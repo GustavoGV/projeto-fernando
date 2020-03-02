@@ -313,6 +313,26 @@
 
         <script>
             let duplo = 0
+            let index = ["147","148",
+"149",
+"157",
+"158",
+"159",
+"257",
+"258",
+"259",
+"267",
+"268",
+"269",
+"347",
+"348",
+"349",
+"357",
+"358",
+"359",
+"367",
+"368",
+"369"]
             function update(dados) {
                 var table = document.getElementById("myTable");
                 for(let i = 0; i < dados.length - 6; i++){
@@ -322,7 +342,12 @@
                 table.rows[i+1].cells[5].innerHTML = dados[i][3]*(dados[i][2] - dados[i][1]);
                 if(dados[i][1] == 1){
                     table.rows[i+1].cells[0].style.backgroundColor = "green";
-
+                }
+                if(dados[i][1] == 2){
+                    table.rows[i+1].cells[0].style.backgroundColor = "yellow"
+                }
+                if(dados[i][1] == 0){
+                    table.rows[i+1].cells[0].style.backgroundColor
                 }
             }
             table.rows[23].cells[0].innerHTML = dados[21] //taokeys
@@ -352,12 +377,26 @@
                 table.rows[i+1].cells[5].innerHTML = dados[i][3]*(dados[i][2] - dados[i][1]);
                 if(dados[i][1] == 1){
                     table.rows[i+1].cells[0].style.backgroundColor = "green";
-
+                }
+                if(dados[i][1] == 2){
+                    table.rows[i+1].cells[0].style.backgroundColor = "yellow"
+                }
+                if(dados[i][1] == 0){
+                    table.rows[i+1].cells[0].style.backgroundColor
                 }
                 //table.rows[i+1].cells[2].innerHTML = dados[i][1];
                 //table.rows[i+1].cells[2].innerHTML = dados[i][2];
-                table.rows[i+1].cells[0].addEventListener('click', function(i){
-                    alert(i +" fazer algo")
+                table.rows[i+1].cells[0].addEventListener('click', function(){
+                    let dec = prompt('Qual evento deseja realizar? => COMPRAR - TROCAR - FINALIZAR')
+                    if(dec.toUpperCase() == "COMPRAR"){
+                        let decC = prompt('Deseja comprar o servico ' + index[i]+ '? (SIM ou NAO)')
+                        if(decC.toUpperCase() == "SIM"){
+                            socket.emit('comprar-servico', index[i])
+                        }
+                        else{
+                            alert('Operacao nao concluida')
+                        }
+                    }
             })
                 table.rows[i+1].cells[1].addEventListener('click', function(i){
                     alert(i+ " fazer outro algo")
@@ -417,6 +456,7 @@
             })
             socket.on('update', (dados) => {
                 update(dados)
+                console.log(dados)
             })
             function send() {
         alert('Operacao Negada')

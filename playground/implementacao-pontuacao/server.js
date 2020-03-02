@@ -86,6 +86,88 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
 
                        
     })
+    socket.on('comprar-servico', (tipo) => {
+    
+
+        Aluno.findOne({sockid: socket.id})
+            .then((userx) => { 
+                    if(userx !== null){
+                        //console.log(user.taokeys + ' ccccccccccccccc');
+                        if(userx['taokeys'] >= 800 && userx[tipo][1] == 0){
+                           console.log(userx[tipo][1] + " <====")
+                           //userx[tipo][1] = 1
+                           let array_dados = [userx[tipo][0], 1, userx[tipo][2], userx[tipo][3], userx[tipo][4]]
+                           userx.set(tipo, array_dados)
+                           userx.taokeys = userx.taokeys - 800
+                           userx.save()
+                                .then(() => Aluno.findOne({ _id: userx._id}))                 
+                                .then((user) => {
+                                    console.log(userx[tipo][1] + ' <----userx(Schema trabalhado aqui)')
+                                    console.log(user[tipo][1] + ' <=====user(recem pesquisado)')
+                                    if(user.taokeys == userx.taokeys){
+                                        socket.emit('update', [user["147"],
+                                        user["148"],
+                                        user["149"],
+                                        user["157"],
+                                        user["158"],
+                                        user["159"],
+                                        user["257"],
+                                        user["258"],
+                                        user["259"],
+                                        user["267"],
+                                        user["268"],
+                                        user["269"],
+                                        user["347"],
+                                        user["348"],
+                                        user["349"],
+                                        user["357"],
+                                        user["358"],
+                                        user["359"],
+                                        user["367"],
+                                        user["368"],
+                                        user["369"],
+                                        user["taokeys"],
+                                        user["frota"],
+                                        user["promotores"],
+                                        user["comissao"],
+                                        user["distribuidores"],
+                                        user["pas"]]);
+                
+                                            }                  
+                                        })
+                                .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
+                                    
+                            
+                            }
+                            else if(userx['taokeys'] >= 800 && userx[tipo][1] == 2){
+                                socket.emit('operacao-negada', 'esse servico esta em espera')
+                            }
+                            else if(userx[tipo][1] == 1){
+                                socket.emit('operacao-negada', 'voce ja possue esse servico')
+                            }
+                        else{
+                            socket.emit('operacao-negada', 'falta caixa');
+                            //console.log('hlu')
+                    }
+                    //console.log(user.taokeys)
+                    }
+                    else{
+                        socket.emit('acesso-negado')
+                    }
+            }) 
+            .catch((err) => { console.log('falha na comunicacao com o banco de dados para o ' +socket.id+ " - " + err)
+    })
+    })
+    /*
+                    if(userx[tipo][1] == 2){
+                        socket.emit('operacao-negada', 'esse servico esta em espera')
+                    }
+                    if(userx[tipo][1] == 1){
+                        socket.emit('operacao-negada', 'voce ja possue esse servico')
+                    }
+                    if(userx[tipo][1] == 0){
+                         }
+                         */
     socket.on('pesquisar-pas', () => {
         Aluno.findOne({sockid: socket.id})
             .then((userx) => { 
@@ -696,7 +778,7 @@ serveradm.listen(5000, () => {
         149:[0,0,360,600,320],
         148:[0,0,324,600,320],
         158:[0,0,360,600,320],
-        157:[0,1,324,600,320],
+        157:[0,0,324,600,320],
         257:[0,0,396,600,320],
         258:[0,0,432,600,320],
         259:[0,0,468,600,320],
