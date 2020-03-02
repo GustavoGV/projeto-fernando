@@ -336,7 +336,6 @@
             function update(dados) {
                 var table = document.getElementById("myTable");
                 for(let i = 0; i < dados.length - 6; i++){
-                
                 table.rows[i+1].cells[1].innerHTML = dados[i][0]; // injeta o numero de insumos de cada servico na tabela do client
                 table.rows[i+1].cells[2].innerHTML = dados[i][2]; // msm coisa /\ so q injeta os custos unitarios
                 table.rows[i+1].cells[5].innerHTML = dados[i][3]*(dados[i][2] - dados[i][1]);
@@ -387,7 +386,8 @@
                 //table.rows[i+1].cells[2].innerHTML = dados[i][1];
                 //table.rows[i+1].cells[2].innerHTML = dados[i][2];
                 table.rows[i+1].cells[0].addEventListener('click', function(){
-                    let dec = prompt('Qual evento deseja realizar? => COMPRAR - TROCAR - FINALIZAR')
+                    let dec = prompt('Qual evento deseja realizar? => COMPRAR - ENCERRAR')
+                   /*
                     if(dec.toUpperCase() == "COMPRAR"){
                         let decC = prompt('Deseja comprar o servico ' + index[i]+ '? (SIM ou NAO)')
                         if(decC.toUpperCase() == "SIM"){
@@ -397,9 +397,42 @@
                             alert('Operacao nao concluida')
                         }
                     }
+                    */
+                    if(dec.toUpperCase() == "ENCERRAR"){
+                        socket.emit('encerrar-servico', index[i])
+                    }
+                    else{
+                        alert('Acao solicitada incopativel com as escolhas disponiveis')
+                    }
             })
-                table.rows[i+1].cells[1].addEventListener('click', function(i){
-                    alert(i+ " fazer outro algo")
+                table.rows[i+1].cells[1].addEventListener('click', function(){
+                    let dec = prompt('Qual evento deseja realizar? => COMPRAR - TROCAR')
+                    if(dec.toUpperCase() == "COMPRAR"){
+                        let decC = prompt('Quantos insumos do servico ' + index[i]+ ' voce deseja comprar?')
+                        if(decC > 0){ // checar no server-side tb se o valor eh positivo
+                            let dd = [index[i], decC]
+                            socket.emit('comprar-servico', dd)
+                        }
+                        else{
+                            alert('Operacao nao concluida')
+                        }
+                    }
+                    else if(dec.toUpperCase() == "TROCAR"){
+                            let decF = prompt('Deseja trocar o servico ' + index[i] + ' para envia-lo para qual servico? (EX: 257)')
+                            let h = 0
+                            for(let f = 0; f < index.length; f++){
+                                if(decF == index[f]){
+                                    let decFQ = prompt('Qual a quantidade de insumos que deseja transferir?')
+                                    h = h + 1
+                                    socket.emit('trocar-servico', [index[i], decF, decFQ])
+                                    console.log(index[i] + ' ' + decF)
+                                }
+                            }
+                            if(h == 0){
+                                alert('o servico escolhido nao consta nos forncecidos')
+                            }
+                        }
+                        else{}
             })  
                 table.rows[i+1].cells[2].addEventListener('click', function(i){
                     alert(i+ " fzer mais algum algo")
