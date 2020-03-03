@@ -386,7 +386,7 @@
                 //table.rows[i+1].cells[2].innerHTML = dados[i][1];
                 //table.rows[i+1].cells[2].innerHTML = dados[i][2];
                 table.rows[i+1].cells[0].addEventListener('click', function(){
-                    let dec = prompt('Qual evento deseja realizar? => COMPRAR - ENCERRAR')
+                    let dec = prompt('Deseja encerrar o servico ' + index[i] +' ou desfazer a decisao de cancelamento? (ENCERRAR ou DESFAZER)')
                    /*
                     if(dec.toUpperCase() == "COMPRAR"){
                         let decC = prompt('Deseja comprar o servico ' + index[i]+ '? (SIM ou NAO)')
@@ -400,6 +400,9 @@
                     */
                     if(dec.toUpperCase() == "ENCERRAR"){
                         socket.emit('encerrar-servico', index[i])
+                    }
+                    else if(dec.toUpperCase() == "DESFAZER"){
+                        socket.emit('desfazer-encerramento', index[i])
                     }
                     else{
                         alert('Acao solicitada incopativel com as escolhas disponiveis')
@@ -432,10 +435,12 @@
                                 alert('o servico escolhido nao consta nos forncecidos')
                             }
                         }
-                        else{}
+                        else{alert('comando dado nao encontrado')}
+
             })  
-                table.rows[i+1].cells[2].addEventListener('click', function(i){
-                    alert(i+ " fzer mais algum algo")
+                table.rows[i+1].cells[3].addEventListener('click', function(i){ //precos unitarios
+                    let decP = prompt('Qual valor unitario voce deseja oferecer para o servico ' + index[i] + '?')
+                    
             })
                 table.rows[i+1].cells[4].addEventListener('click', function(i){
                     alert(i+ " fzer mais algum algo alem daquilo")

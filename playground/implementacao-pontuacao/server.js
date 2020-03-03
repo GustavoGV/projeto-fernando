@@ -94,6 +94,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
             .then((userx) => {
                 if(userx !== null){
                     if(userx['taokeys'] >= qnt*30 && userx[velho][0] >= qnt){
+                        if(userx[novo][1] !== 2){ 
                         let insu_velho = Number(userx[velho][0]) - Number(qnt)
                         let array_dados_velho = [insu_velho,1,userx[velho][2], userx[velho][3], userx[velho][4]];
                         let insu_novo = Number(userx[novo][0]) + Number(qnt)
@@ -139,13 +140,134 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 })
                             .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
                     }
+                    else{socket.emit('operacao-negada', 'voce nao pode transferir insumos para um servico cancelado')}
+                    }
                 }
                 else{
                     socket.emit('acesso-negado')
                 }
             
             })
+    })
+    socket.on('encerrar-servico', (tipo) => {
+        Aluno.findOne({sockid: socket.id})
+            .then((userx) => {
+                if(userx !== null){
+                    if(userx[tipo][0] == 0 && userx[tipo][1] == 1){
+                        let array_dados = [0, 2, userx[tipo][2], userx[tipo][3], userx[tipo][4]]
+                        userx.set(tipo, array_dados) 
+                        userx.save()
+                            .then(() => Aluno.findOne({ _id: userx._id}))                 
+                            .then((user) => {
+                                console.log(userx[tipo][1] + ' <----userx(Schema trabalhado aqui)')
+                                console.log(user[tipo][1] + ' <=====user(recem pesquisado)')
+                                    if(user.taokeys == userx.taokeys){
+                                        socket.emit('update', [user["147"],
+                                user["148"],
+                                user["149"],
+                                user["157"],
+                                user["158"],
+                                user["159"],
+                                user["257"],
+                                user["258"],
+                                user["259"],
+                                user["267"],
+                                user["268"],
+                                user["269"],
+                                user["347"],
+                                user["348"],
+                                user["349"],
+                                user["357"],
+                                user["358"],
+                                user["359"],
+                                user["367"],
+                                user["368"],
+                                user["369"],
+                                user["taokeys"],
+                                user["frota"],
+                                user["promotores"],
+                                user["comissao"],
+                                user["distribuidores"],
+                                user["pas"]]);
+        
+                                    }                  
+                                })
+                        .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
+
+                    }
+                    else if(userx[tipo][0] == 0 && userx[tipo][1] == 2){
+                        socket.emit('operacao-negada', ' servico ja foi cancelado')
+                    }
+                    else{
+                        socket.emit('operacao-negada', ' voce nao pode ter insumos de um servico para encerra-lo')
+                    }
+                }
+                else{
+                    socket.emit('acesso-negado')
+                }
+            })
+            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
     }) 
+    socket.on('desfazer-encerramento', (tipo) => {
+        Aluno.findOne({sockid: socket.id})
+            .then((userx) => {
+                if(userx !== null){
+                    if(userx[tipo][0] == 0 && userx[tipo][1] == 2){
+                        let array_dados = [0, 1, userx[tipo][2], userx[tipo][3], userx[tipo][4]]
+                        userx.set(tipo, array_dados) 
+                        userx.save()
+                            .then(() => Aluno.findOne({ _id: userx._id}))                 
+                            .then((user) => {
+                                console.log(userx[tipo][1] + ' <----userx(Schema trabalhado aqui)')
+                                console.log(user[tipo][1] + ' <=====user(recem pesquisado)')
+                                    if(user.taokeys == userx.taokeys){
+                                        socket.emit('update', [user["147"],
+                                user["148"],
+                                user["149"],
+                                user["157"],
+                                user["158"],
+                                user["159"],
+                                user["257"],
+                                user["258"],
+                                user["259"],
+                                user["267"],
+                                user["268"],
+                                user["269"],
+                                user["347"],
+                                user["348"],
+                                user["349"],
+                                user["357"],
+                                user["358"],
+                                user["359"],
+                                user["367"],
+                                user["368"],
+                                user["369"],
+                                user["taokeys"],
+                                user["frota"],
+                                user["promotores"],
+                                user["comissao"],
+                                user["distribuidores"],
+                                user["pas"]]);
+        
+                                    }
+                                    else{socket.emit('operacao-negada', 'falha ao atunteticar operacao')}                  
+                                })
+                        .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
+
+                    }
+                    else{
+                        socket.emit('operacao-negada', 'esse servico nao esta em processo de encerramento')
+                    }
+                }
+                else{
+                    socket.emit('acesso-negado')
+                }
+            })
+            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
+    }
+
+
+    )
     socket.on('comprar-servico', (dados) => {
         let tipo = dados[0];
         let qnti = dados[1];
@@ -155,7 +277,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
             .then((userx) => { 
                     if(userx !== null){
                         //console.log(user.taokeys + ' ccccccccccccccc');
-                        if(userx['taokeys'] >= qnti*userx[tipo][2] && userx[tipo][1] == 0){
+                        if(userx['taokeys'] >= qnti*userx[tipo][2] && userx[tipo][1] !== 2){
                            console.log(userx[tipo][1] + " <====")
                            //userx[tipo][1] = 1
                            let soma_insu = Number(userx[tipo][0]) + Number(qnti)
@@ -204,9 +326,6 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             }
                             else if(userx['taokeys'] >= qnti*userx[tipo][2] && userx[tipo][1] == 2){
                                 socket.emit('operacao-negada', 'esse servico esta em espera')
-                            }
-                            else if(userx[tipo][1] == 1){
-                                socket.emit('operacao-negada', 'voce ja possue esse servico')
                             }
                         else{
                             socket.emit('operacao-negada', 'falta caixa');
