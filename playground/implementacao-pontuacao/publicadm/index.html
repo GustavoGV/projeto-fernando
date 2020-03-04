@@ -39,95 +39,132 @@
                 top: 50px;
                 left: 900px;
           }
+          #fintur{
+            position: absolute;
+                top: 12px;
+                left: 5px;
+          }
+          #iniciar{
+            position: absolute;
+                top: 12px;
+                left: 110px;
+          }
+          #info{
+            position: absolute;
+                top: 12px;
+                left: 230px;
+          }
         </style>
         <table id="myTable">
             <tr>
                 <td>Players</td>
                 <td>Caixa</td>
+                <td>Faturamento no<br>turno anterior</td>
             </tr>
             <tr>
                 <td>PlayerX</td>
-                <td>250</td>
+                <td>null</td>
+                <td>null</td>
             </tr>
             <tr>
                 <td>PlayerX</td>
-                <td>250</td>
+                <td>null</td>
+                <td>null</td>
             </tr>
             <tr>
                 <td>PlayerX</td>
-                <td>250</td>
+                <td>null</td>
+                <td>null</td>
             </tr>
             <tr>
                 <td>PlayerX</td>
-                <td>250</td>
+                <td>null</td>
+                <td>null</td>
             </tr>
             <tr>
                 <td>PlayerX</td>
-                <td>250</td>
+                <td>null</td>
+                <td>null</td>
             </tr>
             <tr>
                 <td>PlayerX</td>
-                <td>250</td>
+                <td>null</td>
+                <td>null</td>
             </tr>
             <tr>
                 <td>PlayerX</td>
-                <td>250</td>
+                <td>null</td>
+                <td>null</td>
             </tr>
             <tr>
                 <td>PlayerX</td>
-                <td>250</td>
+                <td>null</td>
+                <td>null</td>
             </tr>
             <tr>
                 <td>PlayerX</td>
-                <td>250</td>
+                <td>null</td>
+                <td>null</td>
             </tr>
             <tr>
                 <td>PlayerX</td>
-                <td>250</td>
+                <td>null</td>
+                <td>null</td>
             </tr>
             <tr>
                 <td>PlayerX</td>
-                <td>250</td>
+                <td>null</td>
+                <td>null</td>
             </tr>
             <tr>
                 <td>PlayerX</td>
-                <td>250</td>
+                <td>null</td>
+                <td>null</td>
             </tr>
             <tr>
                 <td>PlayerX</td>
-                <td>250</td>
+                <td>null</td>
+                <td>null</td>
             </tr>
             <tr>
                 <td>PlayerX</td>
-                <td>250</td>
+                <td>null</td>
+                <td>null</td>
             </tr>
             <tr>
                 <td>PlayerX</td>
-                <td>250</td>
+                <td>null</td>
+                <td>null</td>
             </tr>
             <tr>
                 <td>PlayerX</td>
-                <td>250</td>
+                <td>null</td>
+                <td>null</td>
             </tr>
             <tr>
                 <td>PlayerX</td>
-                <td>250</td>
+                <td>null</td>
+                <td>null</td>
             </tr>
             <tr>
                 <td>PlayerX</td>
-                <td>250</td>
+                <td>null</td>
+                <td>null</td>
             </tr>
             <tr>
                 <td>PlayerX</td>
-                <td>250</td>
+                <td>null</td>
+                <td>null</td>
             </tr>
             <tr>
                 <td>PlayerX</td>
-                <td>250</td>
+                <td>null</td>
+                <td>null</td>
             </tr>
             <tr>
                 <td>PlayerX</td>
-                <td>250</td>
+                <td>null</td>
+                <td>null</td>
             </tr>
             
         </table>
@@ -155,55 +192,56 @@
                     <input type="text" id="" value="11500"><br>
 
                     
-                    <button type="button" onclick="parareventox()">Alterar paramentros</button>
+                    <button type="button" onclick="alterar_parametros()">Alterar paramentros</button>
                 </div>
-                <button type="button" id="initur" onclick="eventok()">Iniciar turno</button>
-                <button type="button" id="fintur" onclick="eventop()">Finalizar turno</button>  
+                <button type="button" id="fintur" onclick="finalizar_turno()">Proximo turno</button>
+                <button type="button" id="iniciar" onclick="iniciar()">Iniciar simulacao</button>
+                <button type="button" id="info" onclick="info()">Solicitar informacoes sobre o turno</button>   
                 <div id="custos">
-                    147
-                    <input type="text" value="11500"><br>
-        148
-        <input type="text" value="11500"><br>
-        149
-        <input type="text" value="11500"><br>
-        157
-        <input type="text" value="11500"><br>
-        158
-        <input type="text" value="11500"><br>
-        159
-        <input type="text" value="11500"><br>
-        257
-        <input type="text" value="11500"><br>
-        258
-        <input type="text" value="11500"><br>
-        259
-        <input type="text" value="11500"><br>
-        267
-        <input type="text" value="11500"><br>
-        268
-        <input type="text" value="11500"><br>
-        269
-        <input type="text" value="11500"><br>
-        347
-        <input type="text" value="320"><br>
-        348
-        <input type="text" value="320"><br>
-        349
-        <input type="text" value="320"><br>
-        357
-        <input type="text" value="320"><br>
-        358
-        <input type="text" value="320"><br>
-        359
-        <input type="text" value="320"><br>
-        367
-        <input type="text" value="320"><br>
-        368
-        <input type="text" value="320"><br>
-        369
-        <input type="text" value="320"><br>
+                    Custo unitario do servico 147:
+                    <input type="text" value="288"><br>
+        Custo unitario do servico 148:
+        <input type="text" value="324"><br>
+        Custo unitario do servico 149:
+        <input type="text" value="360"><br>
+        Custo unitario do servico 157:
+        <input type="text" value="324"><br>
+        Custo unitario do servico 158:
+        <input type="text" value="360"><br>
+        Custo unitario do servico 159:
+        <input type="text" value="396"><br>
+        Custo unitario do servico 257:
+        <input type="text" value="396"><br>
+        Custo unitario do servico 258:
+        <input type="text" value="432"><br>
+        Custo unitario do servico 259:
+        <input type="text" value="468"><br>
+        Custo unitario do servico 267:
+        <input type="text" value="432"><br>
+        Custo unitario do servico 268:
+        <input type="text" value="468"><br>
+        Custo unitario do servico 269:
+        <input type="text" value="504"><br>
+        Custo unitario do servico 347:
+        <input type="text" value="432"><br>
+        Custo unitario do servico 348:
+        <input type="text" value="468"><br>
+        Custo unitario do servico 349:
+        <input type="text" value="504"><br>
+        Custo unitario do servico 357:
+        <input type="text" value="468"><br>
+        Custo unitario do servico 358:
+        <input type="text" value="504"><br>
+        Custo unitario do servico 359:
+        <input type="text" value="540"><br>
+        Custo unitario do servico 367:
+        <input type="text" value="504"><br>
+        Custo unitario do servico 368:
+        <input type="text" value="540"><br>
+        Custo unitario do servico 369:
+        <input type="text" value="576"><br>
         <br></br>
-        <button type="button" onclick="parareventox()">Enviar custos unitarios padrao</button>
+        <button type="button" onclick="alterar_custos()">Alterar custos unitarios base</button>
                 </div>
             
 
@@ -221,21 +259,23 @@
     </div>
         <script>
             const socket = io()
-            let game
-            //const scoreTable = document.getElementById('score-table')
-            //const gameCanvas = document.getElementById('game-canvas')
-            //let totalPlayersCount = ''
-            //const collectFruitAudio = new Audio('collect.mp3')
-            //const collect100FruitAudio = new Audio('100-collect.mp3')
             
             socket.on('connect', () => {
                 const playerId = socket.id
                 console.log('> Connected to server (id: ' + socket.id )
             })
-            function eventox() {
-                let valor = document.getElementById("valorx").value;
-                socket.emit('mudar-dolar-adm', valor)
-                }
+            function alterar_custos(params) {
+                
+            }
+            function alterar_parametros(params) {
+                
+            }
+            function iniciar(params) {
+                
+            }
+            function info(params) {
+                
+            }
             function login() {
                 let valor1 = document.getElementById("usuario").value
                 let valor2 = document.getElementById("senha").value
@@ -245,10 +285,7 @@
                 document.getElementById("senha").value = ''
 
             }
-            function eventok() {
-                socket.emit('inicar-turno')
-            }
-            function eventop() {
+            function finalizar_turno() {
                 socket.emit('finalizar-turno')
             }
             function parareventok() {

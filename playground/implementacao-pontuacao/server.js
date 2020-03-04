@@ -1155,7 +1155,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
             .then((userx) => {
                 if(userx !== null){
                         if(userx['faturamento' > 0]){
-                            userx.set('comissao', qnt) 
+                            console.log('realizar processamento do faturamento em lucro bruto') 
                             userx.save()
                                 .then(() => Aluno.findOne({ _id: userx._id}))                 
                                 .then((user) => {
@@ -1240,7 +1240,7 @@ socketsadm.on('connection', (socket) => { //conversa do server com o client do A
         }
         
     })
-    let demanda = 50000 //n eh um valor fixo kkk
+    let demanda = 100000 //n eh um valor fixo kkk
     socket.on('finalizar-turno', () => {
         Aluno.find({ativo: 1})
             .then((users) => {
@@ -1602,14 +1602,16 @@ socketsadm.on('connection', (socket) => { //conversa do server com o client do A
                 let dist = 0;
                 console.log(preco_medio + ' <-- preco medio')
                 for(let i = 0; i < users.length; i++){
-                    dist = dist + preco_medio - users[i]['scorepreco'][1]/users[i]['scorepreco'][0]
+                    let media_user = users[i]['scorepreco'][1]/users[i]['scorepreco'][0]
+                    dist = dist + preco_medio/media_user
                 }
                 for(let i = 0; i < users.length; i++){
-
-                     users[i]['faturamento'] = (0.09*users[i]['distribuidores']/soma + 0.09*users[i]['pas']/soma1 + 0.07*users[i]['promotores']/soma2 + 0.09*users[i]['comissao']/soma3 + 0.1*users[i]['propaganda']/soma5 + 0.12*users[i]['scoremod']/scorex + 0.3 + 0.10*users[i]['propagandauni']/soma6)*demanda
+                    let media_user = users[i]['scorepreco'][1]/users[i]['scorepreco'][0]
+                    let scorepp = preco_medio/media_user
+                     users[i]['faturamento'] = (0.09*users[i]['distribuidores']/soma + 0.09*users[i]['pas']/soma1 + 0.07*users[i]['promotores']/soma2 + 0.09*users[i]['comissao']/soma3 + 0.1*users[i]['propaganda']/soma5 + 0.12*users[i]['scoremod']/scorex + 0.3*(scorepp/dist) + 0.10*users[i]['propagandauni']/soma6)*demanda
                      socket.emit()
-                     console.log("Parcela de mercado adquirida para o player (" + users[i]['cooperativa'] + ')   -dsitribuidores (max 0.09)-> ' +0.09*users[i]['distribuidores']/soma + ' -pas (max 0.09)->  ' + 0.09*users[i]['pas']/soma1 + ' -promotores (max 0.07)-> ' + 0.07*users[i]['promotores']/soma2 + ' -comissao (max 0.09)-> ' + 0.09*users[i]['comissao']/soma3 + ' -propaganda (max 0.10)-> ' + 0.1*users[i]['propaganda']/soma5 + ' -modelos_de_servicos (max 0.12)-> ' + 0.12*users[i]['scoremod']/scorex + ' -precos_unitario (max 0.30)-> ' + 0.3 + ' -propaganda_unitaria (max 0.10)-> ' + 0.1*users[i]['propagandauni']/soma6)
-                     console.log((0.09*users[i]['distribuidores']/soma + 0.09*users[i]['pas']/soma1 + 0.07*users[i]['promotores']/soma2 + 0.09*users[i]['comissao']/soma3 + 0.1*users[i]['propaganda']/soma5 + 0.12*users[i]['scoremod']/scorex + 0.3 + 0.10*users[i]['propagandauni']/soma6)*demanda)
+                     console.log("Parcela de mercado adquirida para o player (" + users[i]['cooperativa'] + ')   -dsitribuidores (max 0.09)-> ' +0.09*users[i]['distribuidores']/soma + ' -pas (max 0.09)->  ' + 0.09*users[i]['pas']/soma1 + ' -promotores (max 0.07)-> ' + 0.07*users[i]['promotores']/soma2 + ' -comissao (max 0.09)-> ' + 0.09*users[i]['comissao']/soma3 + ' -propaganda (max 0.10)-> ' + 0.1*users[i]['propaganda']/soma5 + ' -modelos_de_servicos (max 0.12)-> ' + 0.12*users[i]['scoremod']/scorex + ' -precos_unitario (max 0.30)-> ' + 0.3*(scorepp/dist) + ' -propaganda_unitaria (max 0.10)-> ' + 0.1*users[i]['propagandauni']/soma6)
+                     console.log((0.09*users[i]['distribuidores']/soma + 0.09*users[i]['pas']/soma1 + 0.07*users[i]['promotores']/soma2 + 0.09*users[i]['comissao']/soma3 + 0.1*users[i]['propaganda']/soma5 + 0.12*users[i]['scoremod']/scorex + 0.3*(scorepp/dist) + 0.10*users[i]['propagandauni']/soma6)*demanda)
                     }
                 for(let i = 0; i < users.length; i++){
                     

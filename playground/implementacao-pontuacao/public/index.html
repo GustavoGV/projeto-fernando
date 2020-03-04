@@ -45,17 +45,17 @@
             }
             #usuario {
                 position: absolute;
-                top: 650px;
+                top: 600px;
                 left: 800px;
             }
             #senha {
                 position: absolute;
-                top: 675px;
+                top: 625px;
                 left: 800px;
             }
             #bsenha { 
                 position: absolute;
-                top: 700px;
+                top: 650px;
                 left: 800px;
             }
             #valory {
@@ -66,11 +66,6 @@
             #by {
                 position: absolute;
                 top: 250px;
-                left: 800px;
-            }
-            #bsend {
-                position: absolute;
-                top: 600px;
                 left: 800px;
             }
 
@@ -302,10 +297,7 @@
             <input type="text" value="3irmas" id="usuario">
             <input type="text" value="666" id="senha">
             <button type="button" id="bsenha" onclick="login()">Clique para fazer login</button>
-        </div>
-        <button type="button" id="bsend" onclick="send()">Clique aqui para finalizar suas escolhas do turno</button>
-
-    </div>
+        
 </div>
         <script src="/socket.io/socket.io.js"></script>
     </head>
@@ -560,10 +552,8 @@
         
             const socket = io()
             socket.on('connect', () => {
-                function check_turno() {
-                    socket.emit('check-turno')
-                }
-                setTimeout(check_turno, 3000)
+                
+                
                 const playerId = socket.id
                 // console.log(`Player connected on Client with id: ${playerId}`)
                 // console.log('socket', socket)
@@ -592,9 +582,6 @@
                 update(dados)
                 console.log(dados)
             })
-            function send() {
-                alert('Operacao Negada')
-            }
             socket.on('login-negado', (cre) => {
                 alert('login negado para tentativa de conexao com '+cre)
             })
@@ -609,6 +596,10 @@
             })
             socket.on('ja-conectado', (idd) => {alert('Voce ja esta conectado ' + idd)})
             socket.on('login-aprovado', (cre) => {
+                function check_turno() {
+                    socket.emit('check-turno')
+                }
+                setTimeout(check_turno, 2000)
                 alert('login aprovado para ' + cre)
             })
             function eventox() {
