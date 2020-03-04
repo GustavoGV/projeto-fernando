@@ -20,58 +20,58 @@
             #valorx {
                 position: absolute;
                 top: 25px;
-                left: 770px;
+                left: 800px;
             }
             #cx {
                 position: absolute;
                 top: 400px;
-                left: 770px;
+                left: 800px;
             }
             #fx {
                 position: absolute;
                 top: 75px;
-                left: 770px;
+                left: 800px;
             }
             #ck {
                 position: absolute;
                 top: 300px;
-                left: 770px;
+                left: 800px;
 
             }
             #fk {
                 position: absolute;
                 top: 350px;
-                left: 770px;
+                left: 800px;
             }
             #usuario {
                 position: absolute;
                 top: 650px;
-                left: 770px;
+                left: 800px;
             }
             #senha {
                 position: absolute;
                 top: 675px;
-                left: 770px;
+                left: 800px;
             }
             #bsenha { 
                 position: absolute;
                 top: 700px;
-                left: 770px;
+                left: 800px;
             }
             #valory {
                 position: absolute;
                 top: 225px;
-                left: 770px;
+                left: 800px;
             }
             #by {
                 position: absolute;
                 top: 250px;
-                left: 770px;
+                left: 800px;
             }
             #bsend {
                 position: absolute;
                 top: 600px;
-                left: 770px;
+                left: 800px;
             }
 
            </style>
@@ -166,7 +166,7 @@
             </tr>
             <tr>
                 <td>268</td>
-                <td>nll</td>
+                <td>null</td>
                 <td>null</td>
                 <td>null</td>
                 <td>null</td>
@@ -174,7 +174,7 @@
             </tr>
             <tr>
                 <td>269</td>
-                <td>nll</td>
+                <td>null</td>
                 <td>null</td>
                 <td>null</td>
                 <td>null</td>
@@ -182,7 +182,7 @@
             </tr>
             <tr>
                 <td>347</td>
-                <td>nll</td>
+                <td>null</td>
                 <td>null</td>
                 <td>null</td>
                 <td>null</td>
@@ -190,7 +190,7 @@
             </tr>
             <tr>
                 <td>348</td>
-                <td>nll</td>
+                <td>null</td>
                 <td>null</td>
                 <td>null</td>
                 <td>null</td>
@@ -198,7 +198,7 @@
             </tr>
             <tr>
                 <td>349</td>
-                <td>nll</td>
+                <td>null</td>
                 <td>null</td>
                 <td>null</td>
                 <td>null</td>
@@ -206,7 +206,7 @@
             </tr>
             <tr>
                 <td>357</td>
-                <td>nll</td>
+                <td>null</td>
                 <td>null</td>
                 <td>null</td>
                 <td>null</td>
@@ -214,7 +214,7 @@
             </tr>
             <tr>
                 <td>358</td>
-                <td>nll</td>
+                <td>null</td>
                 <td>null</td>
                 <td>null</td>
                 <td>null</td>
@@ -222,7 +222,7 @@
             </tr>
             <tr>
                 <td>359</td>
-                <td>nll</td>
+                <td>null</td>
                 <td>null</td>
                 <td>null</td>
                 <td>null</td>
@@ -230,7 +230,7 @@
             </tr>
             <tr>
                 <td>367</td>
-                <td>nll</td>
+                <td>null</td>
                 <td>null</td>
                 <td>null</td>
                 <td>null</td>
@@ -238,7 +238,7 @@
             </tr>
             <tr>
                 <td>368</td>
-                <td>nll</td>
+                <td>null</td>
                 <td>null</td>
                 <td>null</td>
                 <td>null</td>
@@ -246,7 +246,7 @@
             </tr>
             <tr>
                 <td>369</td>
-                <td>nll</td>
+                <td>null</td>
                 <td>null</td>
                 <td>null</td>
                 <td>null</td>
@@ -256,17 +256,17 @@
                 <td>Caixa</td>
                 <td>Frota</td>
                 <td>Promotores</td>
-                <td>Depreciacao Frota</td>
-                <td></td>
-                <td>Total do faturamento esperado</td>
+                <td>Soma propagandas<br>unitarias</td>
+                <td>Propaganda<br>institucional</td>
+                <td>Total do faturamento<br>esperado</td>
             </tr>
             <tr>
-                <td>6000</td>
-                <td>2000</td>
-                <td>200</td>
-                <td>60%</td>
-                <td></td>
-                <td>340000</td>
+                <td>null</td>
+                <td>null</td>
+                <td>null</td>
+                <td>null</td>
+                <td>null</td>
+                <td>null</td>
             </tr>
             <tr>
                 <td>Comissao</td>
@@ -275,10 +275,10 @@
                 <td>PAS</td>
             </tr>
             <tr>
-                <td>5%</td>
-                <td>350</td>
-                <td>2</td>
-                <td>30</td>
+                <td>null</td>
+                <td>null</td>
+                <td>null</td>
+                <td>null</td>
             </tr>
             
           </table>
@@ -335,10 +335,16 @@
 "369"]
             function update(dados) {
                 var table = document.getElementById("myTable");
-                for(let i = 0; i < dados.length - 6; i++){
+                let somaf = 0;
+                for(let i = 0; i < 21; i++){
+                somaf = somaf + dados[i][4]*(dados[i][3] - dados[i][2]);
                 table.rows[i+1].cells[1].innerHTML = dados[i][0]; // injeta o numero de insumos de cada servico na tabela do client
                 table.rows[i+1].cells[2].innerHTML = dados[i][2]; // msm coisa /\ so q injeta os custos unitarios
-                table.rows[i+1].cells[5].innerHTML = dados[i][3]*(dados[i][2] - dados[i][1]);
+                table.rows[i+1].cells[5].innerHTML = dados[i][4]*(dados[i][3] - dados[i][2]);
+                table.rows[i+1].cells[3].innerHTML = dados[i][3]
+                table.rows[i+1].cells[4].innerHTML = dados[i][4]
+                
+                table.rows[23].cells[5].innerHTML = 0
                 if(dados[i][1] == 1){
                     table.rows[i+1].cells[0].style.backgroundColor = "green";
                 }
@@ -349,13 +355,20 @@
                     table.rows[i+1].cells[0].style.backgroundColor
                 }
             }
+            table.rows[23].cells[4].innerHTML = dados[27]
+            table.rows[22].cells[4].style.backgroundColor = "gray"
+            table.rows[23].cells[5].innerHTML = somaf
             table.rows[23].cells[0].innerHTML = dados[21] //taokeys
             table.rows[22].cells[0].style.backgroundColor = "gray"
             table.rows[25].cells[0].innerHTML = dados[24] //comissao
             table.rows[24].cells[0].style.backgroundColor = "gray"
             table.rows[25].cells[3].innerHTML = dados[26] //pas
             table.rows[24].cells[3].style.backgroundColor = "gray"
-            table.rows[23].cells[1].innerHTML = dados[22] //frota
+            let sfrota = 0;
+            for(let d = 0; d < dados[22].length; d++){
+                sfrota = sfrota + dados[22][d]
+            }
+            table.rows[23].cells[1].innerHTML = sfrota //frota
             table.rows[22].cells[1].style.backgroundColor = "gray"
             table.rows[25].cells[1].innerHTML = dados[25] //distribuidores
             table.rows[24].cells[1].style.backgroundColor = "gray"
@@ -366,14 +379,15 @@
             var table = document.getElementById("myTable");
             //var row = table.insertRow(0);
             while(duplo == 0){
-            for(let i = 0; i < dados.length - 6; i++){
-                
+                let somaf = 0;
+            for(let i = 0; i < 21; i++){
+                somaf = somaf + dados[i][4]*(dados[i][3] - dados[i][2])
                 table.rows[i+1].cells[1].innerHTML = dados[i][0]; // injeta o numero de insumos de cada servico na tabela do client
                 table.rows[i+1].cells[2].innerHTML = dados[i][2]; // msm coisa /\ so q injeta os custos unitarios
                 table.rows[i+1].cells[3].innerHTML = dados[i][3];
                 table.rows[i+1].cells[4].innerHTML = dados[i][4];
+                table.rows[i+1].cells[5].innerHTML = dados[i][4]*(dados[i][3] - dados[i][2]);
 
-                table.rows[i+1].cells[5].innerHTML = dados[i][3]*(dados[i][2] - dados[i][1]);
                 if(dados[i][1] == 1){
                     table.rows[i+1].cells[0].style.backgroundColor = "green";
                 }
@@ -438,29 +452,101 @@
                         else{alert('comando dado nao encontrado')}
 
             })  
-                table.rows[i+1].cells[3].addEventListener('click', function(i){ //precos unitarios
+                table.rows[i+1].cells[3].addEventListener('click', function(){ //precos unitarios
                     let decP = prompt('Qual valor unitario voce deseja oferecer para o servico ' + index[i] + '?')
-                    
+                    let resp = [index[i], decP]
+                    socket.emit('alterar-preco', resp)
+
             })
-                table.rows[i+1].cells[4].addEventListener('click', function(i){
-                    alert(i+ " fzer mais algum algo alem daquilo")
+                table.rows[i+1].cells[4].addEventListener('click', function(){
+                    let decN = prompt('Qual o volume de vendas que planeja ter para o serviço ' + index[i] + '?')
+                    let resp = [index[i], decN]
+                    socket.emit('alterar-volume', resp)
             })
                 
             }
+            table.rows[23].cells[4].innerHTML = dados[27]
+            table.rows[22].cells[4].style.backgroundColor = "gray"
+            table.rows[23].cells[5].innerHTML = somaf
             table.rows[23].cells[0].innerHTML = dados[21] //taokeys
             table.rows[22].cells[0].style.backgroundColor = "gray"
             table.rows[25].cells[0].innerHTML = dados[24] //comissao
             table.rows[24].cells[0].style.backgroundColor = "gray"
             table.rows[25].cells[3].innerHTML = dados[26] //pas
             table.rows[24].cells[3].style.backgroundColor = "gray"
-            table.rows[23].cells[1].innerHTML = dados[22] //frota
+            let sfrota = 0;
+            for(let d = 0; d < dados[22].length; d++){
+                sfrota = sfrota + dados[22][d]
+            }
+            table.rows[23].cells[1].innerHTML = sfrota //frota
             table.rows[22].cells[1].style.backgroundColor = "gray"
             table.rows[25].cells[1].innerHTML = dados[25] //distribuidores
             table.rows[24].cells[1].style.backgroundColor = "gray"
             table.rows[23].cells[2].innerHTML = dados[23] //promotores
             table.rows[22].cells[2].style.backgroundColor = "gray"
 
-            
+            table.rows[23].cells[1].addEventListener('click', function(){ //frota
+                    let decN = prompt('Deseja aumentar a sua frota, vender algumas unidades ou checar o status da sua frota? (AUMENTAR ou VENDER ou CHECAR)')
+                    if(decN.toUpperCase() == 'AUMENTAR'){
+                        let aume = prompt('Deseja adquirir quantas unidades?')
+                        socket.emit('aumentar-frota', aume)
+                    }
+                    else if(decN.toUpperCase() == 'VENDER'){
+                        let vend = prompt('Deseja vender quantas unidades?')
+                        socket.emit('vender-frota', vend)
+                    }
+                    else if(decN.toUpperCase() == 'CHECAR'){
+                        socket.emit('checar-frota')
+                    }
+                    else{alert('comando nao disponivel')}
+            })
+            table.rows[23].cells[2].addEventListener('click', function(){ //promotor
+                    let dec = prompt('Deseja aumentar ou diminuir o numero de promotores? (AUMENTAR ou DIMINUIR)')
+                    if(dec.toUpperCase() == "AUMENTAR"){
+                        let aume = prompt('Deseja adquirir quantos promotores?')
+                        socket.emit('aumentar-promotores', aume)
+                    }
+                    else if(dec.toUpperCase() == "DIMINUIR"){
+                        let dimi = prompt('Deseja dispensar quantos promotores?')
+                        socket.emit('diminuir-promotores', dimi)
+                    }
+                    else{alert('comando nao disponivel')}
+            })
+            table.rows[25].cells[0].addEventListener('click', function(){ //comissao
+                   let dec = prompt('Quanto de comissao deseja oferecer? EX: 0.3 (para 30%)')
+                   socket.emit('comissao', dec)
+            })
+            table.rows[23].cells[4].addEventListener('click', function(){ //propaganda
+                   let dec = prompt('Quanto deseja invetir em propagada institucional nesse turno?')
+                   socket.emit('aumentar-propaganda', dec)
+            })
+            table.rows[25].cells[1].addEventListener('click', function(){ //distribuidores
+                  let dec = prompt('Deseja aumentar ou diminuir o numero de distribuidores? (AUMENTAR ou DIMINUIR)')
+                  if(dec.toUpperCase() == 'AUMENTAR'){
+                    let aume = prompt('Quantos distribuidores deseja adquirir?')
+                    socket.emit('aumentar-distribuidores', aume)
+                  }
+                  else if(dec.toUpperCase() == 'DIMINUIR'){
+                    let dimi = prompt('Quantos distribuidores deseja dispensar?')
+                    socket.emit('diminuir-distribuidores', dimi)
+                  }
+                  else{alert('Comando nao disponivel')}
+            })
+            table.rows[25].cells[3].addEventListener('click', function(){ //PAS
+                  let dec = prompt('Deseja aumentar o PAS, diminuir ou checar seu status? (AUMENTAR ou DIMINUIR ou CHECAR)')
+                  if(dec.toUpperCase() == 'AUMENTAR'){
+                    let aume = prompt('Quantos PAS deseja adquirir?')
+                    socket.emit('aumentar-pas', aume)
+                  }
+                  else if(dec.toUpperCase() == 'DIMINUIR'){
+                    let dimi = prompt('Quantos PAS deseja desativar?')
+                    socket.emit('diminuir-pas', dimi)
+                  }
+                  else if(dec.toUpperCase() == 'CHECAR'){
+                      socket.emit('checar-pas')
+                  }
+                  else{alert('comando nao disponivel')}
+            })
 
             duplo = duplo + 1
         }
@@ -491,6 +577,12 @@
             })
             socket.on('dados-servicos', (dados) => {
                 tabela(dados)
+            })
+            socket.on('resp-checar-pas', (dados) => {
+                alert('Voce possue ' + dados[0] + ' PAS que entrarao em atividade apos um turno e possue ' + dados[1]+ ' PAS com dois turnos restantes para ativacao')
+            })
+            socket.on('resp-checar-frota', (dados) => {
+                alert('0/24 depreciado: ' + dados[0] + '. 1/24 depreciados: ' + dados[1] + '. 2/24 depreciado: ' + dados[2] + '. 3/24 depreciados: ' + dados[3] +'. 4/24 depreciado: ' + dados[4] + '. 5/24 depreciados: ' + dados[5] +'. 6/24 depreciado: ' + dados[6] + '. 7/24 depreciados: ' + dados[7] +'. 8/24 depreciado: ' + dados[8] + '. 9/24 depreciados: ' + dados[9] +'. 10/24 depreciado: ' + dados[10] + '. 11/24 depreciados: ' + dados[11] +'. 12/24 depreciado: ' + dados[12] + '. 13/24 depreciados: ' + dados[13] +'. 14/24 depreciado: ' + dados[14] + '. 15/24 depreciados: ' + dados[15] +'. 16/24 depreciado: ' + dados[16] + '. 17/24 depreciados: ' + dados[17] +'. 18/24 depreciado: ' + dados[18] + '. 19/24 depreciados: ' + dados[19] +'. 20/24 depreciado: ' + dados[20] + '. 21/24 depreciados: ' + dados[21] +'. 22/24 depreciado: ' + dados[22] + '. 23/24 depreciados: ' + dados[1])
             })
             socket.on('update', (dados) => {
                 update(dados)

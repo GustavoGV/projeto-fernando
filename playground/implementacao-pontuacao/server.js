@@ -75,7 +75,8 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                 user["promotores"],
                 user["comissao"],
                 user["distribuidores"],
-                user["pas"]])
+                user["pas"],
+                user["propaganda"]])
                                         })
                                         .catch((err) => console.log( err + ' <=> Falha ao registrar login do player com o socket especifico: ' + socket.id))
                             }})
@@ -134,7 +135,8 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 user["promotores"],
                                 user["comissao"],
                                 user["distribuidores"],
-                                user["pas"]]);
+                                user["pas"],
+                                user["propaganda"]]);
         
                                     }                  
                                 })
@@ -154,13 +156,11 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
             .then((userx) => {
                 if(userx !== null){
                     if(userx[tipo][0] == 0 && userx[tipo][1] == 1){
-                        let array_dados = [0, 2, userx[tipo][2], userx[tipo][3], userx[tipo][4]]
+                        let array_dados = [0, 2, userx[tipo][2], userx[tipo][3], 0]
                         userx.set(tipo, array_dados) 
                         userx.save()
                             .then(() => Aluno.findOne({ _id: userx._id}))                 
                             .then((user) => {
-                                console.log(userx[tipo][1] + ' <----userx(Schema trabalhado aqui)')
-                                console.log(user[tipo][1] + ' <=====user(recem pesquisado)')
                                     if(user.taokeys == userx.taokeys){
                                         socket.emit('update', [user["147"],
                                 user["148"],
@@ -188,7 +188,8 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 user["promotores"],
                                 user["comissao"],
                                 user["distribuidores"],
-                                user["pas"]]);
+                                user["pas"],
+                                user["propaganda"]]);
         
                                     }                  
                                 })
@@ -196,10 +197,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
 
                     }
                     else if(userx[tipo][0] == 0 && userx[tipo][1] == 2){
-                        socket.emit('operacao-negada', ' servico ja foi cancelado')
+                        socket.emit('operacao-negada', 'servico ja esta em processo de cancelamento')
+                    }
+                    else if(userx[tipo][0] == 0 && userx[tipo][1] == 0){
+                        socket.emit('operacao-negada', 'esse servico ja esta inativo')
                     }
                     else{
-                        socket.emit('operacao-negada', ' voce nao pode ter insumos de um servico para encerra-lo')
+                        socket.emit('operacao-negada', 'voce nao pode ter insumos de um servico para encerra-lo')
                     }
                 }
                 else{
@@ -207,7 +211,741 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
-    }) 
+    })
+    socket.on('alterar-volume', (dados) => {
+        let tipo = dados[0];
+        let volume = Number(dados[1]);
+        Aluno.findOne({sockid: socket.id})
+            .then((userx) => {
+                if(userx !== null){
+                        if(volume >= 0){
+                            let array_dados = [userx[tipo][0], userx[tipo][1], userx[tipo][2], userx[tipo][3], volume]
+                            userx.set(tipo, array_dados) 
+                            userx.save()
+                                .then(() => Aluno.findOne({ _id: userx._id}))                 
+                                .then((user) => {
+                                    if(user.taokeys == userx.taokeys){
+                                        socket.emit('update', [user["147"],
+                                user["148"],
+                                user["149"],
+                                user["157"],
+                                user["158"],
+                                user["159"],
+                                user["257"],
+                                user["258"],
+                                user["259"],
+                                user["267"],
+                                user["268"],
+                                user["269"],
+                                user["347"],
+                                user["348"],
+                                user["349"],
+                                user["357"],
+                                user["358"],
+                                user["359"],
+                                user["367"],
+                                user["368"],
+                                user["369"],
+                                user["taokeys"],
+                                user["frota"],
+                                user["promotores"],
+                                user["comissao"],
+                                user["distribuidores"],
+                                user["pas"],
+                                user["propaganda"]]);
+        
+                                    }                  
+                                })
+                        .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
+                          
+                    }
+                    else{socket.emit('operacao-negada', 'o volume de vendas so aceita valores positivos')}
+                    
+                
+             
+            }
+                else{
+                    socket.emit('acesso-negado')
+                }
+            })
+            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
+    })
+    socket.on('aumentar-frota', (dados) => {
+        let qnt = Number(dados)
+        Aluno.findOne({sockid: socket.id})
+            .then((userx) => {
+                if(userx !== null){
+                        if(qnt > 0 && userx.taokeys > qnt*57600){
+                            let novaf = userx['frota'][0] + qnt
+                            let array_dados = [novaf, userx['frota'][1], userx['frota'][2], userx['frota'][3], userx['frota'][4], userx['frota'][5], userx['frota'][6], userx['frota'][7], userx['frota'][8], userx['frota'][9], userx['frota'][10], userx['frota'][11], userx['frota'][12], userx['frota'][13], userx['frota'][14], userx['frota'][15], userx['frota'][16], userx['frota'][17], userx['frota'][18], userx['frota'][19], userx['frota'][20], userx['frota'][21], userx['frota'][22], userx['frota'][23]]
+                            userx.taokeys = userx.taokeys - 57600*Number(dados)
+                            userx.set('frota', array_dados) 
+                            userx.save()
+                                .then(() => Aluno.findOne({ _id: userx._id}))                 
+                                .then((user) => {
+                                    if(user.taokeys == userx.taokeys){
+                                        socket.emit('update', [user["147"],
+                                user["148"],
+                                user["149"],
+                                user["157"],
+                                user["158"],
+                                user["159"],
+                                user["257"],
+                                user["258"],
+                                user["259"],
+                                user["267"],
+                                user["268"],
+                                user["269"],
+                                user["347"],
+                                user["348"],
+                                user["349"],
+                                user["357"],
+                                user["358"],
+                                user["359"],
+                                user["367"],
+                                user["368"],
+                                user["369"],
+                                user["taokeys"],
+                                user["frota"],
+                                user["promotores"],
+                                user["comissao"],
+                                user["distribuidores"],
+                                user["pas"],
+                                user["propaganda"]]);
+        
+                                    }                  
+                                })
+                        .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
+                          
+                    }
+                    else if(qnt > 0 && userx.taokeys < qnt*57600){
+                        socket.emit('operacao-negada', 'falta caixa')
+                    }
+                    else{socket.emit('operacao-negada', 'apenas valores positivos')}
+                    
+                
+             
+            }
+                else{
+                    socket.emit('acesso-negado')
+                }
+            })
+            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
+    })
+    socket.on('checar-frota', () => {
+        Aluno.findOne({sockid: socket.id})
+            .then((userx) => {
+                if(userx !== null){
+                    let resp = userx['frota']
+                    socket.emit('resp-checar-frota', resp)         
+                
+             
+            }
+                else{
+                    socket.emit('acesso-negado')
+                }
+            })
+            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
+    })
+    socket.on('alterar-preco', (dados) => {
+        let tipo = dados[0];
+        let preco = Number(dados[1]);
+        Aluno.findOne({sockid: socket.id})
+            .then((userx) => {
+                if(userx !== null){
+                    if(userx[tipo][1] == 1 || userx[tipo][1] == 0){
+                        if(preco > 0 && preco < 9999){
+                            let array_dados = [userx[tipo][0], userx[tipo][1], userx[tipo][2], preco, userx[tipo][4]]
+                            userx.set(tipo, array_dados) 
+                            userx.save()
+                                .then(() => Aluno.findOne({ _id: userx._id}))                 
+                                .then((user) => {
+                                    if(user.taokeys == userx.taokeys){
+                                        socket.emit('update', [user["147"],
+                                user["148"],
+                                user["149"],
+                                user["157"],
+                                user["158"],
+                                user["159"],
+                                user["257"],
+                                user["258"],
+                                user["259"],
+                                user["267"],
+                                user["268"],
+                                user["269"],
+                                user["347"],
+                                user["348"],
+                                user["349"],
+                                user["357"],
+                                user["358"],
+                                user["359"],
+                                user["367"],
+                                user["368"],
+                                user["369"],
+                                user["taokeys"],
+                                user["frota"],
+                                user["promotores"],
+                                user["comissao"],
+                                user["distribuidores"],
+                                user["pas"],
+                                user["propaganda"]]);
+        
+                                    }                  
+                                })
+                        .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
+
+                    }
+                    else{socket.emit('operacao-negada', 'o valor do preco unitario deve estar entre 0 e 9999')}
+                }
+                else if(userx[tipo][0] == 0 && userx[tipo][1] == 2){
+                    socket.emit('operacao-negada', ' servico ja foi cancelado')
+                }
+                else{
+                    socket.emit('operacao-negada', ' voce nao pode ter insumos de um servico para encerra-lo')
+                }
+             
+            }
+                else{
+                    socket.emit('acesso-negado')
+                }
+            })
+            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
+    })
+    socket.on('aumentar-promotores', (dados) => {
+        let qnt = Number(dados)
+        Aluno.findOne({sockid: socket.id})
+            .then((userx) => {
+                if(userx !== null){
+                        if(qnt > 0){
+                            let novaf = userx['promotores'] + qnt
+                            userx.set('promotores', novaf) 
+                            userx.save()
+                                .then(() => Aluno.findOne({ _id: userx._id}))                 
+                                .then((user) => {
+                                    if(user.taokeys == userx.taokeys){
+                                        socket.emit('update', [user["147"],
+                                user["148"],
+                                user["149"],
+                                user["157"],
+                                user["158"],
+                                user["159"],
+                                user["257"],
+                                user["258"],
+                                user["259"],
+                                user["267"],
+                                user["268"],
+                                user["269"],
+                                user["347"],
+                                user["348"],
+                                user["349"],
+                                user["357"],
+                                user["358"],
+                                user["359"],
+                                user["367"],
+                                user["368"],
+                                user["369"],
+                                user["taokeys"],
+                                user["frota"],
+                                user["promotores"],
+                                user["comissao"],
+                                user["distribuidores"],
+                                user["pas"],
+                                user["propaganda"]]);
+        
+                                    }                  
+                                })
+                        .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
+                          
+                    }
+                    else if(qnt > 0 && userx.taokeys < qnt*57600){
+                        socket.emit('operacao-negada', 'falta caixa')
+                    }
+                    else{socket.emit('operacao-negada', 'apenas valores positivos')}
+                    
+                
+             
+            }
+                else{
+                    socket.emit('acesso-negado')
+                }
+            })
+            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
+    })
+    socket.on('diminuir-promotores', (dados) => {
+        let qnt = Number(dados)
+        Aluno.findOne({sockid: socket.id})
+            .then((userx) => {
+                if(userx !== null){
+                        if(qnt > 0){
+                            let novaf = userx['promotores'] - qnt
+                            userx.set('promotores', novaf) 
+                            userx.save()
+                                .then(() => Aluno.findOne({ _id: userx._id}))                 
+                                .then((user) => {
+                                    if(user.taokeys == userx.taokeys){
+                                        socket.emit('update', [user["147"],
+                                user["148"],
+                                user["149"],
+                                user["157"],
+                                user["158"],
+                                user["159"],
+                                user["257"],
+                                user["258"],
+                                user["259"],
+                                user["267"],
+                                user["268"],
+                                user["269"],
+                                user["347"],
+                                user["348"],
+                                user["349"],
+                                user["357"],
+                                user["358"],
+                                user["359"],
+                                user["367"],
+                                user["368"],
+                                user["369"],
+                                user["taokeys"],
+                                user["frota"],
+                                user["promotores"],
+                                user["comissao"],
+                                user["distribuidores"],
+                                user["pas"],
+                                user["propaganda"]]);
+        
+                                    }                  
+                                })
+                        .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
+                          
+                    }
+                    else if(qnt > 0 && userx.taokeys < qnt*57600){
+                        socket.emit('operacao-negada', 'falta caixa')
+                    }
+                    else{socket.emit('operacao-negada', 'apenas valores positivos')}
+                    
+                
+             
+            }
+                else{
+                    socket.emit('acesso-negado')
+                }
+            })
+            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
+    })
+    socket.on('aumentar-distribuidores', (dados) => {
+        let qnt = Number(dados)
+        Aluno.findOne({sockid: socket.id})
+            .then((userx) => {
+                if(userx !== null){
+                        if(qnt > 0){
+                            let novaf = userx['distribuidores'] + qnt
+                            userx.set('distribuidores', novaf) 
+                            userx.save()
+                                .then(() => Aluno.findOne({ _id: userx._id}))                 
+                                .then((user) => {
+                                    if(user.taokeys == userx.taokeys){
+                                        socket.emit('update', [user["147"],
+                                user["148"],
+                                user["149"],
+                                user["157"],
+                                user["158"],
+                                user["159"],
+                                user["257"],
+                                user["258"],
+                                user["259"],
+                                user["267"],
+                                user["268"],
+                                user["269"],
+                                user["347"],
+                                user["348"],
+                                user["349"],
+                                user["357"],
+                                user["358"],
+                                user["359"],
+                                user["367"],
+                                user["368"],
+                                user["369"],
+                                user["taokeys"],
+                                user["frota"],
+                                user["promotores"],
+                                user["comissao"],
+                                user["distribuidores"],
+                                user["pas"],
+                                user["propaganda"]]);
+        
+                                    }                  
+                                })
+                        .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
+                          
+                    }
+                    else if(qnt > 0 && userx.taokeys < qnt*57600){
+                        socket.emit('operacao-negada', 'falta caixa')
+                    }
+                    else{socket.emit('operacao-negada', 'apenas valores positivos')}
+                    
+                
+             
+            }
+                else{
+                    socket.emit('acesso-negado')
+                }
+            })
+            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
+    })
+    socket.on('diminuir-distribuidores', (dados) => {
+        let qnt = Number(dados)
+        Aluno.findOne({sockid: socket.id})
+            .then((userx) => {
+                if(userx !== null){
+                        if(qnt > 0){
+                            let novaf = userx['distribuidores'] - qnt
+                            userx.set('distribuidores', novaf) 
+                            userx.save()
+                                .then(() => Aluno.findOne({ _id: userx._id}))                 
+                                .then((user) => {
+                                    if(user.taokeys == userx.taokeys){
+                                        socket.emit('update', [user["147"],
+                                user["148"],
+                                user["149"],
+                                user["157"],
+                                user["158"],
+                                user["159"],
+                                user["257"],
+                                user["258"],
+                                user["259"],
+                                user["267"],
+                                user["268"],
+                                user["269"],
+                                user["347"],
+                                user["348"],
+                                user["349"],
+                                user["357"],
+                                user["358"],
+                                user["359"],
+                                user["367"],
+                                user["368"],
+                                user["369"],
+                                user["taokeys"],
+                                user["frota"],
+                                user["promotores"],
+                                user["comissao"],
+                                user["distribuidores"],
+                                user["pas"],
+                                user["propaganda"]]);
+        
+                                    }                  
+                                })
+                        .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
+                          
+                    }
+                    else{socket.emit('operacao-negada', 'apenas valores positivos')}
+                    
+                
+             
+            }
+                else{
+                    socket.emit('acesso-negado')
+                }
+            })
+            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
+    })
+    socket.on('diminuir-pas', (dados) => {
+        let qnt = Number(dados)
+        Aluno.findOne({sockid: socket.id})
+            .then((userx) => {
+                if(userx !== null){
+                        if(qnt > 0){
+                            let novaf = userx['pas'] - qnt
+                            userx.set('pas', novaf) 
+                            userx.save()
+                                .then(() => Aluno.findOne({ _id: userx._id}))                 
+                                .then((user) => {
+                                    if(user.taokeys == userx.taokeys){
+                                        socket.emit('update', [user["147"],
+                                user["148"],
+                                user["149"],
+                                user["157"],
+                                user["158"],
+                                user["159"],
+                                user["257"],
+                                user["258"],
+                                user["259"],
+                                user["267"],
+                                user["268"],
+                                user["269"],
+                                user["347"],
+                                user["348"],
+                                user["349"],
+                                user["357"],
+                                user["358"],
+                                user["359"],
+                                user["367"],
+                                user["368"],
+                                user["369"],
+                                user["taokeys"],
+                                user["frota"],
+                                user["promotores"],
+                                user["comissao"],
+                                user["distribuidores"],
+                                user["pas"],
+                                user["propaganda"]]);
+        
+                                    }                  
+                                })
+                        .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
+                          
+                    }
+                    else{socket.emit('operacao-negada', 'apenas valores positivos')}
+                    
+                
+             
+            }
+                else{
+                    socket.emit('acesso-negado')
+                }
+            })
+            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
+    })
+    socket.on('aumentar-pas', (dados) => {
+        let qnt = Number(dados)
+        Aluno.findOne({sockid: socket.id})
+            .then((userx) => {
+                if(userx !== null){
+                        if(qnt > 0){
+                            let novaf = userx['pas2'] + qnt
+                            userx.set('pas2', novaf) 
+                            userx.save()
+                                .then(() => Aluno.findOne({ _id: userx._id}))                 
+                                .then((user) => {
+                                    if(user.taokeys == userx.taokeys){
+                                        socket.emit('update', [user["147"],
+                                user["148"],
+                                user["149"],
+                                user["157"],
+                                user["158"],
+                                user["159"],
+                                user["257"],
+                                user["258"],
+                                user["259"],
+                                user["267"],
+                                user["268"],
+                                user["269"],
+                                user["347"],
+                                user["348"],
+                                user["349"],
+                                user["357"],
+                                user["358"],
+                                user["359"],
+                                user["367"],
+                                user["368"],
+                                user["369"],
+                                user["taokeys"],
+                                user["frota"],
+                                user["promotores"],
+                                user["comissao"],
+                                user["distribuidores"],
+                                user["pas"],
+                                user["propaganda"]]);
+        
+                                    }                  
+                                })
+                        .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
+                          
+                    }
+                    else{socket.emit('operacao-negada', 'apenas valores positivos')}
+                    
+                
+             
+            }
+                else{
+                    socket.emit('acesso-negado')
+                }
+            })
+            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
+    })
+    socket.on('aumentar-propaganda', (dados) => {
+        let qnt = Number(dados)
+        Aluno.findOne({sockid: socket.id})
+            .then((userx) => {
+                if(userx !== null){
+                        if(qnt > 0 && userx.taokeys >= qnt){
+                            let novaf = userx['propaganda'] + qnt
+                            userx.taokeys = userx.taokeys - qnt
+                            userx.set('propaganda', novaf) 
+                            userx.save()
+                                .then(() => Aluno.findOne({ _id: userx._id}))                 
+                                .then((user) => {
+                                    if(user.taokeys == userx.taokeys){
+                                        socket.emit('update', [user["147"],
+                                user["148"],
+                                user["149"],
+                                user["157"],
+                                user["158"],
+                                user["159"],
+                                user["257"],
+                                user["258"],
+                                user["259"],
+                                user["267"],
+                                user["268"],
+                                user["269"],
+                                user["347"],
+                                user["348"],
+                                user["349"],
+                                user["357"],
+                                user["358"],
+                                user["359"],
+                                user["367"],
+                                user["368"],
+                                user["369"],
+                                user["taokeys"],
+                                user["frota"],
+                                user["promotores"],
+                                user["comissao"],
+                                user["distribuidores"],
+                                user["pas"],
+                                user["propaganda"]]);
+        
+                                    }                  
+                                })
+                        .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
+                          
+                    }
+                    else{socket.emit('operacao-negada', 'apenas valores positivos')}
+                    
+                
+             
+            }
+                else{
+                    socket.emit('acesso-negado')
+                }
+            })
+            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
+    })
+    socket.on('diminuir-pas', (dados) => {
+        let qnt = Number(dados)
+        Aluno.findOne({sockid: socket.id})
+            .then((userx) => {
+                if(userx !== null){
+                        if(qnt > 0){
+                            let novaf = userx['pas'] - qnt
+                            userx.set('pas', novaf) 
+                            userx.save()
+                                .then(() => Aluno.findOne({ _id: userx._id}))                 
+                                .then((user) => {
+                                    if(user.taokeys == userx.taokeys){
+                                        socket.emit('update', [user["147"],
+                                user["148"],
+                                user["149"],
+                                user["157"],
+                                user["158"],
+                                user["159"],
+                                user["257"],
+                                user["258"],
+                                user["259"],
+                                user["267"],
+                                user["268"],
+                                user["269"],
+                                user["347"],
+                                user["348"],
+                                user["349"],
+                                user["357"],
+                                user["358"],
+                                user["359"],
+                                user["367"],
+                                user["368"],
+                                user["369"],
+                                user["taokeys"],
+                                user["frota"],
+                                user["promotores"],
+                                user["comissao"],
+                                user["distribuidores"],
+                                user["pas"],
+                                user["propaganda"]]);
+        
+                                    }                  
+                                })
+                        .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
+                          
+                    }
+                    else{socket.emit('operacao-negada', 'apenas valores positivos')}
+                    
+                
+             
+            }
+                else{
+                    socket.emit('acesso-negado')
+                }
+            })
+            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
+    })
+    socket.on('checar-pas', () => {
+        Aluno.findOne({sockid: socket.id})
+            .then((userx) => {
+                if(userx !== null){
+                    let resp = [userx['pas1'], userx['pas2']]
+                    socket.emit('resp-checar-pas', resp)  
+            }
+                else{
+                    socket.emit('acesso-negado')
+                }
+            })
+            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
+    })
+    socket.on('comissao', (dados) => {
+        let qnt = Number(dados)
+        Aluno.findOne({sockid: socket.id})
+            .then((userx) => {
+                if(userx !== null){
+                        if(qnt > 0 && qnt <= 1){
+                            userx.set('comissao', qnt) 
+                            userx.save()
+                                .then(() => Aluno.findOne({ _id: userx._id}))                 
+                                .then((user) => {
+                                    if(user.taokeys == userx.taokeys){
+                                        socket.emit('update', [user["147"],
+                                user["148"],
+                                user["149"],
+                                user["157"],
+                                user["158"],
+                                user["159"],
+                                user["257"],
+                                user["258"],
+                                user["259"],
+                                user["267"],
+                                user["268"],
+                                user["269"],
+                                user["347"],
+                                user["348"],
+                                user["349"],
+                                user["357"],
+                                user["358"],
+                                user["359"],
+                                user["367"],
+                                user["368"],
+                                user["369"],
+                                user["taokeys"],
+                                user["frota"],
+                                user["promotores"],
+                                user["comissao"],
+                                user["distribuidores"],
+                                user["pas"],
+                                user["propaganda"]]);
+        
+                                    }                  
+                                })
+                        .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
+                          
+                    }
+                    else{socket.emit('operacao-negada', 'apenas valores entra 0 e 1')}
+                    
+                
+             
+            }
+                else{
+                    socket.emit('acesso-negado')
+                }
+            })
+            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
+    })
     socket.on('desfazer-encerramento', (tipo) => {
         Aluno.findOne({sockid: socket.id})
             .then((userx) => {
@@ -247,7 +985,8 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 user["promotores"],
                                 user["comissao"],
                                 user["distribuidores"],
-                                user["pas"]]);
+                                user["pas"],
+                                user["propaganda"]]);
         
                                     }
                                     else{socket.emit('operacao-negada', 'falha ao atunteticar operacao')}                  
@@ -316,7 +1055,8 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                         user["promotores"],
                                         user["comissao"],
                                         user["distribuidores"],
-                                        user["pas"]]);
+                                        user["pas"],
+                                        user["propaganda"]]);
                 
                                             }                  
                                         })
@@ -390,7 +1130,8 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                 user["promotores"],
                 user["comissao"],
                 user["distribuidores"],
-                user["pas"]]);
+                user["pas"],
+                user["propaganda"]]);
                 socket.emit('resposta-pesquisar-pas');// <==== sistema de cobranca funcional falta apenas entregar o pacote solicitado
                                             }                  
                                         })
@@ -412,8 +1153,6 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
             .catch(() => { console.log('falha na comunicacao com o banco de dados para o ' +socket.id)
     })
     })
-
-
     socket.on('alterar-porcetagem-comissao', () => { //continuar essa logica dentro do sockets.on('connection', ...) para outros comandos! como um comando do admin-client mudando uma variavel ou um client normal querendo mandar alguma informacao para o server
         Aluno.findOne({sockid: socket.id})
             .then((ll) => {console.log(ll['147'])}) //'se o player ja estiver conectado esse ll sera o Schema dele, pronto para ser tratado'
@@ -456,7 +1195,6 @@ socketsadm.on('connection', (socket) => { //conversa do server com o client do A
     })
     let demanda = 100 //n eh um valor fixo kkk
     socket.on('finalizar-turno', () => {
-        console.log('foii')
         Aluno.find({ativo: 1})
             .then((users) => {
                 let soma = 0;
@@ -464,10 +1202,12 @@ socketsadm.on('connection', (socket) => { //conversa do server com o client do A
                 let soma2 = 0;
                 let soma3 = 0;
                 let scorex = 0;
-                let scorey = 0;
+                let scorey1 = 0;
+                let scorey2 = 0;
                 let scorep = 0;
                 //let soma4 = 0
                 let soma5 = 0
+                let soma6 = 0
                 for(let i = 0; i < users.length; i++){
                     soma = soma + users[i]['distribuidores']
                     soma1 = soma1 + users[i]['pas']
@@ -475,10 +1215,14 @@ socketsadm.on('connection', (socket) => { //conversa do server com o client do A
                     soma3 = soma3 + users[i]['comissao']
                     //soma4 = soma4 + users[i]['distribuidores']
                     soma5 = soma5 + users[i]['propaganda']
+                    soma6 = soma6 + users[i]['propagandauni']
 
 
 
                     // <><><>
+                function modo_de_rateio_propaganda_por_servico_score(params) {
+                    
+                
                     if(users[i]['147'][3] > 0){
                         let c = 0;
                         for(let k = 0; k < users.length; k++){
@@ -628,80 +1372,102 @@ socketsadm.on('connection', (socket) => { //conversa do server com o client do A
                         }
                         users[i]['scorepro'] = users[i]['scorepro'] + users[i]['369'][3]/c
                     }
-
+                }
 
                     // <><><>
                 
 
 
                     //
-
-                    if(users[i]['147'][0] > 0){
-                        users[i]['scorepreco'] = users[i]['scorepreco'] + users[i]['147'][2]*users[i]['147'][0] //insumos vezes preco unico
+                function modo_alternativo_para_rateio_preco(params) {
+                    
+                
+                    if(users[i]['147'][4] > 0){
+                        users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['147'][4] //insumos vezes preco unico
+                        users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['147'][4]*users[i]['147'][3]
+                      }
+                    if(users[i]['159'][4] > 0){
+                        users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['159'][4]
+                        users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['159'][4]*users[i]['159'][3]
            
                       }
-                    if(users[i]['159'][0] > 0){
-                        users[i]['scorepreco'] = users[i]['scorepreco'] + users[i]['159'][2]*users[i]['159'][0]
-           
-                      }
-                    if(users[i]['149'][0] > 0){
-                        users[i]['scorepreco'] = users[i]['scorepreco'] + users[i]['149'][2]*users[i]['149'][0]          
+                    if(users[i]['149'][4] > 0){
+                        users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['149'][4]
+                        users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['149'][4]*users[i]['149'][3]          
                             }
-                    if(users[i]['148'][0] > 0){
-                        users[i]['scorepreco'] = users[i]['scorepreco'] + users[i]['148'][2]*users[i]['148'][0]            
+                    if(users[i]['148'][4] > 0){
+                        users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['148'][4]
+                        users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['148'][4]*users[i]['148'][3]            
                             }
-                    if(users[i]['158'][0] > 0){
-                        users[i]['scorepreco'] = users[i]['scorepreco'] + users[i]['158'][2]*users[i]['158'][0]        
+                    if(users[i]['158'][4] > 0){
+                        users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['158'][4]
+                        users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['158'][4]*users[i]['158'][3]        
                             }
-                    if(users[i]['157'][0] > 0){
-                        users[i]['scorepreco'] = users[i]['scorepreco'] + users[i]['157'][2]*users[i]['157'][0]            
+                    if(users[i]['157'][4] > 0){
+                        users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['157'][4]
+                        users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['157'][4]*users[i]['157'][3]            
                             }
-                    if(users[i]['257'][0] > 0){
-                        users[i]['scorepreco'] = users[i]['scorepreco'] + users[i]['257'][2]*users[i]['257'][0]         
+                    if(users[i]['257'][4] > 0){
+                        users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['257'][4]
+                        users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['257'][4]*users[i]['257'][3]         
                     }
-                    if(users[i]['258'][0] > 0){
-                        users[i]['scorepreco'] = users[i]['scorepreco'] + users[i]['258'][2]*users[i]['258'][0]        
+                    if(users[i]['258'][4] > 0){
+                        users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['258'][4]
+                        users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['258'][4]*users[i]['258'][3]        
                     }
-                    if(users[i]['259'][0] > 0){
-                        users[i]['scorepreco'] = users[i]['scorepreco'] + users[i]['259'][2]*users[i]['259'][0]          
+                    if(users[i]['259'][4] > 0){
+                        users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['259'][4]
+                        users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['259'][4]*users[i]['259'][3]          
                     }
-                    if(users[i]['267'][0] > 0){
-                        users[i]['scorepreco'] = users[i]['scorepreco'] + users[i]['267'][2]*users[i]['267'][0]          
+                    if(users[i]['267'][4] > 0){
+                        users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['267'][4]
+                        users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['267'][4]*users[i]['267'][3]          
                     }
-                    if(users[i]['268'][0] > 0){
-                        users[i]['scorepreco'] = users[i]['scorepreco'] + users[i]['268'][2]*users[i]['268'][0]           
+                    if(users[i]['268'][4] > 0){
+                        users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['268'][4]
+                        users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['268'][4]*users[i]['268'][3]           
                     }
-                    if(users[i]['269'][0] > 0){
-                        users[i]['scorepreco'] = users[i]['scorepreco'] + users[i]['269'][2]*users[i]['269'][0]          
+                    if(users[i]['269'][4] > 0){
+                        users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['269'][4]
+                        users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['269'][4]*users[i]['269'][3]          
                     }
-                    if(users[i]['347'][0] > 0){
-                        users[i]['scorepreco'] = users[i]['scorepreco'] + users[i]['347'][2]*users[i]['347'][0]           
+                    if(users[i]['347'][4] > 0){
+                        users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['347'][4]
+                        users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['347'][4]*users[i]['347'][3]           
                     }
-                    if(users[i]['348'][0] > 0){
-                        users[i]['scorepreco'] = users[i]['scorepreco'] + users[i]['348'][2]*users[i]['348'][0]            
+                    if(users[i]['348'][4] > 0){
+                        users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['348'][4]
+                        users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['348'][4]*users[i]['348'][3]            
                     }
-                    if(users[i]['349'][0] > 0){
-                        users[i]['scorepreco'] = users[i]['scorepreco'] + users[i]['349'][2]*users[i]['349'][0]           
+                    if(users[i]['349'][4] > 0){
+                        users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['349'][4]
+                        users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['349'][4]*users[i]['349'][3]           
                     }
-                    if(users[i]['357'][0] > 0){
-                        users[i]['scorepreco'] = users[i]['scorepreco'] + users[i]['357'][2]*users[i]['357'][0]          
+                    if(users[i]['357'][4] > 0){
+                        users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['357'][4]
+                        users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['357'][4]*users[i]['357'][3]          
                     }
-                    if(users[i]['358'][0] > 0){
-                        users[i]['scorepreco'] = users[i]['scorepreco'] + users[i]['358'][2]*users[i]['358'][0]          
+                    if(users[i]['358'][4] > 0){
+                        users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['358'][4]
+                        users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['358'][4]*users[i]['358'][3]          
                     }
-                    if(users[i]['359'][0] > 0){
-                        users[i]['scorepreco'] = users[i]['scorepreco'] + users[i]['359'][2]*users[i]['359'][0]          
+                    if(users[i]['359'][4] > 0){
+                        users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['359'][4]
+                        users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['359'][4]*users[i]['359'][3]          
                     }
-                    if(users[i]['367'][0] > 0){
-                        users[i]['scorepreco'] = users[i]['scorepreco'] + users[i]['367'][2]*users[i]['367'][0]         
+                    if(users[i]['367'][4] > 0){
+                        users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['367'][4]
+                        users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['367'][4]*users[i]['367'][3]         
                     }
-                    if(users[i]['368'][0] > 0){
-                        users[i]['scorepreco'] = users[i]['scorepreco'] + users[i]['368'][2]*users[i]['368'][0]           
+                    if(users[i]['368'][4] > 0){
+                        users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['368'][4]
+                        users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['368'][4]*users[i]['368'][3]           
                     }
-                    if(users[i]['369'][0] > 0){
-                        users[i]['scorepreco'] = users[i]['scorepreco'] + users[i]['369'][2]*users[i]['369'][0]      
+                    if(users[i]['369'][4] > 0){
+                        users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['369'][4]
+                        users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['369'][4]*users[i]['369'][3]      
                     } ////
-
+                }
 
 
 
@@ -780,15 +1546,21 @@ socketsadm.on('connection', (socket) => { //conversa do server com o client do A
                 }
                 for(let i = 0; i < users.length; i++){
                     scorex = scorex + users[i]['scoremod']
-                    scorey = scorey + users[i]['scorepreco']
-                    scorep = scorep + users[i]['scorepro']
+                    scorey1 = scorey1 + users[i]['scorepreco'][0]
+                    scorey2 = scorey2 + users[i]['scorepreco'][1]
+                    //scorep = scorep + users[i]['scorepro']
+                }
+                let preco_medio = scorey2/scorey1; //continuar daqui o rateio do faturamento pelo preco unitario usando esse preco medio global
+                let dist = 0;
+                for(let i = 0; i < users.length; i++){
+                    dist = dist + preco_medio - users[i]['scorepreco'][1]/users[i]['scorepreco'][0]
                 }
                 for(let i = 0; i < users.length; i++){
 
-                     users[i]['faturamento'] = 0.09*demanda*users[i]['distribuidores']/soma + 0.09*demanda*users[i]['pas']/soma1 + 0.07*demanda*users[i]['promotores']/soma2 + 0.09*demanda*users[i]['comissao']/soma3 + 0.1*demanda*users[i]['propaganda']/soma5 + 0.12*demanda*users[i]['scoremod']/scorex + 0.3*demanda*users[i]['scorepreco']/scorey + 0.10*demanda*users[i]['scorepro']/scorep
+                     users[i]['faturamento'] = 0.09*demanda*users[i]['distribuidores']/soma + 0.09*demanda*users[i]['pas']/soma1 + 0.07*demanda*users[i]['promotores']/soma2 + 0.09*demanda*users[i]['comissao']/soma3 + 0.1*demanda*users[i]['propaganda']/soma5 + 0.12*demanda*users[i]['scoremod']/scorex + 0.3 + 0.10*demanda*users[i]['propagandauni']/soma6
                      
-                     console.log("Parcela de mercado adquirida para o player (" + users[i]['cooperativa'] + ')   -dsitribuidores (max 0.09)-> ' +0.09*users[i]['distribuidores']/soma + ' -pas (max 0.09)->  ' + 0.09*users[i]['pas']/soma1 + ' -promotores (max 0.07)-> ' + 0.07*users[i]['promotores']/soma2 + ' -comissao (max 0.09)-> ' + 0.09*users[i]['comissao']/soma3 + ' -propaganda (max 0.10)-> ' + 0.1*users[i]['propaganda']/soma5 + ' -modelos_de_servicos (max 0.12)-> ' + 0.12*users[i]['scoremod']/scorex + ' -precos_unitario (max 0.30)-> ' + 0.3*users[i]['scorepreco']/scorey + ' -propaganda_unitaria (max 0.10)-> ' + 0.1*users[i]['scorepro']/scorep)
-                     console.log(0.09*users[i]['distribuidores']/soma + 0.09*users[i]['pas']/soma1 + 0.07*users[i]['promotores']/soma2 + 0.09*users[i]['comissao']/soma3 + 0.1*users[i]['propaganda']/soma5 + 0.12*users[i]['scoremod']/scorex + 0.3*users[i]['scorepreco']/scorey + 0.10*users[i]['scorepro']/scorep)
+                     console.log("Parcela de mercado adquirida para o player (" + users[i]['cooperativa'] + ')   -dsitribuidores (max 0.09)-> ' +0.09*users[i]['distribuidores']/soma + ' -pas (max 0.09)->  ' + 0.09*users[i]['pas']/soma1 + ' -promotores (max 0.07)-> ' + 0.07*users[i]['promotores']/soma2 + ' -comissao (max 0.09)-> ' + 0.09*users[i]['comissao']/soma3 + ' -propaganda (max 0.10)-> ' + 0.1*users[i]['propaganda']/soma5 + ' -modelos_de_servicos (max 0.12)-> ' + 0.12*users[i]['scoremod']/scorex + ' -precos_unitario (max 0.30)-> ' + 0.3 + ' -propaganda_unitaria (max 0.10)-> ' + 0.1*users[i]['propagandauni']/soma6)
+                     console.log(0.09*users[i]['distribuidores']/soma + 0.09*users[i]['pas']/soma1 + 0.07*users[i]['promotores']/soma2 + 0.09*users[i]['comissao']/soma3 + 0.1*users[i]['propaganda']/soma5 + 0.12*users[i]['scoremod']/scorex + 0.3 + 0.10*users[i]['propagandauni']/soma6)
                     }
                 for(let i = 0; i < users.length; i++){
                     
@@ -954,7 +1726,7 @@ serveradm.listen(5000, () => {
 //INTERACAO COM O BANCO DE DAOS \/
 
 
-        let jogador = new Aluno({ sockid: 123456, scorepro: 0, scoremod: 0, scorepreco: 0, propaganda: 220, faturamento: 0, ativo: 1, taokeys: 18720000, comissao: 0.25, frota: 10, cooperativa: '3irmas', pas: 32, distribuidores: 420, promotores: 300, senha: '666', 
+        let jogador = new Aluno({ sockid: 123456, scorepro: 0, scoremod: 0, scorepreco: [0,0], propaganda: 220, propagandauni: 300, faturamento: 0, ativo: 1, taokeys: 18720000, comissao: 0.25, frota: [10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], cooperativa: '3irmas', pas: 32, pas1:0, pas2:0, distribuidores: 420, promotores: 300, senha: '666', 
         147:[100,1,288,600,300],
         159:[0,0,396,600,320],
         149:[0,0,360,600,320],
