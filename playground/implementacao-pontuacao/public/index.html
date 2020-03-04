@@ -560,6 +560,10 @@
         
             const socket = io()
             socket.on('connect', () => {
+                function check_turno() {
+                    socket.emit('check-turno')
+                }
+                setTimeout(check_turno, 3000)
                 const playerId = socket.id
                 // console.log(`Player connected on Client with id: ${playerId}`)
                 // console.log('socket', socket)
@@ -589,11 +593,8 @@
                 console.log(dados)
             })
             function send() {
-        alert('Operacao Negada')
-    }
-            socket.on('setup', (state) => {
-                
-            })
+                alert('Operacao Negada')
+            }
             socket.on('login-negado', (cre) => {
                 alert('login negado para tentativa de conexao com '+cre)
             })
@@ -632,35 +633,6 @@
 
             }
 
-            socket.on('add-player', (command) => { //ouvindo esse comando o frontend vai rodar addPlayer(command) em tds os clients conectados
-                // console.log(`Receiving ${command.type} -> ${command.playerId}`)
-                
-            })
-
-            socket.on('remove-player', (command) => {
-                // console.log(`Receiving ${command.type} -> ${command.playerId}`)
-                game.removePlayer(command)
-            })
-
-            socket.on('move-player', (command) => {
-                // console.log(`Receiving ${command.type} -> ${command.playerId}`)
-
-                const playerId = socket.id
-
-                if (playerId !== command.playerId) {
-                    game.movePlayer(command)
-                }
-            })
-
-            socket.on('add-fruit', (command) => {
-                // console.log(`Receiving ${command.type} -> ${command.fruitId}`)
-                game.addFruit(command)
-            })
-
-            socket.on('remove-fruit', (command) => {
-                // console.log(`Receiving ${command.type} -> ${command.fruitId}`)
-                game.removeFruit(command)
-            })
         </script>
     </body>
 </html>

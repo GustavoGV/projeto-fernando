@@ -1003,10 +1003,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
-    }
-
-
-    )
+    })
     socket.on('comprar-servico', (dados) => {
         let tipo = dados[0];
         let qnti = dados[1];
@@ -1153,12 +1150,62 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
             .catch(() => { console.log('falha na comunicacao com o banco de dados para o ' +socket.id)
     })
     })
-    socket.on('alterar-porcetagem-comissao', () => { //continuar essa logica dentro do sockets.on('connection', ...) para outros comandos! como um comando do admin-client mudando uma variavel ou um client normal querendo mandar alguma informacao para o server
+    socket.on('check-turno', () => {
         Aluno.findOne({sockid: socket.id})
-            .then((ll) => {console.log(ll['147'])}) //'se o player ja estiver conectado esse ll sera o Schema dele, pronto para ser tratado'
-            .then(() => console.log('meuu'))
-            .catch(() => {socket.emit('acesso-negado')}) //cai aqui se ll['147'] n conseguir ser lido, logo qnd o usuario n esta logado
-        })  
+            .then((userx) => {
+                if(userx !== null){
+                        if(userx['faturamento' > 0]){
+                            userx.set('comissao', qnt) 
+                            userx.save()
+                                .then(() => Aluno.findOne({ _id: userx._id}))                 
+                                .then((user) => {
+                                    if(user.taokeys == userx.taokeys){
+                                        socket.emit('update', [user["147"],
+                                user["148"],
+                                user["149"],
+                                user["157"],
+                                user["158"],
+                                user["159"],
+                                user["257"],
+                                user["258"],
+                                user["259"],
+                                user["267"],
+                                user["268"],
+                                user["269"],
+                                user["347"],
+                                user["348"],
+                                user["349"],
+                                user["357"],
+                                user["358"],
+                                user["359"],
+                                user["367"],
+                                user["368"],
+                                user["369"],
+                                user["taokeys"],
+                                user["frota"],
+                                user["promotores"],
+                                user["comissao"],
+                                user["distribuidores"],
+                                user["pas"],
+                                user["propaganda"]]);
+        
+                                    }                  
+                                })
+                        .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
+                          
+                    }
+                    else{console.log('turno ainda n finalizado')}
+                    
+                
+             
+            }
+                else{
+                    socket.emit('acesso-negado')
+                }
+            })
+            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
+    })
+
 })
 
 
@@ -1193,7 +1240,7 @@ socketsadm.on('connection', (socket) => { //conversa do server com o client do A
         }
         
     })
-    let demanda = 100 //n eh um valor fixo kkk
+    let demanda = 50000 //n eh um valor fixo kkk
     socket.on('finalizar-turno', () => {
         Aluno.find({ativo: 1})
             .then((users) => {
@@ -1379,95 +1426,95 @@ socketsadm.on('connection', (socket) => { //conversa do server com o client do A
 
 
                     //
-                function modo_alternativo_para_rateio_preco(params) {
+                
                     
                 
-                    if(users[i]['147'][4] > 0){
+                    if(users[i]['147'][4] > 0 && users[i]['147'][1] == 1){
                         users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['147'][4] //insumos vezes preco unico
                         users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['147'][4]*users[i]['147'][3]
                       }
-                    if(users[i]['159'][4] > 0){
+                    if(users[i]['159'][4] > 0 && users[i]['159'][1] == 1){
                         users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['159'][4]
                         users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['159'][4]*users[i]['159'][3]
            
                       }
-                    if(users[i]['149'][4] > 0){
+                    if(users[i]['149'][4] > 0 && users[i]['149'][1] == 1){
                         users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['149'][4]
                         users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['149'][4]*users[i]['149'][3]          
                             }
-                    if(users[i]['148'][4] > 0){
+                    if(users[i]['148'][4] > 0 && users[i]['148'][1] == 1){
                         users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['148'][4]
                         users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['148'][4]*users[i]['148'][3]            
                             }
-                    if(users[i]['158'][4] > 0){
+                    if(users[i]['158'][4] > 0 && users[i]['158'][1] == 1){
                         users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['158'][4]
                         users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['158'][4]*users[i]['158'][3]        
                             }
-                    if(users[i]['157'][4] > 0){
+                    if(users[i]['157'][4] > 0 && users[i]['157'][1] == 1){
                         users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['157'][4]
                         users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['157'][4]*users[i]['157'][3]            
                             }
-                    if(users[i]['257'][4] > 0){
+                    if(users[i]['257'][4] > 0 && users[i]['257'][1] == 1){
                         users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['257'][4]
                         users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['257'][4]*users[i]['257'][3]         
                     }
-                    if(users[i]['258'][4] > 0){
+                    if(users[i]['258'][4] > 0 && users[i]['258'][1] == 1){
                         users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['258'][4]
                         users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['258'][4]*users[i]['258'][3]        
                     }
-                    if(users[i]['259'][4] > 0){
+                    if(users[i]['259'][4] > 0 && users[i]['259'][1] == 1){
                         users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['259'][4]
                         users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['259'][4]*users[i]['259'][3]          
                     }
-                    if(users[i]['267'][4] > 0){
+                    if(users[i]['267'][4] > 0 && users[i]['267'][1] == 1){
                         users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['267'][4]
                         users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['267'][4]*users[i]['267'][3]          
                     }
-                    if(users[i]['268'][4] > 0){
+                    if(users[i]['268'][4] > 0 && users[i]['268'][1] == 1){
                         users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['268'][4]
                         users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['268'][4]*users[i]['268'][3]           
                     }
-                    if(users[i]['269'][4] > 0){
+                    if(users[i]['269'][4] > 0 && users[i]['269'][1] == 1){
                         users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['269'][4]
                         users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['269'][4]*users[i]['269'][3]          
                     }
-                    if(users[i]['347'][4] > 0){
+                    if(users[i]['347'][4] > 0 && users[i]['347'][1] == 1){
                         users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['347'][4]
                         users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['347'][4]*users[i]['347'][3]           
                     }
-                    if(users[i]['348'][4] > 0){
+                    if(users[i]['348'][4] > 0 && users[i]['348'][1] == 1){
                         users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['348'][4]
                         users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['348'][4]*users[i]['348'][3]            
                     }
-                    if(users[i]['349'][4] > 0){
+                    if(users[i]['349'][4] > 0 && users[i]['349'][1] == 1){
                         users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['349'][4]
                         users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['349'][4]*users[i]['349'][3]           
                     }
-                    if(users[i]['357'][4] > 0){
+                    if(users[i]['357'][4] > 0 && users[i]['357'][1] == 1){
                         users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['357'][4]
                         users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['357'][4]*users[i]['357'][3]          
                     }
-                    if(users[i]['358'][4] > 0){
+                    if(users[i]['358'][4] > 0 && users[i]['358'][1] == 1){
                         users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['358'][4]
                         users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['358'][4]*users[i]['358'][3]          
                     }
-                    if(users[i]['359'][4] > 0){
+                    if(users[i]['359'][4] > 0 && users[i]['359'][1] == 1){
                         users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['359'][4]
                         users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['359'][4]*users[i]['359'][3]          
                     }
-                    if(users[i]['367'][4] > 0){
+                    if(users[i]['367'][4] > 0 && users[i]['367'][1] == 1){
                         users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['367'][4]
                         users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['367'][4]*users[i]['367'][3]         
                     }
-                    if(users[i]['368'][4] > 0){
+                    if(users[i]['368'][4] > 0 && users[i]['368'][1] == 1){
                         users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['368'][4]
                         users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['368'][4]*users[i]['368'][3]           
                     }
-                    if(users[i]['369'][4] > 0){
+                    if(users[i]['369'][4] > 0 && users[i]['369'][1] == 1){
                         users[i]['scorepreco'][0] = users[i]['scorepreco'][0] + users[i]['369'][4]
                         users[i]['scorepreco'][1] = users[i]['scorepreco'][1] + users[i]['369'][4]*users[i]['369'][3]      
                     } ////
-                }
+                
 
 
 
@@ -1550,17 +1597,19 @@ socketsadm.on('connection', (socket) => { //conversa do server com o client do A
                     scorey2 = scorey2 + users[i]['scorepreco'][1]
                     //scorep = scorep + users[i]['scorepro']
                 }
+                console.log(scorey1 + ' <-- scorey1 - ' + scorey2 + ' <-- scorey2')
                 let preco_medio = scorey2/scorey1; //continuar daqui o rateio do faturamento pelo preco unitario usando esse preco medio global
                 let dist = 0;
+                console.log(preco_medio + ' <-- preco medio')
                 for(let i = 0; i < users.length; i++){
                     dist = dist + preco_medio - users[i]['scorepreco'][1]/users[i]['scorepreco'][0]
                 }
                 for(let i = 0; i < users.length; i++){
 
-                     users[i]['faturamento'] = 0.09*demanda*users[i]['distribuidores']/soma + 0.09*demanda*users[i]['pas']/soma1 + 0.07*demanda*users[i]['promotores']/soma2 + 0.09*demanda*users[i]['comissao']/soma3 + 0.1*demanda*users[i]['propaganda']/soma5 + 0.12*demanda*users[i]['scoremod']/scorex + 0.3 + 0.10*demanda*users[i]['propagandauni']/soma6
-                     
+                     users[i]['faturamento'] = (0.09*users[i]['distribuidores']/soma + 0.09*users[i]['pas']/soma1 + 0.07*users[i]['promotores']/soma2 + 0.09*users[i]['comissao']/soma3 + 0.1*users[i]['propaganda']/soma5 + 0.12*users[i]['scoremod']/scorex + 0.3 + 0.10*users[i]['propagandauni']/soma6)*demanda
+                     socket.emit()
                      console.log("Parcela de mercado adquirida para o player (" + users[i]['cooperativa'] + ')   -dsitribuidores (max 0.09)-> ' +0.09*users[i]['distribuidores']/soma + ' -pas (max 0.09)->  ' + 0.09*users[i]['pas']/soma1 + ' -promotores (max 0.07)-> ' + 0.07*users[i]['promotores']/soma2 + ' -comissao (max 0.09)-> ' + 0.09*users[i]['comissao']/soma3 + ' -propaganda (max 0.10)-> ' + 0.1*users[i]['propaganda']/soma5 + ' -modelos_de_servicos (max 0.12)-> ' + 0.12*users[i]['scoremod']/scorex + ' -precos_unitario (max 0.30)-> ' + 0.3 + ' -propaganda_unitaria (max 0.10)-> ' + 0.1*users[i]['propagandauni']/soma6)
-                     console.log(0.09*users[i]['distribuidores']/soma + 0.09*users[i]['pas']/soma1 + 0.07*users[i]['promotores']/soma2 + 0.09*users[i]['comissao']/soma3 + 0.1*users[i]['propaganda']/soma5 + 0.12*users[i]['scoremod']/scorex + 0.3 + 0.10*users[i]['propagandauni']/soma6)
+                     console.log((0.09*users[i]['distribuidores']/soma + 0.09*users[i]['pas']/soma1 + 0.07*users[i]['promotores']/soma2 + 0.09*users[i]['comissao']/soma3 + 0.1*users[i]['propaganda']/soma5 + 0.12*users[i]['scoremod']/scorex + 0.3 + 0.10*users[i]['propagandauni']/soma6)*demanda)
                     }
                 for(let i = 0; i < users.length; i++){
                     
