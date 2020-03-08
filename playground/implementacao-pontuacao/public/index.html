@@ -596,10 +596,9 @@
             })
             socket.on('ja-conectado', (idd) => {alert('Voce ja esta conectado ' + idd)})
             socket.on('login-aprovado', (cre) => {
-                function check_turno() {
+                setInterval(() => {
                     socket.emit('check-turno')
-                }
-                setTimeout(check_turno, 2000)
+                }, 2000);
                 alert('login aprovado para ' + cre)
             })
             function eventox() {
