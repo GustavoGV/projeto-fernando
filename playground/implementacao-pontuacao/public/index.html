@@ -596,9 +596,11 @@
             })
             socket.on('ja-conectado', (idd) => {alert('Voce ja esta conectado ' + idd)})
             socket.on('login-aprovado', (cre) => {
+                /* 
                 setInterval(() => {
-                    socket.emit('check-turno')
+                    socket.emit('check-turno') // puxa o state do jogo no banco de dados a cada 2 seg pra qnd o ADM terminar o turno a tela dos clients seream avisadas e o jogadore ter as info reais ps: se encotrar um metodo de conversar as duas conexoes com socket (socket e socketadm) seria mais otimzado mas por outro lado esse loop aqui com o if correrto pode avisar o jogador q o jogo foi pausado por exemplo.
                 }, 2000);
+                */
                 alert('login aprovado para ' + cre)
             })
             function eventox() {
