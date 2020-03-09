@@ -1961,6 +1961,157 @@ socketsadm.on('connection', (socket) => { //conversa do server com o client do A
                         else{users[i].taokeys = users[i].taokeys + users[i]['369'][0]*users[i]['369'][2]*1.2}
                         uso_frota = uso_frota + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['149'][4]
                     }
+                    //
+users[i]['scoremod'] = 0
+if(users[i]['147'][1] == 2){
+    users[i]['147'][1] = 3
+}
+else if(users[i]['147'][1] == 3){
+    users[i]['147'][1] = 0
+
+}
+if(users[i]['159'][1] == 2){
+    users[i]['159'][1] = 3
+}
+else if(users[i]['159'][1] == 3){
+    users[i]['159'][1] = 0
+
+}
+if(users[i]['149'][1] == 2){
+    users[i]['149'][1] = 3
+}
+else if(users[i]['149'][1] == 3){
+    users[i]['149'][1] = 0
+
+}
+if(users[i]['148'][1] == 2){
+    users[i]['148'][1] = 3
+}
+else if(users[i]['148'][1] == 3){
+    users[i]['148'][1] = 0
+
+}
+if(users[i]['158'][1] == 2){
+    users[i]['158'][1] = 3
+}
+else if(users[i]['158'][1] == 3){
+    users[i]['158'][1] = 0
+
+}
+if(users[i]['157'][1] == 2){
+    users[i]['157'][1] = 3
+}
+else if(users[i]['157'][1] == 3){
+    users[i]['157'][1] = 0
+
+}
+if(users[i]['257'][1] == 2){
+    users[i]['257'][1] = 3
+}
+else if(users[i]['257'][1] == 3){
+    users[i]['257'][1] = 0
+
+}
+if(users[i]['258'][1] == 2){
+    users[i]['258'][1] = 3
+}
+else if(users[i]['258'][1] == 3){
+    users[i]['258'][1] = 0
+
+}
+if(users[i]['259'][1] == 2){
+    users[i]['259'][1] = 3
+}
+else if(users[i]['259'][1] == 3){
+    users[i]['259'][1] = 0
+
+}
+if(users[i]['267'][1] == 2){
+    users[i]['267'][1] = 3
+}
+else if(users[i]['267'][1] == 3){
+    users[i]['267'][1] = 0
+
+}
+if(users[i]['268'][1] == 2){
+    users[i]['268'][1] = 3
+}
+else if(users[i]['268'][1] == 3){
+    users[i]['268'][1] = 0
+
+}
+if(users[i]['269'][1] == 2){
+    users[i]['269'][1] = 3
+}
+else if(users[i]['269'][1] == 3){
+    users[i]['269'][1] = 0
+
+}
+if(users[i]['347'][1] == 2){
+    users[i]['347'][1] = 3
+}
+else if(users[i]['347'][1] == 3){
+    users[i]['347'][1] = 0
+
+}
+if(users[i]['348'][1] == 2){
+    users[i]['348'][1] = 3
+}
+else if(users[i]['348'][1] == 3){
+    users[i]['348'][1] = 0
+
+}
+if(users[i]['349'][1] == 2){
+    users[i]['349'][1] = 3
+}
+else if(users[i]['349'][1] == 3){
+    users[i]['349'][1] = 0
+
+}
+if(users[i]['357'][1] == 2){
+    users[i]['357'][1] = 3
+}
+else if(users[i]['357'][1] == 3){
+    users[i]['357'][1] = 0
+
+}
+if(users[i]['358'][1] == 2){
+    users[i]['358'][1] = 3
+}
+else if(users[i]['358'][1] == 3){
+    users[i]['358'][1] = 0
+
+}
+if(users[i]['359'][1] == 2){
+    users[i]['359'][1] = 3
+}
+else if(users[i]['359'][1] == 3){
+    users[i]['359'][1] = 0
+
+}
+if(users[i]['367'][1] == 2){
+    users[i]['367'][1] = 3
+}
+else if(users[i]['367'][1] == 3){
+    users[i]['367'][1] = 0
+
+}
+if(users[i]['368'][1] == 2){
+    users[i]['368'][1] = 3
+}
+else if(users[i]['368'][1] == 3){
+    users[i]['368'][1] = 0
+
+}
+if(users[i]['369'][1] == 2){
+    users[i]['369'][1] = 3
+}
+else if(users[i]['369'][1] == 3){
+    users[i]['369'][1] = 0
+
+}
+
+                    //
                     
                     
                     let frota_soma = 0;
