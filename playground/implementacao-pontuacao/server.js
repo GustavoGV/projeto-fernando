@@ -1913,10 +1913,11 @@ serveradm.listen(5000, () => {
          //   .then((users) => {console.log(users)})
             //.catch(() => {console.log('erros')})
         //mongoose.connection.collections.alunos.drop()
-        //jogador.save()
-        //    .then(Aluno.find({ nome: 'Pedo'}))
-        //    .then((pessoa) => {console.log(pessoa)})
-        //    .catch((err) => {console.log('eerro: ' + err)})
+        
+        jogador.save()
+            .then(Aluno.find({ nome: 'Pedo'}))
+            .then((pessoa) => {console.log(pessoa)})
+            .catch((err) => {console.log('eerro: ' + err)})
             
           //  jogador.save(() => {
           //      Aluno.findOne({ nome: 'Pedro'})
