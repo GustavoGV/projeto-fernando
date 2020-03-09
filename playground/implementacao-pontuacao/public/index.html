@@ -58,6 +58,21 @@
                 top: 650px;
                 left: 800px;
             }
+            #usuarior {
+                position: absolute;
+                top: 600px;
+                left: 1000px;
+            }
+            #senhar {
+                position: absolute;
+                top: 625px;
+                left: 1000px;
+            }
+            #bsenhar { 
+                position: absolute;
+                top: 650px;
+                left: 1000px;
+            }
             #valory {
                 position: absolute;
                 top: 225px;
@@ -297,6 +312,11 @@
             <input type="text" value="3irmas" id="usuario">
             <input type="text" value="666" id="senha">
             <button type="button" id="bsenha" onclick="login()">Clique para fazer login</button>
+        </div>
+        <div>
+            <input type="text" value="3irmas" id="usuarior">
+            <input type="text" value="666" id="senhar">
+            <button type="button" id="bsenhar" onclick="register()">Clique para registrar-se</button>
         
 </div>
         <script src="/socket.io/socket.io.js"></script>
@@ -347,10 +367,12 @@
                     table.rows[i+1].cells[0].style.backgroundColor
                 }
             }
+            table.rows[23].cells[3].innerHTML = Number(dados[28])
+            table.rows[22].cells[3].style.backgroundColor = "gray"
             table.rows[23].cells[4].innerHTML = dados[27]
             table.rows[22].cells[4].style.backgroundColor = "gray"
             table.rows[23].cells[5].innerHTML = somaf
-            table.rows[23].cells[0].innerHTML = dados[21] //taokeys
+            table.rows[23].cells[0].innerHTML = Math.round(dados[21]) //taokeys
             table.rows[22].cells[0].style.backgroundColor = "gray"
             table.rows[25].cells[0].innerHTML = dados[24] //comissao
             table.rows[24].cells[0].style.backgroundColor = "gray"
@@ -392,7 +414,7 @@
                 //table.rows[i+1].cells[2].innerHTML = dados[i][1];
                 //table.rows[i+1].cells[2].innerHTML = dados[i][2];
                 table.rows[i+1].cells[0].addEventListener('click', function(){
-                    let dec = prompt('Deseja encerrar o servico ' + index[i] +' ou desfazer a decisao de cancelamento? (ENCERRAR ou DESFAZER)')
+                    let dec = prompt('Deseja encerrar o servico ' + index[i] +', desfazer a decisao de cancelamento ou investir em propaganda de servico? (ENCERRAR ou DESFAZER ou PROPAGANDA)')
                    /*
                     if(dec.toUpperCase() == "COMPRAR"){
                         let decC = prompt('Deseja comprar o servico ' + index[i]+ '? (SIM ou NAO)')
@@ -406,6 +428,10 @@
                     */
                     if(dec.toUpperCase() == "ENCERRAR"){
                         socket.emit('encerrar-servico', index[i])
+                    }
+                    else if(dec.toUpperCase() == "PROPAGANDA"){
+                        let dec2 = prompt('Qual valor em propaganda deseja invetir no servico ' + index[i]+'?')
+                        socket.emit('propaganda-unitaria', [index[i], dec2])
                     }
                     else if(dec.toUpperCase() == "DESFAZER"){
                         socket.emit('desfazer-encerramento', index[i])
@@ -457,10 +483,12 @@
             })
                 
             }
+            table.rows[23].cells[3].innerHTML = dados[28]
+            table.rows[22].cells[3].style.backgroundColor = "gray"
             table.rows[23].cells[4].innerHTML = dados[27]
             table.rows[22].cells[4].style.backgroundColor = "gray"
             table.rows[23].cells[5].innerHTML = somaf
-            table.rows[23].cells[0].innerHTML = dados[21] //taokeys
+            table.rows[23].cells[0].innerHTML = Math.round(dados[21]) //taokeys
             table.rows[22].cells[0].style.backgroundColor = "gray"
             table.rows[25].cells[0].innerHTML = dados[24] //comissao
             table.rows[24].cells[0].style.backgroundColor = "gray"
@@ -566,6 +594,8 @@
             })
 
             socket.on('disconnect', () => {
+                alert('Voce foi desconectado.')
+                clearInterval(checkt)
                 //console.log('Unsubscribing All')
                 //keyboardListener.unsubscribeAll();
             })
@@ -577,6 +607,9 @@
             })
             socket.on('resp-checar-frota', (dados) => {
                 alert('0/24 depreciado: ' + dados[0] + '. 1/24 depreciados: ' + dados[1] + '. 2/24 depreciado: ' + dados[2] + '. 3/24 depreciados: ' + dados[3] +'. 4/24 depreciado: ' + dados[4] + '. 5/24 depreciados: ' + dados[5] +'. 6/24 depreciado: ' + dados[6] + '. 7/24 depreciados: ' + dados[7] +'. 8/24 depreciado: ' + dados[8] + '. 9/24 depreciados: ' + dados[9] +'. 10/24 depreciado: ' + dados[10] + '. 11/24 depreciados: ' + dados[11] +'. 12/24 depreciado: ' + dados[12] + '. 13/24 depreciados: ' + dados[13] +'. 14/24 depreciado: ' + dados[14] + '. 15/24 depreciados: ' + dados[15] +'. 16/24 depreciado: ' + dados[16] + '. 17/24 depreciados: ' + dados[17] +'. 18/24 depreciado: ' + dados[18] + '. 19/24 depreciados: ' + dados[19] +'. 20/24 depreciado: ' + dados[20] + '. 21/24 depreciados: ' + dados[21] +'. 22/24 depreciado: ' + dados[22] + '. 23/24 depreciados: ' + dados[1])
+            })
+            socket.on('final-turno', (aviso) => { 
+                alert('Chegou o final do bimestre. Sua Coopertativa teve faturamento de ' + aviso + ' reais.')
             })
             socket.on('update', (dados) => {
                 update(dados)
@@ -595,12 +628,13 @@
                 alert('Realize login para efetuar essa operacao')
             })
             socket.on('ja-conectado', (idd) => {alert('Voce ja esta conectado ' + idd)})
+            function checkt() {
+                socket.emit('check-turno')
+            }
             socket.on('login-aprovado', (cre) => {
-                /*
-                                setInterval(() => {
-                    socket.emit('check-turno') // puxa o state do jogo no banco de dados a cada 2 seg pra qnd o ADM terminar o turno a tela dos clients seream avisadas e o jogadore ter as info reais ps: se encotrar um metodo de conversar as duas conexoes com socket (socket e socketadm) seria mais otimzado mas por outro lado esse loop aqui com o if correrto pode avisar o jogador q o jogo foi pausado por exemplo.
-                }, 2000);
-                */
+                
+                                setInterval(checkt, 2000);
+                
                 alert('login aprovado para ' + cre)
             })
             function eventox() {
@@ -623,6 +657,14 @@
                 document.getElementById("usuario").value = ''
                 document.getElementById("senha").value = ''
 
+            }
+            function register() {
+                let valor1 = document.getElementById("usuarior").value
+                let valor2 = document.getElementById("senhar").value
+                let valor = [valor1, valor2]
+                socket.emit('register-client', valor)
+                document.getElementById("usuarior").value = ''
+                document.getElementById("senhar").value = ''
             }
 
         </script>
