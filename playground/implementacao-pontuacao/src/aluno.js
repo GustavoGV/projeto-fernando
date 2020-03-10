@@ -4,7 +4,9 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema({
     cooperativa: String,
     senha: String,
+    turno: Number,
     taokeys: Number,
+    divida: Number,
     sockid: String,
     frota: Array,
     promotores: Number,
