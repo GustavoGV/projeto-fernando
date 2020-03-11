@@ -99,7 +99,9 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                 user["distribuidores"],
                 user["pas"],
                 user["propaganda"],
-                user["propagandauni"]])
+                user["propagandauni"],
+                user["divida"],
+                user["turno"]])
                                         })
                                         .catch((err) => console.log( err + ' <=> Falha ao registrar login do player com o socket especifico: ' + socket.id))
                             }})
@@ -119,7 +121,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
             .then((userx) => { 
                 if(userx !== null){socket.emit('operacao-negada', 'ja existe uma cooperativa com esse nome')}
                 else{
-                    let jogador = new Aluno({ sockid: socket.id, scorepro: 0, turno: 0, scoremod: 0, scorepreco: [0,0], propaganda: 220, propagandauni: 300, faturamento: 0, ativo: 1, taokeys: 18720000, divida: 0, comissao: 0.05, frota: [10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], cooperativa: creden[0], pas: 30, pas1:0, pas2:0, distribuidores: 640, promotores: 40, senha: creden[1], 
+                    let jogador = new Aluno({ sockid: socket.id, scorepro: 0, turno: 0, scoremod: 0, scorepreco: [0,0], propaganda: 220, propagandauni: 300, faturamento: 0, ativo: 1, taokeys: 18720000, divida: [0,0,0], comissao: 0.05, frota: [10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], cooperativa: creden[0], pas: 30, pas1:0, pas2:0, distribuidores: 640, promotores: 40, senha: creden[1], 
                         147:[985,1,288,600,300],
                         159:[0,0,396,0,0],
                         149:[0,0,360,0,0],
@@ -173,7 +175,10 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
     user["comissao"],
     user["distribuidores"],
     user["pas"],
-    user["propaganda"]]) }
+    user["propaganda"],
+    user["propagandauni"],
+    user["divida"],
+    user["turno"]])}
     else{ socket.emit('operacao-negada', 'ocorreu uma falha no processo de registro') }
                             }) 
                             .catch((wrr) => {console.log(wrr)})
@@ -246,7 +251,9 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 user["distribuidores"],
                                 user["pas"],
                                 user["propaganda"],
-                                user["propagandauni"]]);
+                                user["propagandauni"],
+                                user["divida"],
+                                user["turno"]]);
         
                                     }                  
                                 })
@@ -311,7 +318,9 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 user["distribuidores"],
                                 user["pas"],
                                 user["propaganda"],
-                                user["propagandauni"]]);
+                                user["propagandauni"],
+                                user["divida"],
+                                user["turno"]]);
         
                                     }                  
                                 })
@@ -379,7 +388,9 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 user["distribuidores"],
                                 user["pas"],
                                 user["propaganda"],
-                                user["propagandauni"]]);
+                                user["propagandauni"],
+                                user["divida"],
+                                user["turno"]]);
         
                                     }                  
                                 })
@@ -440,7 +451,9 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 user["distribuidores"],
                                 user["pas"],
                                 user["propaganda"],
-                                user["propagandauni"]]);
+                                user["propagandauni"],
+                                user["divida"],
+                                user["turno"]]);
         
                                     }                  
                                 })
@@ -518,7 +531,9 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 user["distribuidores"],
                                 user["pas"],
                                 user["propaganda"],
-                                user["propagandauni"]]);
+                                user["propagandauni"],
+                                user["divida"],
+                                user["turno"]]);
         
                                     }                  
                                 })
@@ -584,7 +599,9 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 user["distribuidores"],
                                 user["pas"],
                                 user["propaganda"],
-                                user["propagandauni"]]);
+                                user["propagandauni"],
+                                user["divida"],
+                                user["turno"]]);
         
                                     }                  
                                 })
@@ -645,7 +662,9 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 user["distribuidores"],
                                 user["pas"],
                                 user["propaganda"],
-                                user["propagandauni"]]);
+                                user["propagandauni"],
+                                user["divida"],
+                                user["turno"]]);
         
                                     }                  
                                 })
@@ -656,6 +675,129 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         socket.emit('operacao-negada', 'falta caixa')
                     }
                     else{socket.emit('operacao-negada', 'apenas valores positivos')}
+                    
+                
+             
+            }
+                else{
+                    socket.emit('acesso-negado')
+                }
+            })
+            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
+    })
+    socket.on('emprestimo', (dados) => {
+        let qnt = Number(dados)
+        Aluno.findOne({sockid: socket.id})
+            .then((userx) => {
+                if(userx !== null){
+                        if(qnt > 0){
+                            userx.set('divida', [(qnt+userx['divida'][0]), userx['divida'][1], userx['divida'][2]]) 
+                            userx.taokeys = userx.taokeys + qnt
+                            userx.save()
+                                .then(() => Aluno.findOne({ _id: userx._id}))                 
+                                .then((user) => {
+                                    if(user.taokeys == userx.taokeys){
+                                        socket.emit('update', [user["147"],
+                                user["148"],
+                                user["149"],
+                                user["157"],
+                                user["158"],
+                                user["159"],
+                                user["257"],
+                                user["258"],
+                                user["259"],
+                                user["267"],
+                                user["268"],
+                                user["269"],
+                                user["347"],
+                                user["348"],
+                                user["349"],
+                                user["357"],
+                                user["358"],
+                                user["359"],
+                                user["367"],
+                                user["368"],
+                                user["369"],
+                                user["taokeys"],
+                                user["frota"],
+                                user["promotores"],
+                                user["comissao"],
+                                user["distribuidores"],
+                                user["pas"],
+                                user["propaganda"],
+                                user["propagandauni"],
+                                user["divida"],
+                                user["turno"]]);
+        
+                                    }                  
+                                })
+                        .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
+                          
+                    }
+                    else{socket.emit('operacao-negada', 'apenas valores positivos')}
+                    
+                
+             
+            }
+                else{
+                    socket.emit('acesso-negado')
+                }
+            })
+            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
+    })
+    socket.on('quitar-divida', () => {
+        //let qnt = Number(dados)
+        Aluno.findOne({sockid: socket.id})
+            .then((userx) => {
+                if(userx !== null){
+                    if(userx.taokeys >= (userx['divida'][0] + userx['divida'][1] + userx['divida'][2])){
+                        userx.taokeys = userx.taokeys - (userx['divida'][0] + userx['divida'][1] + userx['divida'][2])
+                        userx.set('divida', [0,0,0])
+    
+                            userx.save()
+                                .then(() => Aluno.findOne({ _id: userx._id}))                 
+                                .then((user) => {
+                                    if(user.taokeys == userx.taokeys){
+                                        socket.emit('update', [user["147"],
+                                user["148"],
+                                user["149"],
+                                user["157"],
+                                user["158"],
+                                user["159"],
+                                user["257"],
+                                user["258"],
+                                user["259"],
+                                user["267"],
+                                user["268"],
+                                user["269"],
+                                user["347"],
+                                user["348"],
+                                user["349"],
+                                user["357"],
+                                user["358"],
+                                user["359"],
+                                user["367"],
+                                user["368"],
+                                user["369"],
+                                user["taokeys"],
+                                user["frota"],
+                                user["promotores"],
+                                user["comissao"],
+                                user["distribuidores"],
+                                user["pas"],
+                                user["propaganda"],
+                                user["propagandauni"],
+                                user["divida"],
+                                user["turno"]]);
+        
+                                    }                  
+                                })
+                        .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
+                          
+                            }
+                            else{
+                                socket.emit('operacao-negada', 'voce nao tem caixa para quitar a sua divida no momento')
+                            }
                     
                 
              
@@ -706,7 +848,9 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 user["distribuidores"],
                                 user["pas"],
                                 user["propaganda"],
-                                user["propagandauni"]]);
+                                user["propagandauni"],
+                                user["divida"],
+                                user["turno"]]);
         
                                     }                  
                                 })
@@ -767,7 +911,9 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 user["distribuidores"],
                                 user["pas"],
                                 user["propaganda"],
-                                user["propagandauni"]]);
+                                user["propagandauni"],
+                                user["divida"],
+                                user["turno"]]);
         
                                     }                  
                                 })
@@ -825,7 +971,9 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 user["distribuidores"],
                                 user["pas"],
                                 user["propaganda"],
-                                user["propagandauni"]]);
+                                user["propagandauni"],
+                                user["divida"],
+                                user["turno"]]);
         
                                     }                  
                                 })
@@ -883,7 +1031,9 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 user["distribuidores"],
                                 user["pas"],
                                 user["propaganda"],
-                                user["propagandauni"]]);
+                                user["propagandauni"],
+                                user["divida"],
+                                user["turno"]]);
         
                                     }                  
                                 })
@@ -943,7 +1093,9 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 user["distribuidores"],
                                 user["pas"],
                                 user["propaganda"],
-                                user["propagandauni"]]);
+                                user["propagandauni"],
+                                user["divida"],
+                                user["turno"]]);
         
                                     }                  
                                 })
@@ -1002,7 +1154,9 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 user["distribuidores"],
                                 user["pas"],
                                 user["propaganda"],
-                                user["propagandauni"]]);
+                                user["propagandauni"],
+                                user["divida"],
+                                user["turno"]]);
         
                                     }                  
                                 })
@@ -1072,7 +1226,9 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 user["distribuidores"],
                                 user["pas"],
                                 user["propaganda"],
-                                user["propagandauni"]]);
+                                user["propagandauni"],
+                                user["divida"],
+                                user["turno"]]);
         
                                     }                  
                                 })
@@ -1143,7 +1299,9 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 user["distribuidores"],
                                 user["pas"],
                                 user["propaganda"],
-                                user["propagandauni"]]);
+                                user["propagandauni"],
+                                user["divida"],
+                                user["turno"]]);
         
                                     }
                                     else{socket.emit('operacao-negada', 'falha ao atunteticar operacao')}                  
@@ -1224,7 +1382,9 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                         user["distribuidores"],
                                         user["pas"],
                                         user["propaganda"],
-                                        user["propagandauni"]]);
+                                        user["propagandauni"],
+                                        user["divida"],
+                                        user["turno"]]);
                 
                                             }                  
                                         })
@@ -1293,7 +1453,9 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                 user["distribuidores"],
                 user["pas"],
                 user["propaganda"],
-                user["propagandauni"]]);
+                user["propagandauni"],
+                user["divida"],
+                user["turno"]]);
                 socket.emit('resposta-pesquisar-pas');// <==== sistema de cobranca funcional falta apenas entregar o pacote solicitado
                                             }                  
                                         })
@@ -1356,7 +1518,9 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 user["distribuidores"],
                                 user["pas"],
                                 user["propaganda"],
-                                user["propagandauni"]]);
+                                user["propagandauni"],
+                                user["divida"],
+                                user["turno"]]);
         
                                     }                  
                                 })
@@ -1406,7 +1570,7 @@ socketsadm.on('connection', (socket) => { //conversa do server com o client do A
         }
         
     })
-    let demanda = 10000000 //n eh um valor fixo kkk
+    let demanda = 100000 //n eh um valor fixo kkk
     socket.on('finalizar-turno', () => { if(socket.id == admid){
         
     
@@ -2043,6 +2207,8 @@ socketsadm.on('connection', (socket) => { //conversa do server com o client do A
                     //
                     
                     users[i]['scoremod'] = 0
+                    users[i]['propaganda'] = 1
+                    users[i]['propagandauni'] = 1
 //console.log(users[i]['147'][1])
 for(let o = 0; o < index.length; o++){
     let ser = index[o]
@@ -2055,159 +2221,9 @@ for(let o = 0; o < index.length; o++){
         users[i].set(ser, array_dados_novo)
 }
 }
-/*
 
 
-else if(users[i]['147'][1] == 3){
-    users[i]['147'][1] = 0
-
-}
-if(users[i]['159'][1] == 2){
-    users[i]['159'][1] = 3
-}
-else if(users[i]['159'][1] == 3){
-    users[i]['159'][1] = 0
-
-}
-if(users[i]['149'][1] == 2){
-    console.log('avanco')
-    users[i]['149'][1] = 3
-}
-else if(users[i]['149'][1] == 3){
-    users[i]['149'][1] = 0
-
-}
-if(users[i]['148'][1] == 2){
-    users[i]['148'][1] = 3
-}
-else if(users[i]['148'][1] == 3){
-    users[i]['148'][1] = 0
-
-}
-if(users[i]['158'][1] == 2){
-    users[i]['158'][1] = 3
-}
-else if(users[i]['158'][1] == 3){
-    users[i]['158'][1] = 0
-
-}
-if(users[i]['157'][1] == 2){
-    users[i]['157'][1] = 3
-}
-else if(users[i]['157'][1] == 3){
-    users[i]['157'][1] = 0
-
-}
-if(users[i]['257'][1] == 2){
-    users[i]['257'][1] = 3
-}
-else if(users[i]['257'][1] == 3){
-    users[i]['257'][1] = 0
-
-}
-if(users[i]['258'][1] == 2){
-    users[i]['258'][1] = 3
-}
-else if(users[i]['258'][1] == 3){
-    users[i]['258'][1] = 0
-
-}
-if(users[i]['259'][1] == 2){
-    users[i]['259'][1] = 3
-}
-else if(users[i]['259'][1] == 3){
-    users[i]['259'][1] = 0
-
-}
-if(users[i]['267'][1] == 2){
-    users[i]['267'][1] = 3
-}
-else if(users[i]['267'][1] == 3){
-    users[i]['267'][1] = 0
-
-}
-if(users[i]['268'][1] == 2){
-    users[i]['268'][1] = 3
-}
-else if(users[i]['268'][1] == 3){
-    users[i]['268'][1] = 0
-
-}
-if(users[i]['269'][1] == 2){
-    users[i]['269'][1] = 3
-}
-else if(users[i]['269'][1] == 3){
-    users[i]['269'][1] = 0
-
-}
-if(users[i]['347'][1] == 2){
-    users[i]['347'][1] = 3
-}
-else if(users[i]['347'][1] == 3){
-    users[i]['347'][1] = 0
-
-}
-if(users[i]['348'][1] == 2){
-    users[i]['348'][1] = 3
-}
-else if(users[i]['348'][1] == 3){
-    users[i]['348'][1] = 0
-
-}
-if(users[i]['349'][1] == 2){
-    users[i]['349'][1] = 3
-}
-else if(users[i]['349'][1] == 3){
-    users[i]['349'][1] = 0
-
-}
-if(users[i]['357'][1] == 2){
-    users[i]['357'][1] = 3
-}
-else if(users[i]['357'][1] == 3){
-    users[i]['357'][1] = 0
-
-}
-if(users[i]['358'][1] == 2){
-    users[i]['358'][1] = 3
-}
-else if(users[i]['358'][1] == 3){
-    users[i]['358'][1] = 0
-
-}
-if(users[i]['359'][1] == 2){
-    users[i]['359'][1] = 3
-}
-else if(users[i]['359'][1] == 3){
-    users[i]['359'][1] = 0
-
-}
-if(users[i]['367'][1] == 2){
-    users[i]['367'][1] = 3
-}
-else if(users[i]['367'][1] == 3){
-    users[i]['367'][1] = 0
-
-}
-if(users[i]['368'][1] == 2){
-    users[i]['368'][1] = 3
-}
-else if(users[i]['368'][1] == 3){
-    users[i]['368'][1] = 0
-
-}
-if(users[i]['369'][1] == 2){
-    users[i]['369'][1] = 3
-}
-else if(users[i]['369'][1] == 3){
-    users[i]['369'][1] = 0
-
-}
-    */
-
-                    //
-                    
-                    
+                    //   
                     let frota_soma = 0;
                     for(let h = 0; h < users[i]['frota']; h++){
 
@@ -2234,6 +2250,31 @@ else if(users[i]['369'][1] == 3){
 
                     // -_-_-_-
                 for(let i = 0; i < users.length; i++){
+
+                    if(users[i].taokeys >= users[i]['divida'][2]){
+                        users[i].taokeys = users[i].taokeys - users[i]['divida'][2]
+                        users[i]['divida'].pop();
+                        users[i]['divida'].unshift(0);
+                        users[i].set('divida', [users[i]['divida'][0], users[i]['divida'][1]*1.08, users[i]['divida'][2]*1.08])
+                    }
+                    else if(users[i].taokeys < users[i]['divida'][2] && users[i].taokeys > 0){
+                        let gamb = users[i]['divida'][2] - users[i].taokeys
+                        users[i]['divida'].pop();
+                        users[i]['divida'].unshift(gamb); //cobrar multa aqui
+                        users[i].set('divida', [users[i]['divida'][0], users[i]['divida'][1]*1.08, users[i]['divida'][2]*1.08])
+                        users[i].taokeys = 0
+
+                    }
+                    else{
+                        let gamb = users[i]['divida'][2]*1.08
+                        users[i]['divida'].pop();
+                        users[i]['divida'].unshift(gamb); //cobrar multa aqui
+                        users[i].set('divida', [(users[i]['divida'][0] + (-1)*users[i].taokeys), users[i]['divida'][1], users[i]['divida'][2]])
+                        users[i].set('divida', [users[i]['divida'][0], users[i]['divida'][1]*1.08, users[i]['divida'][2]*1.08])
+                        users[i].taokeys = 0;
+                    }
+                }
+                for(let i = 0; i < users.length; i++){
                     
                     users[i].save()
                         .then(() => {console.log(users[i]['cooperativa'] + ' Teve seu faturamento processado com sucesso.')})
@@ -2242,7 +2283,7 @@ else if(users[i]['369'][1] == 3){
 
             })
             .then((hope) => {console.log(hope + ' COLOCAR AQUI NESSE THEN() A COMPUTACAO DAS PESQUISAS DO PPROXIMO TURNO')  })
-           .catch((err) => {console.log('erro n 708 =>' + err + ' .id:' + socket.id)})
+            .catch((err) => {console.log('erro n 708 =>' + err + ' .id:' + socket.id)})
 
 
           // \/ essa parte de baixo calcula o resultado das pesquisas para serem mostradas no proximo turno mas CUIDADO porque esse bloco debaixo e o e cima rodarao simultaneamente do jeito q estra (precisa botar .then(() = > {logo qnd terminar esse logica botar ela antes do  botar .save() de cim botar a ;)})
@@ -2407,7 +2448,7 @@ serveradm.listen(5000, () => {
 //81, 84 e 85 contro
 //INTERACAO COM O BANCO DE DAOS \/
 
-
+    /*
         let jogador = new Aluno({ sockid: 123456, scorepro: 0, scoremod: 0, scorepreco: [0,0], propaganda: 220, propagandauni: 300, faturamento: 0, ativo: 1, taokeys: 18720000, comissao: 0.05, frota: [10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], cooperativa: '3irmas', pas: 30, pas1:0, pas2:0, distribuidores: 640, promotores: 40, senha: '666', 
         147:[985,1,288,600,300],
         159:[0,0,396,0,0],
@@ -2430,6 +2471,8 @@ serveradm.listen(5000, () => {
         367:[0,0,504,0,0],
         368:[0,0,540,0,0],
         369:[0,0,576,0,0]});
+        */
+
         //jogador.save()
         //    .then(Aluno.find({ nome: 'Pedro'}))
         //    .then((users) => {console.log(users)})

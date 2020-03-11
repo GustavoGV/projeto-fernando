@@ -6,7 +6,7 @@ const UserSchema = new Schema({
     senha: String,
     turno: Number,
     taokeys: Number,
-    divida: Number,
+    divida: Array,
     sockid: String,
     frota: Array,
     promotores: Number,

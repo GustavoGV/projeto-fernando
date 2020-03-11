@@ -352,7 +352,9 @@
             function update(dados) {
                 var table = document.getElementById("myTable");
                 let somaf = 0;
+                let somacmv = 0;
                 for(let i = 0; i < 21; i++){
+                somacmv = somacmv + dados[i][4]*dados[i][2]
                 somaf = somaf + dados[i][4]*(dados[i][3] - dados[i][2]);
                 table.rows[i+1].cells[1].innerHTML = Math.round(dados[i][0]); // injeta o numero de insumos de cada servico na tabela do client
                 table.rows[i+1].cells[2].innerHTML = dados[i][2]; // msm coisa /\ so q injeta os custos unitarios
@@ -374,6 +376,12 @@
                     table.rows[i+1].cells[0].style.backgroundColor = ""
                 }
             }
+            
+            table.rows[25].cells[2].innerHTML = dados[30]
+            table.rows[24].cells[2].style.backgroundColor = "gray"
+            table.rows[25].cells[4].innerHTML = Math.round(dados[29][0] + dados[29][1] + dados[29][2])
+            table.rows[24].cells[4].style.backgroundColor = "gray"
+            table.rows[25].cells[5].innerHTML = somacmv
             table.rows[23].cells[3].innerHTML = Number(dados[28])
             table.rows[22].cells[3].style.backgroundColor = "gray"
             table.rows[23].cells[4].innerHTML = dados[27]
@@ -401,7 +409,9 @@
             //var row = table.insertRow(0);
             while(duplo == 0){
                 let somaf = 0;
+                let somacmv = 0;
             for(let i = 0; i < 21; i++){
+                somacmv = somacmv + dados[i][4]*dados[i][2]
                 somaf = somaf + dados[i][4]*(dados[i][3] - dados[i][2])
                 table.rows[i+1].cells[1].innerHTML = dados[i][0]; // injeta o numero de insumos de cada servico na tabela do client
                 table.rows[i+1].cells[2].innerHTML = dados[i][2]; // msm coisa /\ so q injeta os custos unitarios
@@ -492,7 +502,13 @@
                     socket.emit('alterar-volume', resp)
             })
                 
+                
             }
+            table.rows[25].cells[2].innerHTML = dados[30]
+            table.rows[24].cells[2].style.backgroundColor = "gray"
+            table.rows[25].cells[4].innerHTML = Math.round(dados[29][0] + dados[29][1] + dados[29][2])
+            table.rows[24].cells[4].style.backgroundColor = "gray"
+            table.rows[25].cells[5].innerHTML = somacmv
             table.rows[23].cells[3].innerHTML = dados[28]
             table.rows[22].cells[3].style.backgroundColor = "gray"
             table.rows[23].cells[4].innerHTML = dados[27]
@@ -545,6 +561,20 @@
             table.rows[25].cells[0].addEventListener('click', function(){ //comissao
                    let dec = prompt('Quanto de comissao deseja oferecer? EX: 0.3 (para 30%)')
                    socket.emit('comissao', dec)
+            })
+            table.rows[23].cells[0].addEventListener('click', function(){ //pedir emprestimo clicnado no caixa
+                   let dec = prompt('Voce deseja contrair uma divida de 8% de juros compostos ao bimestre? se sim qual o valor?')
+                   socket.emit('emprestimo', dec)
+            })
+            table.rows[25].cells[4].addEventListener('click', function(){ //divida
+                   let dec = prompt('Voce deseja quitar a sua divida nesse turno? (SIM ou NAO)')
+                    if(dec.toUpperCase() == "SIM"){
+                        socket.emit('quitar-divida')
+                    }
+                    else{
+                        alert('Comando nao disponivel')
+                    }
+                   
             })
             table.rows[23].cells[4].addEventListener('click', function(){ //propaganda
                    let dec = prompt('Quanto deseja invetir em propagada institucional nesse turno?')
