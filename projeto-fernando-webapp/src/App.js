@@ -1,23 +1,18 @@
 import React from 'react';
-import logo from './logo.svg';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import Login from './components/Login/Login';
+import Game from './components/Game/Game';
 import video from './assets/video.mp4';
 import './App.css';
 
-
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Em construção
-        </p>
-        <video width="640" height="480" controls>
-          <source src={video} type="video/mp4">
-          </source>
-        </video>
-        
-      </header>
-    </div>
+    <BrowserRouter>
+        <Switch>
+            <Route path="/login" component={Login} />
+            <Route path="/game" component={Game}/>
+        </Switch>
+    </ BrowserRouter>
   );
 }
 
