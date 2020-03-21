@@ -8,6 +8,7 @@ import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import List from '@material-ui/core/List';
+
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -15,12 +16,23 @@ import MailIcon from '@material-ui/icons/Mail';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import SaveIcon from '@material-ui/icons/Save';
 import MenuIcon from '@material-ui/icons/Menu';
+import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
+import EventNoteIcon from '@material-ui/icons/EventNote';
+import DescriptionIcon from '@material-ui/icons/Description';
+import ListIcon from '@material-ui/icons/List';
+import CachedIcon from '@material-ui/icons/Cached';
+
+
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import SelectRound from '../SelectRound/SelectRound';
 import SelectReport from '../SelectReport/SelectReport';
 import ServicesContainer from '../ServicesContainer/ServicesContainer';
+import Manual from '../Manual/Manual';
+
+
+import { Route, Link } from 'react-router-dom'
 
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 
@@ -80,6 +92,40 @@ function Game(props) {
     setMobileOpen(!mobileOpen);
   };
 
+  const sidebarIcons = [<LibraryBooksIcon/>,<EventNoteIcon/>,<DescriptionIcon/>,<ListIcon/>,<CachedIcon/>]
+
+  const sidebarComponents = [
+    {
+      path:'/game/manual',
+      label:'Manual do Jogo',
+      component: <Manual/>,
+      icon: <LibraryBooksIcon/>,
+    },
+    {
+      path:'/game/schedule',
+      label:'Cronograma',
+      component: <Manual/>,
+      icon: <EventNoteIcon/>,
+    },
+    {
+      path:'/game/decisions',
+      label:'Síntese de Decisões',
+      component: <Manual/>,
+      icon: <DescriptionIcon/>,
+    },
+    {
+      path:'/game/step-by-step',
+      label:'Passo a Passo',
+      component: <Manual/>,
+      icon: <ListIcon/>,
+    },
+    {
+      path:'/game/seasonality',
+      label:'Sazonalidade',
+      component: <Manual/>,
+      icon: <CachedIcon/>,
+    }
+  ]
   const drawer = (
     <div>
       <div className={classes.toolbar}>
@@ -87,11 +133,13 @@ function Game(props) {
       </div>
       <Divider />
       <List>
-        {['Manual do Jogo', 'Cronograma', 'Síntese de Decisões', 'Passo a Passo', 'Sazonalidade'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
+        {sidebarComponents.map((sidebarComponent, index) => (
+          <Link to={sidebarComponent.path}>
+            <ListItem button key={sidebarComponent.label}>
+              <ListItemIcon>{sidebarComponent.icon}</ListItemIcon>
+              <ListItemText primary={sidebarComponent.label} />
+            </ListItem>
+          </Link>
         ))}
       </List>
       <Divider />
@@ -166,11 +214,13 @@ function Game(props) {
       </nav>
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        <ServicesContainer/>
+        <Route path='/game/inputs' component={ServicesContainer}/>
       </main>
     </div>
   );
 }
+
+
 
 Game.propTypes = {
   /**
