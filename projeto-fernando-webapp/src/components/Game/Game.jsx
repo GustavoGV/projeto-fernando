@@ -98,31 +98,31 @@ function Game(props) {
     {
       path:'/game/manual',
       label:'Manual do Jogo',
-      component: <Manual/>,
+      component: Manual,
       icon: <LibraryBooksIcon/>,
     },
     {
       path:'/game/schedule',
       label:'Cronograma',
-      component: <Manual/>,
+      component: Manual,
       icon: <EventNoteIcon/>,
     },
     {
       path:'/game/decisions',
       label:'Síntese de Decisões',
-      component: <Manual/>,
+      component: Manual,
       icon: <DescriptionIcon/>,
     },
     {
       path:'/game/step-by-step',
       label:'Passo a Passo',
-      component: <Manual/>,
+      component: Manual,
       icon: <ListIcon/>,
     },
     {
       path:'/game/seasonality',
       label:'Sazonalidade',
-      component: <Manual/>,
+      component: Manual,
       icon: <CachedIcon/>,
     }
   ]
@@ -155,7 +155,13 @@ function Game(props) {
   );
 
   function returnSidebarComponents(sidebarComponents){
-    sidebarComponents.map
+    return sidebarComponents.map(sidebarComponent=>{
+      console.log(">>>>>>>>",sidebarComponent.component)
+      console.log(">>>>>>>>",sidebarComponent.path)
+      return(
+        <Route path={sidebarComponent.path} render={props => <sidebarComponent.component {...props}/>}/>
+      )
+    })
   }
 
   return (
@@ -219,9 +225,7 @@ function Game(props) {
       <main className={classes.content}>
         <div className={classes.toolbar} />
         <Route path='/game/inputs' component={ServicesContainer}/>
-        {()=>sidebarComponents.map(sidebarComponent=>{
-          return <Route path={sidebarComponent.path} component={sidebarComponent.component}/>
-        })}
+        {returnSidebarComponents(sidebarComponents)}
       </main>
     </div>
   );
