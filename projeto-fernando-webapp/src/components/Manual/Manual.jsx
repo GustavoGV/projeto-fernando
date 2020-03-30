@@ -7,6 +7,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 export default function Manual() {
 
   //TODO: Move lists to here
+  
 
   const basicActions = []
 
