@@ -16,6 +16,7 @@ const UserSchema = new Schema({
     pas1: Number,
     pas2: Number,
     ativo: Number,
+    npesquisas: Number,
     faturamento: Number,
     propaganda: Number,
     propagandauni: Number,

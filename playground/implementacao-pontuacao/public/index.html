@@ -473,7 +473,7 @@
                         }
                     }
                     else if(dec.toUpperCase() == "TROCAR"){
-                            let decF = prompt('Deseja trocar o servico ' + index[i] + ' para envia-lo para qual servico? (EX: 257)')
+                            let decF = prompt('Deseja trocar alguns insumos do servico ' + index[i] + ' para envia-lo para qual servico? (EX: 257)')
                             let h = 0
                             for(let f = 0; f < index.length; f++){
                                 if(decF == index[f]){
@@ -563,7 +563,7 @@
                    socket.emit('comissao', dec)
             })
             table.rows[23].cells[0].addEventListener('click', function(){ //pedir emprestimo clicnado no caixa
-                   let dec = prompt('Voce deseja contrair uma divida de 8% de juros compostos ao bimestre? se sim qual o valor?')
+                   let dec = prompt('Voce deseja contrair uma divida de 8% de juros compostos ao bimestre, com vencimento apos 3 bimestres? se sim qual o valor?')
                    socket.emit('emprestimo', dec)
             })
             table.rows[25].cells[4].addEventListener('click', function(){ //divida
@@ -639,6 +639,7 @@
                 //console.log('Unsubscribing All')
                 //keyboardListener.unsubscribeAll();
             })
+            
             socket.on('dados-servicos', (dados) => {
                 tabela(dados)
             })
@@ -661,9 +662,13 @@
             socket.on('operacao-negada', (motivo) => {
                 alert('Operacao negada por ' + motivo)
             })
-            socket.on('resposta-pesquisar-pas', () =>{
-                alert('resultado: x')
+            socket.on('resposta-pesquisar-pas', (x) => {
+                alert('resultado : ' + x)
             })
+            socket.on('resposta-pesquisar-distribuidores', (x) => {
+                alert('resultado : ' + x)
+            })
+
             socket.on('acesso-negado', () => {
                 alert('Realize login para efetuar essa operacao')
             })
