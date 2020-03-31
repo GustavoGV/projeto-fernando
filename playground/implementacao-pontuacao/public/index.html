@@ -668,6 +668,9 @@
             socket.on('resposta-pesquisar-distribuidores', (x) => {
                 alert('resultado : ' + x)
             })
+            socket.on('resposta-pesquisar-servicos', (x) => {
+                alert('resultado : ' + x)
+            })
 
             socket.on('acesso-negado', () => {
                 alert('Realize login para efetuar essa operacao')
