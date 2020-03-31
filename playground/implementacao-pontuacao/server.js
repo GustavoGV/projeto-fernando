@@ -2464,7 +2464,7 @@ serveradm.listen(5000, () => {
         //    .then(Aluno.find({ nome: 'Pedro'}))
         //    .then((users) => {console.log(users)})
         //    .catch((wrr) => {console.log(wrr)})
-        //mongoose.connection.collections.alunos.drop()
+        mongoose.connection.collections.alunos.drop()
         
         //jogador.save()
         //    .then(Aluno.find({ nome: 'Pedo'}))
