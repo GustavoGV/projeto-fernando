@@ -36,7 +36,9 @@ import { Route, Link } from 'react-router-dom'
 
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 
+import socket from '../../connection';
 
+socket.emit('teste', 'vitoria')
 
 
 
