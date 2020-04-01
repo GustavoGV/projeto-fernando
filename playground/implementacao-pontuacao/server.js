@@ -112,7 +112,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
 
                        
     })
-    socket.on('teste', (teste) => {console.log('teste: ' + teste)
+    socket.on('teste', (teste) => {console.log('teste: ' + teste + ' (ID de origem: ' + socket.id + ')')
     })
     socket.on('register-client', (creden) => {
         Aluno.findOne({sockid: socket.id}) // se n achar retorna Null e se vc tentar fazer essa pesquisa com um String sendo q no Schema ta como Number vai ir pro Catch ou vai pro Catch tb se n conseguir se conectar com o MongoDB
