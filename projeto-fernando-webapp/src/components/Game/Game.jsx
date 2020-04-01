@@ -179,7 +179,7 @@ function Game(props) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap>
-            {/* Simulation 2 Learn */}
+            {/* Desafiosdegestao */}
           </Typography>
           <SelectRound/>
           <SelectReport/>
