@@ -1,9 +1,10 @@
 import React from 'react';
 import { Formik } from 'formik';
+import {Form, Input} from 'reactstrap';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
-
+import useRound from '../../hooks/useRound';
 
 const useStyles = makeStyles(theme => ({
   form: {
@@ -13,268 +14,39 @@ const useStyles = makeStyles(theme => ({
   textField: {
     margin: '10px',
   },
+  label: {
+    textAlign:'initial',
+  }
 }));
 
 const Service = (props) => {
 
   const classes = useStyles();
+  const [roundData, addNewValue] = useRound()
 
   return(
   <div>
     <h3>{props.serviceName}</h3>
-    <Formik
-      initialValues={{ email: '', password: '' }}
-      validate={values => {
-        const errors = {};
-        if (!values.email) {
-          errors.email = 'Required';
-        } else if (
-          !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-        ) {
-          errors.email = 'Invalid email address';
-        }
-        return errors;
-      }}
-      onSubmit={(values, { setSubmitting }) => {
-        setTimeout(() => {
-          alert(JSON.stringify(values, null, 2));
-          setSubmitting(false);
-        }, 400);
-      }}
-    >
-      {({
-        values,
-        errors,
-        touched,
-        handleChange,
-        handleBlur,
-        handleSubmit,
-        isSubmitting,
-        /* and other goodies */
-      }) => (
-        <form onSubmit={handleSubmit} className={classes.form}>
-          <TextField
-            type="text"
-            name="text"
-            id="standard-basic"
-            label="Previsão de Contratos Fechados"
-            handle
-            className={classes.textField}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.email}
-          />
-          {errors.email && touched.email && errors.email}
-          <TextField
-            type="text"
-            name="text"
-            id="standard-basic"
-            label="Capacidade Instalada"
-            handle
-            className={classes.textField}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.email}
-          />
-          {errors.password && touched.password && errors.password}
-          <TextField
-            type="text"
-            name="text"
-            id="standard-basic"
-            label="Recursos Contratados"
-            handle
-            className={classes.textField}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.email}
-          />
-
-          <TextField
-            type="text"
-            name="text"
-            id="standard-basic"
-            label="Capacidade Disponível"
-            handle
-            className={classes.textField}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.email}
-          />
-
-          <TextField
-            type="text"
-            name="text"
-            id="standard-basic"
-            label="Investimento em Propaganda do Modelo de Serviço"
-            handle
-            className={classes.textField}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.email}
-          />
-
-          <TextField
-            type="text"
-            name="text"
-            id="standard-basic"
-            label="Equipe de Promoção"
-            handle
-            className={classes.textField}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.email}
-          />
-
-          <TextField
-            type="text"
-            name="text"
-            id="standard-basic"
-            label="Comissão de Vendas"
-            handle
-            className={classes.textField}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.email}
-          />
-
-          <TextField
-            type="text"
-            name="text"
-            id="standard-basic"
-            label="Postos Avançados"
-            handle
-            className={classes.textField}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.email}
-          />
-
-          <TextField
-            type="text"
-            name="text"
-            id="standard-basic"
-            label="Frota Inicial"
-            handle
-            className={classes.textField}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.email}
-          />
-
-          <TextField
-            type="text"
-            name="text"
-            id="standard-basic"
-            label="Alteração na Frota"
-            handle
-            className={classes.textField}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.email}
-          />
-
-          <TextField
-            type="text"
-            name="text"
-            id="standard-basic"
-            label="Frota Atual"
-            handle
-            className={classes.textField}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.email}
-          />
-
-          <TextField
-            type="text"
-            name="text"
-            id="standard-basic"
-            label="Pesquisas de Mercado"
-            handle
-            className={classes.textField}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.email}
-          />
-
-          <TextField
-            type="text"
-            name="text"
-            id="standard-basic"
-            label="Teste entre Serviço"
-            handle
-            className={classes.textField}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.email}
-          />
-
-          <TextField
-            type="text"
-            name="text"
-            id="standard-basic"
-            label="Tipos de Serviço dos Concorrentes"
-            handle
-            className={classes.textField}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.email}
-          />
-
-          <TextField
-            type="text"
-            name="text"
-            id="standard-basic"
-            label="Postos Avançados dos Concorrentes"
-            handle
-            className={classes.textField}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.email}
-          />
-
-          <TextField
-            type="text"
-            name="text"
-            id="standard-basic"
-            label="Número de Promotores"
-            handle
-            className={classes.textField}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.email}
-          />
-
-          <TextField
-            type="text"
-            name="text"
-            id="standard-basic"
-            label="Comissão pelos Concorrentes"
-            handle
-            className={classes.textField}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.email}
-          />
-
-          <TextField
-            type="text"
-            name="text"
-            id="standard-basic"
-            label="Share em Unidade dos Concorrentes"
-            handle
-            className={classes.textField}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.email}
-          />
-          
-          <Button type="submit" disabled={isSubmitting}>
-            Submit
-          </Button>
-        </form>
-      )}
-    </Formik>
+    <Form className={classes.form}>
+      <label className={classes.label}>Comprar Insumos</label>
+      <Input onChange={(event)=>{addNewValue({closedContractsForecast:event.target.value})}} placeholder='Quantidade de Insumos'/>
+      <label className={classes.label}>Transferir insumos para outro serviço</label>
+      <Input onChange={(event)=>{addNewValue({installedCapacity:event.target.value})}} placeholder='Quantidade de Insumos'/>
+      <label className={classes.label}>Investimento em propaganda para este serviço</label>
+      <Input onChange={(event)=>{addNewValue({contractedResources:event.target.value})}} placeholder='Investimento'/>
+      <label className={classes.label}>Contratar vendedores</label>      
+      <Input onChange={(event)=>{addNewValue({availableCapacity:event.target.value})}} placeholder='Vendedores'/>
+      <label className={classes.label}>Demitir vendedores</label>
+      <Input onChange={(event)=>{addNewValue({adInvestment:event.target.value})}} placeholder='Vendedores'/>
+      <label className={classes.label}>Aumentar a frota de veículos</label>
+      <Input onChange={(event)=>{addNewValue({promotionTeam:event.target.value})}} placeholder='Veículos'/>
+      <label className={classes.label}>Diminuir a frota de veículos</label>
+      <Input onChange={(event)=>{addNewValue({salesCommission:event.target.value})}} placeholder='Veículos'/>
+      <label className={classes.label}>Aumentar número de varejistas</label>
+      <Input onChange={(event)=>{addNewValue({outposts:event.target.value})}} placeholder='Varejistas'/>
+      <label className={classes.label}>Diminuir número de varejistas</label>
+      <Input onChange={(event)=>{addNewValue({initialFleet:event.target.value})}} placeholder='Varejistas'/>
+    </Form>
   </div>
 )};
 
