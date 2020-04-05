@@ -1,4 +1,5 @@
 import React from 'react';
+import Normalize from 'react-normalize';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import Login from './components/Login/Login';
 import Game from './components/Game/Game';
@@ -13,6 +14,7 @@ socket.emit('teste', 'Mais-info')
 function App() {
   return (
     <BrowserRouter>
+        <Normalize/>
         <Switch>
             <Route exact path="/">
               <Redirect to="/login"/>
