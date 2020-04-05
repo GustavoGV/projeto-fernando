@@ -58,6 +58,11 @@
                 top: 650px;
                 left: 800px;
             }
+            #bsalvar { 
+                position: absolute;
+                top: 675px;
+                left: 800px;
+            }
             #usuarior {
                 position: absolute;
                 top: 600px;
@@ -316,6 +321,7 @@
             <input type="text" value="3irmas" id="usuario">
             <input type="text" value="666" id="senha">
             <button type="button" id="bsenha" onclick="login()">Clique para fazer login</button>
+            <button type="button" id="bsalvar" onclick="salvar()">Clique para salvar</button>
         </div>
         <div>
             <input type="text" value="3irmas" id="usuarior">
@@ -707,6 +713,9 @@
                 document.getElementById("usuario").value = ''
                 document.getElementById("senha").value = ''
 
+            }
+            function salvar() {
+                socket.emit('salvar')
             }
             function register() {
                 let valor1 = document.getElementById("usuarior").value

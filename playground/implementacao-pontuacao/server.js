@@ -123,7 +123,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
             .then((userx) => { 
                 if(userx !== null){socket.emit('operacao-negada', 'ja existe uma cooperativa com esse nome')}
                 else{
-                    let jogador = new Aluno({ sockid: socket.id, scorepro: 0, npesquisas: 1, turno: 0, scoremod: 0, scorepreco: [0,0], propaganda: 1, propagandauni: 1, faturamento: 0, ativo: 1, taokeys: 18720000, divida: [0,0,0], comissao: 0.05, frota: [10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], cooperativa: creden[0], pas: 30, pas1:0, pas2:0, distribuidores: 640, promotores: 40, senha: creden[1], 
+                    let jogador = new Aluno({ sockid: socket.id, temporario: 1, scorepro: 0, npesquisas: 1, turno: 0, scoremod: 0, scorepreco: [0,0], propaganda: 1, propagandauni: 1, faturamento: 0, ativo: 1, taokeys: 18720000, divida: [0,0,0], comissao: 0.05, frota: [10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], cooperativa: creden[0], pas: 30, pas1:0, pas2:0, distribuidores: 640, promotores: 40, senha: creden[1], 
                         147:[985,1,288,600,300,0],
                         159:[0,0,396,0,0,0],
                         149:[0,0,360,0,0,0],
@@ -184,6 +184,31 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
     else{ socket.emit('operacao-negada', 'ocorreu uma falha no processo de registro') }
                             }) 
                             .catch((wrr) => {console.log(wrr)})
+                            let jogadorR = new Aluno({ sockid: socket.id, temporario: 0, scorepro: 0, npesquisas: 1, turno: 0, scoremod: 0, scorepreco: [0,0], propaganda: 1, propagandauni: 1, faturamento: 0, ativo: 1, taokeys: 18720000, divida: [0,0,0], comissao: 0.05, frota: [10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], cooperativa: creden[0], pas: 30, pas1:0, pas2:0, distribuidores: 640, promotores: 40, senha: creden[1], 
+                                147:[985,1,288,600,300,0],
+                                159:[0,0,396,0,0,0],
+                                149:[0,0,360,0,0,0],
+                                148:[0,0,324,0,0,0],
+                                158:[0,0,360,0,0,0],
+                                157:[0,0,324,0,0,0],
+                                257:[0,0,396,0,0,0],
+                                258:[0,0,432,0,0,0],
+                                259:[0,0,468,0,0,0],
+                                267:[0,0,432,0,0,0],
+                                268:[0,0,468,0,0,0],
+                                269:[0,0,504,0,0,0],
+                                347:[0,0,432,0,0,0],
+                                348:[0,0,468,0,0,0],
+                                349:[0,0,504,0,0,0],
+                                357:[0,0,468,0,0,0],
+                                358:[0,0,504,0,0,0],
+                                359:[0,0,540,0,0,0],
+                                367:[0,0,504,0,0,0],
+                                368:[0,0,540,0,0,0],
+                                369:[0,0,576,0,0,0]});
+                            jogadorR.save()
+                                .then(() => {})
+                                .catch((err) => {console.log(err)})
 
                 }
 
@@ -351,15 +376,17 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
     socket.on('alterar-volume', (dados) => {
         let tipo = dados[0];
         let volume = Number(dados[1]);
-        Aluno.findOne({sockid: socket.id})
+        let ttt;
+        Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => {
+                ttt = userx;
                 if(userx !== null){
                     if(userx[tipo][1] == 1 || userx[tipo][1] == 0){
                         if(volume > 0){
-                            let array_dados = [userx[tipo][0], userx[tipo][1], userx[tipo][2], userx[tipo][3], volume]
+                            let array_dados = [userx[tipo][0], userx[tipo][1], userx[tipo][2], userx[tipo][3], volume, userx[tipo][5]]
                             userx.set(tipo, array_dados) 
                             userx.save()
-                                .then(() => Aluno.findOne({ _id: userx._id}))                 
+                                .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
                                 .then((user) => {
                                     if(user.taokeys == userx.taokeys){
                                         socket.emit('update', [user["147"],
@@ -409,7 +436,42 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     socket.emit('acesso-negado')
                 }
             })
-            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
+            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})     
+    })
+    socket.on('salvar', () => {
+        console.log('inicio-salvamento')
+        Aluno.findOne({sockid: socket.id, temporario: 1})
+            .then((usert) => {
+                Aluno.findOne({sockid: socket.id, temporario: 0})
+                    .then((userdef) => {
+                        userdef.set('npesquisas', usert.npesquisas)
+                        userdef.set('turno', usert.turno)
+                        userdef.set('propaganda', usert.propaganda)
+                        userdef.set('propagandauni', usert.propagandauni)
+                        userdef.set('taokeys', usert.taokeys)
+                        userdef.set('comissao', usert.comissao)
+                        console.log('PASt: ' + usert.pas)
+                        userdef.set('pas', usert.pas)
+                        userdef.set('pas1', usert.pas1)
+                        userdef.set('pas2', usert.pas2)
+                        userdef.set('distribuidores', usert.distribuidores)
+                        userdef.set('promotores', usert.promotores)
+                        console.log(index)
+                        
+                        for(let s = 0; s < index.length; s++){
+                            //console.log(index[s])
+                            let serv = index[s]
+                            userdef.set(serv, [usert[serv][0], usert[serv][1], usert[serv][2], usert[serv][3], usert[serv][4], usert[serv][5]])
+                        }
+                        
+                        userdef.save()
+                            .then(() => {})
+                            .catch((err) => {socket.emit('opracao-negada', 'falha ao salvar os dados no servidor')})
+                        
+
+
+                    })
+            })
     })
     socket.on('aumentar-frota', (dados) => {
         let qnt = Number(dados)

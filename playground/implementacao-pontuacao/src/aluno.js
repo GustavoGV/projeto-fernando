@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema({
     cooperativa: String,
     senha: String,
+    instancia: String,
     turno: Number,
     taokeys: Number,
     divida: Array,
@@ -23,6 +24,7 @@ const UserSchema = new Schema({
     scoremod: Number,
     scorepreco: Array,
     scorepro: Number,
+    temporario: Number,
         147:Array,
         148:Array,
         149:Array,
