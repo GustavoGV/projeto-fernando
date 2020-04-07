@@ -49,6 +49,12 @@ const UserSchema = new Schema({
 });
 
 const DataSchema = new Schema({
+    ativo: Number,
+    sockid: String,
+    login_adm: String,
+    senha_adm: String,
+    instancia: String,
+    senha_instancia: String,
     modelos_oferecidos: Array,
     total_pas: Number,
     oferta_mercado: Number,
