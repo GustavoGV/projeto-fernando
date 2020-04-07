@@ -59,51 +59,81 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
         console.log(` <=> Cooperativa OFF. socket.id: ${socket.id}`)
     })
     socket.on('login-client', (creden) => {
-        Aluno.findOne({sockid: socket.id}) // se n achar retorna Null e se vc tentar fazer essa pesquisa com um String sendo q no Schema ta como Number vai ir pro Catch ou vai pro Catch tb se n conseguir se conectar com o MongoDB
+        Aluno.findOne({sockid: socket.id, temporario: 1}) // se n achar retorna Null e se vc tentar fazer essa pesquisa com um String sendo q no Schema ta como Number vai ir pro Catch ou vai pro Catch tb se n conseguir se conectar com o MongoDB
             .then((ll) => {
                 if(ll !== null){socket.emit('ja-conectado', socket.id)}
                 else{
-                    Aluno.findOne({ cooperativa: creden[0], senha: creden[1]})
-                        .then((user) => { if(user == null){
+                    Aluno.findOne({ cooperativa: creden[0], senha: creden[1], temporario: 1})
+                        .then((usert) => { if(usert == null){
                                 socket.emit('login-negado', creden[0])
                                 }
-                                else{
-                                    Aluno.findOneAndUpdate({ _id: user._id}, { sockid: socket.id })
-                                        .then(() => { 
+                                else{   
+                                        Aluno.findOne({cooperativa: cooperativa.usert, temporario: 0})
+                                            .then((userdef) => {
+                                                usert.set('npesquisas', userdef.npesquisas)
+                                                usert.set('turno', userdef.turno)
+                                                usert.set('propaganda', userdef.propaganda)
+                                                usert.set('propagandauni', userdef.propagandauni)
+                                                usert.set('taokeys', userdef.taokeys)
+                                                usert.set('comissao', userdef.comissao)
+                                                //console.log('PASt: ' + userdef.pas)
+                                                usert.set('pas', userdef.pas)
+                                                usert.set('pas1', userdef.pas1)
+                                                usert.set('pas2', userdef.pas2)
+                                                usert.set('distribuidores', userdef.distribuidores)
+                                                usert.set('promotores', userdef.promotores)
+                                                //console.log(index)
+                                                
+                                                for(let s = 0; s < index.length; s++){
+                                                    //console.log(index[s])
+                                                    let serv = index[s]
+                                                    usert.set(serv, [userdef[serv][0], userdef[serv][1], userdef[serv][2], userdef[serv][3], userdef[serv][4], userdef[serv][5]])
+                                                }
+                                                
+                                                usert.save()
+                                                    .then(() => {})
+                                                    .catch((err) => {socket.emit('opracao-negada', 'falha ao salvar os dados no servidor')})
+                                     
+                                            })
+                                    
+                                        usert.sockid = socket.id;
+                                        usert.save()
+                                            .then(() => {})
+                                            .catch((err) => {console.log(err + ' (in socket.on(login-client)')})
+
                                             socket.emit('login-aprovado', creden[0]) 
-                                            socket.emit('dados-servicos', [user["147"],
-                user["148"],
-                user["149"],
-                user["157"],
-                user["158"],
-                user["159"],
-                user["257"],
-                user["258"],
-                user["259"],
-                user["267"],
-                user["268"],
-                user["269"],
-                user["347"],
-                user["348"],
-                user["349"],
-                user["357"],
-                user["358"],
-                user["359"],
-                user["367"],
-                user["368"],
-                user["369"],
-                user["taokeys"],
-                user["frota"],
-                user["promotores"],
-                user["comissao"],
-                user["distribuidores"],
-                user["pas"],
-                user["propaganda"],
-                user["propagandauni"],
-                user["divida"],
-                user["turno"]])
-                                        })
-                                        .catch((err) => console.log( err + ' <=> Falha ao registrar login do player com o socket especifico: ' + socket.id))
+                                            socket.emit('dados-servicos', [usert["147"],
+                usert["148"],
+                usert["149"],
+                usert["157"],
+                usert["158"],
+                usert["159"],
+                usert["257"],
+                usert["258"],
+                usert["259"],
+                usert["267"],
+                usert["268"],
+                usert["269"],
+                usert["347"],
+                usert["348"],
+                usert["349"],
+                usert["357"],
+                usert["358"],
+                usert["359"],
+                usert["367"],
+                usert["368"],
+                usert["369"],
+                usert["taokeys"],
+                usert["frota"],
+                usert["promotores"],
+                usert["comissao"],
+                usert["distribuidores"],
+                usert["pas"],
+                usert["propaganda"],
+                usert["propagandauni"],
+                usert["divida"],
+                usert["turno"]])
+
                             }})
                         .catch((err) => {console.log(err + ' <=> Falha na comunicacao com o Banco de dados n 403 ' + socket.id)})
                         }
@@ -123,7 +153,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
             .then((userx) => { 
                 if(userx !== null){socket.emit('operacao-negada', 'ja existe uma cooperativa com esse nome')}
                 else{
-                    let jogador = new Aluno({ sockid: socket.id, temporario: 1, scorepro: 0, npesquisas: 1, turno: 0, scoremod: 0, scorepreco: [0,0], propaganda: 1, propagandauni: 1, faturamento: 0, ativo: 1, taokeys: 18720000, divida: [0,0,0], comissao: 0.05, frota: [10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], cooperativa: creden[0], pas: 30, pas1:0, pas2:0, distribuidores: 640, promotores: 40, senha: creden[1], 
+                    let jogador = new Aluno({ sockid: socket.id, temporario: 1, instancia: "fgv", scorepro: 0, npesquisas: 1, turno: 0, scoremod: 0, scorepreco: [0,0], propaganda: 1, propagandauni: 1, faturamento: 0, ativo: 1, taokeys: 18720000, divida: [0,0,0], comissao: 0.05, frota: [10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], cooperativa: creden[0], pas: 30, pas1:0, pas2:0, distribuidores: 640, promotores: 40, senha: creden[1], 
                         147:[985,1,288,600,300,0],
                         159:[0,0,396,0,0,0],
                         149:[0,0,360,0,0,0],
@@ -184,7 +214,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
     else{ socket.emit('operacao-negada', 'ocorreu uma falha no processo de registro') }
                             }) 
                             .catch((wrr) => {console.log(wrr)})
-                            let jogadorR = new Aluno({ sockid: socket.id, temporario: 0, scorepro: 0, npesquisas: 1, turno: 0, scoremod: 0, scorepreco: [0,0], propaganda: 1, propagandauni: 1, faturamento: 0, ativo: 1, taokeys: 18720000, divida: [0,0,0], comissao: 0.05, frota: [10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], cooperativa: creden[0], pas: 30, pas1:0, pas2:0, distribuidores: 640, promotores: 40, senha: creden[1], 
+                            let jogadorR = new Aluno({ sockid: socket.id, temporario: 0, instancia: "fgv", scorepro: 0, npesquisas: 1, turno: 0, scoremod: 0, scorepreco: [0,0], propaganda: 1, propagandauni: 1, faturamento: 0, ativo: 1, taokeys: 18720000, divida: [0,0,0], comissao: 0.05, frota: [10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], cooperativa: creden[0], pas: 30, pas1:0, pas2:0, distribuidores: 640, promotores: 40, senha: creden[1], 
                                 147:[985,1,288,600,300,0],
                                 159:[0,0,396,0,0,0],
                                 149:[0,0,360,0,0,0],
@@ -219,7 +249,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
         let velho = dados[0];
         let novo = dados[1];
         let qnt = dados[2];
-        Aluno.findOne({sockid: socket.id})
+        Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => {
                 if(userx !== null){
                     if(userx['taokeys'] >= qnt*30 && userx[velho][0] >= qnt){
@@ -245,7 +275,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         userx.set(novo, array_dados_novo)
                         userx.taokeys = userx.taokeys - qnt*30
                         userx.save()
-                            .then(() => Aluno.findOne({ _id: userx._id}))                 
+                            .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
                             .then((user) => {
                                 console.log(userx[velho][0] + ' <----userx(Schema trabalhado aqui)')
                                 console.log(user[velho][0] + ' <=====user(recem pesquisado)')
@@ -294,7 +324,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                 }
             
             })
-    })
+    }) //OK
     socket.on('encerrar-servico', (tipo) => {
         Aluno.findOne({sockid: socket.id})
             .then((userx) => {
@@ -442,7 +472,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
         console.log('inicio-salvamento')
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((usert) => {
-                Aluno.findOne({sockid: socket.id, temporario: 0})
+                Aluno.findOne({cooperativa: cooperativa.usert, temporario: 0})
                     .then((userdef) => {
                         userdef.set('npesquisas', usert.npesquisas)
                         userdef.set('turno', usert.turno)
@@ -1765,7 +1795,7 @@ socketsadm.on('connection', (socket) => { //conversa do server com o client do A
     let demanda = 100000 //n eh um valor fixo kkk
     let teste = 0
     socket.on('finalizar-turno', () => { if(socket.id == admid){
-        Aluno.find({ativo: 1})
+        Aluno.find({ativo: 1, temporario: 0}) //colocar aqui o filtro por instancia tb
             .then((users) => {
                 let soma = 0;
                 let soma1 = 0;
