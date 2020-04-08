@@ -17,6 +17,8 @@ import { CardMedia } from '@material-ui/core';
 import video from './../../assets/video.mp4'
 import { makeStyles } from '@material-ui/core/styles';
 
+import socket from '../../connection'
+socket.emit('teste', 'teste01')
 
 function Copyright() {
   return (

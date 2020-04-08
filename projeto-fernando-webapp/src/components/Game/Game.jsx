@@ -31,14 +31,14 @@ import SelectReport from '../SelectReport/SelectReport';
 import ServicesContainer from '../ServicesContainer/ServicesContainer';
 import Manual from '../Manual/Manual';
 
-
 import { Route, Link } from 'react-router-dom'
 
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 
-import socket from '../../connection';
+//import socket from '../../connection';
+//socket.emit("testar", "Deus_Nemo_RULES")
 
-socket.emit('teste', 'vitoria')
+
 
 
 

@@ -3,11 +3,14 @@ import Typography from '@material-ui/core/Typography'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
+//import socket from '../../connection';
+//socket.emit("teste", "dados")
+
 
 export default function Manual() {
 
   //TODO: Move lists to here
-  
+   
 
   const basicActions = []
 

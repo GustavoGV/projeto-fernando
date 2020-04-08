@@ -501,6 +501,8 @@
                     let resp = [index[i], decP]
                     socket.emit('alterar-preco', resp)
 
+                    
+
             })
                 table.rows[i+1].cells[4].addEventListener('click', function(){
                     let decN = prompt('Qual o volume de vendas que planeja ter para o serviço ' + index[i] + '?')
