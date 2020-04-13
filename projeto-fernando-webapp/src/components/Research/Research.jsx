@@ -21,6 +21,9 @@ function Research(props) {
         defaultValue={options[0]}
         options={options}
       />
+      <Button variant="contained" color="primary" style={{margin:'16px'}}>
+        Pesquisar
+      </Button>
       
     </>
   )

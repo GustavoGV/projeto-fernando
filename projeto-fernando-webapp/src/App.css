@@ -14,3 +14,33 @@ a {
   margin: 8px 0;
 }
 
+.css-yk16xz-control{
+  min-height: 34px !important;
+}
+
+.css-tlfecz-indicatorContainer{
+  padding:4px !important;
+}
+
+.css-1gtu0rj-indicatorContainer{
+  padding:4px !important;
+}
+
+.css-1pahdxg-control{
+  min-height: 34px !important;
+}
+
+.css-1uccc91-singleValue{
+  color: rgba(0,0,0,0.57) !important;
+}
+
+.css-9gakcf-option{
+  background-color: white !important;
+  color:rgba(0,0,0,0.57) !important;
+  text-align: left;
+}
+
+.css-9gakcf-option:hover{
+  background-color: rgba(38,132,255,0.2) !important;
+}
+

@@ -39,6 +39,7 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 //socket.emit("testar", "Deus_Nemo_RULES")
 
 
+//socket.emit('teste', 'vitoria')
 
 
 
@@ -139,7 +140,7 @@ function Game(props) {
       <Divider />
       <List>
         {sidebarComponents.map((sidebarComponent, index) => (
-          <Link to={sidebarComponent.path}>
+          <Link to={sidebarComponent.path} key={index}>
             <ListItem button key={sidebarComponent.label}>
               <ListItemIcon>{sidebarComponent.icon}</ListItemIcon>
               <ListItemText primary={sidebarComponent.label} />
@@ -160,11 +161,11 @@ function Game(props) {
   );
 
   function returnSidebarComponents(sidebarComponents){
-    return sidebarComponents.map(sidebarComponent=>{
+    return sidebarComponents.map((sidebarComponent, index)=>{
       console.log(">>>>>>>>",sidebarComponent.component)
       console.log(">>>>>>>>",sidebarComponent.path)
       return(
-        <Route path={sidebarComponent.path} render={props => <sidebarComponent.component {...props}/>}/>
+        <Route key={index} path={sidebarComponent.path} render={props => <sidebarComponent.component {...props}/>}/>
       )
     })
   }
