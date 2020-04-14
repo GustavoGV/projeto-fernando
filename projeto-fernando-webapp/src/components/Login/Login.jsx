@@ -20,7 +20,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import socket from '../../connection';
 import {register, login} from '../../serverCalls';
 
-import socket from '../../connection'
+//import socket from '../../connection'
 socket.emit('teste', 'teste01')
 
 
