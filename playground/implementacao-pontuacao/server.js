@@ -67,10 +67,15 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
     socket.on('login-client', (creden) => {
         Aluno.findOne({sockid: socket.id, temporario: 1}) // se n achar retorna Null e se vc tentar fazer essa pesquisa com um String sendo q no Schema ta como Number vai ir pro Catch ou vai pro Catch tb se n conseguir se conectar com o MongoDB
             .then((ll) => {
-                if(ll !== null){socket.emit('ja-conectado', socket.id)}
+                if(ll !== null){
+                    console.log('>>usuario ja conectado');
+                    socket.emit('ja-conectado', socket.id)
+                
+                }
                 else{
                     Aluno.findOne({ cooperativa: creden[0], senha: creden[1], temporario: 1, instancia: creden[2]})
                         .then((usert) => { if(usert == null){
+                                console.log('>>login não permitido: credenciais invalidas')
                                 socket.emit('login-negado', creden[0])
                                 }
                                 else{   
@@ -99,6 +104,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                                 usert.sockid = socket.id;
                                                 usert.save()
                                                     .then(() => {
+                                                        console.log('>>login efetuado com sucesso')
                                                         socket.emit('login-aprovado', creden[0]) 
                                             socket.emit('dados-servicos', [usert["147"],
                 usert["148"],
@@ -151,7 +157,10 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
     socket.on('register-client', (creden) => {
         Aluno.findOne({sockid: socket.id, temporario: 1}) // se n achar retorna Null e se vc tentar fazer essa pesquisa com um String sendo q no Schema ta como Number vai ir pro Catch ou vai pro Catch tb se n conseguir se conectar com o MongoDB
             .then((ll) => {
-                if(ll !== null){socket.emit('ja-conectado', ll.cooperativa)}
+                if(ll !== null){
+                    console.log('>>usuario ja conectado')
+                    socket.emit('ja-conectado', ll.cooperativa)
+                }
                 else{
                     Data.findOne({instancia: creden[2], senha_instancia: creden[3]})
                         .then((inst) => {
@@ -160,7 +169,9 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             
         Aluno.findOne({cooperativa: creden[0], instancia: creden[2]})
             .then((userx) => { 
-                if(userx !== null){socket.emit('operacao-negada', 'ja existe uma cooperativa com esse nome na instancia selecionada')}
+                if(userx !== null){
+                    console.log('>>registro negado: já existe cooperativa com este nome');
+                    socket.emit('operacao-negada', 'ja existe uma cooperativa com esse nome na instancia selecionada')}
                 else{
                     let jogador = new Aluno({ sockid: socket.id, temporario: 1, instancia: creden[2], scorepro: 0, npesquisas: 1, turno: 0, scoremod: 0, scorepreco: [0,0], propaganda: 1, propagandauni: 1, faturamento: 0, ativo: 1, taokeys: 18720000, divida: [0,0,0], comissao: 0.05, frota: [10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], cooperativa: creden[0], pas: 30, pas1:0, pas2:0, distribuidores: 640, promotores: 40, senha: creden[1], 
                         147:[985,1,288,600,300,0],
@@ -213,6 +224,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                     369:[0,0,576,0,0,0]});
                                     jogadorR.save()
                                         .then(() => {
+                                            console.log('>>login aprovado')
                                             socket.emit('login-aprovado', creden[0]) 
                                 socket.emit('dados-servicos', [user["147"],
     user["148"],
@@ -249,7 +261,8 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                         .catch((err) => {console.log(err)})
 
                                 }
-                                else{ 
+                                else{
+                                    console.log('>>falha ao registrar')
                                     socket.emit('operacao-negada', 'ocorreu uma falha no processo de registro') 
                                     }
                             })
@@ -262,7 +275,9 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
             }) 
         
         }
-        else{socket.emit('operacao-negada', 'combinação de nome da sessão e senha da sessão invalida')}
+        else{
+            console.log('>>registro negado')
+            socket.emit('operacao-negada', 'combinação de nome da sessão e senha da sessão invalida')}
     })
         } })
             .catch((err) => {console.log(err+'. id:' + socket.id)})

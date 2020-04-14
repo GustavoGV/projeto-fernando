@@ -24,9 +24,9 @@ export default function SelectRound() {
   };
 
   const generateRounds = rounds =>{
-    return rounds.map(round=>{
+    return rounds.map((round, index)=>{
       return(
-        <Link to={`/game/inputs?round=${round.identifier}`}>
+        <Link key={index} to={`/game/inputs?round=${round.identifier}`}>
           <MenuItem onClick={handleClose}>{round.label}</MenuItem>
         </Link>
       )

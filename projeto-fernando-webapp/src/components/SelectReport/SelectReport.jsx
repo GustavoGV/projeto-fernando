@@ -23,9 +23,9 @@ export default function SelectRound() {
   };
 
   const generateRounds = rounds =>{
-    return rounds.map(round=>{
+    return rounds.map((round, index)=>{
       return(
-        <MenuItem onClick={handleClose}>{round}</MenuItem>
+        <MenuItem key={index} onClick={handleClose}>{round}</MenuItem>
       )
     })
   }
