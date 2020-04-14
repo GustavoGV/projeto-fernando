@@ -69,7 +69,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
             .then((ll) => {
                 if(ll !== null){socket.emit('ja-conectado', socket.id)}
                 else{
-                    Aluno.findOne({ cooperativa: creden[0], senha: creden[1], temporario: 1})
+                    Aluno.findOne({ cooperativa: creden[0], senha: creden[1], temporario: 1, instancia: creden[2]})
                         .then((usert) => { if(usert == null){
                                 socket.emit('login-negado', creden[0])
                                 }
@@ -145,7 +145,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
             .catch(() => {console.log('falha na comunicacao com o Banco de dados n 504 ' +socket.id)})
 
                        
-    }) //OK
+    }) //OK (alteracao para CHECAR TB a instancia do Client ao inves de so a senha e o nome (pq poderia dar conflito (alternativa seria n perminitir q dois cliente tenham senhas iguais)))
     socket.on('teste', (teste) => {console.log('teste: ' + teste + ' (ID de origem: ' + socket.id + ')')
     })
     socket.on('register-client', (creden) => {
