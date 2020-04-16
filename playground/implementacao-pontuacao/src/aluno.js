@@ -14,18 +14,18 @@ const UserSchema = new Schema({
     distribuidores: Number,
     comissao: Number,
     pas: Number,
-    pas1: Number,
-    pas2: Number,
-    ativo: Number,
-    npesquisas: Number,
-    faturamento: Number,
+    pas1: Number, //PAS em construção (faltando 1 turno para serem finalizados)
+    pas2: Number, //PAS em construção (faltando 2 turno para serem finalizados)
+    ativo: Number, //Se o player esta habilitado para participar do faturamento
+    npesquisas: Number, //num de pesquisas realizadas
+    faturamento: Number, //faturamento obtido no turno
     propaganda: Number,
     propagandauni: Number,
-    scoremod: Number,
-    scorepreco: Array,
+    scoremod: Number, //auxilio para calculo de faturamento por diferencaod e tipo de serviço (top, med, low)
+    scorepreco: Array, //auxilia calculo de faturamento referente ao preco de venda
     scorepro: Number,
-    temporario: Number,
-        147:Array,
+    temporario: Number, // 0 ou 1 fala se é o Schema temporario ou o oficial
+        147:Array, //nessa array (com 6 de length) sendo que *147[0] = Num de Insumos; *147[1] = SITUAÇÃO do serviõ (0(inativo) ou 1(ativo) ou 2(em cancelamento) ou 3(cancelado (dura 1 turno))); *147[2] = custo unitario; *147[3] = preço de venda; *147[4] = vendas planejadas; *147[5] = num de vendas acumuladas (serve pra dar desconto pro player "experiente"(que ja vendeu varios desse serviço)) 
         148:Array,
         149:Array,
         157:Array,
@@ -56,9 +56,11 @@ const DataSchema = new Schema({
     instancia: String,
     senha_instancia: String,
     modelos_oferecidos: Array,
+    participacao_modelos: Array, //array com length de 21 (= index) e cada elemento representa qnt do faturamento global acabou sendo alocado para cada serviço (participaçao desse serviço no faturamento global)
     total_pas: Number,
     oferta_mercado: Number,
-    total_distribuidores: Number
+    total_distribuidores: Number,
+    turno: Number
 
 
 })
