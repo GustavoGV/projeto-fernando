@@ -76,7 +76,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                 else{
                     Aluno.findOne({ cooperativa: creden[0], senha: creden[1], temporario: 1, instancia: creden[2]})
                         .then((usert) => { if(usert == null){
-                                console.log('>>login não permitido: credenciais invalidas')
+                                console.log('>>login não permitido: credenciais invalidas', creden[0], creden[1], creden[2])
                                 socket.emit('login-negado', creden[0])
                                 }
                                 else{ 
