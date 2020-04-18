@@ -314,7 +314,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     }
                     if(userx[novo][1] == 1 || check_1_servico_ativo()){ 
                     if(userx['taokeys'] >= qnt*30 && userx[velho][0] >= qnt){
-                        if(userx[novo][1] !== 2 && userx[novo][1] !== 3){ 
+                        if(userx[novo][1] == 1){ 
                         let insu_velho = Number(userx[velho][0]) - Number(qnt)
                         let array_dados_velho = [insu_velho,1,userx[velho][2], userx[velho][3], userx[velho][4], userx[velho][5], userx[velho][6]];
                         let insu_novo = Number(userx[novo][0]) + Number(qnt)
@@ -377,7 +377,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 })
                             .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
                     }
-                    else{socket.emit('operacao-negada', 'voce nao pode transferir insumos para um servico cancelado')}
+                    else{socket.emit('operacao-negada', 'voce nao pode transferir insumos para um servico que nao esta ativo')}
                     }
                 }
                 else{
@@ -389,14 +389,15 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                 }
             
             })
-    }) //OK troca insu de um servico ativo para outro ativo e troca de um ativo para um INATIVADO (ele checa antes no sistema se só tem 1 ativo no momento) e ativa-o
+    }) //OK troca insu de um servico ativo para outro ativo APENAS TESTADO
     socket.on('substituir-servico', (dados) => {
         let velho = dados[0];
         let novo = dados[1];
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => {
                 if(userx !== null){
-                    if(userx[velho] == 1 && userx[novo] !== 3){
+                    if(userx[velho][1] == 1 && userx[novo][1] !== 3){
+                    if(userx[novo][1] !== 1){
                     if(userx['taokeys'] >= userx[velho][0]*30){
                         let array_dados_velho = [0,2,userx[velho][2], userx[velho][3], userx[velho][4], userx[velho][5], userx[velho][6]];
                         let insu_novo = Number(userx[novo][0]) + Number(userx[velho][0])
@@ -413,10 +414,10 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             else{
                                 array_dados_novo = [insu_novo,1,userx[novo][2], userx[novo][3], userx[novo][4], userx[novo][5], userx[novo][6]]
                             }
-                        
+                        userx.taokeys = userx.taokeys - userx[velho][0]*30
                         userx.set(velho, array_dados_velho)
                         userx.set(novo, array_dados_novo)
-                        userx.taokeys = userx.taokeys - qnt*30
+                        //userx.taokeys = userx.taokeys - userx[velho][0]*30
                         userx.save()
                             .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
                             .then((user) => {
@@ -462,7 +463,16 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     }
                 }
                 else{
-                    socket.emit('operacao-negada', 'voce nao pode substituir um serviço por um que foi cancelado no turno anterior, espere o proximo turno para reativa-lo')
+                    socket.emit('operacao-negada', 'voce nao pode substituir um serviço por outro que ja esta ativado')
+                }
+                }
+                else{
+                    if(userx[velho][1] == 1){
+                        socket.emit('operacao-negada', 'voce nao pode substituir um serviço por outro que foi cancelado no turno anterior, espere o proximo turno para reativa-lo')
+                    }
+                    else{
+                        socket.emit('operacao-negada', 'voce nao pode substituir um serviço que nao esta ativo por outro')
+                    }
                 }
                 }
                 else{
@@ -1605,8 +1615,14 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
 
                     }
                     else{
+                        if(userx[tipo][1] == 3){
                         socket.emit('operacao-negada', 'esse servico esta indisponivel para ativação nesse turno')
+                        }
+                        else{
+                            socket.emit('operacao-negada', 'voce so pode ter 2 servicoes simultaneos')
+                        }
                     }
+
                 }
                 else{
                     socket.emit('acesso-negado')
@@ -2901,7 +2917,7 @@ function lixo(){
 CHECK LIST:
             - COLETAR DADOS PARA DEMONSTRATIVOS FINANCEIROS DURANTE O PROCESSAMENTO DO TURNO SALVANDO NO SCHEMA DE CADA COOPERATIVA
 
-            - LIMITAR O NUMERO DE POSSIVEIS SERVICOS ATIVOS PARA 2 //metodo: 
+            -OK LIMITAR O NUMERO DE POSSIVEIS SERVICOS ATIVOS PARA 2 //metodo: 
                 NOVOS SOCKETS: - SUBSTITUICAO DE SERVICO (transferir tds os insumos para outro servico, ativa-lo e desativar o antigo) (ps: tem q haver substituicao ate para servicos em processo de cancelamento) - ; - COMPRA DE SERVICO (para serviços já ativos) - ; - TROCA DE INSUMOS (troca de insumos entre os servicoes ativos apenas) - ; - ATIVACAO DE SERVICO (para servicos n cancelados) - ; - DESATIVACAO DO SERVICO (para servicos ativos e com 0 insumos contanto que sempre haja 1 servico ativo a todo momento(ps: por isso é essencial a SUBSTITUICAO)) -
             
             - IDEA PARA BACK UP (e saves antigos): ao final do turno criar um: new Aluno({ ... }) mas com uma assim: key: backup (0 ou 1) e dai vai ter o Ativo q é 0 ou 1 q auxilia pra so processar os dados atuais
