@@ -80,13 +80,11 @@ export default function Register(props) {
   function register(){
     let {cooperative, instance, password} = signUpData
     if(cooperative && instance && password){
-      let creden = [cooperative, password, instance]
+      socket.emit('registrar-nova-instancia', ['miranda', 'batata', 'unicamp', 'batata-publica', 'senha-mestra'])
+      let creden = [cooperative, password, instance, 'batata-publica']
       socket.emit('register-client', creden )
       socket.on('login-aprovado',data=>{
         console.log(data)
-      })
-      socket.on('dados-servicos', state=>{
-        console.log(state)
       })
     }
     

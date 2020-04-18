@@ -162,8 +162,6 @@ function Game(props) {
 
   function returnSidebarComponents(sidebarComponents){
     return sidebarComponents.map((sidebarComponent, index)=>{
-      console.log(">>>>>>>>",sidebarComponent.component)
-      console.log(">>>>>>>>",sidebarComponent.path)
       return(
         <Route key={index} path={sidebarComponent.path} render={props => <sidebarComponent.component {...props}/>}/>
       )

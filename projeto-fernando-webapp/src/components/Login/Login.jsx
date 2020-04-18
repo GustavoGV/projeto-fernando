@@ -20,7 +20,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import socket from '../../connection';
 import {register, login} from '../../serverCalls';
 
-//import socket from '../../connection'
 socket.emit('teste', 'teste01')
 
 
@@ -64,35 +63,32 @@ const useStyles = makeStyles(theme => ({
 export default function Login(props) {
   const classes = useStyles();
   const [modal, setModal] = useState(false);
+  const [error, setError] = useState(false);
   const [signInData, setSignInData] = useState({
     cooperative:null,
     instance:null,
     password:null,
   })
-
   function handleClickModal(){
     setModal(!modal)
   };
 
   function onSimulationClick(){
     const {cooperative,instance,password} = signInData
-    const creden = [cooperative,password,instance];
-    socket.emit('registrar-nova-instancia', ['miranda', 'batata', 'unicamp', 'batata-publica', 'senha-mestra'])
-    register(['miranda', 'batata', 'unicamp'])
-    login(['miranda', 'batata', 'unicamp'])
+    const creden = [cooperative, password];
+    login(creden)
   }
-  //props.history.push('/game/inputs?round=t1')
+  //
 
   useEffect(()=>{
     console.log('component mounted')
     socket.on('login-negado',creden=>{
       console.log('login negado',creden)
+      setError(true);
     })
     socket.on('login-aprovado', creden=>{
       console.log('login aprovado',creden)
-    })
-    socket.on('dados-servicos', data=>{
-      console.log(data)
+
     })
     return(()=>{
       console.log('component unmounted')
@@ -128,6 +124,8 @@ export default function Login(props) {
           </Typography>
           <form className={classes.form} noValidate>
             <TextField
+              error={error}
+              helperText={error? "falha no login" : null}
               variant="outlined"
               margin="normal"
               required
@@ -140,6 +138,8 @@ export default function Login(props) {
               onChange={e=>setSignInData({...signInData, cooperative:e.target.value})}
             />
             <TextField
+              error={error}
+              helperText={error? "falha no login" : null}
               variant="outlined"
               margin="normal"
               required
@@ -152,6 +152,8 @@ export default function Login(props) {
               onChange={e=>setSignInData({...signInData, instance:e.target.value})}
             />
             <TextField
+              error={error}
+              helperText={error? "falha no login" : null}
               variant="outlined"
               margin="normal"
               required
