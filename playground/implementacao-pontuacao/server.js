@@ -9,6 +9,7 @@ const Data = estrutura[1]
 //import { isMainThread } from 'worker_threads'
 import mongoose from 'mongoose'
 import { Socket } from 'net'
+import e from 'express'
 //import { createCipher } from 'crypto'
 
 mongoose.connect('mongodb://localhost/aluno_teste')
@@ -297,6 +298,21 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => {
                 if(userx !== null){
+                    function check_1_servico_ativo() {
+                        let count = 0
+                        for(let s = 0; s < index.length; s++){
+                            if(userx[index[s]][1] == 1){
+                                count = count + 1
+                            }
+                        }
+                        if(count == 1){
+                            return true
+                        }
+                        else{
+                            return false
+                        }
+                    }
+                    if(userx[novo][1] == 1 || check_1_servico_ativo()){ 
                     if(userx['taokeys'] >= qnt*30 && userx[velho][0] >= qnt){
                         if(userx[novo][1] !== 2 && userx[novo][1] !== 3){ 
                         let insu_velho = Number(userx[velho][0]) - Number(qnt)
@@ -365,11 +381,96 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     }
                 }
                 else{
+                    socket.emit('operacao-negada', 'voce nao pode ter mais de dois serviços ativos simultaneamente')
+                }
+                }
+                else{
                     socket.emit('acesso-negado')
                 }
             
             })
-    }) //OK
+    }) //OK troca insu de um servico ativo para outro ativo e troca de um ativo para um INATIVADO (ele checa antes no sistema se só tem 1 ativo no momento) e ativa-o
+    socket.on('substituir-servico', (dados) => {
+        let velho = dados[0];
+        let novo = dados[1];
+        Aluno.findOne({sockid: socket.id, temporario: 1})
+            .then((userx) => {
+                if(userx !== null){
+                    if(userx[velho] == 1 && userx[novo] !== 3){
+                    if(userx['taokeys'] >= userx[velho][0]*30){
+                        let array_dados_velho = [0,2,userx[velho][2], userx[velho][3], userx[velho][4], userx[velho][5], userx[velho][6]];
+                        let insu_novo = Number(userx[novo][0]) + Number(userx[velho][0])
+                        let array_dados_novo
+                            if(userx[novo][4] == 0 && userx[novo][3] !== 0){
+                                array_dados_novo = [insu_novo,1,userx[novo][2], userx[novo][3], 1, userx[novo][5], userx[novo][6]]
+                            }
+                            else if(userx[novo][4] == 0 && userx[novo][3] == 0){
+                                array_dados_novo = [insu_novo,1,userx[novo][2], 800, 1, userx[novo][5], userx[novo][6]]
+                            }
+                            else if(userx[novo][4] !== 0 && userx[novo][3] == 0){
+                                array_dados_novo = [insu_novo,1,userx[novo][2], 800, userx[novo][4], userx[novo][5], userx[novo][6]]
+                            }
+                            else{
+                                array_dados_novo = [insu_novo,1,userx[novo][2], userx[novo][3], userx[novo][4], userx[novo][5], userx[novo][6]]
+                            }
+                        
+                        userx.set(velho, array_dados_velho)
+                        userx.set(novo, array_dados_novo)
+                        userx.taokeys = userx.taokeys - qnt*30
+                        userx.save()
+                            .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
+                            .then((user) => {
+                                //console.log(userx[velho][0] + ' <----userx(Schema trabalhado aqui)')
+                                //console.log(user[velho][0] + ' <=====user(recem pesquisado)')
+                                if(user.taokeys == userx.taokeys){
+                                socket.emit('update', [user["147"],
+                                user["148"],
+                                user["149"],
+                                user["157"],
+                                user["158"],
+                                user["159"],
+                                user["257"],
+                                user["258"],
+                                user["259"],
+                                user["267"],
+                                user["268"],
+                                user["269"],
+                                user["347"],
+                                user["348"],
+                                user["349"],
+                                user["357"],
+                                user["358"],
+                                user["359"],
+                                user["367"],
+                                user["368"],
+                                user["369"],
+                                user["taokeys"],
+                                user["frota"],
+                                user["promotores"],
+                                user["comissao"],
+                                user["distribuidores"],
+                                user["pas"],
+                                user["propaganda"],
+                                user["propagandauni"],
+                                user["divida"],
+                                user["turno"]]);
+        
+                                    }                  
+                                })
+                            .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
+                    
+                    }
+                }
+                else{
+                    socket.emit('operacao-negada', 'voce nao pode substituir um serviço por um que foi cancelado no turno anterior, espere o proximo turno para reativa-lo')
+                }
+                }
+                else{
+                    socket.emit('acesso-negado')
+                }
+            
+            })
+    }) //OK (falta teste)
     socket.on('encerrar-servico', (tipo) => {
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => {
@@ -379,14 +480,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         for(let i = 0; i < 21; i++){
                             if(userx[index[i]][1] !== 1){
                                 b = b + 1 //passivel de otimizacao
-                            }
-                             
+                            }   
                         }
                         if(b == 20){
                             socket.emit('operacao-negada', 'voce precisa sempre ter pelo menos um servico ativo durante o turno (ative outro para desativar esse)')
                         }
                         else{
-                        let array_dados = [0, 2, userx[tipo][2], 0, 0, 0]
+                        let array_dados = [0, 2, userx[tipo][2], userx[tipo][3], userx[tipo][4], userx[tipo][5], userx[tipo][6]]
                         userx.set(tipo, array_dados) 
                         userx.save()
                             .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
@@ -451,12 +551,12 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
     socket.on('alterar-volume', (dados) => {
         let tipo = dados[0];
         let volume = Number(dados[1]);
-        let ttt;
+        //let ttt;
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => {
-                ttt = userx;
+                //ttt = userx;
                 if(userx !== null){
-                    if(userx[tipo][1] == 1 || userx[tipo][1] == 0){
+                    if(userx[tipo][1] == 1){
                         if(volume > 0){
                             let array_dados = [userx[tipo][0], userx[tipo][1], userx[tipo][2], userx[tipo][3], volume, userx[tipo][5], userx[tipo][6]]
                             userx.set(tipo, array_dados) 
@@ -637,13 +737,55 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
     }) //OK
+    socket.on('puxar-state', () => {
+        Aluno.findOne({sockid: socket.id, temporario: 1})
+            .then((userx) => {
+                if(userx !== null){
+                    socket.emit('update', [user["147"],
+                                user["148"],
+                                user["149"],
+                                user["157"],
+                                user["158"],
+                                user["159"],
+                                user["257"],
+                                user["258"],
+                                user["259"],
+                                user["267"],
+                                user["268"],
+                                user["269"],
+                                user["347"],
+                                user["348"],
+                                user["349"],
+                                user["357"],
+                                user["358"],
+                                user["359"],
+                                user["367"],
+                                user["368"],
+                                user["369"],
+                                user["taokeys"],
+                                user["frota"],
+                                user["promotores"],
+                                user["comissao"],
+                                user["distribuidores"],
+                                user["pas"],
+                                user["propaganda"],
+                                user["propagandauni"],
+                                user["divida"],
+                                user["turno"]]);
+                }
+                else{
+                    socket.emit('acesso-negado')
+                }
+            })
+            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
+    }) // OK
     socket.on('alterar-preco', (dados) => {
         let tipo = dados[0];
         let preco = Number(dados[1]);
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => {
                 if(userx !== null){
-                    if(userx[tipo][1] == 1 || userx[tipo][1] == 0){
+                    if(userx[tipo][1] == 1){
                         if(preco > 0 && preco <= 9999){
                             let array_dados = [userx[tipo][0], userx[tipo][1], userx[tipo][2], preco, userx[tipo][4], userx[tipo][5], userx[tipo][6]]
                             userx.set(tipo, array_dados) 
@@ -1394,30 +1536,35 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
     }) //OK
-    socket.on('desfazer-encerramento', (tipo) => {
+    socket.on('ativar-servico', (tipo) => {
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => {
                 if(userx !== null){
-                    if(userx[tipo][0] == 0 && userx[tipo][1] == 2){
-                        let array_dados
-                        if(userx[tipo][3] == 0 && userx[tipo][4] !== 0){
-                            array_dados = [soma_insu, 1, userx[tipo][2], 800, userx[tipo][4], userx[tipo][5], userx[tipo][6]]
+                    function check_1_servico_ativo() {
+                        let count = 0
+                        for(let s = 0; s < index.length; s++){
+                            if(userx[index[s]][1] == 1){
+                                count = count + 1
+                            }
                         }
-                        else if(userx[tipo][3] == 0 && userx[tipo][4] == 0){
-                            array_dados = [0, 1, userx[tipo][2], 800, 1, userx[tipo][5], userx[tipo][6]]
+                        if(count == 1){
+                            return true
                         }
-                        else if(userx[tipo][3] !== 0 && userx[tipo][4] == 0){
-                            array_dados = [0, 1, userx[tipo][2], userx[tipo][3], 0, userx[tipo][5], userx[tipo][6]]
+                        else if(count == 0){
+                            return true
                         }
                         else{
-                            array_dados = [0, 1, userx[tipo][2], userx[tipo][3], userx[tipo][4], userx[tipo][5], userx[tipo][6]]
+                            return false
                         }
+                    }
+                    if(userx[tipo][1] !== 3 && check_1_servico_ativo()){
+                        let array_dados = [0, 1, userx[tipo][2], userx[tipo][3], userx[tipo][4], userx[tipo][5], userx[tipo][6]]
                         userx.set(tipo, array_dados) 
                         userx.save()
                             .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
                             .then((user) => {
-                                console.log(userx[tipo][1] + ' <----userx(Schema trabalhado aqui)')
-                                console.log(user[tipo][1] + ' <=====user(recem pesquisado)')
+                               // console.log(userx[tipo][1] + ' <----userx(Schema trabalhado aqui)')
+                               // console.log(user[tipo][1] + ' <=====user(recem pesquisado)')
                                     if(user.taokeys == userx.taokeys){
                                         socket.emit('update', [user["147"],
                                 user["148"],
@@ -1458,7 +1605,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
 
                     }
                     else{
-                        socket.emit('operacao-negada', 'esse servico nao esta em processo de encerramento')
+                        socket.emit('operacao-negada', 'esse servico esta indisponivel para ativação nesse turno')
                     }
                 }
                 else{
@@ -1466,7 +1613,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
-    }) //OK
+    }) //OK fazet teste (so ativa se tiver 1 ou 0 servicos ja ativos)
     socket.on('comprar-servico', (dados) => {
         let tipo = dados[0];
         let qnti = dados[1];
@@ -1475,7 +1622,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     if(userx !== null){
                         //console.log(user.taokeys + ' ccccccccccccccc');
                         if(userx['taokeys'] >= qnti*userx[tipo][2] && userx[tipo][1] !== 2){
-                            if(userx[tipo][1] !== 3){
+                            if(userx[tipo][1] !== 3 && userx[tipo][1] !== 0){
                            console.log(userx[tipo][1] + " <====")
                            //userx[tipo][1] = 1
                            let soma_insu = Number(userx[tipo][0]) + Number(qnti)
@@ -1497,8 +1644,8 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                            userx.save()
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
                                 .then((user) => {
-                                    console.log(userx[tipo][1] + ' <----userx(Schema trabalhado aqui)')
-                                    console.log(user[tipo][1] + ' <=====user(recem pesquisado)')
+                                  //  console.log(userx[tipo][1] + ' <----userx(Schema trabalhado aqui)')
+                                  //  console.log(user[tipo][1] + ' <=====user(recem pesquisado)')
                                     if(user.taokeys == userx.taokeys){
                                         socket.emit('update', [user["147"],
                                         user["148"],
@@ -1707,8 +1854,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         if(userx['taokeys'] >= 10800 && input.length == 1){
                            //console.log(user.taokeys + " <====")
                            userx.taokeys = userx.taokeys - 10800
-                           userx['npesquisas'] = userx['npesquisas'] + 1 
-                           
+                           userx['npesquisas'] = userx['npesquisas'] + 1     
                            //console.log(user.taokeys)
                            userx.save()
                             .then(() => {
@@ -1973,7 +2119,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
         //})
         // user.faturamento = 0
     }) // NAO OK
-
+    
     // SOCKETS AMD \/
     socket.on('registrar-nova-instancia', (creden) => {
                 if(creden[4] == "senha-mestra"){
