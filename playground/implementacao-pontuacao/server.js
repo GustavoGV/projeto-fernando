@@ -71,13 +71,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
             .then((ll) => {
                 if(ll !== null){
                     console.log('>>usuario ja conectado');
-                    socket.emit('ja-conectado', socket.id) 
+                    socket.emit('feedback', ['warning','voce ja esta conectado com: ' + ll.cooperativa]) 
                 }
                 else{
                     Aluno.findOne({ cooperativa: creden[0], senha: creden[1], temporario: 1, instancia: creden[2]})
                         .then((usert) => { if(usert == null){
                                 console.log('>>login não permitido: credenciais invalidas', creden[0], creden[1], creden[2])
-                                socket.emit('login-negado', creden[0])
+                                socket.emit('feedback', ['danger', 'login negado para: ' + creden[0]])
                                 }
                                 else{ 
                                     Data.findOne({instancia: usert.instancia, ativo: 1})
@@ -109,7 +109,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                                 usert.save()
                                                     .then(() => {
                                                         console.log('>>login efetuado com sucesso')
-                                                        socket.emit('login-aprovado', creden[0]) 
+                                                        socket.emit('feedback', ['success', 'login aprovado para: ' + creden[0]]) 
                                             socket.emit('dados-servicos', [usert["147"],
                 usert["148"],
                 usert["149"],
@@ -143,13 +143,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                 usert["turno"]])
 
                                                     })
-                                                    .catch((err) => {socket.emit('opracao-negada', 'falha ao salvar os dados no servidor')})
+                                                    .catch((err) => {socket.emit('feedback', ['danger','falha ao salvar os dados no servidor -> ' + err])})
                                      
                                             })
                               
                                         }
                                         else{
-                                            socket.emit('operacao-negada', 'o turno atual ainda nao foi inicializado pelo administrador')
+                                            socket.emit('feedback', ['warning','o turno atual ainda nao foi inicializado pelo administrador'])
                                         }        
                                     })
                                     .catch((errr) => {console.log(errr + ' <=> Falha na comunicacao com o Banco de dados n 403.0 ' + socket.id)})       
@@ -168,7 +168,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
             .then((ll) => {
                 if(ll !== null){
                     console.log('>>usuario ja conectado')
-                    socket.emit('ja-conectado', ll.cooperativa)
+                    socket.emit('feedback', ['warning','voce ja esta conectado com: ' + ll.cooperativa])
                 }
                 else{
                     Data.findOne({instancia: creden[2], senha_instancia: creden[3]})
@@ -180,7 +180,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
             .then((userx) => { 
                 if(userx !== null){
                     console.log('>>registro negado: já existe cooperativa com este nome');
-                    socket.emit('operacao-negada', 'ja existe uma cooperativa com esse nome na instancia selecionada')}
+                    socket.emit('feedback', ['danger', 'ja existe uma cooperativa com esse nome na instancia selecionada'])}
                 else{
                     let jogador = new Aluno({ sockid: socket.id, temporario: 1, instancia: creden[2], npesquisas: 1, turno: 0, scoremod: 0, scorepreco: [0,0], propaganda: 1, propagandauni: 1, faturamento: 0, ativo: 1, taokeys: 18720000, divida: [0,0,0], comissao: 0.05, frota: [10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], cooperativa: creden[0], pas: 30, pas1:0, pas2:0, distribuidores: 640, promotores: 40, senha: creden[1], 
                         147:[985,1,288,600,300,0,0],
@@ -234,7 +234,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                     jogadorR.save()
                                         .then(() => {
                                             console.log('>>login aprovado')
-                                            socket.emit('login-aprovado', creden[0]) 
+                                            socket.emit('feedback', ['success','login aprovado para: ' + creden[0]]) 
                                 socket.emit('dados-servicos', [user["147"],
     user["148"],
     user["149"],
@@ -272,7 +272,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 }
                                 else{
                                     console.log('>>falha ao registrar')
-                                    socket.emit('operacao-negada', 'ocorreu uma falha no processo de registro') 
+                                    socket.emit('feedback', ['danger','ocorreu uma falha no processo de registro']) 
                                     }
                             })
 
@@ -286,7 +286,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
         }
         else{
             console.log('>>registro negado')
-            socket.emit('operacao-negada', 'combinação de nome da sessão e senha da sessão invalida')}
+            socket.emit('feedback', ['danger', 'combinação de nome da sessão e senha da sessão invalida'])}
     })
         } })
             .catch((err) => {console.log(err+'. id:' + socket.id)})
@@ -377,15 +377,15 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 })
                             .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
                     }
-                    else{socket.emit('operacao-negada', 'voce nao pode transferir insumos para um servico que nao esta ativo')}
+                    else{socket.emit('feedback', ['warning','voce nao pode transferir insumos para um servico que nao esta ativo'])}
                     }
                 }
                 else{
-                    socket.emit('operacao-negada', 'voce nao pode ter mais de dois serviços ativos simultaneamente')
+                    socket.emit('feedback', ['warning','voce nao pode ter mais de dois serviços ativos simultaneamente'])
                 }
                 }
                 else{
-                    socket.emit('acesso-negado')
+                    socket.emit('feedback', ['danger','voce precisa estar logado para trocar de serviço'])
                 }
             
             })
@@ -463,20 +463,20 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     }
                 }
                 else{
-                    socket.emit('operacao-negada', 'voce nao pode substituir um serviço por outro que ja esta ativado')
+                    socket.emit('feedback', ['warning','voce nao pode substituir um serviço por outro que ja esta ativado'])
                 }
                 }
                 else{
                     if(userx[velho][1] == 1){
-                        socket.emit('operacao-negada', 'voce nao pode substituir um serviço por outro que foi cancelado no turno anterior, espere o proximo turno para reativa-lo')
+                        socket.emit('feedback', ['warning','voce nao pode substituir um serviço por outro que foi cancelado no turno anterior, espere o proximo turno para reativa-lo'])
                     }
                     else{
-                        socket.emit('operacao-negada', 'voce nao pode substituir um serviço que nao esta ativo por outro')
+                        socket.emit('feedback', ['warning','voce nao pode substituir um serviço que nao esta ativo por outro'])
                     }
                 }
                 }
                 else{
-                    socket.emit('acesso-negado')
+                    socket.emit('feedback', ['danger','voce precisa estar logado para substituir um serviço'])
                 }
             
             })
@@ -493,7 +493,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             }   
                         }
                         if(b == 20){
-                            socket.emit('operacao-negada', 'voce precisa sempre ter pelo menos um servico ativo durante o turno (ative outro para desativar esse)')
+                            socket.emit('feedback', ['warning','voce precisa sempre ter pelo menos um servico ativo durante o turno (ative outro para desativar esse)'])
                         }
                         else{
                         let array_dados = [0, 2, userx[tipo][2], userx[tipo][3], userx[tipo][4], userx[tipo][5], userx[tipo][6]]
@@ -540,20 +540,20 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             }
                     }
                     else if(userx[tipo][0] == 0 && userx[tipo][1] == 2){
-                        socket.emit('operacao-negada', 'servico ja esta em processo de cancelamento')
+                        socket.emit('feedback', ['warning','servico ja esta em processo de cancelamento'])
                     }
                     else if(userx[tipo][0] == 0 && userx[tipo][1] == 0){
-                        socket.emit('operacao-negada', 'esse servico ja esta inativo')
+                        socket.emit('feedback', ['warning','esse servico ja esta inativo'])
                     }
                     else if(userx[tipo][0] == 0 && userx[tipo][1] == 3){
-                        socket.emit('operacao-negada', 'esse servico ja esta fechado')
+                        socket.emit('feedback', ['warning','esse servico ja esta fechado'])
                     }
                     else{
-                        socket.emit('operacao-negada', 'voce nao pode ter insumos de um servico para encerra-lo')
+                        socket.emit('feedback', ['warning', 'voce nao pode ter insumos de um servico para encerra-lo'])
                     }
                 }
                 else{
-                    socket.emit('acesso-negado')
+                    socket.emit('feedback', ['danger','voce precisa estar logado para encerrar um serviço'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -611,14 +611,14 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
                           
                     }
-                    else{socket.emit('operacao-negada', 'o volume de vendas so aceita valores positivos')}
+                    else{socket.emit('feedback', ['warning','o volume de vendas so aceita valores positivos'])}
                     
                 
                 }
-                else{socket.emit('operacao-negada', 'voce nao pode alterar o preco de venda enquanto o servico estiver em processo de encerramento')}
+                else{socket.emit('feedback', ['warning','voce nao pode alterar o preco de venda enquanto o servico estiver em processo de encerramento'])}
             }
                 else{
-                    socket.emit('acesso-negado')
+                    socket.emit('feedback', ['danger', 'voce precisa estar logado para alerar o volume de vendas planejado'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})     
@@ -654,18 +654,18 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         }
                         
                         userdef.save()
-                            .then(() => {socket.emit('save-complete')})
-                            .catch((err) => {socket.emit('opracao-negada', 'falha ao salvar os dados no servidor')})
+                            .then(() => {socket.emit('feedback', ['success','os dados foram salvos com sucesso'])})
+                            .catch((err) => {socket.emit('feedback', ['danger','falha ao salvar os dados no servidor'])})
                         
 
 
                     })
                 }
-                else{socket.emit('operacao-negada', 'você só pode salvar uma jogada quando o moderador iniciar oficialmente o turno')}
+                else{socket.emit('feedback', ['danger','você só pode salvar uma jogada quando o moderador iniciar oficialmente o turno'])}
                 })
             }
             else{
-                socket.emit('operacao-negada', 'reconecte-se ao simulador para realizar essa operação')
+                socket.emit('feedback', ['danger','reconecte-se ao simulador para realizar essa operação'])
             }
             })
     }) //OK
@@ -721,15 +721,15 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                           
                     }
                     else if(qnt > 0 && userx.taokeys < qnt*57600){
-                        socket.emit('operacao-negada', 'falta caixa')
+                        socket.emit('feedback', ['warning','falta caixa'])
                     }
-                    else{socket.emit('operacao-negada', 'apenas valores positivos')}
+                    else{socket.emit('feedback', ['warning','apenas valores positivos'])}
                     
                 
              
             }
                 else{
-                    socket.emit('acesso-negado')
+                    socket.emit('feedback', ['danger','voce precisa estar logado para aumetar a sua frota'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -739,10 +739,10 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
             .then((userx) => {
                 if(userx !== null){
                     let resp = userx['frota']
-                    socket.emit('resp-checar-frota', resp)         
+                    socket.emit('feedback', ['success', 'Situação da sua frota: ' +resp])         
             }
                 else{
-                    socket.emit('acesso-negado')
+                    socket.emit('feedback', ['danger', 'voce precisa estar logado para checar a sua frota'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -784,7 +784,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 user["turno"]]);
                 }
                 else{
-                    socket.emit('acesso-negado')
+                    socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -840,21 +840,21 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
 
                     }
-                    else{socket.emit('operacao-negada', 'o valor do preco unitario deve estar entre 0 e 9999')}
+                    else{socket.emit('feedback', ['warning','o valor do preco unitario deve estar entre 0 e 9999'])}
                 }
                 else if(userx[tipo][0] == 0 && userx[tipo][1] == 2){
-                    socket.emit('operacao-negada', 'voce nao pode alterar o preco de venda unitario enquanto o servico esta em processo de encerramento')
+                    socket.emit('feedback', ['warning','voce nao pode alterar o preco de venda unitario enquanto o servico esta em processo de encerramento'])
                 }
                 else if(userx[tipo][0] == 0 && userx[tipo][1] == 3){
-                    socket.emit('operacao-negada', 'voce nao pode alterar o preco de venda unitario de um servico desativado')
+                    socket.emit('feedback', ['warning','voce nao pode alterar o preco de venda unitario de um servico desativado'])
                 }
                 else{
-                    socket.emit('operacao-negada', 'voce nao pode ter insumos de um servico para encerra-lo')
+                    socket.emit('feedback', ['warning','voce nao pode ter insumos de um servico para encerra-lo'])
                 }
              
             }
                 else{
-                    socket.emit('acesso-negado')
+                    socket.emit('feedback', ['danger','voce precisa estar conectado para alterar os preços unitarios'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -909,15 +909,15 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                           
                     }
                     else if(qnt > 0 && userx.taokeys < qnt*57600){
-                        socket.emit('operacao-negada', 'falta caixa')
+                        socket.emit('feedback', ['warning','falta caixa'])
                     }
-                    else{socket.emit('operacao-negada', 'apenas valores positivos')}
+                    else{socket.emit('feedback', ['warning','apenas valores positivos'])}
                     
                 
              
             }
                 else{
-                    socket.emit('acesso-negado')
+                    socket.emit('feedback', ['danger','voce precisa estar logado para aumentar seu numero de promotores'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -965,22 +965,21 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 user["propagandauni"],
                                 user["divida"],
                                 user["turno"]]);
-        
                                     }                  
                                 })
                         .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
                           
                     }
                     else if(qnt > 0 && userx.taokeys < qnt*57600){
-                        socket.emit('operacao-negada', 'falta caixa')
+                        socket.emit('feedback', ['warning', 'falta caixa'])
                     }
-                    else{socket.emit('operacao-negada', 'apenas valores positivos')}
+                    else{socket.emit('feedback', ['warning', 'apenas valores positivos'])}
                     
                 
              
             }
                 else{
-                    socket.emit('acesso-negado')
+                    socket.emit('feedback', ['danger','voce precisa estar logado para diminuir o seu numero de promotores'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -1034,13 +1033,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
                           
                     }
-                    else{socket.emit('operacao-negada', 'apenas valores positivos')}
+                    else{socket.emit('feedback', ['warning','apenas valores positivos'])}
                     
                 
              
             }
                 else{
-                    socket.emit('acesso-negado')
+                    socket.emit('feedback', ['danger', 'voce precisa estar logado para realizar um emprestimo'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -1096,14 +1095,14 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                           
                             }
                             else{
-                                socket.emit('operacao-negada', 'voce nao tem caixa para quitar a sua divida no momento')
+                                socket.emit('feedback', ['warning','voce nao tem caixa para quitar a sua divida no momento'])
                             }
                     
                 
              
             }
                 else{
-                    socket.emit('acesso-negado')
+                    socket.emit('feedback', ['danger', 'voce precisa estar logado para quitar a sua divida'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -1158,15 +1157,15 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                           
                     }
                     else if(qnt > 0 && userx.taokeys < qnt*57600){
-                        socket.emit('operacao-negada', 'falta caixa')
+                        socket.emit('feedback', ['warning','falta caixa'])
                     }
-                    else{socket.emit('operacao-negada', 'apenas valores positivos')}
+                    else{socket.emit('feedback', ['warning','apenas valores positivos'])}
                     
                 
              
             }
                 else{
-                    socket.emit('acesso-negado')
+                    socket.emit('feedback', ['danger','voce precisa estar logado'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -1220,13 +1219,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
                           
                     }
-                    else{socket.emit('operacao-negada', 'apenas valores positivos')}
+                    else{socket.emit('feedback', ['warning', 'apenas valores positivos'])}
                     
                 
              
             }
                 else{
-                    socket.emit('acesso-negado')
+                    socket.emit('feedback', ['danger','voce precisa estar logado para alterar o numero  de distribuidores'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -1280,13 +1279,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
                           
                     }
-                    else{socket.emit('operacao-negada', 'apenas valores positivos')}
+                    else{socket.emit('feedback', ['warning','apenas valores positivos'])}
                     
                 
              
             }
                 else{
-                    socket.emit('acesso-negado')
+                    socket.emit('feedback', ['danger', 'voce precisa estar logado para dimunuir o numero de P.A.S.'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -1340,13 +1339,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
                           
                     }
-                    else{socket.emit('operacao-negada', 'apenas valores positivos')}
+                    else{socket.emit('feedback', ['warning','apenas valores positivos'])}
                     
                 
              
             }
                 else{
-                    socket.emit('acesso-negado')
+                    socket.emit('feedback', ['danger','voce precisa estar logado para aumentar o numero de P.A.S.'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -1402,13 +1401,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
                        
                     }
-                    else{socket.emit('operacao-negada', 'apenas valores positivos')}
+                    else{socket.emit('feedback', ['warning','apenas valores positivos'])}
                     
                 
              
             }
                 else{
-                    socket.emit('acesso-negado')
+                    socket.emit('feedback', ['danger','voce precisa estar logado para alterar a propaganda unitaria'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -1463,13 +1462,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
                           
                     }
-                    else{socket.emit('operacao-negada', 'apenas valores positivos')}
+                    else{socket.emit('feedback', ['warning','apenas valores positivos'])}
                     
                 
              
             }
                 else{
-                    socket.emit('acesso-negado')
+                    socket.emit('feedback', ['danger', 'voce precisa estar logado para aumentar a propaganda'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -1479,10 +1478,10 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
             .then((userx) => {
                 if(userx !== null){
                     let resp = [userx['pas1'], userx['pas2']]
-                    socket.emit('resp-checar-pas', resp)  
+                    socket.emit('feedback', ['success', 'Situação dos seus postos avançados de servilo: '+resp])  
             }
                 else{
-                    socket.emit('acesso-negado')
+                    socket.emit('feedback', ['danger', 'voce precisa estar logado para checar sues P.A.S.'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -1535,13 +1534,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
                           
                     }
-                    else{socket.emit('operacao-negada', 'apenas valores entra 0 e 1')}
+                    else{socket.emit('feedback', ['warning','apenas valores entra 0 e 1'])}
                     
                 
              
             }
                 else{
-                    socket.emit('acesso-negado')
+                    socket.emit('feedback', ['danger','voce precisa estar logado para alterar a comissao'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -1609,23 +1608,23 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 user["turno"]]);
         
                                     }
-                                    else{socket.emit('operacao-negada', 'falha ao atunteticar operacao')}                  
+                                    else{socket.emit('feedback', ['danger', 'falha ao atunteticar operacao'])}                  
                                 })
                         .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
 
                     }
                     else{
                         if(userx[tipo][1] == 3){
-                        socket.emit('operacao-negada', 'esse servico esta indisponivel para ativação nesse turno')
+                        socket.emit('feedback', ['warning', 'esse servico esta indisponivel para ativação nesse turno'])
                         }
                         else{
-                            socket.emit('operacao-negada', 'voce so pode ter 2 servicoes simultaneos')
+                            socket.emit('feedback', ['warning', 'voce so pode ter 2 servicoes simultaneos'])
                         }
                     }
 
                 }
                 else{
-                    socket.emit('acesso-negado')
+                    socket.emit('feedback', ['danger','voce precisa estar logado para ativar um serviço'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -1701,20 +1700,20 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                     
                                     }
                                     else{
-                                        socket.emit('operacao-negada', 'esse servico esta fechado')
+                                        socket.emit('feedback', ['warning', 'esse servico nao esta ativado'])
                                     }
                             }
                             else if(userx['taokeys'] >= qnti*userx[tipo][2] && userx[tipo][1] == 2){
-                                socket.emit('operacao-negada', 'esse servico esta em espera')
+                                socket.emit('feedback', ['warning','esse servico esta em espera'])
                             }
                         else{
-                            socket.emit('operacao-negada', 'falta caixa');
+                            socket.emit('feedback', ['warning','falta caixa']);
                             //console.log('hlu')
                     }
                     //console.log(user.taokeys)
                     }
                     else{
-                        socket.emit('acesso-negado')
+                        socket.emit('feedback', ['danger','voce precisa estar logado para comprar insumos'])
                     }
             }) 
             .catch((err) => { console.log('falha na comunicacao com o banco de dados para o ' +socket.id+ " - " + err)
@@ -1769,7 +1768,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                 userx["turno"]]);
                                     }
                                     else{
-                                        socket.emit('operacao-negada', 'voce nao pode realizar pesquisas ate que o administrador inicie o turno')
+                                        socket.emit('feedback', ['danger','voce nao pode realizar pesquisas ate que o administrador inicie o turno'])
                                     }
                                     })
                                     .catch((err) => {console.log(err)})
@@ -1779,13 +1778,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             }
 
                         else{
-                            socket.emit('operacao-negada', 'falta caixa');
+                            socket.emit('feedback', ['warning','falta caixa']);
                             //console.log('hlu')
                     }
                     //console.log(user.taokeys)
                     }
                     else{
-                        socket.emit('acesso-negado')
+                        socket.emit('feedback', ['danger','voce precisa estar logado para realizar pesquisas'])
                     }
             }) 
             .catch(() => { console.log('falha na comunicacao com o banco de dados para o ' +socket.id)
@@ -1840,7 +1839,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                 userx["turno"]]);
                                         }
                 else{
-                    socket.emit('operacao-negada', 'voce nao pode realizar pesquisas ate que o administrador inicie o turno')
+                    socket.emit('feedback', ['danger', 'voce nao pode realizar pesquisas ate que o administrador inicie o turno'])
                 }
                                     })
 
@@ -1849,13 +1848,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             }
 
                         else{
-                            socket.emit('operacao-negada', 'falta caixa');
+                            socket.emit('feedback', ['warning','falta caixa']);
                             //console.log('hlu')
                     }
                     //console.log(user.taokeys)
                     }
                     else{
-                        socket.emit('acesso-negado')
+                        socket.emit('feedback', ['danger','voce precisa estar logado para realizar pesquisas'])
                     }
             }) 
             .catch(() => { console.log('falha na comunicacao com o banco de dados para o ' +socket.id)
@@ -1917,7 +1916,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                 userx["turno"]]);
             }
             else{
-                socket.emit('operacao-negada', 'voce nao pode realizar pesquisas ate que o administrador inicie o turno')
+                socket.emit('feedback', ['danger','voce nao pode realizar pesquisas ate que o administrador inicie o turno'])
             }
                                     })
 
@@ -1977,7 +1976,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                      userx["turno"]]);
                  }
                  else{
-                     socket.emit('operacao-negada', 'voce nao pode realizar pesquisas ate que o administrador inicie o turno')
+                     socket.emit('feedback', ['danger', 'voce nao pode realizar pesquisas ate que o administrador inicie o turno'])
                  }
                                          })
      
@@ -1985,13 +1984,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                  .catch((err) => {console.log('falha em salvar transacao por pesquisa n 307' + err)})
                                  }
                         else{
-                            socket.emit('operacao-negada', 'falta caixa');
+                            socket.emit('feedback', ['warning','falta caixa']);
                             //console.log('hlu')
                     }
                     //console.log(user.taokeys)
                     }
                     else{
-                        socket.emit('acesso-negado')
+                        socket.emit('feedback', ['danger','voce precisa estar logado para realizar pesquisas'])
                     }
             }) 
             .catch(() => { console.log('falha na comunicacao com o banco de dados para o ' +socket.id)
@@ -2047,7 +2046,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                 userx["turno"]]);
             }
             else{
-                socket.emit('operacao-negada', 'voce nao pode realizar pesquisas ate que o administrador inicie o turno')
+                socket.emit('feedback', ['danger','voce nao pode realizar pesquisas ate que o administrador inicie o turno'])
             }
                                     })
 
@@ -2056,13 +2055,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             }
 
                         else{
-                            socket.emit('operacao-negada', 'falta caixa');
+                            socket.emit('feedback', ['warning','falta caixa']);
                             //console.log('hlu')
                     }
                     //console.log(user.taokeys)
                     }
                     else{
-                        socket.emit('acesso-negado')
+                        socket.emit('feedback',['danger','voce precisa estar estar logado para realizar pesquisas'])
                     }
             }) 
             .catch(() => { console.log('falha na comunicacao com o banco de dados para o ' +socket.id)
@@ -2079,7 +2078,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             userx.save()
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
                                 .then((user) => {
-                                    socket.emit('final-turno', faturamento)
+                                    socket.emit('feedback', ['success', 'sua cooperativa teve um faturamento de: ' + faturamento])  
                                     if(user.taokeys == userx.taokeys){
                                         socket.emit('update', [user["147"],
                                 user["148"],
@@ -2142,7 +2141,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     Data.findOne({instancia: creden[2]})
                         .then((ll) => {
                             if(ll !== null){
-                                socket.emit('operacao-negada', 'ja existe uma instancia com esse nome')
+                                socket.emit('feedback', ['danger','ja existe uma instancia com esse nome'])
                             }
                             else{
                                 Data.findOne({login_adm: creden[0]})
@@ -2151,24 +2150,25 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                             let jogo = new Data({login_adm: creden[0], senha_adm: creden[1], instancia: creden[2], senha_instancia: creden[3], turno: 0, oferta_mercado: 100000})
                                             jogo.save()
                                                 .then(() => {
-                                                        socket.emit('registro-instancia-completo', creden[0])
+                                                    console.log('>>> Instancia: ' + userL.instancia + ' registrada com sucesso')    
+                                                    socket.emit('registro-instancia-completo', creden[0])
                                                 })
                                                 .catch((err) => {console.log(err)})
                                         }
                                         else{
-                                            socket.emit('operacao-negada', 'ja existe ums instancia com esse LOGIN de administrador')
+                                            socket.emit('feedback', ['danger','ja existe ums instancia com esse LOGIN de administrador'])
                                         }
 
                                     })
                             }
                         })
                 }
-                else{socket.emit('operacao-negada', 'senha mestra incorreta')}  
+                else{socket.emit('feedback', ['danger','senha mestra incorreta'])}  
     })
     socket.on('login-adm', (creden) => {
         Data.findOne({sockid: socket.id})
             .then((ll) => {
-                if(ll !== null){socket.emit('ja-conectado', socket.id)}
+                if(ll !== null){socket.emit('feedback', ['danger','voce ja esta conectado'])}
                 else{
                     Data.findOne({login_adm: creden[0], senha_adm: creden[1]})
                         .then((adm) => {
@@ -2180,13 +2180,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                             .then((cooperativas) => {
                                                 socket.emit('state-gloal', cooperativas)
                                             })
-                                        socket.emit('login-aprovado', creden[0])
+                                        socket.emit('feedback', ['success', 'login aprovado para ' + adm.instancia])
                                     })
                                     .catch((err) => {
                                         console.log(err)
                                    })
                             }
-                            else{socket.emit('login-negado', creden[0])}
+                            else{socket.emit('feedback', ['danger', 'instancia nao encontrada'])}
                         })
                         .catch((err) => {console.log(err + ' <=> Falha na comunicacao com o Banco de dados n 403 ' + socket.id)})
                         }
@@ -2200,7 +2200,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
         Data.findOne({sockid: socket.id})
             .then((ll) => {
                 if(ll == null){
-                    socket.emit('acesso-negado', socket.id)
+                    socket.emit('feedback', ['danger','voce esta desconectado'])
                 }
                 else{
                     if(ll.turno == 0){
@@ -2212,7 +2212,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             .catch((err) => {console.log(err)})
                     }
                     else{
-                        socket.emit('operacao-negada', 'só é possivel alterar a demanda global antes de finalizar o primeiro turno')
+                        socket.emit('feedback', ['danger','só é possivel alterar a demanda global antes de finalizar o primeiro turno'])
                     }
                 }
             })
@@ -2782,9 +2782,10 @@ for(let o = 0; o < index.length; o++){ //ATUALIZA o estado de cada serviço (se 
                                                 }
                                                 usert.save()
                                                     .then(() => {
+                                                        socket.emit('feedback', ['success', 'turno foi finalizado (tem q implementar um socket.on no front q qnd recebe o socket debaixo pede pro server o seu faturamento!'])
                                                         sockets.emit('final-turno') //manda a info pra tds os sockets conectados de que acabou o turno e para eles requisitarem (!!socket.emit('receber-faturamento')!!) o novo state pós FATURAMENTO e se o jogador n esriver conectado qnd acontecer o processo de faturamento essa puxada de dados tb smp acontece qnd ele se loga
                                                     })
-                                                    .catch((err) => {socket.emit('opracao-negada', 'falha ao salvar os dados no servidor (' + err + ')')})
+                                                    .catch((err) => {socket.emit('feedback', ['danger', 'falha ao salvar os dados no servidor (' + err + ')'])})
                                      
                                             })
                     // (IGUALANDO O BANCO TEMPORARIO COM O OFICIAL)
@@ -2801,7 +2802,7 @@ for(let o = 0; o < index.length; o++){ //ATUALIZA o estado de cada serviço (se 
           // \/ essa parte de baixo calcula o resultado das pesquisas para serem mostradas no proximo turno mas CUIDADO porque esse bloco debaixo e o e cima rodarao simultaneamente do jeito q estra (precisa botar .then(() = > {logo qnd terminar esse logica botar ela antes do  botar .save() de cim botar a ;)})
             })
         }
-    else{socket.emit('operacao-negada', "é necessario reconectar-se ao simulador para efetuar essa operacao")}
+    else{socket.emit('feedback', ['danger',"é necessario reconectar-se ao simulador para efetuar essa operacao"])}
     }) 
     }) //100% fatura sendo gerado mas falta coletar os dados para os demonstrativos
     socket.on('iniciar-turno', () => {
@@ -2846,7 +2847,7 @@ for(let o = 0; o < index.length; o++){ //ATUALIZA o estado de cada serviço (se 
                         })
                 }
                 else{
-                    socket.emit('operacao-negada', 'necessário reconectar-se ao simulador para realizar essa operação')
+                    socket.emit('feedback', ['danger','necessário reconectar-se ao simulador para realizar essa operação'])
                 }   
 
     })
