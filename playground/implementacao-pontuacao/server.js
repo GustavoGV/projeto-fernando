@@ -110,37 +110,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                                     .then(() => {
                                                         console.log('>>login efetuado com sucesso')
                                                         socket.emit('feedback', ['success', 'login aprovado para: ' + creden[0]]) 
-                                            socket.emit('dados-servicos', [usert["147"],
-                usert["148"],
-                usert["149"],
-                usert["157"],
-                usert["158"],
-                usert["159"],
-                usert["257"],
-                usert["258"],
-                usert["259"],
-                usert["267"],
-                usert["268"],
-                usert["269"],
-                usert["347"],
-                usert["348"],
-                usert["349"],
-                usert["357"],
-                usert["358"],
-                usert["359"],
-                usert["367"],
-                usert["368"],
-                usert["369"],
-                usert["taokeys"],
-                usert["frota"],
-                usert["promotores"],
-                usert["comissao"],
-                usert["distribuidores"],
-                usert["pas"],
-                usert["propaganda"],
-                usert["propagandauni"],
-                usert["divida"],
-                usert["turno"]])
+                                                        socket.emit('login-client-aprovado')
 
                                                     })
                                                     .catch((err) => {socket.emit('feedback', ['danger','falha ao salvar os dados no servidor -> ' + err])})
@@ -235,37 +205,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                         .then(() => {
                                             console.log('>>login aprovado')
                                             socket.emit('feedback', ['success','login aprovado para: ' + creden[0]]) 
-                                socket.emit('dados-servicos', [user["147"],
-    user["148"],
-    user["149"],
-    user["157"],
-    user["158"],
-    user["159"],
-    user["257"],
-    user["258"],
-    user["259"],
-    user["267"],
-    user["268"],
-    user["269"],
-    user["347"],
-    user["348"],
-    user["349"],
-    user["357"],
-    user["358"],
-    user["359"],
-    user["367"],
-    user["368"],
-    user["369"],
-    user["taokeys"],
-    user["frota"],
-    user["promotores"],
-    user["comissao"],
-    user["distribuidores"],
-    user["pas"],
-    user["propaganda"],
-    user["propagandauni"],
-    user["divida"],
-    user["turno"]])
+                                            socket.emit('register-client-aprovado')
                                         })
                                         .catch((err) => {console.log(err)})
 
@@ -2067,7 +2007,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
             .catch(() => { console.log('falha na comunicacao com o banco de dados para o ' +socket.id)
     })
     }) //OK
-    socket.on('check-turno', () => { 
+    socket.on('receber-faturamento', () => { 
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => {
                 let faturamento = 0;
@@ -2118,22 +2058,12 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                           
                     }
                     else{}
-                    
-                
-             
             }
                 else{
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
     }) //OK
-    socket.on('receber-faturamento', () => {
-        //...
-        // socket.emit('update', () => {
-        //
-        //})
-        // user.faturamento = 0
-    }) // NAO OK
     
     // SOCKETS AMD \/
     socket.on('registrar-nova-instancia', (creden) => {
