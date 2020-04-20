@@ -45,7 +45,12 @@ const UserSchema = new Schema({
         359:Array,
         367:Array,
         368:Array,
-        369:Array
+        369:Array,
+    balanco_patrimonial: Object,
+    DRE: Object,
+    fluxo_de_caixa: Object,
+    cronograma: Object,
+    pesquisas_realizadas: Object
 });
 
 const DataSchema = new Schema({
@@ -60,7 +65,8 @@ const DataSchema = new Schema({
     total_pas: Number,
     oferta_mercado: Number,
     total_distribuidores: Number,
-    turno: Number
+    turno: Number,
+    CBG_news: Object
 
 
 })

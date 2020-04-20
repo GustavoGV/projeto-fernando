@@ -11,6 +11,7 @@
     "chroma-js": "^2.1.0",
     "formik": "^2.1.4",
     "grommet": "^2.11.2",
+    "minimist": "^1.2.5",
     "normalize.css": "^8.0.1",
     "polished": "^3.4.4",
     "react": "^16.13.1",

@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
+    "minimist": "^1.2.5",
     "mocha": "^7.0.1",
     "mongoose": "^5.9.1",
     "node": "^13.8.0",
