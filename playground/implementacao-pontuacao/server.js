@@ -80,7 +80,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 socket.emit('feedback', ['danger', 'login negado para: ' + creden[0]])
                                 }
                                 else{ 
-                                    Data.findOne({instancia: usert.instancia, ativo: 1})
+                                    Data.findOne({instancia: usert.instancia})
                                         .then((check2) => {
                                 if(check2 !== null){ 
                                         Aluno.findOne({cooperativa: usert.cooperativa, temporario: 0, instancia: usert.instancia})
@@ -175,7 +175,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         368:[0,0,540,0,0,0,0],
                         369:[0,0,576,0,0,0,0]});
                         jogador.save()
-                            .then(Aluno.find({ cooperativa: creden[0], temporario: 1}))
+                            .then(Aluno.find({ cooperativa: creden[0], temporario: 1, instancia: creden[2]}))
                             .then((user) => { 
                                 if(user !== null){
 
@@ -2155,10 +2155,9 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
     socket.on('finalizar-turno', () => {
         Data.findOne({sockid: socket.id})
             .then((adm) => {
-
         if(adm !== null){
-        adm.ativo = 0;
-        adm.turno = adm.turno + 1
+        adm.ativo = 0; //congela a data base da instancia para os jogadores nao conseguirem altera-la enquanto o faturamento é efetuado
+        adm.turno = adm.turno + 1 //contabilia a passagem de turno
         adm.save()
             .then(() => {
         Aluno.find({ativo: 1, temporario: 0, instancia: adm.instancia})
