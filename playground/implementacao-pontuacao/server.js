@@ -80,7 +80,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 socket.emit('feedback', ['danger', 'login negado para: ' + creden[0]])
                                 }
                                 else{ 
-                                    Data.findOne({instancia: usert.instancia})
+                                    Data.findOne({instancia: usert.instancia}) //filtro para apenas liberar o login se o turno estiver ATIVO aqui se necessário
                                         .then((check2) => {
                                 if(check2 !== null){ 
                                         Aluno.findOne({cooperativa: usert.cooperativa, temporario: 0, instancia: usert.instancia})
