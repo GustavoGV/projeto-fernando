@@ -1,0 +1,83 @@
+.alert {
+  border: 0;
+  color: #fff;
+  font-weight: 600;
+  z-index: 1500 !important;
+}
+.MuiAppBar-root{
+  z-index: 1000 !important;
+}
+.MuiDrawer-paper{
+  z-index: 1001 !important;
+}
+.alert .alert-link {
+  color: #fff;
+}
+.alert.alert-success {
+  background-color: #4caf50;
+}
+.alert.alert-danger {
+  background-color: #ef5350;
+}
+.alert.alert-warning {
+  background-color: #ffca28;
+}
+.alert i.fa, .alert i.fas {
+  font-size: 1rem;
+}
+.alert .close {
+  color: #fff;
+  opacity: 0.9;
+  text-shadow: none;
+  line-height: 0;
+  outline: 0;
+}
+.alert span[data-notify="icon"] {
+  font-size: 22px;
+  display: block;
+  left: 19px;
+  position: absolute;
+  top: 50%;
+  margin-top: -11px;
+}
+.alert button.close {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  margin-top: -13px;
+  width: 25px;
+  height: 25px;
+  padding: 3px;
+}
+.alert .close ~ span {
+  display: block;
+  max-width: 89%;
+}
+.alert.alert-with-icon {
+  padding-left: 65px;
+}
+.alert-dismissible .close {
+  top: 50%;
+  right: 1.25rem;
+  padding: 0;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.6);
+  opacity: 1;
+}
+.alert-dismissible .close:hover, .alert-dismissible .close:focus {
+  color: rgba(255, 255, 255, 0.9);
+  opacity: 1 !important;
+}
+.alert-dismissible .close > span:not(.sr-only) {
+  font-size: 1.5rem;
+  background-color: transparent;
+  color: rgba(255, 255, 255, 0.6);
+}
+.alert-dismissible .close:hover > span:not(.sr-only), .alert-dismissible .close:focus > span:not(.sr-only) {
+  background-color: transparent;
+  color: rgba(255, 255, 255, 0.9);
+}
+.alert-message{
+  padding:15px;
+  vertical-align: middle;
+}

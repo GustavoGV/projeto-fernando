@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -6,6 +6,8 @@ import Button from '@material-ui/core/Button';
 import Service from '../Service/Service';
 import GeneralInformation from '../GeneralInformation/GeneralInformation';
 import Research from '../Research/Research';
+import socket from '../../connection';
+import { stat } from 'fs';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -23,16 +25,31 @@ const useStyles = makeStyles(theme => ({
 
 export default function ServicesContainer() {
   const classes = useStyles();
+  const [game, setGame] = useState([])
+
+  useEffect(()=>{
+    console.log('puxando state')
+    socket.emit('puxar-state');
+    socket.emit('aumentar-frota', 1);
+    socket.on('update', state => {
+      console.log('estado atual: ', state)
+      setGame(state)
+    return ()=>{
+      socket.off('update');
+      console.log('unmounting servicesContainer');
+    }
+    })
+  },[])
 
   return (
     <div className={classes.root}>
       <Grid container justify="center" spacing={2}>
         <Grid item sm={12}>
-          <GeneralInformation/>
+          <GeneralInformation gameData={game}/>
         </Grid>
         <Grid item xs={12} sm={12}>
           <Paper className={classes.paper}>
-            <Research/>
+            <Research gameData={game} />
           </Paper>
         </Grid>
         <Grid item xs={12} sm={6}>

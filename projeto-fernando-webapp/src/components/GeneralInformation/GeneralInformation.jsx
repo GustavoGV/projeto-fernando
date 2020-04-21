@@ -58,28 +58,28 @@ function GeneralInformation(props){
           <Paper className={classes.paper}>
             <h3>Caixa</h3>
             <br/>
-            <h4>{gameState[21]}</h4>
+            <h4>{props.gameData[21]}</h4>
           </Paper>
         </Grid>
         <Grid item xs={12} sm={4} md={2}>
           <Paper className={classes.paper}>
             <h3>Frota</h3>
             <br/>
-            <h4>{gameState[22]}</h4>
+            <h4>{props.gameData[22]}</h4>
           </Paper>
         </Grid>
         <Grid item xs={12} sm={4} md={2}>
           <Paper className={classes.paper}>
             <h3>Promotores</h3>
             <br/>
-            <h4>{gameState[23]}</h4>
+            <h4>{props.gameData[23]}</h4>
           </Paper>
         </Grid>
         <Grid item xs={12} sm={8} md={4}>
           <Paper className={classes.paper}>
             <h3>Propaganda Institucional</h3>
             <br/>
-            <h4>{gameState[27]}</h4>
+            <h4>{props.gameData[27]}</h4>
           </Paper>
         </Grid>
         <Grid item xs={12} sm={4} md={2}>

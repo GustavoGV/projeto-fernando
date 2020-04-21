@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -78,17 +78,26 @@ export default function Register(props) {
   });
 
   function register(){
-    let {cooperative, instance, password} = signUpData
+    let {cooperative, instance, password, instancePassword} = signUpData
     if(cooperative && instance && password){
-      socket.emit('registrar-nova-instancia', ['miranda', 'batata', 'unicamp', 'batata-publica', 'senha-mestra'])
-      let creden = [cooperative, password, instance, 'batata-publica']
+      let creden = [cooperative, password, instance, instancePassword]
       socket.emit('register-client', creden )
-      socket.on('login-aprovado',data=>{
-        console.log(data)
-      })
+      console.log()
     }
     
   }
+
+  useEffect(()=>{
+    socket.on('login-client-aprovado',data=>{
+      console.log('login aprovado')
+      console.log(data)
+      props.history.push('/game/inputs')
+    })
+    return(()=>{
+      console.log('component unmounted')
+      socket.off('login-client-aprovado')
+    })
+  })
 
   return (
     <>
@@ -121,6 +130,20 @@ export default function Register(props) {
               autoFocus
               onChange={e=>setSignUpData({...signUpData, cooperative:e.target.value})}
             />
+
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Senha"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              onChange={e=>setSignUpData({...signUpData, password:e.target.value})}
+            />
+
             <TextField
               variant="outlined"
               margin="normal"
@@ -133,17 +156,19 @@ export default function Register(props) {
               autoFocus
               onChange={e=>setSignUpData({...signUpData, instance:e.target.value})}
             />
+            
+
             <TextField
               variant="outlined"
               margin="normal"
               required
               fullWidth
               name="password"
-              label="Senha"
+              label="Senha da instância"
               type="password"
               id="password"
               autoComplete="current-password"
-              onChange={e=>setSignUpData({...signUpData, password:e.target.value})}
+              onChange={e=>setSignUpData({...signUpData, instancePassword:e.target.value})}
             />
            
             <Button

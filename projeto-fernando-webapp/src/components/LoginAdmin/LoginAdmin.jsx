@@ -1,24 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import {Link} from 'react-router-dom';
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle'
 import Paper from '@material-ui/core/Paper';
-import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
-import { CardMedia } from '@material-ui/core';
 import video from './../../assets/video.mp4'
 import { makeStyles } from '@material-ui/core/styles';
 import socket from '../../connection';
-import {register, login} from '../../serverCalls';
 
 socket.emit('teste', 'teste01')
 
@@ -61,23 +55,20 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function Login(props) {
+  const history = useHistory();
   const classes = useStyles();
-  const [modal, setModal] = useState(false);
   const [error, setError] = useState(false);
   const [signInData, setSignInData] = useState({
     cooperative:null,
     instance:null,
     password:null,
   })
-  function handleClickModal(){
-    setModal(!modal)
-  };
 
-  function onSimulationClick(){
-    const {cooperative, instance, password} = signInData
-    const creden = [cooperative, password, instance];
-    login(creden)
-    props.history.push('/game/inputs')
+  function onClick(){
+    const {login, password} = signInData
+    const creden = [login, password];
+    socket.emit('login-adm', creden);
+    history.push('/admin/panel')
     setError(true);
   }
 
@@ -95,11 +86,6 @@ export default function Login(props) {
 
   return (
     <>
-    <Dialog open={modal} aria-labelledby="simple-dialog-title" onClose={()=>setModal(!modal)}>
-      <DialogTitle id="simple-dialog-title">Escolha a sua Simulação</DialogTitle>
-      <Button onClick={()=>onSimulationClick()}>CBG</Button>
-      <Button onClick={()=>props.history.push('/game/inputs?round=t1')}>HSG</Button>
-    </Dialog>
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
       <Hidden xsDown>
@@ -126,12 +112,12 @@ export default function Login(props) {
               margin="normal"
               required
               fullWidth
-              id="cooperative"
-              label="Cooperativa"
-              name="cooperativa"
-              autoComplete="cooperativa"
+              id="login"
+              label="Login"
+              name="login"
+              autoComplete="login"
               autoFocus
-              onChange={e=>setSignInData({...signInData, cooperative:e.target.value})}
+              onChange={e=>setSignInData({...signInData, login:e.target.value})}
             />
             <TextField
               error={error}
@@ -147,27 +133,13 @@ export default function Login(props) {
               autoComplete="current-password"
               onChange={e=>setSignInData({...signInData, password:e.target.value})}
             />
-           <TextField
-              error={error}
-              helperText={error? "falha no login" : null}
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="instance"
-              label="Instância"
-              name="instância"
-              autoComplete="instância"
-              autoFocus
-              onChange={e=>setSignInData({...signInData, instance:e.target.value})}
-            />
             <Button
               //type="submit"
               fullWidth
               variant="contained"
               color="primary"
               className={classes.submit}
-              onClick={()=>handleClickModal()}
+              onClick={()=>onClick()}
             >
               Entrar
             </Button>
