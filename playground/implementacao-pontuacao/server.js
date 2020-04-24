@@ -177,6 +177,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         369:[0,0,576,0,0,0,0,0],
                         balanco_patrimonial: {
                             ativo: 0,
+                            contas_a_receber: 0,
                             ativo_circulante: 0,
                             passivo: 0
                         }});
@@ -209,6 +210,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                     369:[0,0,576,0,0,0,0,0],
                                     balanco_patrimonial: {
                                         ativo: 0,
+                                        contas_a_receber: 0,
                                         ativo_circulante: 0,
                                         passivo: 0
                                     }
@@ -2357,6 +2359,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         let array_insu = [(users[i]['147'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['147'][4]), users[i]['147'][1], users[i]['147'][2], users[i]['147'][3], users[i]['147'][4],(users[i]['147'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['147'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['147'][4]*users[i]['147'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['147'][4]*(users[i]['147'][3] - users[i]['147'][2])]
                         //(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['147'][4]*users[i]['147'][3] => igual ao faturamento obtido pelo jogador nesse serviço especifico
                         users[i].set('147', array_insu)
+                        users[i].balanco_patrimonial.contas_a_receber = users[i]['147'][7]
                         //users[i]['147'][0] = users[i]['147'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['147'][4]
                         if(users[i]['147'][0] >= 0){
                             users[i].taokeys = users[i].taokeys - users[i]['147'][0]*36
@@ -2371,6 +2374,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         users[i].taokeys = users[i].taokeys + users[i]['147'][7]; //recebendo contas a receber, aqui no caso se o serviço n estiver mais sendo utilizado
                         let array_novo = [users[i]['147'][0], users[i]['147'][1], users[i]['147'][2], users[i]['147'][3], users[i]['147'][4], users[i]['147'][5], users[i]['147'][6], 0]
                         users[i].set('147', array_novo)
+
                         }
 
                       users[i].set('159', [users[i]['159'][0], users[i]['159'][1], users[i]['159'][2], users[i]['159'][3], users[i]['159'][4], users[i]['159'][5], 0, users[i]['159'][7]])
@@ -2379,6 +2383,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['159'][4]*(users[i]['159'][3] - users[i]['159'][2])
                         let array_insu = [(users[i]['159'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['159'][4]), users[i]['159'][1], users[i]['159'][2], users[i]['159'][3], users[i]['159'][4],(users[i]['159'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['159'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['159'][4]*users[i]['159'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['159'][4]*(users[i]['159'][3] - users[i]['159'][2])]
                         users[i].set('159', array_insu)
+                        users[i].balanco_patrimonial = { 
+                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['159'][7],
+                            ativo: users[i].balanco_patrimonial.ativo,
+                            passivo: users[i].balanco_patrimonial.passivo,
+                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+
+                        }
                         //users[i]['159'][0] = users[i]['159'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['159'][4]
                         if(users[i]['159'][0] >= 0){
                             users[i].taokeys = users[i].taokeys - users[i]['159'][0]*36
@@ -2399,6 +2410,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['149'][4]*(users[i]['149'][3] - users[i]['149'][2])
                         let array_insu = [(users[i]['149'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['149'][4]), users[i]['149'][1], users[i]['149'][2], users[i]['149'][3], users[i]['149'][4],(users[i]['149'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['149'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['149'][4]*users[i]['149'][3], users[i]['149'][7], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['149'][4]*(users[i]['149'][3] - users[i]['149'][2])]
                         users[i].set('149', array_insu)
+                        users[i].balanco_patrimonial = { 
+                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['149'][7],
+                            ativo: users[i].balanco_patrimonial.ativo,
+                            passivo: users[i].balanco_patrimonial.passivo,
+                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+
+                        }
                         //users[i]['149'][0] = users[i]['149'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['149'][4]
                         if(users[i]['149'][0] >= 0){
                             users[i].taokeys = users[i].taokeys - users[i]['149'][0]*36
@@ -2419,6 +2437,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['148'][4]*(users[i]['148'][3] - users[i]['148'][2])
                         let array_insu = [(users[i]['148'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['148'][4]), users[i]['148'][1], users[i]['148'][2], users[i]['148'][3], users[i]['148'][4],(users[i]['148'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['148'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['148'][4]*users[i]['148'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['148'][4]*(users[i]['148'][3] - users[i]['148'][2])]
                         users[i].set('148', array_insu)
+                        users[i].balanco_patrimonial = { 
+                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['148'][7],
+                            ativo: users[i].balanco_patrimonial.ativo,
+                            passivo: users[i].balanco_patrimonial.passivo,
+                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+
+                        }
                         //users[i]['148'][0] = users[i]['148'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['148'][4]
                         if(users[i]['148'][0] >= 0){
                             users[i].taokeys = users[i].taokeys - users[i]['148'][0]*36
@@ -2439,6 +2464,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['158'][4]*(users[i]['158'][3] - users[i]['158'][2])
                         let array_insu = [(users[i]['158'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['158'][4]), users[i]['158'][1], users[i]['158'][2], users[i]['158'][3], users[i]['158'][4],(users[i]['158'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['158'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['158'][4]*users[i]['158'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['158'][4]*(users[i]['158'][3] - users[i]['158'][2])]
                         users[i].set('158', array_insu)
+                        users[i].balanco_patrimonial = { 
+                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['158'][7],
+                            ativo: users[i].balanco_patrimonial.ativo,
+                            passivo: users[i].balanco_patrimonial.passivo,
+                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+
+                        }
                         //users[i]['158'][0] = users[i]['158'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['158'][4]
                         if(users[i]['158'][0] >= 0){
                             users[i].taokeys = users[i].taokeys - users[i]['158'][0]*36
@@ -2459,6 +2491,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['157'][4]*(users[i]['157'][3] - users[i]['157'][2])
                         let array_insu = [(users[i]['157'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['157'][4]), users[i]['157'][1], users[i]['157'][2], users[i]['157'][3], users[i]['157'][4],(users[i]['157'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['157'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['157'][4]*users[i]['157'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['157'][4]*(users[i]['157'][3] - users[i]['157'][2])]
                         users[i].set('157', array_insu)
+                        users[i].balanco_patrimonial = { 
+                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['157'][7],
+                            ativo: users[i].balanco_patrimonial.ativo,
+                            passivo: users[i].balanco_patrimonial.passivo,
+                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+
+                        }
                         //users[i]['157'][0] = users[i]['157'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['157'][4]
                         if(users[i]['157'][0] >= 0){
                             users[i].taokeys = users[i].taokeys - users[i]['157'][0]*36
@@ -2478,6 +2517,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['257'][4]*(users[i]['257'][3] - users[i]['257'][2])
                         let array_insu = [(users[i]['257'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['257'][4]), users[i]['257'][1], users[i]['257'][2], users[i]['257'][3], users[i]['257'][4],(users[i]['257'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['257'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['257'][4]*users[i]['257'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['257'][4]*(users[i]['257'][3] - users[i]['257'][2])]
                         users[i].set('257', array_insu)
+                        users[i].balanco_patrimonial = { 
+                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['257'][7],
+                            ativo: users[i].balanco_patrimonial.ativo,
+                            passivo: users[i].balanco_patrimonial.passivo,
+                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+
+                        }
                         //users[i]['257'][0] = users[i]['257'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['257'][4]
                         if(users[i]['257'][0] >= 0){
                             users[i].taokeys = users[i].taokeys - users[i]['257'][0]*36
@@ -2498,6 +2544,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['258'][4]*(users[i]['258'][3] - users[i]['258'][2])
                         let array_insu = [(users[i]['258'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['258'][4]), users[i]['258'][1], users[i]['258'][2], users[i]['258'][3], users[i]['258'][4],(users[i]['258'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['258'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['258'][4]*users[i]['258'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['258'][4]*(users[i]['258'][3] - users[i]['258'][2])]
                         users[i].set('258', array_insu)
+                        users[i].balanco_patrimonial = { 
+                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['258'][7],
+                            ativo: users[i].balanco_patrimonial.ativo,
+                            passivo: users[i].balanco_patrimonial.passivo,
+                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+
+                        }
                         //users[i]['258'][0] = users[i]['258'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['258'][4]
                         if(users[i]['258'][0] >= 0){
                             users[i].taokeys = users[i].taokeys - users[i]['258'][0]*36
@@ -2520,6 +2573,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['259'][4]*(users[i]['259'][3] - users[i]['259'][2])
                         let array_insu = [(users[i]['259'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['259'][4]), users[i]['259'][1], users[i]['259'][2], users[i]['259'][3], users[i]['259'][4],(users[i]['259'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['259'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['259'][4]*users[i]['259'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['259'][4]*(users[i]['259'][3] - users[i]['259'][2])]
                         users[i].set('259', array_insu)
+                        users[i].balanco_patrimonial = { 
+                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['259'][7],
+                            ativo: users[i].balanco_patrimonial.ativo,
+                            passivo: users[i].balanco_patrimonial.passivo,
+                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+
+                        }
                         //users[i]['259'][0] = users[i]['259'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['259'][4]
                         if(users[i]['259'][0] >= 0){
                             users[i].taokeys = users[i].taokeys - users[i]['259'][0]*36
@@ -2540,6 +2600,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['267'][4]*(users[i]['267'][3] - users[i]['267'][2])
                         let array_insu = [(users[i]['267'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['267'][4]), users[i]['267'][1], users[i]['267'][2], users[i]['267'][3], users[i]['267'][4],(users[i]['267'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['267'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['267'][4]*users[i]['267'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['267'][4]*(users[i]['267'][3] - users[i]['267'][2])]
                         users[i].set('267', array_insu)
+                        users[i].balanco_patrimonial = { 
+                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['267'][7],
+                            ativo: users[i].balanco_patrimonial.ativo,
+                            passivo: users[i].balanco_patrimonial.passivo,
+                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+
+                        }
                         //users[i]['267'][0] = users[i]['267'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['267'][4]
                         if(users[i]['267'][0] >= 0){
                             users[i].taokeys = users[i].taokeys - users[i]['267'][0]*36
@@ -2559,6 +2626,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['268'][4]*(users[i]['268'][3] - users[i]['268'][2])
                         let array_insu = [(users[i]['268'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['268'][4]), users[i]['268'][1], users[i]['268'][2], users[i]['268'][3], users[i]['268'][4],(users[i]['268'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['268'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['268'][4]*users[i]['268'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['268'][4]*(users[i]['268'][3] - users[i]['268'][2])]
                         users[i].set('268', array_insu)
+                        users[i].balanco_patrimonial = { 
+                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['268'][7],
+                            ativo: users[i].balanco_patrimonial.ativo,
+                            passivo: users[i].balanco_patrimonial.passivo,
+                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+
+                        }
                         //users[i]['268'][0] = users[i]['268'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['268'][4]
                         if(users[i]['268'][0] >= 0){
                             users[i].taokeys = users[i].taokeys - users[i]['268'][0]*36
@@ -2579,6 +2653,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['269'][4]*(users[i]['269'][3] - users[i]['269'][2])
                         let array_insu = [(users[i]['269'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['269'][4]), users[i]['269'][1], users[i]['269'][2], users[i]['269'][3], users[i]['269'][4],(users[i]['269'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['269'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['269'][4]*users[i]['269'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['269'][4]*(users[i]['269'][3] - users[i]['269'][2])]
                         users[i].set('269', array_insu)
+                        users[i].balanco_patrimonial = { 
+                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['269'][7],
+                            ativo: users[i].balanco_patrimonial.ativo,
+                            passivo: users[i].balanco_patrimonial.passivo,
+                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+
+                        }
                         //users[i]['269'][0] = users[i]['269'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['269'][4]
                         if(users[i]['269'][0] >= 0){
                             users[i].taokeys = users[i].taokeys - users[i]['269'][0]*36
@@ -2599,6 +2680,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['347'][4]*(users[i]['347'][3] - users[i]['347'][2])
                         let array_insu = [(users[i]['347'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['347'][4]), users[i]['347'][1], users[i]['347'][2], users[i]['347'][3], users[i]['347'][4],(users[i]['347'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['347'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['347'][4]*users[i]['347'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['347'][4]*(users[i]['347'][3] - users[i]['347'][2])]
                         users[i].set('347', array_insu)
+                        users[i].balanco_patrimonial = { 
+                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['347'][7],
+                            ativo: users[i].balanco_patrimonial.ativo,
+                            passivo: users[i].balanco_patrimonial.passivo,
+                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+
+                        }
                         //users[i]['347'][0] = users[i]['347'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['347'][4]
                         if(users[i]['347'][0] >= 0){
                             users[i].taokeys = users[i].taokeys - users[i]['347'][0]*36
@@ -2618,6 +2706,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['348'][4]*(users[i]['348'][3] - users[i]['348'][2])
                         let array_insu = [(users[i]['348'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['348'][4]), users[i]['348'][1], users[i]['348'][2], users[i]['348'][3], users[i]['348'][4],(users[i]['348'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['348'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['348'][4]*users[i]['348'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['348'][4]*(users[i]['348'][3] - users[i]['348'][2])]
                         users[i].set('348', array_insu)
+                        users[i].balanco_patrimonial = { 
+                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['348'][7],
+                            ativo: users[i].balanco_patrimonial.ativo,
+                            passivo: users[i].balanco_patrimonial.passivo,
+                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+
+                        }
                         //users[i]['348'][0] = users[i]['348'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['348'][4]
                         if(users[i]['348'][0] >= 0){
                             users[i].taokeys = users[i].taokeys - users[i]['348'][0]*36
@@ -2638,6 +2733,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['349'][4]*(users[i]['349'][3] - users[i]['349'][2])
                         let array_insu = [(users[i]['349'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['349'][4]), users[i]['349'][1], users[i]['349'][2], users[i]['349'][3], users[i]['349'][4],(users[i]['349'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['349'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['349'][4]*users[i]['349'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['349'][4]*(users[i]['349'][3] - users[i]['349'][2])]
                         users[i].set('349', array_insu)
+                        users[i].balanco_patrimonial = { 
+                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['349'][7],
+                            ativo: users[i].balanco_patrimonial.ativo,
+                            passivo: users[i].balanco_patrimonial.passivo,
+                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+
+                        }
                         //users[i]['349'][0] = users[i]['349'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['349'][4]
                         if(users[i]['349'][0] >= 0){
                             users[i].taokeys = users[i].taokeys - users[i]['349'][0]*36
@@ -2658,6 +2760,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['357'][4]*(users[i]['357'][3] - users[i]['357'][2])
                         let array_insu = [(users[i]['357'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['357'][4]), users[i]['357'][1], users[i]['357'][2], users[i]['357'][3], users[i]['357'][4],(users[i]['357'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['357'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['357'][4]*users[i]['357'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['357'][4]*(users[i]['357'][3] - users[i]['357'][2])]
                         users[i].set('357', array_insu)
+                        users[i].balanco_patrimonial = { 
+                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['357'][7],
+                            ativo: users[i].balanco_patrimonial.ativo,
+                            passivo: users[i].balanco_patrimonial.passivo,
+                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+
+                        }
                         //users[i]['357'][0] = users[i]['357'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['357'][4]
                         if(users[i]['357'][0] >= 0){
                             users[i].taokeys = users[i].taokeys - users[i]['357'][0]*36
@@ -2677,6 +2786,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['358'][4]*(users[i]['358'][3] - users[i]['358'][2])
                         let array_insu = [(users[i]['358'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['358'][4]), users[i]['358'][1], users[i]['358'][2], users[i]['358'][3], users[i]['358'][4],(users[i]['358'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['358'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['358'][4]*users[i]['358'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['358'][4]*(users[i]['358'][3] - users[i]['358'][2])]
                         users[i].set('358', array_insu)
+                        users[i].balanco_patrimonial = { 
+                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['358'][7],
+                            ativo: users[i].balanco_patrimonial.ativo,
+                            passivo: users[i].balanco_patrimonial.passivo,
+                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+
+                        }
                         //users[i]['358'][0] = users[i]['358'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['358'][4]
                         if(users[i]['358'][0] >= 0){
                             users[i].taokeys = users[i].taokeys - users[i]['358'][0]*36
@@ -2697,6 +2813,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['359'][4]*(users[i]['359'][3] - users[i]['359'][2])
                         let array_insu = [(users[i]['359'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['359'][4]), users[i]['359'][1], users[i]['359'][2], users[i]['359'][3], users[i]['359'][4],(users[i]['359'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['359'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['359'][4]*users[i]['359'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['359'][4]*(users[i]['359'][3] - users[i]['359'][2])]
                         users[i].set('359', array_insu)
+                        users[i].balanco_patrimonial = { 
+                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['359'][7],
+                            ativo: users[i].balanco_patrimonial.ativo,
+                            passivo: users[i].balanco_patrimonial.passivo,
+                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+
+                        }
                         //users[i]['359'][0] = users[i]['359'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['359'][4]
                         if(users[i]['359'][0] >= 0){
                             users[i].taokeys = users[i].taokeys - users[i]['359'][0]*36
@@ -2717,6 +2840,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['367'][4]*(users[i]['367'][3] - users[i]['367'][2])
                         let array_insu = [(users[i]['367'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['367'][4]), users[i]['367'][1], users[i]['367'][2], users[i]['367'][3], users[i]['367'][4],(users[i]['367'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['367'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['367'][4]*users[i]['367'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['367'][4]*(users[i]['367'][3] - users[i]['367'][2])]
                         users[i].set('367', array_insu)
+                        users[i].balanco_patrimonial = { 
+                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['367'][7],
+                            ativo: users[i].balanco_patrimonial.ativo,
+                            passivo: users[i].balanco_patrimonial.passivo,
+                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+
+                        }
                         //users[i]['367'][0] = users[i]['367'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['367'][4]
                         if(users[i]['367'][0] >= 0){
                             users[i].taokeys = users[i].taokeys - users[i]['367'][0]*36
@@ -2736,6 +2866,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['368'][4]*(users[i]['368'][3] - users[i]['368'][2])
                         let array_insu = [(users[i]['368'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['368'][4]), users[i]['368'][1], users[i]['368'][2], users[i]['368'][3], users[i]['368'][4],(users[i]['368'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['368'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['368'][4]*users[i]['368'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['368'][4]*(users[i]['368'][3] - users[i]['368'][2])]
                         users[i].set('368', array_insu)
+                        users[i].balanco_patrimonial = { 
+                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['368'][7],
+                            ativo: users[i].balanco_patrimonial.ativo,
+                            passivo: users[i].balanco_patrimonial.passivo,
+                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+
+                        }
                         //users[i]['368'][0] = users[i]['368'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['368'][4]
                         if(users[i]['368'][0] >= 0){
                             users[i].taokeys = users[i].taokeys - users[i]['368'][0]*36
@@ -2756,6 +2893,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['369'][4]*(users[i]['369'][3] - users[i]['369'][2])
                         let array_insu = [(users[i]['369'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['369'][4]), users[i]['369'][1], users[i]['369'][2], users[i]['369'][3], users[i]['369'][4],(users[i]['369'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['369'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['369'][4]*users[i]['369'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['369'][4]*(users[i]['369'][3] - users[i]['369'][2])]
                         users[i].set('369', array_insu)
+                        users[i].balanco_patrimonial = { 
+                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['369'][7],
+                            ativo: users[i].balanco_patrimonial.ativo,
+                            passivo: users[i].balanco_patrimonial.passivo,
+                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+
+                        }
                         //users[i]['369'][0] = users[i]['369'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['369'][4]
                         if(users[i]['369'][0] >= 0){
                             users[i].taokeys = users[i].taokeys - users[i]['369'][0]*36 //descontando valor de guardar insumos no estoque
