@@ -667,8 +667,8 @@
             socket.on('login-negado', (cre) => {
                 alert('login negado para tentativa de conexao com '+cre)
             })
-            socket.on('operacao-negada', (motivo) => {
-                alert('Operacao negada por ' + motivo)
+            socket.on('feedback', (motivo) => {
+                alert(motivo[1])
             })
             socket.on('resposta-pesquisar-pas', (x) => {
                 alert('resultado : ' + x)

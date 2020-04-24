@@ -1,6 +1,0 @@
-ports:
-  - port: 3000
-    onOpen: open-preview
-tasks:
-  - before: if [[ -z "$experiment" ]]; then cd playground/implementacao-pontuacao; else cd playground/$experiment; fi
-    command: nvm install node && npm i express && node server.js
