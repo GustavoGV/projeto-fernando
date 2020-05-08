@@ -1311,8 +1311,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
     }) //OK
     socket.on('propaganda-unitaria', (dados) => {
-        console.log(dados)
-        let qnt = Number(dados[1])
+        let qnt = Number(dados)
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => {
                 if(userx !== null){
