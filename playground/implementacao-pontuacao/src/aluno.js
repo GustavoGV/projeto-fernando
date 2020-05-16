@@ -47,7 +47,7 @@ const UserSchema = new Schema({
         368:Array,
         369:Array,
     balanco_patrimonial: Object,
-    DRE: Object,
+    dre: Object,
     fluxo_de_caixa: Object,
     cronograma: Object,
     pesquisas_realizadas: Object

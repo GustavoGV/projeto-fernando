@@ -8,8 +8,7 @@ const Data = estrutura[1]
 
 //import { isMainThread } from 'worker_threads'
 import mongoose from 'mongoose'
-import { Socket } from 'net'
-import e from 'express'
+
 //import { createCipher } from 'crypto'
 
 mongoose.connect('mongodb://localhost/aluno_teste')
@@ -176,11 +175,42 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         368:[0,0,540,0,0,0,0,0],
                         369:[0,0,576,0,0,0,0,0],
                         balanco_patrimonial: {
-                            ativo: 0,
-                            contas_a_receber: 0,
-                            ativo_circulante: 0,
-                            passivo: 0
-                        }});
+                            ativo: {
+                                circulante: {
+                                    caixa: 18720000,
+                                    estoque: 288*985,
+                                    contas_a_receber: 0
+
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: 30,
+                                        frota: 10*57600,
+                                        depreciacao_frota: 0
+                                    }
+                                }
+                            },
+                            passivo: {
+                                contas_a_pagar: 0
+                            },
+                            patrimonio_liquido: {
+                                capital_social: 18720000+288*985+10*57600,
+                                lucros_acumulados: 0
+                            }
+                        },
+                        dre: {
+                            receita: 0,
+                            imposto: 0,
+                            cmv: 0,
+                            despesas_comerciais: 0,
+                            despesas_vendas: 0,
+                            depreciacao_e_amortizacao: 0,
+                            ir: 0
+                        },
+                        fluxo_de_caixa: {
+                            
+                        }
+                    });
                         jogador.save()
                             .then(Aluno.find({ cooperativa: creden[0], temporario: 1, instancia: creden[2]}))
                             .then((user) => { 
@@ -209,10 +239,40 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                     368:[0,0,540,0,0,0,0,0],
                                     369:[0,0,576,0,0,0,0,0],
                                     balanco_patrimonial: {
-                                        ativo: 0,
-                                        contas_a_receber: 0,
-                                        ativo_circulante: 0,
-                                        passivo: 0
+                                        ativo: {
+                                            circulante: {
+                                                caixa: 18720000,
+                                                estoque: 288*985,
+                                                contas_a_receber: 0
+            
+                                            },
+                                            n_circulante: {
+                                                imobilizado: {
+                                                    pas: 30,
+                                                    frota: 10*57600,
+                                                    depreciacao_frota: 0
+                                                },
+                                            },
+                                        },
+                                        passivo: {
+                                            contas_a_pagar: 0
+                                        },
+                                        patrimonio_liquido: {
+                                            capital_social: 18720000+288*985+10*57600,
+                                            lucros_acumulados: 0
+                                        }
+                                    },
+                                    dre: {
+                                        receita: 0,
+                                        imposto: 0,
+                                        cmv: 0,
+                                        despesas_comerciais: 0,
+                                        despesas_vendas: 0,
+                                        depreciacao_e_amortizacao: 0,
+                                        ir: 0
+                                    },
+                                    fluxo_de_caixa: {
+                                        
                                     }
                                     });
                                     jogadorR.save()
@@ -295,27 +355,28 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 //console.log(userx[velho][0] + ' <----userx(Schema trabalhado aqui)')
                                 //console.log(user[velho][0] + ' <=====user(recem pesquisado)')
                                 if(user.taokeys == userx.taokeys){
-                                socket.emit('update', [user["147"],
-                                user["148"],
-                                user["149"],
-                                user["157"],
-                                user["158"],
-                                user["159"],
-                                user["257"],
-                                user["258"],
-                                user["259"],
-                                user["267"],
-                                user["268"],
-                                user["269"],
-                                user["347"],
-                                user["348"],
-                                user["349"],
-                                user["357"],
-                                user["358"],
-                                user["359"],
-                                user["367"],
-                                user["368"],
-                                user["369"],
+                                socket.emit('update', [
+                                [user["147"],"147"],
+                                [user["148"],"148"],
+                                [user["149"],"149"],
+                                [user["157"],"157"],
+                                [user["158"],"158"],
+                                [user["159"],"159"],
+                                [user["257"],"257"],
+                                [user["258"],"258"],
+                                [user["259"],"259"],
+                                [user["267"],"267"],
+                                [user["268"],"268"],
+                                [user["269"],"269"],
+                                [user["347"],"347"],
+                                [user["348"],"348"],
+                                [user["349"],"349"],
+                                [user["357"],"357"],
+                                [user["358"],"358"],
+                                [user["359"],"359"],
+                                [user["367"],"367"],
+                                [user["368"],"368"],
+                                [user["369"],"369"],
                                 user["taokeys"],
                                 user["frota"],
                                 user["promotores"],
@@ -378,37 +439,38 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 //console.log(userx[velho][0] + ' <----userx(Schema trabalhado aqui)')
                                 //console.log(user[velho][0] + ' <=====user(recem pesquisado)')
                                 if(user.taokeys == userx.taokeys){
-                                socket.emit('update', [user["147"],
-                                user["148"],
-                                user["149"],
-                                user["157"],
-                                user["158"],
-                                user["159"],
-                                user["257"],
-                                user["258"],
-                                user["259"],
-                                user["267"],
-                                user["268"],
-                                user["269"],
-                                user["347"],
-                                user["348"],
-                                user["349"],
-                                user["357"],
-                                user["358"],
-                                user["359"],
-                                user["367"],
-                                user["368"],
-                                user["369"],
-                                user["taokeys"],
-                                user["frota"],
-                                user["promotores"],
-                                user["comissao"],
-                                user["distribuidores"],
-                                user["pas"],
-                                user["propaganda"],
-                                user["propagandauni"],
-                                user["divida"],
-                                user["turno"]]);
+                                    socket.emit('update', [
+                                        [user["147"],"147"],
+                                        [user["148"],"148"],
+                                        [user["149"],"149"],
+                                        [user["157"],"157"],
+                                        [user["158"],"158"],
+                                        [user["159"],"159"],
+                                        [user["257"],"257"],
+                                        [user["258"],"258"],
+                                        [user["259"],"259"],
+                                        [user["267"],"267"],
+                                        [user["268"],"268"],
+                                        [user["269"],"269"],
+                                        [user["347"],"347"],
+                                        [user["348"],"348"],
+                                        [user["349"],"349"],
+                                        [user["357"],"357"],
+                                        [user["358"],"358"],
+                                        [user["359"],"359"],
+                                        [user["367"],"367"],
+                                        [user["368"],"368"],
+                                        [user["369"],"369"],
+                                        user["taokeys"],
+                                        user["frota"],
+                                        user["promotores"],
+                                        user["comissao"],
+                                        user["distribuidores"],
+                                        user["pas"],
+                                        user["propaganda"],
+                                        user["propagandauni"],
+                                        user["divida"],
+                                        user["turno"]]);
         
                                     }                  
                                 })
@@ -456,37 +518,38 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
                             .then((user) => {
                                     if(user.taokeys == userx.taokeys){
-                                        socket.emit('update', [user["147"],
-                                user["148"],
-                                user["149"],
-                                user["157"],
-                                user["158"],
-                                user["159"],
-                                user["257"],
-                                user["258"],
-                                user["259"],
-                                user["267"],
-                                user["268"],
-                                user["269"],
-                                user["347"],
-                                user["348"],
-                                user["349"],
-                                user["357"],
-                                user["358"],
-                                user["359"],
-                                user["367"],
-                                user["368"],
-                                user["369"],
-                                user["taokeys"],
-                                user["frota"],
-                                user["promotores"],
-                                user["comissao"],
-                                user["distribuidores"],
-                                user["pas"],
-                                user["propaganda"],
-                                user["propagandauni"],
-                                user["divida"],
-                                user["turno"]]);
+                                        socket.emit('update', [
+                                            [user["147"],"147"],
+                                            [user["148"],"148"],
+                                            [user["149"],"149"],
+                                            [user["157"],"157"],
+                                            [user["158"],"158"],
+                                            [user["159"],"159"],
+                                            [user["257"],"257"],
+                                            [user["258"],"258"],
+                                            [user["259"],"259"],
+                                            [user["267"],"267"],
+                                            [user["268"],"268"],
+                                            [user["269"],"269"],
+                                            [user["347"],"347"],
+                                            [user["348"],"348"],
+                                            [user["349"],"349"],
+                                            [user["357"],"357"],
+                                            [user["358"],"358"],
+                                            [user["359"],"359"],
+                                            [user["367"],"367"],
+                                            [user["368"],"368"],
+                                            [user["369"],"369"],
+                                            user["taokeys"],
+                                            user["frota"],
+                                            user["promotores"],
+                                            user["comissao"],
+                                            user["distribuidores"],
+                                            user["pas"],
+                                            user["propaganda"],
+                                            user["propagandauni"],
+                                            user["divida"],
+                                            user["turno"]]);
         
                                     }                  
                                 })
@@ -528,37 +591,38 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
                                 .then((user) => {
                                     if(user.taokeys == userx.taokeys){
-                                        socket.emit('update', [user["147"],
-                                user["148"],
-                                user["149"],
-                                user["157"],
-                                user["158"],
-                                user["159"],
-                                user["257"],
-                                user["258"],
-                                user["259"],
-                                user["267"],
-                                user["268"],
-                                user["269"],
-                                user["347"],
-                                user["348"],
-                                user["349"],
-                                user["357"],
-                                user["358"],
-                                user["359"],
-                                user["367"],
-                                user["368"],
-                                user["369"],
-                                user["taokeys"],
-                                user["frota"],
-                                user["promotores"],
-                                user["comissao"],
-                                user["distribuidores"],
-                                user["pas"],
-                                user["propaganda"],
-                                user["propagandauni"],
-                                user["divida"],
-                                user["turno"]]);
+                                        socket.emit('update', [
+                                            [user["147"],"147"],
+                                            [user["148"],"148"],
+                                            [user["149"],"149"],
+                                            [user["157"],"157"],
+                                            [user["158"],"158"],
+                                            [user["159"],"159"],
+                                            [user["257"],"257"],
+                                            [user["258"],"258"],
+                                            [user["259"],"259"],
+                                            [user["267"],"267"],
+                                            [user["268"],"268"],
+                                            [user["269"],"269"],
+                                            [user["347"],"347"],
+                                            [user["348"],"348"],
+                                            [user["349"],"349"],
+                                            [user["357"],"357"],
+                                            [user["358"],"358"],
+                                            [user["359"],"359"],
+                                            [user["367"],"367"],
+                                            [user["368"],"368"],
+                                            [user["369"],"369"],
+                                            user["taokeys"],
+                                            user["frota"],
+                                            user["promotores"],
+                                            user["comissao"],
+                                            user["distribuidores"],
+                                            user["pas"],
+                                            user["propaganda"],
+                                            user["propagandauni"],
+                                            user["divida"],
+                                            user["turno"]]);
         
                                     }                  
                                 })
@@ -601,10 +665,29 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         userdef.set('promotores', usert.promotores)
                         //console.log(index)
 
-                        userdef.balanco_patrimonial = { 
-                            ativo: usert.balanco_patrimonial.ativo,
-                            ativo_circulante: usert.balanco_patrimonial.ativo_circulante,
-                            
+                        userdef.balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: usert.balanco_patrimonial.ativo.circulante.caixa,
+                                    estoque: usert.balanco_patrimonial.ativo.circulante.estoque,
+                                    contas_a_receber: usert.balanco_patrimonial.ativo.circulante.contas_a_receber
+
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: usert.balanco_patrimonial.n_circulante.imobilizado.pas,
+                                        frota: usert.balanco_patrimonial.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: usert.balanco_patrimonial.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: usert.balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: usert.balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: usert.balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                            }
                         }
                         
                         for(let s = 0; s < index.length; s++){
@@ -643,38 +726,38 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
                                 .then((user) => {
                                     if(user.taokeys == userx.taokeys){
-                                        socket.emit('update', [user["147"],
-                                user["148"],
-                                user["149"],
-                                user["157"],
-                                user["158"],
-                                user["159"],
-                                user["257"],
-                                user["258"],
-                                user["259"],
-                                user["267"],
-                                user["268"],
-                                user["269"],
-                                user["347"],
-                                user["348"],
-                                user["349"],
-                                user["357"],
-                                user["358"],
-                                user["359"],
-                                user["367"],
-                                user["368"],
-                                user["369"],
-                                user["taokeys"],
-                                user["frota"],
-                                user["promotores"],
-                                user["comissao"],
-                                user["distribuidores"],
-                                user["pas"],
-                                user["propaganda"],
-                                user["propagandauni"],
-                                user["divida"],
-                                user["turno"]]);
-        
+                                        socket.emit('update', [
+                                            [user["147"],"147"],
+                                            [user["148"],"148"],
+                                            [user["149"],"149"],
+                                            [user["157"],"157"],
+                                            [user["158"],"158"],
+                                            [user["159"],"159"],
+                                            [user["257"],"257"],
+                                            [user["258"],"258"],
+                                            [user["259"],"259"],
+                                            [user["267"],"267"],
+                                            [user["268"],"268"],
+                                            [user["269"],"269"],
+                                            [user["347"],"347"],
+                                            [user["348"],"348"],
+                                            [user["349"],"349"],
+                                            [user["357"],"357"],
+                                            [user["358"],"358"],
+                                            [user["359"],"359"],
+                                            [user["367"],"367"],
+                                            [user["368"],"368"],
+                                            [user["369"],"369"],
+                                            user["taokeys"],
+                                            user["frota"],
+                                            user["promotores"],
+                                            user["comissao"],
+                                            user["distribuidores"],
+                                            user["pas"],
+                                            user["propaganda"],
+                                            user["propagandauni"],
+                                            user["divida"],
+                                            user["turno"]]);
                                     }                  
                                 })
                         .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
@@ -711,44 +794,45 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => {
                 if(userx !== null){
-                    socket.emit('update', [user["147"],
-                                user["148"],
-                                user["149"],
-                                user["157"],
-                                user["158"],
-                                user["159"],
-                                user["257"],
-                                user["258"],
-                                user["259"],
-                                user["267"],
-                                user["268"],
-                                user["269"],
-                                user["347"],
-                                user["348"],
-                                user["349"],
-                                user["357"],
-                                user["358"],
-                                user["359"],
-                                user["367"],
-                                user["368"],
-                                user["369"],
-                                user["taokeys"],
-                                user["frota"],
-                                user["promotores"],
-                                user["comissao"],
-                                user["distribuidores"],
-                                user["pas"],
-                                user["propaganda"],
-                                user["propagandauni"],
-                                user["divida"],
-                                user["turno"]]);
+                    socket.emit('update', [
+                        [user["147"],"147"],
+                        [user["148"],"148"],
+                        [user["149"],"149"],
+                        [user["157"],"157"],
+                        [user["158"],"158"],
+                        [user["159"],"159"],
+                        [user["257"],"257"],
+                        [user["258"],"258"],
+                        [user["259"],"259"],
+                        [user["267"],"267"],
+                        [user["268"],"268"],
+                        [user["269"],"269"],
+                        [user["347"],"347"],
+                        [user["348"],"348"],
+                        [user["349"],"349"],
+                        [user["357"],"357"],
+                        [user["358"],"358"],
+                        [user["359"],"359"],
+                        [user["367"],"367"],
+                        [user["368"],"368"],
+                        [user["369"],"369"],
+                        user["taokeys"],
+                        user["frota"],
+                        user["promotores"],
+                        user["comissao"],
+                        user["distribuidores"],
+                        user["pas"],
+                        user["propaganda"],
+                        user["propagandauni"],
+                        user["divida"],
+                        user["turno"]]);
                 }
                 else{
                     socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
-    }) // OK
+    }) //OK
     socket.on('alterar-preco', (dados) => {
         let tipo = dados[0];
         let preco = Number(dados[1]);
@@ -763,37 +847,38 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
                                 .then((user) => {
                                     if(user.taokeys == userx.taokeys){
-                                        socket.emit('update', [user["147"],
-                                user["148"],
-                                user["149"],
-                                user["157"],
-                                user["158"],
-                                user["159"],
-                                user["257"],
-                                user["258"],
-                                user["259"],
-                                user["267"],
-                                user["268"],
-                                user["269"],
-                                user["347"],
-                                user["348"],
-                                user["349"],
-                                user["357"],
-                                user["358"],
-                                user["359"],
-                                user["367"],
-                                user["368"],
-                                user["369"],
-                                user["taokeys"],
-                                user["frota"],
-                                user["promotores"],
-                                user["comissao"],
-                                user["distribuidores"],
-                                user["pas"],
-                                user["propaganda"],
-                                user["propagandauni"],
-                                user["divida"],
-                                user["turno"]]);
+                                        socket.emit('update', [
+                                            [user["147"],"147"],
+                                            [user["148"],"148"],
+                                            [user["149"],"149"],
+                                            [user["157"],"157"],
+                                            [user["158"],"158"],
+                                            [user["159"],"159"],
+                                            [user["257"],"257"],
+                                            [user["258"],"258"],
+                                            [user["259"],"259"],
+                                            [user["267"],"267"],
+                                            [user["268"],"268"],
+                                            [user["269"],"269"],
+                                            [user["347"],"347"],
+                                            [user["348"],"348"],
+                                            [user["349"],"349"],
+                                            [user["357"],"357"],
+                                            [user["358"],"358"],
+                                            [user["359"],"359"],
+                                            [user["367"],"367"],
+                                            [user["368"],"368"],
+                                            [user["369"],"369"],
+                                            user["taokeys"],
+                                            user["frota"],
+                                            user["promotores"],
+                                            user["comissao"],
+                                            user["distribuidores"],
+                                            user["pas"],
+                                            user["propaganda"],
+                                            user["propagandauni"],
+                                            user["divida"],
+                                            user["turno"]]);
         
                                     }                  
                                 })
@@ -831,37 +916,38 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
                                 .then((user) => {
                                     if(user.taokeys == userx.taokeys){
-                                        socket.emit('update', [user["147"],
-                                user["148"],
-                                user["149"],
-                                user["157"],
-                                user["158"],
-                                user["159"],
-                                user["257"],
-                                user["258"],
-                                user["259"],
-                                user["267"],
-                                user["268"],
-                                user["269"],
-                                user["347"],
-                                user["348"],
-                                user["349"],
-                                user["357"],
-                                user["358"],
-                                user["359"],
-                                user["367"],
-                                user["368"],
-                                user["369"],
-                                user["taokeys"],
-                                user["frota"],
-                                user["promotores"],
-                                user["comissao"],
-                                user["distribuidores"],
-                                user["pas"],
-                                user["propaganda"],
-                                user["propagandauni"],
-                                user["divida"],
-                                user["turno"]]);
+                                        socket.emit('update', [
+                                            [user["147"],"147"],
+                                            [user["148"],"148"],
+                                            [user["149"],"149"],
+                                            [user["157"],"157"],
+                                            [user["158"],"158"],
+                                            [user["159"],"159"],
+                                            [user["257"],"257"],
+                                            [user["258"],"258"],
+                                            [user["259"],"259"],
+                                            [user["267"],"267"],
+                                            [user["268"],"268"],
+                                            [user["269"],"269"],
+                                            [user["347"],"347"],
+                                            [user["348"],"348"],
+                                            [user["349"],"349"],
+                                            [user["357"],"357"],
+                                            [user["358"],"358"],
+                                            [user["359"],"359"],
+                                            [user["367"],"367"],
+                                            [user["368"],"368"],
+                                            [user["369"],"369"],
+                                            user["taokeys"],
+                                            user["frota"],
+                                            user["promotores"],
+                                            user["comissao"],
+                                            user["distribuidores"],
+                                            user["pas"],
+                                            user["propaganda"],
+                                            user["propagandauni"],
+                                            user["divida"],
+                                            user["turno"]]);
         
                                     }                  
                                 })
@@ -894,37 +980,38 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
                                 .then((user) => {
                                     if(user.taokeys == userx.taokeys){
-                                        socket.emit('update', [user["147"],
-                                user["148"],
-                                user["149"],
-                                user["157"],
-                                user["158"],
-                                user["159"],
-                                user["257"],
-                                user["258"],
-                                user["259"],
-                                user["267"],
-                                user["268"],
-                                user["269"],
-                                user["347"],
-                                user["348"],
-                                user["349"],
-                                user["357"],
-                                user["358"],
-                                user["359"],
-                                user["367"],
-                                user["368"],
-                                user["369"],
-                                user["taokeys"],
-                                user["frota"],
-                                user["promotores"],
-                                user["comissao"],
-                                user["distribuidores"],
-                                user["pas"],
-                                user["propaganda"],
-                                user["propagandauni"],
-                                user["divida"],
-                                user["turno"]]);
+                                        socket.emit('update', [
+                                            [user["147"],"147"],
+                                            [user["148"],"148"],
+                                            [user["149"],"149"],
+                                            [user["157"],"157"],
+                                            [user["158"],"158"],
+                                            [user["159"],"159"],
+                                            [user["257"],"257"],
+                                            [user["258"],"258"],
+                                            [user["259"],"259"],
+                                            [user["267"],"267"],
+                                            [user["268"],"268"],
+                                            [user["269"],"269"],
+                                            [user["347"],"347"],
+                                            [user["348"],"348"],
+                                            [user["349"],"349"],
+                                            [user["357"],"357"],
+                                            [user["358"],"358"],
+                                            [user["359"],"359"],
+                                            [user["367"],"367"],
+                                            [user["368"],"368"],
+                                            [user["369"],"369"],
+                                            user["taokeys"],
+                                            user["frota"],
+                                            user["promotores"],
+                                            user["comissao"],
+                                            user["distribuidores"],
+                                            user["pas"],
+                                            user["propaganda"],
+                                            user["propagandauni"],
+                                            user["divida"],
+                                            user["turno"]]);
                                     }                  
                                 })
                         .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
@@ -956,37 +1043,38 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
                                 .then((user) => {
                                     if(user.taokeys == userx.taokeys){
-                                        socket.emit('update', [user["147"],
-                                user["148"],
-                                user["149"],
-                                user["157"],
-                                user["158"],
-                                user["159"],
-                                user["257"],
-                                user["258"],
-                                user["259"],
-                                user["267"],
-                                user["268"],
-                                user["269"],
-                                user["347"],
-                                user["348"],
-                                user["349"],
-                                user["357"],
-                                user["358"],
-                                user["359"],
-                                user["367"],
-                                user["368"],
-                                user["369"],
-                                user["taokeys"],
-                                user["frota"],
-                                user["promotores"],
-                                user["comissao"],
-                                user["distribuidores"],
-                                user["pas"],
-                                user["propaganda"],
-                                user["propagandauni"],
-                                user["divida"],
-                                user["turno"]]);
+                                        socket.emit('update', [
+                                            [user["147"],"147"],
+                                            [user["148"],"148"],
+                                            [user["149"],"149"],
+                                            [user["157"],"157"],
+                                            [user["158"],"158"],
+                                            [user["159"],"159"],
+                                            [user["257"],"257"],
+                                            [user["258"],"258"],
+                                            [user["259"],"259"],
+                                            [user["267"],"267"],
+                                            [user["268"],"268"],
+                                            [user["269"],"269"],
+                                            [user["347"],"347"],
+                                            [user["348"],"348"],
+                                            [user["349"],"349"],
+                                            [user["357"],"357"],
+                                            [user["358"],"358"],
+                                            [user["359"],"359"],
+                                            [user["367"],"367"],
+                                            [user["368"],"368"],
+                                            [user["369"],"369"],
+                                            user["taokeys"],
+                                            user["frota"],
+                                            user["promotores"],
+                                            user["comissao"],
+                                            user["distribuidores"],
+                                            user["pas"],
+                                            user["propaganda"],
+                                            user["propagandauni"],
+                                            user["divida"],
+                                            user["turno"]]);
         
                                     }                  
                                 })
@@ -1017,38 +1105,38 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
                                 .then((user) => {
                                     if(user.taokeys == userx.taokeys){
-                                        socket.emit('update', [user["147"],
-                                user["148"],
-                                user["149"],
-                                user["157"],
-                                user["158"],
-                                user["159"],
-                                user["257"],
-                                user["258"],
-                                user["259"],
-                                user["267"],
-                                user["268"],
-                                user["269"],
-                                user["347"],
-                                user["348"],
-                                user["349"],
-                                user["357"],
-                                user["358"],
-                                user["359"],
-                                user["367"],
-                                user["368"],
-                                user["369"],
-                                user["taokeys"],
-                                user["frota"],
-                                user["promotores"],
-                                user["comissao"],
-                                user["distribuidores"],
-                                user["pas"],
-                                user["propaganda"],
-                                user["propagandauni"],
-                                user["divida"],
-                                user["turno"]]);
-        
+                                        socket.emit('update', [
+                                            [user["147"],"147"],
+                                            [user["148"],"148"],
+                                            [user["149"],"149"],
+                                            [user["157"],"157"],
+                                            [user["158"],"158"],
+                                            [user["159"],"159"],
+                                            [user["257"],"257"],
+                                            [user["258"],"258"],
+                                            [user["259"],"259"],
+                                            [user["267"],"267"],
+                                            [user["268"],"268"],
+                                            [user["269"],"269"],
+                                            [user["347"],"347"],
+                                            [user["348"],"348"],
+                                            [user["349"],"349"],
+                                            [user["357"],"357"],
+                                            [user["358"],"358"],
+                                            [user["359"],"359"],
+                                            [user["367"],"367"],
+                                            [user["368"],"368"],
+                                            [user["369"],"369"],
+                                            user["taokeys"],
+                                            user["frota"],
+                                            user["promotores"],
+                                            user["comissao"],
+                                            user["distribuidores"],
+                                            user["pas"],
+                                            user["propaganda"],
+                                            user["propagandauni"],
+                                            user["divida"],
+                                            user["turno"]]);
                                     }                  
                                 })
                         .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
@@ -1079,37 +1167,38 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
                                 .then((user) => {
                                     if(user.taokeys == userx.taokeys){
-                                        socket.emit('update', [user["147"],
-                                user["148"],
-                                user["149"],
-                                user["157"],
-                                user["158"],
-                                user["159"],
-                                user["257"],
-                                user["258"],
-                                user["259"],
-                                user["267"],
-                                user["268"],
-                                user["269"],
-                                user["347"],
-                                user["348"],
-                                user["349"],
-                                user["357"],
-                                user["358"],
-                                user["359"],
-                                user["367"],
-                                user["368"],
-                                user["369"],
-                                user["taokeys"],
-                                user["frota"],
-                                user["promotores"],
-                                user["comissao"],
-                                user["distribuidores"],
-                                user["pas"],
-                                user["propaganda"],
-                                user["propagandauni"],
-                                user["divida"],
-                                user["turno"]]);
+                                        socket.emit('update', [
+                                            [user["147"],"147"],
+                                            [user["148"],"148"],
+                                            [user["149"],"149"],
+                                            [user["157"],"157"],
+                                            [user["158"],"158"],
+                                            [user["159"],"159"],
+                                            [user["257"],"257"],
+                                            [user["258"],"258"],
+                                            [user["259"],"259"],
+                                            [user["267"],"267"],
+                                            [user["268"],"268"],
+                                            [user["269"],"269"],
+                                            [user["347"],"347"],
+                                            [user["348"],"348"],
+                                            [user["349"],"349"],
+                                            [user["357"],"357"],
+                                            [user["358"],"358"],
+                                            [user["359"],"359"],
+                                            [user["367"],"367"],
+                                            [user["368"],"368"],
+                                            [user["369"],"369"],
+                                            user["taokeys"],
+                                            user["frota"],
+                                            user["promotores"],
+                                            user["comissao"],
+                                            user["distribuidores"],
+                                            user["pas"],
+                                            user["propaganda"],
+                                            user["propagandauni"],
+                                            user["divida"],
+                                            user["turno"]]);
         
                                     }                  
                                 })
@@ -1142,37 +1231,38 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
                                 .then((user) => {
                                     if(user.taokeys == userx.taokeys){
-                                        socket.emit('update', [user["147"],
-                                user["148"],
-                                user["149"],
-                                user["157"],
-                                user["158"],
-                                user["159"],
-                                user["257"],
-                                user["258"],
-                                user["259"],
-                                user["267"],
-                                user["268"],
-                                user["269"],
-                                user["347"],
-                                user["348"],
-                                user["349"],
-                                user["357"],
-                                user["358"],
-                                user["359"],
-                                user["367"],
-                                user["368"],
-                                user["369"],
-                                user["taokeys"],
-                                user["frota"],
-                                user["promotores"],
-                                user["comissao"],
-                                user["distribuidores"],
-                                user["pas"],
-                                user["propaganda"],
-                                user["propagandauni"],
-                                user["divida"],
-                                user["turno"]]);
+                                        socket.emit('update', [
+                                            [user["147"],"147"],
+                                            [user["148"],"148"],
+                                            [user["149"],"149"],
+                                            [user["157"],"157"],
+                                            [user["158"],"158"],
+                                            [user["159"],"159"],
+                                            [user["257"],"257"],
+                                            [user["258"],"258"],
+                                            [user["259"],"259"],
+                                            [user["267"],"267"],
+                                            [user["268"],"268"],
+                                            [user["269"],"269"],
+                                            [user["347"],"347"],
+                                            [user["348"],"348"],
+                                            [user["349"],"349"],
+                                            [user["357"],"357"],
+                                            [user["358"],"358"],
+                                            [user["359"],"359"],
+                                            [user["367"],"367"],
+                                            [user["368"],"368"],
+                                            [user["369"],"369"],
+                                            user["taokeys"],
+                                            user["frota"],
+                                            user["promotores"],
+                                            user["comissao"],
+                                            user["distribuidores"],
+                                            user["pas"],
+                                            user["propaganda"],
+                                            user["propagandauni"],
+                                            user["divida"],
+                                            user["turno"]]);
         
                                     }                  
                                 })
@@ -1202,37 +1292,38 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
                                 .then((user) => {
                                     if(user.taokeys == userx.taokeys){
-                                        socket.emit('update', [user["147"],
-                                user["148"],
-                                user["149"],
-                                user["157"],
-                                user["158"],
-                                user["159"],
-                                user["257"],
-                                user["258"],
-                                user["259"],
-                                user["267"],
-                                user["268"],
-                                user["269"],
-                                user["347"],
-                                user["348"],
-                                user["349"],
-                                user["357"],
-                                user["358"],
-                                user["359"],
-                                user["367"],
-                                user["368"],
-                                user["369"],
-                                user["taokeys"],
-                                user["frota"],
-                                user["promotores"],
-                                user["comissao"],
-                                user["distribuidores"],
-                                user["pas"],
-                                user["propaganda"],
-                                user["propagandauni"],
-                                user["divida"],
-                                user["turno"]]);
+                                        socket.emit('update', [
+                                            [user["147"],"147"],
+                                            [user["148"],"148"],
+                                            [user["149"],"149"],
+                                            [user["157"],"157"],
+                                            [user["158"],"158"],
+                                            [user["159"],"159"],
+                                            [user["257"],"257"],
+                                            [user["258"],"258"],
+                                            [user["259"],"259"],
+                                            [user["267"],"267"],
+                                            [user["268"],"268"],
+                                            [user["269"],"269"],
+                                            [user["347"],"347"],
+                                            [user["348"],"348"],
+                                            [user["349"],"349"],
+                                            [user["357"],"357"],
+                                            [user["358"],"358"],
+                                            [user["359"],"359"],
+                                            [user["367"],"367"],
+                                            [user["368"],"368"],
+                                            [user["369"],"369"],
+                                            user["taokeys"],
+                                            user["frota"],
+                                            user["promotores"],
+                                            user["comissao"],
+                                            user["distribuidores"],
+                                            user["pas"],
+                                            user["propaganda"],
+                                            user["propagandauni"],
+                                            user["divida"],
+                                            user["turno"]]);
         
                                     }                  
                                 })
@@ -1262,37 +1353,38 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
                                 .then((user) => {
                                     if(user.taokeys == userx.taokeys){
-                                        socket.emit('update', [user["147"],
-                                user["148"],
-                                user["149"],
-                                user["157"],
-                                user["158"],
-                                user["159"],
-                                user["257"],
-                                user["258"],
-                                user["259"],
-                                user["267"],
-                                user["268"],
-                                user["269"],
-                                user["347"],
-                                user["348"],
-                                user["349"],
-                                user["357"],
-                                user["358"],
-                                user["359"],
-                                user["367"],
-                                user["368"],
-                                user["369"],
-                                user["taokeys"],
-                                user["frota"],
-                                user["promotores"],
-                                user["comissao"],
-                                user["distribuidores"],
-                                user["pas"],
-                                user["propaganda"],
-                                user["propagandauni"],
-                                user["divida"],
-                                user["turno"]]);
+                                        socket.emit('update', [
+                                            [user["147"],"147"],
+                                            [user["148"],"148"],
+                                            [user["149"],"149"],
+                                            [user["157"],"157"],
+                                            [user["158"],"158"],
+                                            [user["159"],"159"],
+                                            [user["257"],"257"],
+                                            [user["258"],"258"],
+                                            [user["259"],"259"],
+                                            [user["267"],"267"],
+                                            [user["268"],"268"],
+                                            [user["269"],"269"],
+                                            [user["347"],"347"],
+                                            [user["348"],"348"],
+                                            [user["349"],"349"],
+                                            [user["357"],"357"],
+                                            [user["358"],"358"],
+                                            [user["359"],"359"],
+                                            [user["367"],"367"],
+                                            [user["368"],"368"],
+                                            [user["369"],"369"],
+                                            user["taokeys"],
+                                            user["frota"],
+                                            user["promotores"],
+                                            user["comissao"],
+                                            user["distribuidores"],
+                                            user["pas"],
+                                            user["propaganda"],
+                                            user["propagandauni"],
+                                            user["divida"],
+                                            user["turno"]]);
         
                                     }                  
                                 })
@@ -1323,37 +1415,38 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
                                 .then((user) => {
                                     if(user.taokeys == userx.taokeys){
-                                        socket.emit('update', [user["147"],
-                                user["148"],
-                                user["149"],
-                                user["157"],
-                                user["158"],
-                                user["159"],
-                                user["257"],
-                                user["258"],
-                                user["259"],
-                                user["267"],
-                                user["268"],
-                                user["269"],
-                                user["347"],
-                                user["348"],
-                                user["349"],
-                                user["357"],
-                                user["358"],
-                                user["359"],
-                                user["367"],
-                                user["368"],
-                                user["369"],
-                                user["taokeys"],
-                                user["frota"],
-                                user["promotores"],
-                                user["comissao"],
-                                user["distribuidores"],
-                                user["pas"],
-                                user["propaganda"],
-                                user["propagandauni"],
-                                user["divida"],
-                                user["turno"]]);
+                                        socket.emit('update', [
+                                            [user["147"],"147"],
+                                            [user["148"],"148"],
+                                            [user["149"],"149"],
+                                            [user["157"],"157"],
+                                            [user["158"],"158"],
+                                            [user["159"],"159"],
+                                            [user["257"],"257"],
+                                            [user["258"],"258"],
+                                            [user["259"],"259"],
+                                            [user["267"],"267"],
+                                            [user["268"],"268"],
+                                            [user["269"],"269"],
+                                            [user["347"],"347"],
+                                            [user["348"],"348"],
+                                            [user["349"],"349"],
+                                            [user["357"],"357"],
+                                            [user["358"],"358"],
+                                            [user["359"],"359"],
+                                            [user["367"],"367"],
+                                            [user["368"],"368"],
+                                            [user["369"],"369"],
+                                            user["taokeys"],
+                                            user["frota"],
+                                            user["promotores"],
+                                            user["comissao"],
+                                            user["distribuidores"],
+                                            user["pas"],
+                                            user["propaganda"],
+                                            user["propagandauni"],
+                                            user["divida"],
+                                            user["turno"]]);
         
                                     }                  
                                 })
@@ -1384,37 +1477,38 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
                                 .then((user) => {
                                     if(user.taokeys == userx.taokeys){
-                                        socket.emit('update', [user["147"],
-                                user["148"],
-                                user["149"],
-                                user["157"],
-                                user["158"],
-                                user["159"],
-                                user["257"],
-                                user["258"],
-                                user["259"],
-                                user["267"],
-                                user["268"],
-                                user["269"],
-                                user["347"],
-                                user["348"],
-                                user["349"],
-                                user["357"],
-                                user["358"],
-                                user["359"],
-                                user["367"],
-                                user["368"],
-                                user["369"],
-                                user["taokeys"],
-                                user["frota"],
-                                user["promotores"],
-                                user["comissao"],
-                                user["distribuidores"],
-                                user["pas"],
-                                user["propaganda"],
-                                user["propagandauni"],
-                                user["divida"],
-                                user["turno"]]);
+                                        socket.emit('update', [
+                                            [user["147"],"147"],
+                                            [user["148"],"148"],
+                                            [user["149"],"149"],
+                                            [user["157"],"157"],
+                                            [user["158"],"158"],
+                                            [user["159"],"159"],
+                                            [user["257"],"257"],
+                                            [user["258"],"258"],
+                                            [user["259"],"259"],
+                                            [user["267"],"267"],
+                                            [user["268"],"268"],
+                                            [user["269"],"269"],
+                                            [user["347"],"347"],
+                                            [user["348"],"348"],
+                                            [user["349"],"349"],
+                                            [user["357"],"357"],
+                                            [user["358"],"358"],
+                                            [user["359"],"359"],
+                                            [user["367"],"367"],
+                                            [user["368"],"368"],
+                                            [user["369"],"369"],
+                                            user["taokeys"],
+                                            user["frota"],
+                                            user["promotores"],
+                                            user["comissao"],
+                                            user["distribuidores"],
+                                            user["pas"],
+                                            user["propaganda"],
+                                            user["propagandauni"],
+                                            user["divida"],
+                                            user["turno"]]);
         
                                     }                  
                                 })
@@ -1456,37 +1550,38 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
                                 .then((user) => {
                                     if(user.taokeys == userx.taokeys){
-                                        socket.emit('update', [user["147"],
-                                user["148"],
-                                user["149"],
-                                user["157"],
-                                user["158"],
-                                user["159"],
-                                user["257"],
-                                user["258"],
-                                user["259"],
-                                user["267"],
-                                user["268"],
-                                user["269"],
-                                user["347"],
-                                user["348"],
-                                user["349"],
-                                user["357"],
-                                user["358"],
-                                user["359"],
-                                user["367"],
-                                user["368"],
-                                user["369"],
-                                user["taokeys"],
-                                user["frota"],
-                                user["promotores"],
-                                user["comissao"],
-                                user["distribuidores"],
-                                user["pas"],
-                                user["propaganda"],
-                                user["propagandauni"],
-                                user["divida"],
-                                user["turno"]]);
+                                        socket.emit('update', [
+                                            [user["147"],"147"],
+                                            [user["148"],"148"],
+                                            [user["149"],"149"],
+                                            [user["157"],"157"],
+                                            [user["158"],"158"],
+                                            [user["159"],"159"],
+                                            [user["257"],"257"],
+                                            [user["258"],"258"],
+                                            [user["259"],"259"],
+                                            [user["267"],"267"],
+                                            [user["268"],"268"],
+                                            [user["269"],"269"],
+                                            [user["347"],"347"],
+                                            [user["348"],"348"],
+                                            [user["349"],"349"],
+                                            [user["357"],"357"],
+                                            [user["358"],"358"],
+                                            [user["359"],"359"],
+                                            [user["367"],"367"],
+                                            [user["368"],"368"],
+                                            [user["369"],"369"],
+                                            user["taokeys"],
+                                            user["frota"],
+                                            user["promotores"],
+                                            user["comissao"],
+                                            user["distribuidores"],
+                                            user["pas"],
+                                            user["propaganda"],
+                                            user["propagandauni"],
+                                            user["divida"],
+                                            user["turno"]]);
         
                                     }                  
                                 })
@@ -1534,37 +1629,38 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                // console.log(userx[tipo][1] + ' <----userx(Schema trabalhado aqui)')
                                // console.log(user[tipo][1] + ' <=====user(recem pesquisado)')
                                     if(user.taokeys == userx.taokeys){
-                                        socket.emit('update', [user["147"],
-                                user["148"],
-                                user["149"],
-                                user["157"],
-                                user["158"],
-                                user["159"],
-                                user["257"],
-                                user["258"],
-                                user["259"],
-                                user["267"],
-                                user["268"],
-                                user["269"],
-                                user["347"],
-                                user["348"],
-                                user["349"],
-                                user["357"],
-                                user["358"],
-                                user["359"],
-                                user["367"],
-                                user["368"],
-                                user["369"],
-                                user["taokeys"],
-                                user["frota"],
-                                user["promotores"],
-                                user["comissao"],
-                                user["distribuidores"],
-                                user["pas"],
-                                user["propaganda"],
-                                user["propagandauni"],
-                                user["divida"],
-                                user["turno"]]);
+                                        socket.emit('update', [
+                                            [user["147"],"147"],
+                                            [user["148"],"148"],
+                                            [user["149"],"149"],
+                                            [user["157"],"157"],
+                                            [user["158"],"158"],
+                                            [user["159"],"159"],
+                                            [user["257"],"257"],
+                                            [user["258"],"258"],
+                                            [user["259"],"259"],
+                                            [user["267"],"267"],
+                                            [user["268"],"268"],
+                                            [user["269"],"269"],
+                                            [user["347"],"347"],
+                                            [user["348"],"348"],
+                                            [user["349"],"349"],
+                                            [user["357"],"357"],
+                                            [user["358"],"358"],
+                                            [user["359"],"359"],
+                                            [user["367"],"367"],
+                                            [user["368"],"368"],
+                                            [user["369"],"369"],
+                                            user["taokeys"],
+                                            user["frota"],
+                                            user["promotores"],
+                                            user["comissao"],
+                                            user["distribuidores"],
+                                            user["pas"],
+                                            user["propaganda"],
+                                            user["propagandauni"],
+                                            user["divida"],
+                                            user["turno"]]);
         
                                     }
                                     else{socket.emit('feedback', ['danger', 'falha ao atunteticar operacao'])}                  
@@ -1629,37 +1725,38 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                   //  console.log(userx[tipo][1] + ' <----userx(Schema trabalhado aqui)')
                                   //  console.log(user[tipo][1] + ' <=====user(recem pesquisado)')
                                     if(user.taokeys == userx.taokeys){
-                                        socket.emit('update', [user["147"],
-                                        user["148"],
-                                        user["149"],
-                                        user["157"],
-                                        user["158"],
-                                        user["159"],
-                                        user["257"],
-                                        user["258"],
-                                        user["259"],
-                                        user["267"],
-                                        user["268"],
-                                        user["269"],
-                                        user["347"],
-                                        user["348"],
-                                        user["349"],
-                                        user["357"],
-                                        user["358"],
-                                        user["359"],
-                                        user["367"],
-                                        user["368"],
-                                        user["369"],
-                                        user["taokeys"],
-                                        user["frota"],
-                                        user["promotores"],
-                                        user["comissao"],
-                                        user["distribuidores"],
-                                        user["pas"],
-                                        user["propaganda"],
-                                        user["propagandauni"],
-                                        user["divida"],
-                                        user["turno"]]);
+                                        socket.emit('update', [
+                                            [user["147"],"147"],
+                                            [user["148"],"148"],
+                                            [user["149"],"149"],
+                                            [user["157"],"157"],
+                                            [user["158"],"158"],
+                                            [user["159"],"159"],
+                                            [user["257"],"257"],
+                                            [user["258"],"258"],
+                                            [user["259"],"259"],
+                                            [user["267"],"267"],
+                                            [user["268"],"268"],
+                                            [user["269"],"269"],
+                                            [user["347"],"347"],
+                                            [user["348"],"348"],
+                                            [user["349"],"349"],
+                                            [user["357"],"357"],
+                                            [user["358"],"358"],
+                                            [user["359"],"359"],
+                                            [user["367"],"367"],
+                                            [user["368"],"368"],
+                                            [user["369"],"369"],
+                                            user["taokeys"],
+                                            user["frota"],
+                                            user["promotores"],
+                                            user["comissao"],
+                                            user["distribuidores"],
+                                            user["pas"],
+                                            user["propaganda"],
+                                            user["propagandauni"],
+                                            user["divida"],
+                                            user["turno"]]);
                 
                                             }                  
                                         })
@@ -1702,37 +1799,38 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                     .then((dados) => {
                                         if(dados !== null){
                                         socket.emit('resposta-pesquisar-pas', dados['total_pas'])
-                                        socket.emit('update', [userx["147"],
-                userx["148"],
-                userx["149"],
-                userx["157"],
-                userx["158"],
-                userx["159"],
-                userx["257"],
-                userx["258"],
-                userx["259"],
-                userx["267"],
-                userx["268"],
-                userx["269"],
-                userx["347"],
-                userx["348"],
-                userx["349"],
-                userx["357"],
-                userx["358"],
-                userx["359"],
-                userx["367"],
-                userx["368"],
-                userx["369"],
-                userx["taokeys"],
-                userx["frota"],
-                userx["promotores"],
-                userx["comissao"],
-                userx["distribuidores"],
-                userx["pas"],
-                userx["propaganda"],
-                userx["propagandauni"],
-                userx["divida"],
-                userx["turno"]]);
+                                        socket.emit('update', [
+                                            [user["147"],"147"],
+                                            [user["148"],"148"],
+                                            [user["149"],"149"],
+                                            [user["157"],"157"],
+                                            [user["158"],"158"],
+                                            [user["159"],"159"],
+                                            [user["257"],"257"],
+                                            [user["258"],"258"],
+                                            [user["259"],"259"],
+                                            [user["267"],"267"],
+                                            [user["268"],"268"],
+                                            [user["269"],"269"],
+                                            [user["347"],"347"],
+                                            [user["348"],"348"],
+                                            [user["349"],"349"],
+                                            [user["357"],"357"],
+                                            [user["358"],"358"],
+                                            [user["359"],"359"],
+                                            [user["367"],"367"],
+                                            [user["368"],"368"],
+                                            [user["369"],"369"],
+                                            user["taokeys"],
+                                            user["frota"],
+                                            user["promotores"],
+                                            user["comissao"],
+                                            user["distribuidores"],
+                                            user["pas"],
+                                            user["propaganda"],
+                                            user["propagandauni"],
+                                            user["divida"],
+                                            user["turno"]]);
                                     }
                                     else{
                                         socket.emit('feedback', ['danger','voce nao pode realizar pesquisas ate que o administrador inicie o turno'])
@@ -1773,37 +1871,38 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                     .then((dados) => {
                                         if(dados !== null){
                                         socket.emit('resposta-pesquisar-distribuidores', dados['total_distribuidores'])
-                                        socket.emit('update', [userx["147"],
-                userx["148"],
-                userx["149"],
-                userx["157"],
-                userx["158"],
-                userx["159"],
-                userx["257"],
-                userx["258"],
-                userx["259"],
-                userx["267"],
-                userx["268"],
-                userx["269"],
-                userx["347"],
-                userx["348"],
-                userx["349"],
-                userx["357"],
-                userx["358"],
-                userx["359"],
-                userx["367"],
-                userx["368"],
-                userx["369"],
-                userx["taokeys"],
-                userx["frota"],
-                userx["promotores"],
-                userx["comissao"],
-                userx["distribuidores"],
-                userx["pas"],
-                userx["propaganda"],
-                userx["propagandauni"],
-                userx["divida"],
-                userx["turno"]]);
+                                        socket.emit('update', [
+                                            [user["147"],"147"],
+                                            [user["148"],"148"],
+                                            [user["149"],"149"],
+                                            [user["157"],"157"],
+                                            [user["158"],"158"],
+                                            [user["159"],"159"],
+                                            [user["257"],"257"],
+                                            [user["258"],"258"],
+                                            [user["259"],"259"],
+                                            [user["267"],"267"],
+                                            [user["268"],"268"],
+                                            [user["269"],"269"],
+                                            [user["347"],"347"],
+                                            [user["348"],"348"],
+                                            [user["349"],"349"],
+                                            [user["357"],"357"],
+                                            [user["358"],"358"],
+                                            [user["359"],"359"],
+                                            [user["367"],"367"],
+                                            [user["368"],"368"],
+                                            [user["369"],"369"],
+                                            user["taokeys"],
+                                            user["frota"],
+                                            user["promotores"],
+                                            user["comissao"],
+                                            user["distribuidores"],
+                                            user["pas"],
+                                            user["propaganda"],
+                                            user["propagandauni"],
+                                            user["divida"],
+                                            user["turno"]]);
                                         }
                 else{
                     socket.emit('feedback', ['danger', 'voce nao pode realizar pesquisas ate que o administrador inicie o turno'])
@@ -1850,37 +1949,38 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                                 }
                                             }
                                         socket.emit('resposta-pesquisar-participacao-servicos', respostaP)
-                                        socket.emit('update', [userx["147"],
-                userx["148"],
-                userx["149"],
-                userx["157"],
-                userx["158"],
-                userx["159"],
-                userx["257"],
-                userx["258"],
-                userx["259"],
-                userx["267"],
-                userx["268"],
-                userx["269"],
-                userx["347"],
-                userx["348"],
-                userx["349"],
-                userx["357"],
-                userx["358"],
-                userx["359"],
-                userx["367"],
-                userx["368"],
-                userx["369"],
-                userx["taokeys"],
-                userx["frota"],
-                userx["promotores"],
-                userx["comissao"],
-                userx["distribuidores"],
-                userx["pas"],
-                userx["propaganda"],
-                userx["propagandauni"],
-                userx["divida"],
-                userx["turno"]]);
+                                        socket.emit('update', [
+                                            [user["147"],"147"],
+                                            [user["148"],"148"],
+                                            [user["149"],"149"],
+                                            [user["157"],"157"],
+                                            [user["158"],"158"],
+                                            [user["159"],"159"],
+                                            [user["257"],"257"],
+                                            [user["258"],"258"],
+                                            [user["259"],"259"],
+                                            [user["267"],"267"],
+                                            [user["268"],"268"],
+                                            [user["269"],"269"],
+                                            [user["347"],"347"],
+                                            [user["348"],"348"],
+                                            [user["349"],"349"],
+                                            [user["357"],"357"],
+                                            [user["358"],"358"],
+                                            [user["359"],"359"],
+                                            [user["367"],"367"],
+                                            [user["368"],"368"],
+                                            [user["369"],"369"],
+                                            user["taokeys"],
+                                            user["frota"],
+                                            user["promotores"],
+                                            user["comissao"],
+                                            user["distribuidores"],
+                                            user["pas"],
+                                            user["propaganda"],
+                                            user["propagandauni"],
+                                            user["divida"],
+                                            user["turno"]]);
             }
             else{
                 socket.emit('feedback', ['danger','voce nao pode realizar pesquisas ate que o administrador inicie o turno'])
@@ -1910,37 +2010,38 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                                 }
                                             } 
                                              socket.emit('resposta-pesquisar-participacao-servicos', respostaP)
-                                             socket.emit('update', [userx["147"],
-                     userx["148"],
-                     userx["149"],
-                     userx["157"],
-                     userx["158"],
-                     userx["159"],
-                     userx["257"],
-                     userx["258"],
-                     userx["259"],
-                     userx["267"],
-                     userx["268"],
-                     userx["269"],
-                     userx["347"],
-                     userx["348"],
-                     userx["349"],
-                     userx["357"],
-                     userx["358"],
-                     userx["359"],
-                     userx["367"],
-                     userx["368"],
-                     userx["369"],
-                     userx["taokeys"],
-                     userx["frota"],
-                     userx["promotores"],
-                     userx["comissao"],
-                     userx["distribuidores"],
-                     userx["pas"],
-                     userx["propaganda"],
-                     userx["propagandauni"],
-                     userx["divida"],
-                     userx["turno"]]);
+                                             socket.emit('update', [
+                                                [user["147"],"147"],
+                                                [user["148"],"148"],
+                                                [user["149"],"149"],
+                                                [user["157"],"157"],
+                                                [user["158"],"158"],
+                                                [user["159"],"159"],
+                                                [user["257"],"257"],
+                                                [user["258"],"258"],
+                                                [user["259"],"259"],
+                                                [user["267"],"267"],
+                                                [user["268"],"268"],
+                                                [user["269"],"269"],
+                                                [user["347"],"347"],
+                                                [user["348"],"348"],
+                                                [user["349"],"349"],
+                                                [user["357"],"357"],
+                                                [user["358"],"358"],
+                                                [user["359"],"359"],
+                                                [user["367"],"367"],
+                                                [user["368"],"368"],
+                                                [user["369"],"369"],
+                                                user["taokeys"],
+                                                user["frota"],
+                                                user["promotores"],
+                                                user["comissao"],
+                                                user["distribuidores"],
+                                                user["pas"],
+                                                user["propaganda"],
+                                                user["propagandauni"],
+                                                user["divida"],
+                                                user["turno"]]);
                  }
                  else{
                      socket.emit('feedback', ['danger', 'voce nao pode realizar pesquisas ate que o administrador inicie o turno'])
@@ -1980,37 +2081,38 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                     .then((dados) => {
                                         if(dados !== null){
                                         socket.emit('resposta-pesquisar-servicos', dados['modelos_oferecidos'])
-                                        socket.emit('update', [userx["147"],
-                userx["148"],
-                userx["149"],
-                userx["157"],
-                userx["158"],
-                userx["159"],
-                userx["257"],
-                userx["258"],
-                userx["259"],
-                userx["267"],
-                userx["268"],
-                userx["269"],
-                userx["347"],
-                userx["348"],
-                userx["349"],
-                userx["357"],
-                userx["358"],
-                userx["359"],
-                userx["367"],
-                userx["368"],
-                userx["369"],
-                userx["taokeys"],
-                userx["frota"],
-                userx["promotores"],
-                userx["comissao"],
-                userx["distribuidores"],
-                userx["pas"],
-                userx["propaganda"],
-                userx["propagandauni"],
-                userx["divida"],
-                userx["turno"]]);
+                                        socket.emit('update', [
+                                            [user["147"],"147"],
+                                            [user["148"],"148"],
+                                            [user["149"],"149"],
+                                            [user["157"],"157"],
+                                            [user["158"],"158"],
+                                            [user["159"],"159"],
+                                            [user["257"],"257"],
+                                            [user["258"],"258"],
+                                            [user["259"],"259"],
+                                            [user["267"],"267"],
+                                            [user["268"],"268"],
+                                            [user["269"],"269"],
+                                            [user["347"],"347"],
+                                            [user["348"],"348"],
+                                            [user["349"],"349"],
+                                            [user["357"],"357"],
+                                            [user["358"],"358"],
+                                            [user["359"],"359"],
+                                            [user["367"],"367"],
+                                            [user["368"],"368"],
+                                            [user["369"],"369"],
+                                            user["taokeys"],
+                                            user["frota"],
+                                            user["promotores"],
+                                            user["comissao"],
+                                            user["distribuidores"],
+                                            user["pas"],
+                                            user["propaganda"],
+                                            user["propagandauni"],
+                                            user["divida"],
+                                            user["turno"]]);
             }
             else{
                 socket.emit('feedback', ['danger','voce nao pode realizar pesquisas ate que o administrador inicie o turno'])
@@ -2047,37 +2149,38 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 .then((user) => {
                                     socket.emit('feedback', ['success', 'sua cooperativa teve um faturamento de: ' + faturamento])  
                                     if(user.taokeys == userx.taokeys){
-                                        socket.emit('update', [user["147"],
-                                user["148"],
-                                user["149"],
-                                user["157"],
-                                user["158"],
-                                user["159"],
-                                user["257"],
-                                user["258"],
-                                user["259"],
-                                user["267"],
-                                user["268"],
-                                user["269"],
-                                user["347"],
-                                user["348"],
-                                user["349"],
-                                user["357"],
-                                user["358"],
-                                user["359"],
-                                user["367"],
-                                user["368"],
-                                user["369"],
-                                user["taokeys"],
-                                user["frota"],
-                                user["promotores"],
-                                user["comissao"],
-                                user["distribuidores"],
-                                user["pas"],
-                                user["propaganda"],
-                                user["propagandauni"],
-                                user["divida"],
-                                user["turno"]]);
+                                        socket.emit('update', [
+                                            [user["147"],"147"],
+                                            [user["148"],"148"],
+                                            [user["149"],"149"],
+                                            [user["157"],"157"],
+                                            [user["158"],"158"],
+                                            [user["159"],"159"],
+                                            [user["257"],"257"],
+                                            [user["258"],"258"],
+                                            [user["259"],"259"],
+                                            [user["267"],"267"],
+                                            [user["268"],"268"],
+                                            [user["269"],"269"],
+                                            [user["347"],"347"],
+                                            [user["348"],"348"],
+                                            [user["349"],"349"],
+                                            [user["357"],"357"],
+                                            [user["358"],"358"],
+                                            [user["359"],"359"],
+                                            [user["367"],"367"],
+                                            [user["368"],"368"],
+                                            [user["369"],"369"],
+                                            user["taokeys"],
+                                            user["frota"],
+                                            user["promotores"],
+                                            user["comissao"],
+                                            user["distribuidores"],
+                                            user["pas"],
+                                            user["propaganda"],
+                                            user["propagandauni"],
+                                            user["divida"],
+                                            user["turno"]]);
         
                                     }                  
                                 })
@@ -2107,7 +2210,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                             let jogo = new Data({login_adm: creden[0], senha_adm: creden[1], instancia: creden[2], senha_instancia: creden[3], turno: 0, oferta_mercado: 100000})
                                             jogo.save()
                                                 .then(() => {
-                                                    console.log('>>> Instancia: ' + userL.instancia + ' registrada com sucesso')    
+                                                    console.log('>>> Instancia: ' + creden[2] + ' registrada com sucesso')    
                                                     socket.emit('registro-instancia-completo', creden[0])
                                                 })
                                                 .catch((err) => {console.log(err)})
@@ -2298,6 +2401,64 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                 for(let i = 0; i < users.length; i++){
                     let media_user = users[i]['scorepreco'][1]/users[i]['scorepreco'][0]
                     dist = dist + preco_medio/media_user
+                    
+                    for(let f = 0; f < 24; f++){
+                        
+                        if(users[i]['frota'][f] > 0){
+                            
+                            users[i].balanco_patrimonial = {
+                                ativo: {
+                                    circulante: {
+                                        caixa: users[i].balanco_patrimonial.ativo.circulante.caixa,
+                                        estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                        contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber
+    
+                                    },
+                                    n_circulante: {
+                                        imobilizado: {
+                                            pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                            frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                            depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota + 2400*users[i]['frota'][f]
+                                        }
+                                    }
+                                },
+                                passivo: {
+                                    contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                                },
+                                patrimonio_liquido: {
+                                    capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                    lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - 2400*users[i]['frota'][f]
+                                }
+                            }
+                        }
+                        if(users[i]['frota'][f] > 0 && f == 23){
+                            users[i].balanco_patrimonial = {
+                                ativo: {
+                                    circulante: {
+                                        caixa: users[i].balanco_patrimonial.ativo.circulante.caixa,
+                                        estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                        contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber
+    
+                                    },
+                                    n_circulante: {
+                                        imobilizado: {
+                                            pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                            frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota - 57600*users[i]['frota'][f],
+                                            depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota - 57600*users[i]['frota'][f]
+                                        },
+                                    },
+                                },
+                                passivo: {
+                                    contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                                },
+                                patrimonio_liquido: {
+                                    capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                    lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                                }
+                            }
+                        }
+                    }
+                    
                     users[i]['frota'].pop(); //depreciacao do veiculo! a cada turno apaga o ultimo elemento do array e adiciona um 0 no inicio, logo tds os elemtos q sobram avancam uma casa pra direita ou seja depreciam mais
                     users[i]['frota'].unshift(0);
                     for(let r = 0; r < index.length; r++){ //desconto no custo untario por ter experiencia no servico
@@ -2353,12 +2514,60 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     if(users[i]['147'][4] > 0){
                         //console.log('----------> antes (do recebimento de contas a receber): ' + users[i].taokeys)
                         users[i].taokeys = users[i].taokeys + users[i]['147'][7] //recebendo contas a receber
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['147'][7],
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['147'][7]
+
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                            }
+                        }
                         //console.log('----------> depois (do recebimento de contas a receber): ' + users[i].taokeys)
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['147'][4]*(users[i]['147'][3] - users[i]['147'][2]) // pega a razao do qnt ele vendeu pelo qnt pretendia dai multiplica qnt q pretendia vender de cada servvico e faz vezes o precco - o custo (mas aqui esta recebendo td a grana de uma vez (nada fiado))
                         let array_insu = [(users[i]['147'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['147'][4]), users[i]['147'][1], users[i]['147'][2], users[i]['147'][3], users[i]['147'][4],(users[i]['147'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['147'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['147'][4]*users[i]['147'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['147'][4]*(users[i]['147'][3] - users[i]['147'][2])]
                         //(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['147'][4]*users[i]['147'][3] => igual ao faturamento obtido pelo jogador nesse serviço especifico
                         users[i].set('147', array_insu)
-                        users[i].balanco_patrimonial.contas_a_receber = users[i]['147'][7]
+                        //users[i].balanco_patrimonial.contas_a_receber = users[i]['147'][7]
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['147'][4]*(users[i]['147'][3] - users[i]['147'][2]),
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['147'][4]*(users[i]['147'][2]),
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber + users[i]['147'][7]
+
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['147'][4]*(users[i]['147'][2]) + users[i]['147'][7] + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['147'][4]*(users[i]['147'][3] - users[i]['147'][2])
+                            }
+                        }
                         //users[i]['147'][0] = users[i]['147'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['147'][4]
                         if(users[i]['147'][0] >= 0){
                             users[i].taokeys = users[i].taokeys - users[i]['147'][0]*36
@@ -2370,7 +2579,32 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
            
                       }
                       else{
+                          
                         users[i].taokeys = users[i].taokeys + users[i]['147'][7]; //recebendo contas a receber, aqui no caso se o serviço n estiver mais sendo utilizado
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['147'][7],
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['147'][7]
+
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                            }
+                        }          
                         let array_novo = [users[i]['147'][0], users[i]['147'][1], users[i]['147'][2], users[i]['147'][3], users[i]['147'][4], users[i]['147'][5], users[i]['147'][6], 0]
                         users[i].set('147', array_novo)
 
@@ -2379,15 +2613,56 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                       users[i].set('159', [users[i]['159'][0], users[i]['159'][1], users[i]['159'][2], users[i]['159'][3], users[i]['159'][4], users[i]['159'][5], 0, users[i]['159'][7]])
                     if(users[i]['159'][4] > 0){
                         users[i].taokeys = users[i].taokeys + users[i]['159'][7]
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['159'][7],
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['159'][7]
+
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                            }
+                        }
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['159'][4]*(users[i]['159'][3] - users[i]['159'][2])
                         let array_insu = [(users[i]['159'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['159'][4]), users[i]['159'][1], users[i]['159'][2], users[i]['159'][3], users[i]['159'][4],(users[i]['159'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['159'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['159'][4]*users[i]['159'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['159'][4]*(users[i]['159'][3] - users[i]['159'][2])]
                         users[i].set('159', array_insu)
-                        users[i].balanco_patrimonial = { 
-                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['159'][7],
-                            ativo: users[i].balanco_patrimonial.ativo,
-                            passivo: users[i].balanco_patrimonial.passivo,
-                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['159'][4]*(users[i]['159'][3] - users[i]['159'][2]),
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['159'][4]*(users[i]['159'][2]),
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber + users[i]['159'][7]
 
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['159'][4]*(users[i]['159'][2]) + users[i]['159'][7] + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['159'][4]*(users[i]['159'][3] - users[i]['159'][2])
+                            }
                         }
                         //users[i]['159'][0] = users[i]['159'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['159'][4]
                         if(users[i]['159'][0] >= 0){
@@ -2399,6 +2674,30 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                       }
                       else{
                         users[i].taokeys = users[i].taokeys + users[i]['159'][7];
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['159'][7],
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['159'][7]
+
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                            }
+                        }
                         let array_novo = [users[i]['159'][0], users[i]['159'][1], users[i]['159'][2], users[i]['159'][3], users[i]['159'][4], users[i]['159'][5], users[i]['159'][6], 0]
                         users[i].set('159', array_novo)
                         }
@@ -2406,15 +2705,56 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                       users[i].set('149', [users[i]['149'][0], users[i]['149'][1], users[i]['149'][2], users[i]['149'][3], users[i]['149'][4], users[i]['149'][5], 0, users[i]['149'][7]])
                     if(users[i]['149'][4] > 0){
                         users[i].taokeys = users[i].taokeys + users[i]['149'][7]
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['149'][7],
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['149'][7]
+
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                            }
+                        }
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['149'][4]*(users[i]['149'][3] - users[i]['149'][2])
                         let array_insu = [(users[i]['149'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['149'][4]), users[i]['149'][1], users[i]['149'][2], users[i]['149'][3], users[i]['149'][4],(users[i]['149'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['149'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['149'][4]*users[i]['149'][3], users[i]['149'][7], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['149'][4]*(users[i]['149'][3] - users[i]['149'][2])]
                         users[i].set('149', array_insu)
-                        users[i].balanco_patrimonial = { 
-                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['149'][7],
-                            ativo: users[i].balanco_patrimonial.ativo,
-                            passivo: users[i].balanco_patrimonial.passivo,
-                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['149'][4]*(users[i]['149'][3] - users[i]['149'][2]),
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['149'][4]*(users[i]['149'][2]),
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber + users[i]['149'][7]
 
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['149'][4]*(users[i]['149'][2]) + users[i]['149'][7] + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['149'][4]*(users[i]['149'][3] - users[i]['149'][2])
+                            }
                         }
                         //users[i]['149'][0] = users[i]['149'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['149'][4]
                         if(users[i]['149'][0] >= 0){
@@ -2426,6 +2766,30 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             }
                             else{
                                 users[i].taokeys = users[i].taokeys + users[i]['149'][7];
+                                users[i].balanco_patrimonial = {
+                                    ativo: {
+                                        circulante: {
+                                            caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['149'][7],
+                                            estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                            contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['149'][7]
+        
+                                        },
+                                        n_circulante: {
+                                            imobilizado: {
+                                                pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                                frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                                depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                            },
+                                        },
+                                    },
+                                    passivo: {
+                                        contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                                    },
+                                    patrimonio_liquido: {
+                                        capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                        lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                                    }
+                                }
                                 let array_novo = [users[i]['149'][0], users[i]['149'][1], users[i]['149'][2], users[i]['149'][3], users[i]['149'][4], users[i]['149'][5], users[i]['149'][6], 0]
                                 users[i].set('149', array_novo)
                                 }
@@ -2433,15 +2797,56 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         users[i].set('148', [users[i]['148'][0], users[i]['148'][1], users[i]['148'][2], users[i]['148'][3], users[i]['148'][4], users[i]['148'][5], 0, users[i]['148'][7]])
                     if(users[i]['148'][4] > 0){
                         users[i].taokeys = users[i].taokeys + users[i]['148'][7]
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['148'][7],
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['148'][7]
+
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                            }
+                        }
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['148'][4]*(users[i]['148'][3] - users[i]['148'][2])
                         let array_insu = [(users[i]['148'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['148'][4]), users[i]['148'][1], users[i]['148'][2], users[i]['148'][3], users[i]['148'][4],(users[i]['148'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['148'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['148'][4]*users[i]['148'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['148'][4]*(users[i]['148'][3] - users[i]['148'][2])]
                         users[i].set('148', array_insu)
-                        users[i].balanco_patrimonial = { 
-                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['148'][7],
-                            ativo: users[i].balanco_patrimonial.ativo,
-                            passivo: users[i].balanco_patrimonial.passivo,
-                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['148'][4]*(users[i]['148'][3] - users[i]['148'][2]),
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['148'][4]*(users[i]['148'][2]),
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber + users[i]['148'][7]
 
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['148'][4]*(users[i]['148'][2]) + users[i]['149'][7] + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['148'][4]*(users[i]['148'][3] - users[i]['148'][2])
+                            }
                         }
                         //users[i]['148'][0] = users[i]['148'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['148'][4]
                         if(users[i]['148'][0] >= 0){
@@ -2453,6 +2858,30 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     }
                     else{
                         users[i].taokeys = users[i].taokeys + users[i]['148'][7];
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['148'][7],
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['148'][7]
+
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                            }
+                        }
                         let array_novo = [users[i]['148'][0], users[i]['148'][1], users[i]['148'][2], users[i]['148'][3], users[i]['148'][4], users[i]['148'][5], users[i]['148'][6], 0]
                         users[i].set('148', array_novo)
                         }
@@ -2460,15 +2889,56 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     users[i].set('158', [users[i]['158'][0], users[i]['158'][1], users[i]['158'][2], users[i]['158'][3], users[i]['158'][4], users[i]['158'][5],0, users[i]['158'][7]])
                     if(users[i]['158'][4] > 0){
                         users[i].taokeys = users[i].taokeys + users[i]['158'][7]
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['158'][7],
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['158'][7]
+
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                            }
+                        }
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['158'][4]*(users[i]['158'][3] - users[i]['158'][2])
                         let array_insu = [(users[i]['158'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['158'][4]), users[i]['158'][1], users[i]['158'][2], users[i]['158'][3], users[i]['158'][4],(users[i]['158'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['158'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['158'][4]*users[i]['158'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['158'][4]*(users[i]['158'][3] - users[i]['158'][2])]
                         users[i].set('158', array_insu)
-                        users[i].balanco_patrimonial = { 
-                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['158'][7],
-                            ativo: users[i].balanco_patrimonial.ativo,
-                            passivo: users[i].balanco_patrimonial.passivo,
-                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['158'][4]*(users[i]['158'][3] - users[i]['158'][2]),
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['158'][4]*(users[i]['158'][2]),
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber + users[i]['158'][7]
 
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['158'][4]*(users[i]['158'][2]) + users[i]['158'][7] + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['158'][4]*(users[i]['158'][3] - users[i]['158'][2])
+                            }
                         }
                         //users[i]['158'][0] = users[i]['158'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['158'][4]
                         if(users[i]['158'][0] >= 0){
@@ -2480,6 +2950,30 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     }
                     else{
                         users[i].taokeys = users[i].taokeys + users[i]['158'][7];
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['158'][7],
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['158'][7]
+
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                            }
+                        }
                         let array_novo = [users[i]['158'][0], users[i]['158'][1], users[i]['158'][2], users[i]['158'][3], users[i]['158'][4], users[i]['158'][5], users[i]['158'][6], 0]
                         users[i].set('158', array_novo)
                         }
@@ -2487,15 +2981,56 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     users[i].set('157', [users[i]['157'][0], users[i]['157'][1], users[i]['157'][2], users[i]['157'][3], users[i]['157'][4], users[i]['157'][5], 0, users[i]['157'][7]])
                     if(users[i]['157'][4] > 0){
                         users[i].taokeys = users[i].taokeys + users[i]['157'][7]
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['157'][7],
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['157'][7]
+
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                            }
+                        }
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['157'][4]*(users[i]['157'][3] - users[i]['157'][2])
                         let array_insu = [(users[i]['157'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['157'][4]), users[i]['157'][1], users[i]['157'][2], users[i]['157'][3], users[i]['157'][4],(users[i]['157'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['157'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['157'][4]*users[i]['157'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['157'][4]*(users[i]['157'][3] - users[i]['157'][2])]
                         users[i].set('157', array_insu)
-                        users[i].balanco_patrimonial = { 
-                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['157'][7],
-                            ativo: users[i].balanco_patrimonial.ativo,
-                            passivo: users[i].balanco_patrimonial.passivo,
-                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['157'][4]*(users[i]['157'][3] - users[i]['157'][2]),
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['157'][4]*(users[i]['157'][2]),
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber + users[i]['157'][7]
 
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['157'][4]*(users[i]['157'][2]) + users[i]['158'][7] + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['157'][4]*(users[i]['157'][3] - users[i]['157'][2])
+                            }
                         }
                         //users[i]['157'][0] = users[i]['157'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['157'][4]
                         if(users[i]['157'][0] >= 0){
@@ -2506,6 +3041,30 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             }
                             else{
                                 users[i].taokeys = users[i].taokeys + users[i]['157'][7];
+                                users[i].balanco_patrimonial = {
+                                    ativo: {
+                                        circulante: {
+                                            caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['157'][7],
+                                            estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                            contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['157'][7]
+        
+                                        },
+                                        n_circulante: {
+                                            imobilizado: {
+                                                pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                                frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                                depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                            },
+                                        },
+                                    },
+                                    passivo: {
+                                        contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                                    },
+                                    patrimonio_liquido: {
+                                        capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                        lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                                    }
+                                }
                                 let array_novo = [users[i]['157'][0], users[i]['157'][1], users[i]['157'][2], users[i]['157'][3], users[i]['157'][4], users[i]['157'][5], users[i]['157'][6], 0]
                                 users[i].set('157', array_novo)
                                 }
@@ -2513,15 +3072,56 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         users[i].set('257', [users[i]['257'][0], users[i]['257'][1], users[i]['257'][2], users[i]['257'][3], users[i]['257'][4], users[i]['257'][5],0, users[i]['257'][7]])
                     if(users[i]['257'][4] > 0){
                         users[i].taokeys = users[i].taokeys + users[i]['257'][7]
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['257'][7],
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['257'][7]
+
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                            }
+                        }
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['257'][4]*(users[i]['257'][3] - users[i]['257'][2])
                         let array_insu = [(users[i]['257'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['257'][4]), users[i]['257'][1], users[i]['257'][2], users[i]['257'][3], users[i]['257'][4],(users[i]['257'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['257'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['257'][4]*users[i]['257'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['257'][4]*(users[i]['257'][3] - users[i]['257'][2])]
                         users[i].set('257', array_insu)
-                        users[i].balanco_patrimonial = { 
-                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['257'][7],
-                            ativo: users[i].balanco_patrimonial.ativo,
-                            passivo: users[i].balanco_patrimonial.passivo,
-                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['257'][4]*(users[i]['257'][3] - users[i]['257'][2]),
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['257'][4]*(users[i]['257'][2]),
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber + users[i]['257'][7]
 
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['257'][4]*(users[i]['257'][2]) + users[i]['257'][7] + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['257'][4]*(users[i]['257'][3] - users[i]['257'][2])
+                            }
                         }
                         //users[i]['257'][0] = users[i]['257'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['257'][4]
                         if(users[i]['257'][0] >= 0){
@@ -2533,6 +3133,29 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     }
                     else{
                         users[i].taokeys = users[i].taokeys + users[i]['257'][7];
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['257'],
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['257'][7]
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                            }
+                        }
                         let array_novo = [users[i]['257'][0], users[i]['257'][1], users[i]['257'][2], users[i]['257'][3], users[i]['257'][4], users[i]['257'][5], users[i]['257'][6], 0]
                         users[i].set('257', array_novo)
                         }
@@ -2540,15 +3163,56 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     users[i].set('258', [users[i]['258'][0], users[i]['258'][1], users[i]['258'][2], users[i]['258'][3], users[i]['258'][4], users[i]['258'][5], 0, users[i]['258'][7]])
                     if(users[i]['258'][4] > 0){
                         users[i].taokeys = users[i].taokeys + users[i]['258'][7]
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['258'][7],
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['258'][7]
+
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                            }
+                        }
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['258'][4]*(users[i]['258'][3] - users[i]['258'][2])
                         let array_insu = [(users[i]['258'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['258'][4]), users[i]['258'][1], users[i]['258'][2], users[i]['258'][3], users[i]['258'][4],(users[i]['258'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['258'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['258'][4]*users[i]['258'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['258'][4]*(users[i]['258'][3] - users[i]['258'][2])]
                         users[i].set('258', array_insu)
-                        users[i].balanco_patrimonial = { 
-                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['258'][7],
-                            ativo: users[i].balanco_patrimonial.ativo,
-                            passivo: users[i].balanco_patrimonial.passivo,
-                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['258'][4]*(users[i]['258'][3] - users[i]['258'][2]),
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['258'][4]*(users[i]['258'][2]),
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber + users[i]['258'][7]
 
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['258'][4]*(users[i]['258'][2]) + users[i]['258'][7] + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['258'][4]*(users[i]['258'][3] - users[i]['258'][2])
+                            }
                         }
                         //users[i]['258'][0] = users[i]['258'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['258'][4]
                         if(users[i]['258'][0] >= 0){
@@ -2562,6 +3226,30 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     }
                     else{
                         users[i].taokeys = users[i].taokeys + users[i]['258'][7];
+                        users[i].balanco_patrimonial = {
+                                    ativo: {
+                                        circulante: {
+                                            caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['258'][7],
+                                            estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                            contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['258'][7]
+        
+                                        },
+                                        n_circulante: {
+                                            imobilizado: {
+                                                pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                                frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                                depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                            },
+                                        },
+                                    },
+                                    passivo: {
+                                        contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                                    },
+                                    patrimonio_liquido: {
+                                        capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                        lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                                    }
+                                }
                         let array_novo = [users[i]['258'][0], users[i]['258'][1], users[i]['258'][2], users[i]['258'][3], users[i]['258'][4], users[i]['258'][5], users[i]['258'][6], 0]
                         users[i].set('258', array_novo)
                         }
@@ -2569,15 +3257,56 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     users[i].set('259', [users[i]['259'][0], users[i]['259'][1], users[i]['259'][2], users[i]['259'][3], users[i]['259'][4], users[i]['259'][5], 0, users[i]['259'][7]])
                     if(users[i]['259'][4] > 0){
                         users[i].taokeys = users[i].taokeys + users[i]['259'][7]
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['259'][7],
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['259'][7]
+
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                            }
+                        }
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['259'][4]*(users[i]['259'][3] - users[i]['259'][2])
                         let array_insu = [(users[i]['259'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['259'][4]), users[i]['259'][1], users[i]['259'][2], users[i]['259'][3], users[i]['259'][4],(users[i]['259'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['259'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['259'][4]*users[i]['259'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['259'][4]*(users[i]['259'][3] - users[i]['259'][2])]
                         users[i].set('259', array_insu)
-                        users[i].balanco_patrimonial = { 
-                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['259'][7],
-                            ativo: users[i].balanco_patrimonial.ativo,
-                            passivo: users[i].balanco_patrimonial.passivo,
-                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['259'][4]*(users[i]['259'][3] - users[i]['259'][2]),
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['259'][4]*(users[i]['259'][2]),
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber + users[i]['259'][7]
 
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['259'][4]*(users[i]['259'][2]) + users[i]['259'][7] + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['259'][4]*(users[i]['259'][3] - users[i]['259'][2])
+                            }
                         }
                         //users[i]['259'][0] = users[i]['259'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['259'][4]
                         if(users[i]['259'][0] >= 0){
@@ -2589,6 +3318,30 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     }
                     else{
                         users[i].taokeys = users[i].taokeys + users[i]['259'][7];
+                        users[i].balanco_patrimonial = {
+                                    ativo: {
+                                        circulante: {
+                                            caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['259'][7],
+                                            estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                            contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['259'][7]
+        
+                                        },
+                                        n_circulante: {
+                                            imobilizado: {
+                                                pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                                frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                                depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                            },
+                                        },
+                                    },
+                                    passivo: {
+                                        contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                                    },
+                                    patrimonio_liquido: {
+                                        capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                        lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                                    }
+                                }
                         let array_novo = [users[i]['259'][0], users[i]['259'][1], users[i]['259'][2], users[i]['259'][3], users[i]['259'][4], users[i]['259'][5], users[i]['259'][6], 0]
                         users[i].set('259', array_novo)
                         }
@@ -2596,15 +3349,56 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     users[i].set('267', [users[i]['267'][0], users[i]['267'][1], users[i]['267'][2], users[i]['267'][3], users[i]['267'][4], users[i]['267'][5], 0, users[i]['267'][7]])
                     if(users[i]['267'][4] > 0){
                         users[i].taokeys = users[i].taokeys + users[i]['267'][7]
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['267'][7],
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['267'][7]
+
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                            }
+                        }
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['267'][4]*(users[i]['267'][3] - users[i]['267'][2])
                         let array_insu = [(users[i]['267'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['267'][4]), users[i]['267'][1], users[i]['267'][2], users[i]['267'][3], users[i]['267'][4],(users[i]['267'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['267'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['267'][4]*users[i]['267'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['267'][4]*(users[i]['267'][3] - users[i]['267'][2])]
                         users[i].set('267', array_insu)
-                        users[i].balanco_patrimonial = { 
-                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['267'][7],
-                            ativo: users[i].balanco_patrimonial.ativo,
-                            passivo: users[i].balanco_patrimonial.passivo,
-                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['267'][4]*(users[i]['267'][3] - users[i]['267'][2]),
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['267'][4]*(users[i]['267'][2]),
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber + users[i]['267'][7]
 
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['267'][4]*(users[i]['267'][2]) + users[i]['267'][7] + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['267'][4]*(users[i]['267'][3] - users[i]['267'][2])
+                            }
                         }
                         //users[i]['267'][0] = users[i]['267'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['267'][4]
                         if(users[i]['267'][0] >= 0){
@@ -2615,6 +3409,30 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     }
                     else{
                         users[i].taokeys = users[i].taokeys + users[i]['267'][7];
+                        users[i].balanco_patrimonial = {
+                                    ativo: {
+                                        circulante: {
+                                            caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['267'][7],
+                                            estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                            contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['267'][7]
+        
+                                        },
+                                        n_circulante: {
+                                            imobilizado: {
+                                                pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                                frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                                depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                            },
+                                        },
+                                    },
+                                    passivo: {
+                                        contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                                    },
+                                    patrimonio_liquido: {
+                                        capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                        lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                                    }
+                                }
                         let array_novo = [users[i]['267'][0], users[i]['267'][1], users[i]['267'][2], users[i]['267'][3], users[i]['267'][4], users[i]['267'][5], users[i]['267'][6], 0]
                         users[i].set('267', array_novo)
                         }
@@ -2622,15 +3440,56 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     users[i].set('268', [users[i]['268'][0], users[i]['268'][1], users[i]['268'][2], users[i]['268'][3], users[i]['268'][4], users[i]['268'][5], 0, users[i]['268'][7]])
                     if(users[i]['268'][4] > 0){
                         users[i].taokeys = users[i].taokeys + users[i]['268'][7]
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['268'][7],
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['268'][7]
+
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                            }
+                        }
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['268'][4]*(users[i]['268'][3] - users[i]['268'][2])
                         let array_insu = [(users[i]['268'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['268'][4]), users[i]['268'][1], users[i]['268'][2], users[i]['268'][3], users[i]['268'][4],(users[i]['268'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['268'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['268'][4]*users[i]['268'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['268'][4]*(users[i]['268'][3] - users[i]['268'][2])]
                         users[i].set('268', array_insu)
-                        users[i].balanco_patrimonial = { 
-                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['268'][7],
-                            ativo: users[i].balanco_patrimonial.ativo,
-                            passivo: users[i].balanco_patrimonial.passivo,
-                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['268'][4]*(users[i]['268'][3] - users[i]['268'][2]),
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['268'][4]*(users[i]['268'][2]),
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber + users[i]['268'][7]
 
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['268'][4]*(users[i]['268'][2]) + users[i]['268'][7] + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['268'][4]*(users[i]['268'][3] - users[i]['268'][2])
+                            }
                         }
                         //users[i]['268'][0] = users[i]['268'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['268'][4]
                         if(users[i]['268'][0] >= 0){
@@ -2642,6 +3501,30 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     }
                     else{
                         users[i].taokeys = users[i].taokeys + users[i]['268'][7];
+                        users[i].balanco_patrimonial = {
+                                    ativo: {
+                                        circulante: {
+                                            caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['268'][7],
+                                            estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                            contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['268'][7]
+        
+                                        },
+                                        n_circulante: {
+                                            imobilizado: {
+                                                pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                                frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                                depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                            },
+                                        },
+                                    },
+                                    passivo: {
+                                        contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                                    },
+                                    patrimonio_liquido: {
+                                        capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                        lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                                    }
+                                }
                         let array_novo = [users[i]['268'][0], users[i]['268'][1], users[i]['268'][2], users[i]['268'][3], users[i]['268'][4], users[i]['268'][5], users[i]['268'][6], 0]
                         users[i].set('268', array_novo)
                         }
@@ -2649,15 +3532,56 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     users[i].set('269', [users[i]['269'][0], users[i]['269'][1], users[i]['269'][2], users[i]['269'][3], users[i]['269'][4], users[i]['269'][5], 0, users[i]['269'][7]])
                     if(users[i]['269'][4] > 0){
                         users[i].taokeys = users[i].taokeys + users[i]['269'][7]
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['269'][7],
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['269'][7]
+
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                            }
+                        }
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['269'][4]*(users[i]['269'][3] - users[i]['269'][2])
                         let array_insu = [(users[i]['269'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['269'][4]), users[i]['269'][1], users[i]['269'][2], users[i]['269'][3], users[i]['269'][4],(users[i]['269'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['269'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['269'][4]*users[i]['269'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['269'][4]*(users[i]['269'][3] - users[i]['269'][2])]
                         users[i].set('269', array_insu)
-                        users[i].balanco_patrimonial = { 
-                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['269'][7],
-                            ativo: users[i].balanco_patrimonial.ativo,
-                            passivo: users[i].balanco_patrimonial.passivo,
-                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['269'][4]*(users[i]['269'][3] - users[i]['269'][2]),
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['269'][4]*(users[i]['269'][2]),
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber + users[i]['269'][7]
 
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['269'][4]*(users[i]['269'][2]) + users[i]['269'][7] + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['269'][4]*(users[i]['269'][3] - users[i]['269'][2])
+                            }
                         }
                         //users[i]['269'][0] = users[i]['269'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['269'][4]
                         if(users[i]['269'][0] >= 0){
@@ -2669,6 +3593,30 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     }
                     else{
                         users[i].taokeys = users[i].taokeys + users[i]['269'][7];
+                        users[i].balanco_patrimonial = {
+                                    ativo: {
+                                        circulante: {
+                                            caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['269'][7],
+                                            estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                            contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['269'][7]
+        
+                                        },
+                                        n_circulante: {
+                                            imobilizado: {
+                                                pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                                frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                                depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                            },
+                                        },
+                                    },
+                                    passivo: {
+                                        contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                                    },
+                                    patrimonio_liquido: {
+                                        capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                        lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                                    }
+                                }
                         let array_novo = [users[i]['269'][0], users[i]['269'][1], users[i]['269'][2], users[i]['269'][3], users[i]['269'][4], users[i]['269'][5], users[i]['269'][6], 0]
                         users[i].set('269', array_novo)
                         }
@@ -2676,15 +3624,56 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     users[i].set('347', [users[i]['347'][0], users[i]['347'][1], users[i]['347'][2], users[i]['347'][3], users[i]['347'][4], users[i]['347'][5], 0, users[i]['347'][7]])
                     if(users[i]['347'][4] > 0){
                         users[i].taokeys = users[i].taokeys + users[i]['347'][7]
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['347'][7],
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['347'][7]
+
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                            }
+                        }
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['347'][4]*(users[i]['347'][3] - users[i]['347'][2])
                         let array_insu = [(users[i]['347'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['347'][4]), users[i]['347'][1], users[i]['347'][2], users[i]['347'][3], users[i]['347'][4],(users[i]['347'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['347'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['347'][4]*users[i]['347'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['347'][4]*(users[i]['347'][3] - users[i]['347'][2])]
                         users[i].set('347', array_insu)
-                        users[i].balanco_patrimonial = { 
-                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['347'][7],
-                            ativo: users[i].balanco_patrimonial.ativo,
-                            passivo: users[i].balanco_patrimonial.passivo,
-                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['347'][4]*(users[i]['347'][3] - users[i]['347'][2]),
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['347'][4]*(users[i]['347'][2]),
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber + users[i]['347'][7]
 
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['347'][4]*(users[i]['347'][2]) + users[i]['347'][7] + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['347'][4]*(users[i]['347'][3] - users[i]['347'][2])
+                            }
                         }
                         //users[i]['347'][0] = users[i]['347'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['347'][4]
                         if(users[i]['347'][0] >= 0){
@@ -2695,6 +3684,30 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     }
                     else{
                         users[i].taokeys = users[i].taokeys + users[i]['347'][7];
+                        users[i].balanco_patrimonial = {
+                                    ativo: {
+                                        circulante: {
+                                            caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['347'][7],
+                                            estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                            contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['347'][7]
+        
+                                        },
+                                        n_circulante: {
+                                            imobilizado: {
+                                                pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                                frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                                depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                            },
+                                        },
+                                    },
+                                    passivo: {
+                                        contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                                    },
+                                    patrimonio_liquido: {
+                                        capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                        lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                                    }
+                                }
                         let array_novo = [users[i]['347'][0], users[i]['347'][1], users[i]['347'][2], users[i]['347'][3], users[i]['347'][4], users[i]['347'][5], users[i]['347'][6], 0]
                         users[i].set('347', array_novo)
                         }
@@ -2702,15 +3715,56 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     users[i].set('348', [users[i]['348'][0], users[i]['348'][1], users[i]['348'][2], users[i]['348'][3], users[i]['348'][4], users[i]['348'][5], 0, users[i]['348'][7]])
                     if(users[i]['348'][4] > 0){
                         users[i].taokeys = users[i].taokeys + users[i]['348'][7]
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['348'][7],
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['348'][7]
+
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                            }
+                        }
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['348'][4]*(users[i]['348'][3] - users[i]['348'][2])
                         let array_insu = [(users[i]['348'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['348'][4]), users[i]['348'][1], users[i]['348'][2], users[i]['348'][3], users[i]['348'][4],(users[i]['348'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['348'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['348'][4]*users[i]['348'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['348'][4]*(users[i]['348'][3] - users[i]['348'][2])]
                         users[i].set('348', array_insu)
-                        users[i].balanco_patrimonial = { 
-                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['348'][7],
-                            ativo: users[i].balanco_patrimonial.ativo,
-                            passivo: users[i].balanco_patrimonial.passivo,
-                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['348'][4]*(users[i]['348'][3] - users[i]['348'][2]),
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['348'][4]*(users[i]['348'][2]),
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber + users[i]['348'][7]
 
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['348'][4]*(users[i]['348'][2]) + users[i]['348'][7] + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['348'][4]*(users[i]['348'][3] - users[i]['348'][2])
+                            }
                         }
                         //users[i]['348'][0] = users[i]['348'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['348'][4]
                         if(users[i]['348'][0] >= 0){
@@ -2722,6 +3776,30 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     }
                     else{
                         users[i].taokeys = users[i].taokeys + users[i]['348'][7];
+                        users[i].balanco_patrimonial = {
+                                    ativo: {
+                                        circulante: {
+                                            caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['348'][7],
+                                            estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                            contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['348'][7]
+        
+                                        },
+                                        n_circulante: {
+                                            imobilizado: {
+                                                pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                                frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                                depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                            },
+                                        },
+                                    },
+                                    passivo: {
+                                        contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                                    },
+                                    patrimonio_liquido: {
+                                        capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                        lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                                    }
+                                }
                         let array_novo = [users[i]['348'][0], users[i]['348'][1], users[i]['348'][2], users[i]['348'][3], users[i]['348'][4], users[i]['348'][5], users[i]['348'][6], 0]
                         users[i].set('348', array_novo)
                         }
@@ -2729,15 +3807,56 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     users[i].set('349', [users[i]['349'][0], users[i]['349'][1], users[i]['349'][2], users[i]['349'][3], users[i]['349'][4], users[i]['349'][5], 0, users[i]['349'][7]])
                     if(users[i]['349'][4] > 0){
                         users[i].taokeys = users[i].taokeys + users[i]['349'][7]
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['349'][7],
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['349'][7]
+
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                            }
+                        }
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['349'][4]*(users[i]['349'][3] - users[i]['349'][2])
                         let array_insu = [(users[i]['349'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['349'][4]), users[i]['349'][1], users[i]['349'][2], users[i]['349'][3], users[i]['349'][4],(users[i]['349'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['349'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['349'][4]*users[i]['349'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['349'][4]*(users[i]['349'][3] - users[i]['349'][2])]
                         users[i].set('349', array_insu)
-                        users[i].balanco_patrimonial = { 
-                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['349'][7],
-                            ativo: users[i].balanco_patrimonial.ativo,
-                            passivo: users[i].balanco_patrimonial.passivo,
-                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['349'][4]*(users[i]['349'][3] - users[i]['349'][2]),
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['349'][4]*(users[i]['349'][2]),
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber + users[i]['349'][7]
 
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['349'][4]*(users[i]['349'][2]) + users[i]['349'][7] + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['349'][4]*(users[i]['349'][3] - users[i]['349'][2])
+                            }
                         }
                         //users[i]['349'][0] = users[i]['349'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['349'][4]
                         if(users[i]['349'][0] >= 0){
@@ -2749,6 +3868,30 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     }
                     else{
                         users[i].taokeys = users[i].taokeys + users[i]['349'][7];
+                        users[i].balanco_patrimonial = {
+                                    ativo: {
+                                        circulante: {
+                                            caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['349'][7],
+                                            estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                            contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['349'][7]
+        
+                                        },
+                                        n_circulante: {
+                                            imobilizado: {
+                                                pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                                frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                                depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                            },
+                                        },
+                                    },
+                                    passivo: {
+                                        contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                                    },
+                                    patrimonio_liquido: {
+                                        capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                        lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                                    }
+                                }
                         let array_novo = [users[i]['349'][0], users[i]['349'][1], users[i]['349'][2], users[i]['349'][3], users[i]['349'][4], users[i]['349'][5], users[i]['349'][6], 0]
                         users[i].set('349', array_novo)
                         }
@@ -2756,15 +3899,56 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     users[i].set('357', [users[i]['357'][0], users[i]['357'][1], users[i]['357'][2], users[i]['357'][3], users[i]['357'][4], users[i]['357'][5], 0, users[i]['357'][7]])
                     if(users[i]['357'][4] > 0){
                         users[i].taokeys = users[i].taokeys + users[i]['357'][7]
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['357'][7],
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['357'][7]
+
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                            }
+                        }
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['357'][4]*(users[i]['357'][3] - users[i]['357'][2])
                         let array_insu = [(users[i]['357'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['357'][4]), users[i]['357'][1], users[i]['357'][2], users[i]['357'][3], users[i]['357'][4],(users[i]['357'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['357'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['357'][4]*users[i]['357'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['357'][4]*(users[i]['357'][3] - users[i]['357'][2])]
                         users[i].set('357', array_insu)
-                        users[i].balanco_patrimonial = { 
-                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['357'][7],
-                            ativo: users[i].balanco_patrimonial.ativo,
-                            passivo: users[i].balanco_patrimonial.passivo,
-                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['357'][4]*(users[i]['357'][3] - users[i]['357'][2]),
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['357'][4]*(users[i]['357'][2]),
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber + users[i]['357'][7]
 
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['357'][4]*(users[i]['357'][2]) + users[i]['357'][7] + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['357'][4]*(users[i]['357'][3] - users[i]['357'][2])
+                            }
                         }
                         //users[i]['357'][0] = users[i]['357'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['357'][4]
                         if(users[i]['357'][0] >= 0){
@@ -2775,6 +3959,30 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     }
                     else{
                         users[i].taokeys = users[i].taokeys + users[i]['357'][7];
+                        users[i].balanco_patrimonial = {
+                                    ativo: {
+                                        circulante: {
+                                            caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['357'][7],
+                                            estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                            contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['357'][7]
+        
+                                        },
+                                        n_circulante: {
+                                            imobilizado: {
+                                                pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                                frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                                depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                            },
+                                        },
+                                    },
+                                    passivo: {
+                                        contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                                    },
+                                    patrimonio_liquido: {
+                                        capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                        lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                                    }
+                                }
                         let array_novo = [users[i]['357'][0], users[i]['357'][1], users[i]['357'][2], users[i]['357'][3], users[i]['357'][4], users[i]['357'][5], users[i]['357'][6], 0]
                         users[i].set('357', array_novo)
                         }
@@ -2782,15 +3990,56 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     users[i].set('358', [users[i]['358'][0], users[i]['358'][1], users[i]['358'][2], users[i]['358'][3], users[i]['358'][4], users[i]['358'][5], 0, users[i]['358'][7]])
                     if(users[i]['358'][4] > 0){
                         users[i].taokeys = users[i].taokeys + users[i]['358'][7]
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['358'][7],
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['358'][7]
+
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                            }
+                        }
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['358'][4]*(users[i]['358'][3] - users[i]['358'][2])
                         let array_insu = [(users[i]['358'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['358'][4]), users[i]['358'][1], users[i]['358'][2], users[i]['358'][3], users[i]['358'][4],(users[i]['358'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['358'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['358'][4]*users[i]['358'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['358'][4]*(users[i]['358'][3] - users[i]['358'][2])]
                         users[i].set('358', array_insu)
-                        users[i].balanco_patrimonial = { 
-                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['358'][7],
-                            ativo: users[i].balanco_patrimonial.ativo,
-                            passivo: users[i].balanco_patrimonial.passivo,
-                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['358'][4]*(users[i]['358'][3] - users[i]['358'][2]),
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['358'][4]*(users[i]['358'][2]),
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber + users[i]['358'][7]
 
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['358'][4]*(users[i]['358'][2]) + users[i]['358'][7] + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['358'][4]*(users[i]['358'][3] - users[i]['358'][2])
+                            }
                         }
                         //users[i]['358'][0] = users[i]['358'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['358'][4]
                         if(users[i]['358'][0] >= 0){
@@ -2802,6 +4051,30 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     }
                     else{
                         users[i].taokeys = users[i].taokeys + users[i]['358'][7];
+                        users[i].balanco_patrimonial = {
+                                    ativo: {
+                                        circulante: {
+                                            caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['358'][7],
+                                            estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                            contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['358'][7]
+        
+                                        },
+                                        n_circulante: {
+                                            imobilizado: {
+                                                pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                                frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                                depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                            },
+                                        },
+                                    },
+                                    passivo: {
+                                        contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                                    },
+                                    patrimonio_liquido: {
+                                        capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                        lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                                    }
+                                }
                         let array_novo = [users[i]['358'][0], users[i]['358'][1], users[i]['358'][2], users[i]['358'][3], users[i]['358'][4], users[i]['358'][5], users[i]['358'][6], 0]
                         users[i].set('358', array_novo)
                         }
@@ -2809,15 +4082,56 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     users[i].set('359', [users[i]['359'][0], users[i]['359'][1], users[i]['359'][2], users[i]['359'][3], users[i]['359'][4], users[i]['359'][5], 0, users[i]['359'][7]])
                     if(users[i]['359'][4] > 0){
                         users[i].taokeys = users[i].taokeys + users[i]['359'][7]
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['359'][7],
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['359'][7]
+
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                            }
+                        }
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['359'][4]*(users[i]['359'][3] - users[i]['359'][2])
                         let array_insu = [(users[i]['359'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['359'][4]), users[i]['359'][1], users[i]['359'][2], users[i]['359'][3], users[i]['359'][4],(users[i]['359'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['359'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['359'][4]*users[i]['359'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['359'][4]*(users[i]['359'][3] - users[i]['359'][2])]
                         users[i].set('359', array_insu)
-                        users[i].balanco_patrimonial = { 
-                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['359'][7],
-                            ativo: users[i].balanco_patrimonial.ativo,
-                            passivo: users[i].balanco_patrimonial.passivo,
-                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['359'][4]*(users[i]['359'][3] - users[i]['359'][2]),
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['359'][4]*(users[i]['359'][2]),
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber + users[i]['359'][7]
 
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['359'][4]*(users[i]['359'][2]) + users[i]['359'][7] + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['359'][4]*(users[i]['359'][3] - users[i]['359'][2])
+                            }
                         }
                         //users[i]['359'][0] = users[i]['359'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['359'][4]
                         if(users[i]['359'][0] >= 0){
@@ -2829,6 +4143,30 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     }
                     else{
                         users[i].taokeys = users[i].taokeys + users[i]['359'][7];
+                        users[i].balanco_patrimonial = {
+                                    ativo: {
+                                        circulante: {
+                                            caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['359'][7],
+                                            estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                            contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['359'][7]
+        
+                                        },
+                                        n_circulante: {
+                                            imobilizado: {
+                                                pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                                frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                                depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                            },
+                                        },
+                                    },
+                                    passivo: {
+                                        contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                                    },
+                                    patrimonio_liquido: {
+                                        capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                        lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                                    }
+                                }
                         let array_novo = [users[i]['359'][0], users[i]['359'][1], users[i]['359'][2], users[i]['359'][3], users[i]['359'][4], users[i]['359'][5], users[i]['359'][6], 0]
                         users[i].set('359', array_novo)
                         }
@@ -2836,15 +4174,56 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     users[i].set('367', [users[i]['367'][0], users[i]['367'][1], users[i]['367'][2], users[i]['367'][3], users[i]['367'][4], users[i]['367'][5], 0, users[i]['367'][7]])
                     if(users[i]['367'][4] > 0){
                         users[i].taokeys = users[i].taokeys + users[i]['367'][7]
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['367'][7],
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['367'][7]
+
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                            }
+                        }
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['367'][4]*(users[i]['367'][3] - users[i]['367'][2])
                         let array_insu = [(users[i]['367'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['367'][4]), users[i]['367'][1], users[i]['367'][2], users[i]['367'][3], users[i]['367'][4],(users[i]['367'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['367'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['367'][4]*users[i]['367'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['367'][4]*(users[i]['367'][3] - users[i]['367'][2])]
                         users[i].set('367', array_insu)
-                        users[i].balanco_patrimonial = { 
-                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['367'][7],
-                            ativo: users[i].balanco_patrimonial.ativo,
-                            passivo: users[i].balanco_patrimonial.passivo,
-                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['367'][4]*(users[i]['367'][3] - users[i]['367'][2]),
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['367'][4]*(users[i]['367'][2]),
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber + users[i]['367'][7]
 
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['367'][4]*(users[i]['367'][2]) + users[i]['367'][7] + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['367'][4]*(users[i]['367'][3] - users[i]['367'][2])
+                            }
                         }
                         //users[i]['367'][0] = users[i]['367'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['367'][4]
                         if(users[i]['367'][0] >= 0){
@@ -2855,6 +4234,30 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     }
                     else{
                         users[i].taokeys = users[i].taokeys + users[i]['367'][7];
+                        users[i].balanco_patrimonial = {
+                                    ativo: {
+                                        circulante: {
+                                            caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['367'][7],
+                                            estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                            contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['367'][7]
+        
+                                        },
+                                        n_circulante: {
+                                            imobilizado: {
+                                                pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                                frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                                depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                            },
+                                        },
+                                    },
+                                    passivo: {
+                                        contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                                    },
+                                    patrimonio_liquido: {
+                                        capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                        lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                                    }
+                                }
                         let array_novo = [users[i]['367'][0], users[i]['367'][1], users[i]['367'][2], users[i]['367'][3], users[i]['367'][4], users[i]['367'][5], users[i]['367'][6], 0]
                         users[i].set('367', array_novo)
                         }
@@ -2862,15 +4265,56 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     users[i].set('368', [users[i]['368'][0], users[i]['368'][1], users[i]['368'][2], users[i]['368'][3], users[i]['368'][4], users[i]['368'][5], 0, users[i]['368'][7]])
                     if(users[i]['368'][4] > 0){
                         users[i].taokeys = users[i].taokeys + users[i]['368'][7]
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['368'][7],
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['368'][7]
+
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                            }
+                        }
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['368'][4]*(users[i]['368'][3] - users[i]['368'][2])
                         let array_insu = [(users[i]['368'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['368'][4]), users[i]['368'][1], users[i]['368'][2], users[i]['368'][3], users[i]['368'][4],(users[i]['368'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['368'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['368'][4]*users[i]['368'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['368'][4]*(users[i]['368'][3] - users[i]['368'][2])]
                         users[i].set('368', array_insu)
-                        users[i].balanco_patrimonial = { 
-                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['368'][7],
-                            ativo: users[i].balanco_patrimonial.ativo,
-                            passivo: users[i].balanco_patrimonial.passivo,
-                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['368'][4]*(users[i]['368'][3] - users[i]['368'][2]),
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['368'][4]*(users[i]['368'][2]),
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber + users[i]['368'][7]
 
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['368'][4]*(users[i]['368'][2]) + users[i]['368'][7] + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['368'][4]*(users[i]['368'][3] - users[i]['368'][2])
+                            }
                         }
                         //users[i]['368'][0] = users[i]['368'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['368'][4]
                         if(users[i]['368'][0] >= 0){
@@ -2882,6 +4326,30 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     }
                     else{
                         users[i].taokeys = users[i].taokeys + users[i]['368'][7];
+                        users[i].balanco_patrimonial = {
+                                    ativo: {
+                                        circulante: {
+                                            caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['368'][7],
+                                            estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                            contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['368'][7]
+        
+                                        },
+                                        n_circulante: {
+                                            imobilizado: {
+                                                pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                                frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                                depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                            },
+                                        },
+                                    },
+                                    passivo: {
+                                        contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                                    },
+                                    patrimonio_liquido: {
+                                        capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                        lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                                    }
+                                }
                         let array_novo = [users[i]['368'][0], users[i]['368'][1], users[i]['368'][2], users[i]['368'][3], users[i]['368'][4], users[i]['368'][5], users[i]['368'][6], 0]
                         users[i].set('368', array_novo)
                         }
@@ -2889,15 +4357,56 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     users[i].set('369', [users[i]['369'][0], users[i]['369'][1], users[i]['369'][2], users[i]['369'][3], users[i]['369'][4], users[i]['369'][5], 0, users[i]['369'][7]])
                     if(users[i]['369'][4] > 0){
                         users[i].taokeys = users[i].taokeys + users[i]['369'][7]
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['369'][7],
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['369'][7]
+
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                            }
+                        }
                         users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['369'][4]*(users[i]['369'][3] - users[i]['369'][2])
                         let array_insu = [(users[i]['369'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['369'][4]), users[i]['369'][1], users[i]['369'][2], users[i]['369'][3], users[i]['369'][4],(users[i]['369'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['369'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['369'][4]*users[i]['369'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['369'][4]*(users[i]['369'][3] - users[i]['369'][2])]
                         users[i].set('369', array_insu)
-                        users[i].balanco_patrimonial = { 
-                            contas_a_receber: users[i].balanco_patrimonial.contas_a_receber + users[i]['369'][7],
-                            ativo: users[i].balanco_patrimonial.ativo,
-                            passivo: users[i].balanco_patrimonial.passivo,
-                            ativo_circulante: users[i].balanco_patrimonial.ativo_circulante
+                        users[i].balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['369'][4]*(users[i]['369'][3] - users[i]['369'][2]),
+                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['369'][4]*(users[i]['369'][2]),
+                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber + users[i]['369'][7]
 
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['369'][4]*(users[i]['369'][2]) + users[i]['369'][7] + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['369'][4]*(users[i]['369'][3] - users[i]['369'][2])
+                            }
                         }
                         //users[i]['369'][0] = users[i]['369'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['369'][4]
                         if(users[i]['369'][0] >= 0){
@@ -2909,12 +4418,36 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     }
                     else{
                         users[i].taokeys = users[i].taokeys + users[i]['369'][7];
+                        users[i].balanco_patrimonial = {
+                                    ativo: {
+                                        circulante: {
+                                            caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i]['369'][7],
+                                            estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                            contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i]['369'][7]
+        
+                                        },
+                                        n_circulante: {
+                                            imobilizado: {
+                                                pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                                frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                                depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                            },
+                                        },
+                                    },
+                                    passivo: {
+                                        contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                                    },
+                                    patrimonio_liquido: {
+                                        capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                        lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                                    }
+                                }
                         let array_novo = [users[i]['369'][0], users[i]['369'][1], users[i]['369'][2], users[i]['369'][3], users[i]['369'][4], users[i]['369'][5], users[i]['369'][6], 0]
                         users[i].set('369', array_novo)
                         }
                     //
                     
-                    users[i]['scoremod'] = 0
+                    users[i]['scoremod'] = 1
                     users[i]['propaganda'] = 1
                     users[i]['propagandauni'] = 1
 //console.log(users[i]['147'][1])
@@ -3007,6 +4540,30 @@ for(let o = 0; o < index.length; o++){ //ATUALIZA o estado de cada serviço (se 
                                                 usert.set('promotores', users[i].promotores)
                                                 usert.set('faturamento', users[i].faturamento)
                                                 //console.log(index)
+                                                usert.balanco_patrimonial = {
+                                                    ativo: {
+                                                        circulante: {
+                                                            caixa: users[i].balanco_patrimonial.ativo.circulante.caixa,
+                                                            estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                                            contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber
+                        
+                                                        },
+                                                        n_circulante: {
+                                                            imobilizado: {
+                                                                pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                                                frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                                                depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                                            },
+                                                        },
+                                                    },
+                                                    passivo: {
+                                                        contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                                                    },
+                                                    patrimonio_liquido: {
+                                                        capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                                                        lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                                                    }
+                                                }
                                                 
                                                 for(let s = 0; s < index.length; s++){
                                                     //console.log(index[s])
@@ -3086,66 +4643,13 @@ for(let o = 0; o < index.length; o++){ //ATUALIZA o estado de cada serviço (se 
     })
 
 })
+
 })
 // PARA TESTES PROFESSOR PRETENDE TER INSTANCIAS COM 8 PESSOAS NA SITUAÇAO IDEAL (basear teste com o parametro 8)
 server.listen(3000, () => {
     console.log(`--> Server escutando porta: 3000`)
 })
-function lixo(){
-//81, 84 e 85 contro
-//INTERACAO COM O BANCO DE DAOS \/
 
-    /*
-        let jogador = new Aluno({ sockid: 123456, scoremod: 0, scorepreco: [0,0], propaganda: 220, propagandauni: 300, faturamento: 0, ativo: 1, taokeys: 18720000, comissao: 0.05, frota: [10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], cooperativa: '3irmas', pas: 30, pas1:0, pas2:0, distribuidores: 640, promotores: 40, senha: '666', 
-        147:[985,1,288,600,300],
-        159:[0,0,396,0,0],
-        149:[0,0,360,0,0],
-        148:[0,0,324,0,0],
-        158:[0,0,360,0,0],
-        157:[0,0,324,0,0],
-        257:[0,0,396,0,0],
-        258:[0,0,432,0,0],
-        259:[0,0,468,0,0],
-        267:[0,0,432,0,0],
-        268:[0,0,468,0,0],
-        269:[0,0,504,0,0],
-        347:[0,0,432,0,0],
-        348:[0,0,468,0,0],
-        349:[0,0,504,0,0],
-        357:[0,0,468,0,0],
-        358:[0,0,504,0,0],
-        359:[0,0,540,0,0],
-        367:[0,0,504,0,0],
-        368:[0,0,540,0,0],
-        369:[0,0,576,0,0]});
-        */
-
-        //jogador.save()
-        //    .then(Aluno.find({ nome: 'Pedro'}))
-        //    .then((users) => {console.log(users)})
-        //    .catch((wrr) => {console.log(wrr)})
-        //mongoose.connection.collections.datas.drop()
-        //mongoose.connection.collections.alunos.drop()
-        
-        //jogador.save()
-        //    .then(Aluno.find({ nome: 'Pedo'}))
-        //    .then((pessoa) => {console.log(pessoa)})
-        //    .catch((err) => {console.log('eerro: ' + err)})
-            
-          //  jogador.save(() => {
-          //      Aluno.findOne({ nome: 'Pedro'})
-          //          .then((array) => {console.log(array)})
-          //          
-          //  })
-            //Aluno.updateOne({ nome: 'Pedro'}, { 257: [0,1]})
-          /*  Aluno.findOne({ sockid: socket.id})
-                .then((user) => { if(user.taokeys > x*custo){
-                    Aluno.updateOne({sockid: socket.id},{ taokeys: user.taokeys - x*custo})
-                }})
-                .catch(() => )
-                */
-            //
-            }
 
             /*
 CHECK LIST:
