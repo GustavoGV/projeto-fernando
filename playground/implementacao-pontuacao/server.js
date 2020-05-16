@@ -328,7 +328,35 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     }
                     if(userx[novo][1] == 1 || check_1_servico_ativo()){ 
                     if(userx['taokeys'] >= qnt*30 && userx[velho][0] >= qnt){
-                        if(userx[novo][1] == 1){ 
+                        if(userx[novo][1] == 1){
+
+                        if(userx[novo][2] - userx[velho][2] > 0 && userx['taokeys'] >= qnt*30 + qnt*(userx[novo][2] - userx[velho][2])){
+
+                        
+                            userx.balanco_patrimonial = {
+                                ativo: {
+                                    circulante: {
+                                        caixa: userx.balanco_patrimonial.ativo.circulante.caixa - qnt*30 - (userx[novo][2] - userx[velho][2])*qnt,
+                                        estoque: userx.balanco_patrimonial.ativo.circulante.estoque + (userx[novo][2] - userx[velho][2])*qnt,
+                                        contas_a_receber: userx.balanco_patrimonial.ativo.circulante.contas_a_receber
+    
+                                    },
+                                    n_circulante: {
+                                        imobilizado: {
+                                            pas: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                            frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                            depreciacao_frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                        },
+                                    },
+                                },
+                                passivo: {
+                                    contas_a_pagar: userx.balanco_patrimonial.passivo.contas_a_pagar
+                                },
+                                patrimonio_liquido: {
+                                    capital_social: userx.balanco_patrimonial.patrimonio_liquido.capital_social,
+                                    lucros_acumulados: userx.balanco_patrimonial.patrimonio_liquido.lucros_acumulados - qnt*30
+                                }
+                            }     
                         let insu_velho = Number(userx[velho][0]) - Number(qnt)
                         let array_dados_velho = [insu_velho,1,userx[velho][2], userx[velho][3], userx[velho][4], userx[velho][5], userx[velho][6], userx[velho][7]];
                         let insu_novo = Number(userx[novo][0]) + Number(qnt)
@@ -348,7 +376,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         
                         userx.set(velho, array_dados_velho)
                         userx.set(novo, array_dados_novo)
-                        userx.taokeys = userx.taokeys - qnt*30
+                        userx.taokeys = userx.taokeys - qnt*30 - (userx[novo][2] - userx[velho][2])*qnt 
                         userx.save()
                             .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
                             .then((user) => {
@@ -356,27 +384,27 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 //console.log(user[velho][0] + ' <=====user(recem pesquisado)')
                                 if(user.taokeys == userx.taokeys){
                                 socket.emit('update', [
-                                [user["147"],"147"],
-                                [user["148"],"148"],
-                                [user["149"],"149"],
-                                [user["157"],"157"],
-                                [user["158"],"158"],
-                                [user["159"],"159"],
-                                [user["257"],"257"],
-                                [user["258"],"258"],
-                                [user["259"],"259"],
-                                [user["267"],"267"],
-                                [user["268"],"268"],
-                                [user["269"],"269"],
-                                [user["347"],"347"],
-                                [user["348"],"348"],
-                                [user["349"],"349"],
-                                [user["357"],"357"],
-                                [user["358"],"358"],
-                                [user["359"],"359"],
-                                [user["367"],"367"],
-                                [user["368"],"368"],
-                                [user["369"],"369"],
+                                [...user["147"],"147"],
+                                [...user["148"],"148"],
+                                [...user["149"],"149"],
+                                [...user["157"],"157"],
+                                [...user["158"],"158"],
+                                [...user["159"],"159"],
+                                [...user["257"],"257"],
+                                [...user["258"],"258"],
+                                [...user["259"],"259"],
+                                [...user["267"],"267"],
+                                [...user["268"],"268"],
+                                [...user["269"],"269"],
+                                [...user["347"],"347"],
+                                [...user["348"],"348"],
+                                [...user["349"],"349"],
+                                [...user["357"],"357"],
+                                [...user["358"],"358"],
+                                [...user["359"],"359"],
+                                [...user["367"],"367"],
+                                [...user["368"],"368"],
+                                [...user["369"],"369"],
                                 user["taokeys"],
                                 user["frota"],
                                 user["promotores"],
@@ -391,6 +419,99 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                     }                  
                                 })
                             .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
+                        }
+                            else{
+                                userx.balanco_patrimonial = {
+                                    ativo: {
+                                        circulante: {
+                                            caixa: userx.balanco_patrimonial.ativo.circulante.caixa - qnt*30,
+                                            estoque: userx.balanco_patrimonial.ativo.circulante.estoque + (userx[novo][2] - userx[velho][2])*qnt,
+                                            contas_a_receber: userx.balanco_patrimonial.ativo.circulante.contas_a_receber
+        
+                                        },
+                                        n_circulante: {
+                                            imobilizado: {
+                                                pas: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                                frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                                depreciacao_frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                            },
+                                        },
+                                    },
+                                    passivo: {
+                                        contas_a_pagar: userx.balanco_patrimonial.passivo.contas_a_pagar
+                                    },
+                                    patrimonio_liquido: {
+                                        capital_social: userx.balanco_patrimonial.patrimonio_liquido.capital_social,
+                                        lucros_acumulados: userx.balanco_patrimonial.patrimonio_liquido.lucros_acumulados - qnt*30 + (userx[novo][2] - userx[velho][2])*qnt //na DRE isso vai entrar como despesa de operação
+                                    }
+                                }     
+                            let insu_velho = Number(userx[velho][0]) - Number(qnt)
+                            let array_dados_velho = [insu_velho,1,userx[velho][2], userx[velho][3], userx[velho][4], userx[velho][5], userx[velho][6], userx[velho][7]];
+                            let insu_novo = Number(userx[novo][0]) + Number(qnt)
+                            let array_dados_novo
+                                if(userx[novo][4] == 0 && userx[novo][3] !== 0){
+                                    array_dados_novo = [insu_novo,1,userx[novo][2], userx[novo][3], 1, userx[novo][5], userx[novo][6], userx[novo][7]]
+                                }
+                                else if(userx[novo][4] == 0 && userx[novo][3] == 0){
+                                    array_dados_novo = [insu_novo,1,userx[novo][2], 800, 1, userx[novo][5], userx[novo][6], userx[novo][7]]
+                                }
+                                else if(userx[novo][4] !== 0 && userx[novo][3] == 0){
+                                    array_dados_novo = [insu_novo,1,userx[novo][2], 800, userx[novo][4], userx[novo][5], userx[novo][6], userx[novo][7]]
+                                }
+                                else{
+                                    array_dados_novo = [insu_novo,1,userx[novo][2], userx[novo][3], userx[novo][4], userx[novo][5], userx[novo][6], userx[novo][7]]
+                                }
+                            
+                            userx.set(velho, array_dados_velho)
+                            userx.set(novo, array_dados_novo)
+                            userx.taokeys = userx.taokeys - qnt*30 - Math.abs(userx[novo][2] - userx[velho][2])*qnt 
+                            userx.save()
+                                .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
+                                .then((user) => {
+                                    //console.log(userx[velho][0] + ' <----userx(Schema trabalhado aqui)')
+                                    //console.log(user[velho][0] + ' <=====user(recem pesquisado)')
+                                    if(user.taokeys == userx.taokeys){
+                                    socket.emit('update', [
+                                    [...user["147"],"147"],
+                                    [...user["148"],"148"],
+                                    [...user["149"],"149"],
+                                    [...user["157"],"157"],
+                                    [...user["158"],"158"],
+                                    [...user["159"],"159"],
+                                    [...user["257"],"257"],
+                                    [...user["258"],"258"],
+                                    [...user["259"],"259"],
+                                    [...user["267"],"267"],
+                                    [...user["268"],"268"],
+                                    [...user["269"],"269"],
+                                    [...user["347"],"347"],
+                                    [...user["348"],"348"],
+                                    [...user["349"],"349"],
+                                    [...user["357"],"357"],
+                                    [...user["358"],"358"],
+                                    [...user["359"],"359"],
+                                    [...user["367"],"367"],
+                                    [...user["368"],"368"],
+                                    [...user["369"],"369"],
+                                    user["taokeys"],
+                                    user["frota"],
+                                    user["promotores"],
+                                    user["comissao"],
+                                    user["distribuidores"],
+                                    user["pas"],
+                                    user["propaganda"],
+                                    user["propagandauni"],
+                                    user["divida"],
+                                    user["turno"]]);
+            
+                                        }                  
+                                    })
+                                .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
+
+                            }
+                        if(userx[novo][2] - userx[velho][2] > 0 && userx['taokeys'] <= qnt*30 + qnt*(userx[novo][2] - userx[velho][2])){
+                            socket.emit('feedback', ['warning', 'falta caixa para realizar essa operação'])
+                        }
                     }
                     else{socket.emit('feedback', ['warning','voce nao pode transferir insumos para um servico que nao esta ativo'])}
                     }
@@ -404,7 +525,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                 }
             
             })
-    }) //OK troca insu de um servico ativo para outro ativo APENAS TESTADO
+    }) //OK troca insu de um servico ativo para outro ativo APENAS TESTADO BALAN OK
     socket.on('substituir-servico', (dados) => {
         let velho = dados[0];
         let novo = dados[1];
@@ -414,6 +535,33 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     if(userx[velho][1] == 1 && userx[novo][1] !== 3){
                     if(userx[novo][1] !== 1){
                     if(userx['taokeys'] >= userx[velho][0]*30){
+                        if(userx[novo][2] - userx[velho][2] > 0 && userx['taokeys'] >= qnt*30 + qnt*(userx[novo][2] - userx[velho][2])){
+
+                        
+                        userx.balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: userx.balanco_patrimonial.ativo.circulante.caixa - userx[velho][0]*30 - (userx[novo][2] - userx[velho][2])*userx[velho][0],
+                                    estoque: userx.balanco_patrimonial.ativo.circulante.estoque + (userx[novo][2] - userx[velho][2])*userx[velho][0],
+                                    contas_a_receber: userx.balanco_patrimonial.ativo.circulante.contas_a_receber
+
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: userx.balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: userx.balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: userx.balanco_patrimonial.patrimonio_liquido.lucros_acumulados - userx[velho][0]*30
+                            }
+                        }
                         let array_dados_velho = [0,2,userx[velho][2], userx[velho][3], userx[velho][4], userx[velho][5], userx[velho][6], userx[velho][7]];
                         let insu_novo = Number(userx[novo][0]) + Number(userx[velho][0])
                         let array_dados_novo
@@ -429,7 +577,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             else{
                                 array_dados_novo = [insu_novo,1,userx[novo][2], userx[novo][3], userx[novo][4], userx[novo][5], userx[novo][6], userx[novo][7]]
                             }
-                        userx.taokeys = userx.taokeys - userx[velho][0]*30
+                        userx.taokeys = userx.taokeys - userx[velho][0]*30 - Math.abs(userx[novo][2] - userx[velho][2])*userx[velho][0]
                         userx.set(velho, array_dados_velho)
                         userx.set(novo, array_dados_novo)
                         //userx.taokeys = userx.taokeys - userx[velho][0]*30
@@ -440,27 +588,27 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 //console.log(user[velho][0] + ' <=====user(recem pesquisado)')
                                 if(user.taokeys == userx.taokeys){
                                     socket.emit('update', [
-                                        [user["147"],"147"],
-                                        [user["148"],"148"],
-                                        [user["149"],"149"],
-                                        [user["157"],"157"],
-                                        [user["158"],"158"],
-                                        [user["159"],"159"],
-                                        [user["257"],"257"],
-                                        [user["258"],"258"],
-                                        [user["259"],"259"],
-                                        [user["267"],"267"],
-                                        [user["268"],"268"],
-                                        [user["269"],"269"],
-                                        [user["347"],"347"],
-                                        [user["348"],"348"],
-                                        [user["349"],"349"],
-                                        [user["357"],"357"],
-                                        [user["358"],"358"],
-                                        [user["359"],"359"],
-                                        [user["367"],"367"],
-                                        [user["368"],"368"],
-                                        [user["369"],"369"],
+                                        [...user["147"],"147"],
+                                        [...user["148"],"148"],
+                                        [...user["149"],"149"],
+                                        [...user["157"],"157"],
+                                        [...user["158"],"158"],
+                                        [...user["159"],"159"],
+                                        [...user["257"],"257"],
+                                        [...user["258"],"258"],
+                                        [...user["259"],"259"],
+                                        [...user["267"],"267"],
+                                        [...user["268"],"268"],
+                                        [...user["269"],"269"],
+                                        [...user["347"],"347"],
+                                        [...user["348"],"348"],
+                                        [...user["349"],"349"],
+                                        [...user["357"],"357"],
+                                        [...user["358"],"358"],
+                                        [...user["359"],"359"],
+                                        [...user["367"],"367"],
+                                        [...user["368"],"368"],
+                                        [...user["369"],"369"],
                                         user["taokeys"],
                                         user["frota"],
                                         user["promotores"],
@@ -475,7 +623,98 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                     }                  
                                 })
                             .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
-                    
+                    }
+                    else{
+                        userx.balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: userx.balanco_patrimonial.ativo.circulante.caixa - userx[velho][0]*30,
+                                    estoque: userx.balanco_patrimonial.ativo.circulante.estoque + (userx[novo][2] - userx[velho][2])*userx[velho][0],
+                                    contas_a_receber: userx.balanco_patrimonial.ativo.circulante.contas_a_receber
+
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: userx.balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: userx.balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: userx.balanco_patrimonial.patrimonio_liquido.lucros_acumulados - userx[velho][0]*30 + (userx[novo][2] - userx[velho][2])*userx[velho][0]
+                            }
+                        }
+                        let array_dados_velho = [0,2,userx[velho][2], userx[velho][3], userx[velho][4], userx[velho][5], userx[velho][6], userx[velho][7]];
+                        let insu_novo = Number(userx[novo][0]) + Number(userx[velho][0])
+                        let array_dados_novo
+                            if(userx[novo][4] == 0 && userx[novo][3] !== 0){
+                                array_dados_novo = [insu_novo,1,userx[novo][2], userx[novo][3], 1, userx[novo][5], userx[novo][6], userx[novo][7]]
+                            }
+                            else if(userx[novo][4] == 0 && userx[novo][3] == 0){
+                                array_dados_novo = [insu_novo,1,userx[novo][2], 800, 1, userx[novo][5], userx[novo][6], userx[novo][7]]
+                            }
+                            else if(userx[novo][4] !== 0 && userx[novo][3] == 0){
+                                array_dados_novo = [insu_novo,1,userx[novo][2], 800, userx[novo][4], userx[novo][5], userx[novo][6], userx[novo][7]]
+                            }
+                            else{
+                                array_dados_novo = [insu_novo,1,userx[novo][2], userx[novo][3], userx[novo][4], userx[novo][5], userx[novo][6], userx[novo][7]]
+                            }
+                        userx.taokeys = userx.taokeys - userx[velho][0]*30 - Math.abs(userx[novo][2] - userx[velho][2])*userx[velho][0]
+                        userx.set(velho, array_dados_velho)
+                        userx.set(novo, array_dados_novo)
+                        //userx.taokeys = userx.taokeys - userx[velho][0]*30
+                        userx.save()
+                            .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
+                            .then((user) => {
+                                //console.log(userx[velho][0] + ' <----userx(Schema trabalhado aqui)')
+                                //console.log(user[velho][0] + ' <=====user(recem pesquisado)')
+                                if(user.taokeys == userx.taokeys){
+                                    socket.emit('update', [
+                                        [...user["147"],"147"],
+                                        [...user["148"],"148"],
+                                        [...user["149"],"149"],
+                                        [...user["157"],"157"],
+                                        [...user["158"],"158"],
+                                        [...user["159"],"159"],
+                                        [...user["257"],"257"],
+                                        [...user["258"],"258"],
+                                        [...user["259"],"259"],
+                                        [...user["267"],"267"],
+                                        [...user["268"],"268"],
+                                        [...user["269"],"269"],
+                                        [...user["347"],"347"],
+                                        [...user["348"],"348"],
+                                        [...user["349"],"349"],
+                                        [...user["357"],"357"],
+                                        [...user["358"],"358"],
+                                        [...user["359"],"359"],
+                                        [...user["367"],"367"],
+                                        [...user["368"],"368"],
+                                        [...user["369"],"369"],
+                                        user["taokeys"],
+                                        user["frota"],
+                                        user["promotores"],
+                                        user["comissao"],
+                                        user["distribuidores"],
+                                        user["pas"],
+                                        user["propaganda"],
+                                        user["propagandauni"],
+                                        user["divida"],
+                                        user["turno"]]);
+        
+                                    }                  
+                                })
+                            .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
+                    }
+
+                    if(userx[novo][2] - userx[velho][2] > 0 && userx['taokeys'] < qnt*30 + qnt*(userx[novo][2] - userx[velho][2])){
+                        socket.emit('feedback', ['warning', 'falta caixa para realizar essa operacao'])
+                    }
                     }
                 }
                 else{
@@ -496,7 +735,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                 }
             
             })
-    }) //OK (falta teste)
+    }) //OK (falta teste) BALAN OK
     socket.on('encerrar-servico', (tipo) => {
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => {
@@ -718,6 +957,30 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
             .then((userx) => {
                 if(userx !== null){
                         if(qnt > 0 && userx.taokeys > qnt*57600){
+                            userx.balanco_patrimonial = {
+                                ativo: {
+                                    circulante: {
+                                        caixa: userx.balanco_patrimonial.ativo.circulante.caixa - qnt*57600,
+                                        estoque: userx.balanco_patrimonial.ativo.circulante.estoque,
+                                        contas_a_receber: userx.balanco_patrimonial.ativo.circulante.contas_a_receber
+    
+                                    },
+                                    n_circulante: {
+                                        imobilizado: {
+                                            pas: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                            frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.frota + qnt*57600,
+                                            depreciacao_frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                        },
+                                    },
+                                },
+                                passivo: {
+                                    contas_a_pagar: userx.balanco_patrimonial.passivo.contas_a_pagar
+                                },
+                                patrimonio_liquido: {
+                                    capital_social: userx.balanco_patrimonial.patrimonio_liquido.capital_social,
+                                    lucros_acumulados: userx.balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                                }
+                            }   
                             let novaf = userx['frota'][0] + qnt
                             let array_dados = [novaf, userx['frota'][1], userx['frota'][2], userx['frota'][3], userx['frota'][4], userx['frota'][5], userx['frota'][6], userx['frota'][7], userx['frota'][8], userx['frota'][9], userx['frota'][10], userx['frota'][11], userx['frota'][12], userx['frota'][13], userx['frota'][14], userx['frota'][15], userx['frota'][16], userx['frota'][17], userx['frota'][18], userx['frota'][19], userx['frota'][20], userx['frota'][21], userx['frota'][22], userx['frota'][23]]
                             userx.taokeys = userx.taokeys - 57600*Number(dados)
@@ -776,7 +1039,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
-    }) //OK
+    }) //OK BALAN OK
     socket.on('checar-frota', () => {
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => {
@@ -795,37 +1058,37 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
             .then((userx) => {
                 if(userx !== null){
                     socket.emit('update', [
-                        [user["147"],"147"],
-                        [user["148"],"148"],
-                        [user["149"],"149"],
-                        [user["157"],"157"],
-                        [user["158"],"158"],
-                        [user["159"],"159"],
-                        [user["257"],"257"],
-                        [user["258"],"258"],
-                        [user["259"],"259"],
-                        [user["267"],"267"],
-                        [user["268"],"268"],
-                        [user["269"],"269"],
-                        [user["347"],"347"],
-                        [user["348"],"348"],
-                        [user["349"],"349"],
-                        [user["357"],"357"],
-                        [user["358"],"358"],
-                        [user["359"],"359"],
-                        [user["367"],"367"],
-                        [user["368"],"368"],
-                        [user["369"],"369"],
-                        user["taokeys"],
-                        user["frota"],
-                        user["promotores"],
-                        user["comissao"],
-                        user["distribuidores"],
-                        user["pas"],
-                        user["propaganda"],
-                        user["propagandauni"],
-                        user["divida"],
-                        user["turno"]]);
+                        [...userx["147"],"147"],
+                        [...userx["148"],"148"],
+                        [...userx["149"],"149"],
+                        [...userx["157"],"157"],
+                        [...userx["158"],"158"],
+                        [...userx["159"],"159"],
+                        [...userx["257"],"257"],
+                        [...userx["258"],"258"],
+                        [...userx["259"],"259"],
+                        [...userx["267"],"267"],
+                        [...userx["268"],"268"],
+                        [...userx["269"],"269"],
+                        [...userx["347"],"347"],
+                        [...userx["348"],"348"],
+                        [...userx["349"],"349"],
+                        [...userx["357"],"357"],
+                        [...userx["358"],"358"],
+                        [...userx["359"],"359"],
+                        [...userx["367"],"367"],
+                        [...userx["368"],"368"],
+                        [...userx["369"],"369"],
+                        userx["taokeys"],
+                        userx["frota"],
+                        userx["promotores"],
+                        userx["comissao"],
+                        userx["distribuidores"],
+                        userx["pas"],
+                        userx["propaganda"],
+                        userx["propagandauni"],
+                        userx["divida"],
+                        userx["turno"]]);
                 }
                 else{
                     socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
@@ -833,6 +1096,20 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
     }) //OK
+    socket.on('state-global', () => {
+        Data.findOne({sockid: socket.id})
+            .then((ll) => {
+                if(ll == null){
+                    socket.emit('feedback', ['danger','voce esta desconectado'])
+                }
+                else{
+                    Aluno.find({ instancia: ll.instancia })
+                        .then((alunos) => { socket.emit('state-global', alunos)})
+                }
+            })
+            .catch(() => {console.log('falha na comunicacao com o Banco de dados n 504 ' +socket.id)})
+
+    })
     socket.on('alterar-preco', (dados) => {
         let tipo = dados[0];
         let preco = Number(dados[1]);
@@ -1037,6 +1314,30 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
             .then((userx) => {
                 if(userx !== null){
                         if(qnt > 0){
+                            userx.balanco_patrimonial = {
+                                ativo: {
+                                    circulante: {
+                                        caixa: userx.balanco_patrimonial.ativo.circulante.caixa + qnt,
+                                        estoque: userx.balanco_patrimonial.ativo.circulante.estoque,
+                                        contas_a_receber: userx.balanco_patrimonial.ativo.circulante.contas_a_receber
+    
+                                    },
+                                    n_circulante: {
+                                        imobilizado: {
+                                            pas: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                            frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                            depreciacao_frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                        },
+                                    },
+                                },
+                                passivo: {
+                                    contas_a_pagar: userx.balanco_patrimonial.passivo.contas_a_pagar + qnt
+                                },
+                                patrimonio_liquido: {
+                                    capital_social: userx.balanco_patrimonial.patrimonio_liquido.capital_social,
+                                    lucros_acumulados: userx.balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                                }
+                            }
                             userx.set('divida', [(qnt+userx['divida'][0]), userx['divida'][1], userx['divida'][2]]) 
                             userx.taokeys = userx.taokeys + qnt
                             userx.save()
@@ -1075,29 +1376,48 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                             user["propagandauni"],
                                             user["divida"],
                                             user["turno"]]);
-        
                                     }                  
                                 })
-                        .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
-                          
+                        .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})  
                     }
                     else{socket.emit('feedback', ['warning','apenas valores positivos'])}
-                    
-                
-             
             }
                 else{
                     socket.emit('feedback', ['danger', 'voce precisa estar logado para realizar um emprestimo'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
-    }) //OK
+    }) //OK BALAN OK
     socket.on('quitar-divida', () => {
         //let qnt = Number(dados)
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => {
                 if(userx !== null){
                     if(userx.taokeys >= (userx['divida'][0] + userx['divida'][1] + userx['divida'][2])){
+                        userx.balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: userx.balanco_patrimonial.ativo.circulante.caixa - (userx['divida'][0] + userx['divida'][1] + userx['divida'][2]),
+                                    estoque: userx.balanco_patrimonial.ativo.circulante.estoque,
+                                    contas_a_receber: userx.balanco_patrimonial.ativo.circulante.contas_a_receber
+
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: userx.balanco_patrimonial.passivo.contas_a_pagar - (userx['divida'][0] + userx['divida'][1] + userx['divida'][2])
+                            },
+                            patrimonio_liquido: {
+                                capital_social: userx.balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: userx.balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                            }
+                        }
                         userx.taokeys = userx.taokeys - (userx['divida'][0] + userx['divida'][1] + userx['divida'][2])
                         userx.set('divida', [0,0,0])
     
@@ -1154,7 +1474,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
-    }) //OK
+    }) //OK BALAN OK
     socket.on('aumentar-distribuidores', (dados) => {
         let qnt = Number(dados)
         Aluno.findOne({sockid: socket.id, temporario: 1})
@@ -1408,6 +1728,30 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
             .then((userx) => {
                 if(userx !== null){
                         if(qnt > 0 && userx.taokeys >= qnt){
+                            userx.balanco_patrimonial = {
+                                ativo: {
+                                    circulante: {
+                                        caixa: userx.balanco_patrimonial.ativo.circulante.caixa - qnt,
+                                        estoque: userx.balanco_patrimonial.ativo.circulante.estoque,
+                                        contas_a_receber: userx.balanco_patrimonial.ativo.circulante.contas_a_receber
+    
+                                    },
+                                    n_circulante: {
+                                        imobilizado: {
+                                            pas: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                            frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                            depreciacao_frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                        },
+                                    },
+                                },
+                                passivo: {
+                                    contas_a_pagar: userx.balanco_patrimonial.passivo.contas_a_pagar
+                                },
+                                patrimonio_liquido: {
+                                    capital_social: userx.balanco_patrimonial.patrimonio_liquido.capital_social,
+                                    lucros_acumulados: userx.balanco_patrimonial.patrimonio_liquido.lucros_acumulados - qnt
+                                }
+                            }
                             let novaf = Number(userx['propagandauni']) + qnt
                             userx.taokeys = userx.taokeys - qnt
                             userx.set('propagandauni', novaf) 
@@ -1463,13 +1807,37 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
-    }) //OK
+    }) //OK BALAN OK
     socket.on('aumentar-propaganda', (dados) => {
         let qnt = Number(dados)
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => {
                 if(userx !== null){
                         if(qnt > 0 && userx.taokeys >= qnt){
+                            userx.balanco_patrimonial = {
+                                ativo: {
+                                    circulante: {
+                                        caixa: userx.balanco_patrimonial.ativo.circulante.caixa - qnt,
+                                        estoque: userx.balanco_patrimonial.ativo.circulante.estoque,
+                                        contas_a_receber: userx.balanco_patrimonial.ativo.circulante.contas_a_receber
+    
+                                    },
+                                    n_circulante: {
+                                        imobilizado: {
+                                            pas: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                            frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                            depreciacao_frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                        },
+                                    },
+                                },
+                                passivo: {
+                                    contas_a_pagar: userx.balanco_patrimonial.passivo.contas_a_pagar
+                                },
+                                patrimonio_liquido: {
+                                    capital_social: userx.balanco_patrimonial.patrimonio_liquido.capital_social,
+                                    lucros_acumulados: userx.balanco_patrimonial.patrimonio_liquido.lucros_acumulados - qnt
+                                }
+                            }   
                             let novaf = userx['propaganda'] + qnt
                             userx.taokeys = userx.taokeys - qnt
                             userx.set('propaganda', novaf) 
@@ -1525,7 +1893,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
-    }) //OK
+    }) //OK BALAN OK
     socket.on('checar-pas', () => {
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => {
@@ -1692,6 +2060,30 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     if(userx !== null){
                         //console.log(user.taokeys + ' ccccccccccccccc');
                         if(userx['taokeys'] >= qnti*userx[tipo][2] && userx[tipo][1] !== 2){
+                            userx.balanco_patrimonial = {
+                                ativo: {
+                                    circulante: {
+                                        caixa: userx.balanco_patrimonial.ativo.circulante.caixa - qnti*userx[tipo][2],
+                                        estoque: userx.balanco_patrimonial.ativo.circulante.estoque + qnti*userx[tipo][2],
+                                        contas_a_receber: userx.balanco_patrimonial.ativo.circulante.contas_a_receber
+    
+                                    },
+                                    n_circulante: {
+                                        imobilizado: {
+                                            pas: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                            frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                            depreciacao_frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                        },
+                                    },
+                                },
+                                passivo: {
+                                    contas_a_pagar: userx.balanco_patrimonial.passivo.contas_a_pagar - (userx['divida'][0] + userx['divida'][1] + userx['divida'][2])
+                                },
+                                patrimonio_liquido: {
+                                    capital_social: userx.balanco_patrimonial.patrimonio_liquido.capital_social,
+                                    lucros_acumulados: userx.balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                                }
+                            }
                             if(userx[tipo][1] !== 3 && userx[tipo][1] !== 0){
                            //console.log(userx[tipo][1] + " <====")
                            //userx[tipo][1] = 1
@@ -1782,11 +2174,35 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
             }) 
             .catch((err) => { console.log('falha na comunicacao com o banco de dados para o ' +socket.id+ " - " + err)
     })
-    }) //OK
+    }) //OK BALAN OK
     socket.on('pesquisar-pas', () => {
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => { 
                     if(userx !== null){
+                        userx.balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: userx.balanco_patrimonial.ativo.circulante.caixa - 2160,
+                                    estoque: userx.balanco_patrimonial.ativo.circulante.estoque,
+                                    contas_a_receber: userx.balanco_patrimonial.ativo.circulante.contas_a_receber
+
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: userx.balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: userx.balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: userx.balanco_patrimonial.patrimonio_liquido.lucros_acumulados - 2160
+                            }
+                        }
                         //console.log(user.taokeys + ' ccccccccccccccc');
                         if(userx['taokeys'] >= 2160){
                            //console.log(user.taokeys + " <====")
@@ -1798,39 +2214,39 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 Data.findOne({ativo: 1, instancia: userx.instancia})
                                     .then((dados) => {
                                         if(dados !== null){
-                                        socket.emit('resposta-pesquisar-pas', dados['total_pas'])
+                                        socket.emit('resposta-pesquisa', dados['total_pas'])
                                         socket.emit('update', [
-                                            [...user["147"],"147"],
-                                            [...user["148"],"148"],
-                                            [...user["149"],"149"],
-                                            [...user["157"],"157"],
-                                            [...user["158"],"158"],
-                                            [...user["159"],"159"],
-                                            [...user["257"],"257"],
-                                            [...user["258"],"258"],
-                                            [...user["259"],"259"],
-                                            [...user["267"],"267"],
-                                            [...user["268"],"268"],
-                                            [...user["269"],"269"],
-                                            [...user["347"],"347"],
-                                            [...user["348"],"348"],
-                                            [...user["349"],"349"],
-                                            [...user["357"],"357"],
-                                            [...user["358"],"358"],
-                                            [...user["359"],"359"],
-                                            [...user["367"],"367"],
-                                            [...user["368"],"368"],
-                                            [...user["369"],"369"],
-                                            user["taokeys"],
-                                            user["frota"],
-                                            user["promotores"],
-                                            user["comissao"],
-                                            user["distribuidores"],
-                                            user["pas"],
-                                            user["propaganda"],
-                                            user["propagandauni"],
-                                            user["divida"],
-                                            user["turno"]]);
+                                            [...userx["147"],"147"],
+                                            [...userx["148"],"148"],
+                                            [...userx["149"],"149"],
+                                            [...userx["157"],"157"],
+                                            [...userx["158"],"158"],
+                                            [...userx["159"],"159"],
+                                            [...userx["257"],"257"],
+                                            [...userx["258"],"258"],
+                                            [...userx["259"],"259"],
+                                            [...userx["267"],"267"],
+                                            [...userx["268"],"268"],
+                                            [...userx["269"],"269"],
+                                            [...userx["347"],"347"],
+                                            [...userx["348"],"348"],
+                                            [...userx["349"],"349"],
+                                            [...userx["357"],"357"],
+                                            [...userx["358"],"358"],
+                                            [...userx["359"],"359"],
+                                            [...userx["367"],"367"],
+                                            [...userx["368"],"368"],
+                                            [...userx["369"],"369"],
+                                            userx["taokeys"],
+                                            userx["frota"],
+                                            userx["promotores"],
+                                            userx["comissao"],
+                                            userx["distribuidores"],
+                                            userx["pas"],
+                                            userx["propaganda"],
+                                            userx["propagandauni"],
+                                            userx["divida"],
+                                            userx["turno"]]);
                                     }
                                     else{
                                         socket.emit('feedback', ['danger','voce nao pode realizar pesquisas ate que o administrador inicie o turno'])
@@ -1854,11 +2270,35 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
             }) 
             .catch(() => { console.log('falha na comunicacao com o banco de dados para o ' +socket.id)
     })
-    }) //OK
+    }) //OK BALAN OK
     socket.on('pesquisar-distribuidores', () => {
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => { 
                     if(userx !== null){
+                        userx.balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: userx.balanco_patrimonial.ativo.circulante.caixa - 2160,
+                                    estoque: userx.balanco_patrimonial.ativo.circulante.estoque,
+                                    contas_a_receber: userx.balanco_patrimonial.ativo.circulante.contas_a_receber
+
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: userx.balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: userx.balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: userx.balanco_patrimonial.patrimonio_liquido.lucros_acumulados - 2160
+                            }
+                        }
                         //console.log(user.taokeys + ' ccccccccccccccc');
                         if(userx['taokeys'] >= 2160){
                            //console.log(user.taokeys + " <====")
@@ -1870,39 +2310,39 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 Data.findOne({ativo: 1, instancia: userx.instancia})
                                     .then((dados) => {
                                         if(dados !== null){
-                                        socket.emit('resposta-pesquisar-distribuidores', dados['total_distribuidores'])
+                                        socket.emit('resposta-pesquisa', dados['total_distribuidores'])
                                         socket.emit('update', [
-                                            [...user["147"],"147"],
-                                            [...user["148"],"148"],
-                                            [...user["149"],"149"],
-                                            [...user["157"],"157"],
-                                            [...user["158"],"158"],
-                                            [...user["159"],"159"],
-                                            [...user["257"],"257"],
-                                            [...user["258"],"258"],
-                                            [...user["259"],"259"],
-                                            [...user["267"],"267"],
-                                            [...user["268"],"268"],
-                                            [...user["269"],"269"],
-                                            [...user["347"],"347"],
-                                            [...user["348"],"348"],
-                                            [...user["349"],"349"],
-                                            [...user["357"],"357"],
-                                            [...user["358"],"358"],
-                                            [...user["359"],"359"],
-                                            [...user["367"],"367"],
-                                            [...user["368"],"368"],
-                                            [...user["369"],"369"],
-                                            user["taokeys"],
-                                            user["frota"],
-                                            user["promotores"],
-                                            user["comissao"],
-                                            user["distribuidores"],
-                                            user["pas"],
-                                            user["propaganda"],
-                                            user["propagandauni"],
-                                            user["divida"],
-                                            user["turno"]]);
+                                            [...userx["147"],"147"],
+                                            [...userx["148"],"148"],
+                                            [...userx["149"],"149"],
+                                            [...userx["157"],"157"],
+                                            [...userx["158"],"158"],
+                                            [...userx["159"],"159"],
+                                            [...userx["257"],"257"],
+                                            [...userx["258"],"258"],
+                                            [...userx["259"],"259"],
+                                            [...userx["267"],"267"],
+                                            [...userx["268"],"268"],
+                                            [...userx["269"],"269"],
+                                            [...userx["347"],"347"],
+                                            [...userx["348"],"348"],
+                                            [...userx["349"],"349"],
+                                            [...userx["357"],"357"],
+                                            [...userx["358"],"358"],
+                                            [...userx["359"],"359"],
+                                            [...userx["367"],"367"],
+                                            [...userx["368"],"368"],
+                                            [...userx["369"],"369"],
+                                            userx["taokeys"],
+                                            userx["frota"],
+                                            userx["promotores"],
+                                            userx["comissao"],
+                                            userx["distribuidores"],
+                                            userx["pas"],
+                                            userx["propaganda"],
+                                            userx["propagandauni"],
+                                            userx["divida"],
+                                            userx["turno"]]);
                                         }
                 else{
                     socket.emit('feedback', ['danger', 'voce nao pode realizar pesquisas ate que o administrador inicie o turno'])
@@ -1925,7 +2365,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
             }) 
             .catch(() => { console.log('falha na comunicacao com o banco de dados para o ' +socket.id)
     })
-    }) //OK
+    }) //OK BALAN OK
     //
     socket.on('pesquisar-participacao-servicos', (input) => {
         Aluno.findOne({sockid: socket.id, temporario: 1})
@@ -1933,6 +2373,30 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     if(userx !== null && input.length < 3){
                         //console.log(user.taokeys + ' ccccccccccccccc');
                         if(userx['taokeys'] >= 10800 && input.length == 1){
+                            userx.balanco_patrimonial = {
+                                ativo: {
+                                    circulante: {
+                                        caixa: userx.balanco_patrimonial.ativo.circulante.caixa - 10800,
+                                        estoque: userx.balanco_patrimonial.ativo.circulante.estoque,
+                                        contas_a_receber: userx.balanco_patrimonial.ativo.circulante.contas_a_receber
+    
+                                    },
+                                    n_circulante: {
+                                        imobilizado: {
+                                            pas: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                            frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                            depreciacao_frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                        },
+                                    },
+                                },
+                                passivo: {
+                                    contas_a_pagar: userx.balanco_patrimonial.passivo.contas_a_pagar
+                                },
+                                patrimonio_liquido: {
+                                    capital_social: userx.balanco_patrimonial.patrimonio_liquido.capital_social,
+                                    lucros_acumulados: userx.balanco_patrimonial.patrimonio_liquido.lucros_acumulados - 10800
+                                }
+                            }
                            //console.log(user.taokeys + " <====")
                            userx.taokeys = userx.taokeys - 10800
                            userx['npesquisas'] = userx['npesquisas'] + 1     
@@ -1950,37 +2414,37 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                             }
                                         socket.emit('resposta-pesquisar-participacao-servicos', respostaP)
                                         socket.emit('update', [
-                                            [...user["147"],"147"],
-                                            [...user["148"],"148"],
-                                            [...user["149"],"149"],
-                                            [...user["157"],"157"],
-                                            [...user["158"],"158"],
-                                            [...user["159"],"159"],
-                                            [...user["257"],"257"],
-                                            [...user["258"],"258"],
-                                            [...user["259"],"259"],
-                                            [...user["267"],"267"],
-                                            [...user["268"],"268"],
-                                            [...user["269"],"269"],
-                                            [...user["347"],"347"],
-                                            [...user["348"],"348"],
-                                            [...user["349"],"349"],
-                                            [...user["357"],"357"],
-                                            [...user["358"],"358"],
-                                            [...user["359"],"359"],
-                                            [...user["367"],"367"],
-                                            [...user["368"],"368"],
-                                            [...user["369"],"369"],
-                                            user["taokeys"],
-                                            user["frota"],
-                                            user["promotores"],
-                                            user["comissao"],
-                                            user["distribuidores"],
-                                            user["pas"],
-                                            user["propaganda"],
-                                            user["propagandauni"],
-                                            user["divida"],
-                                            user["turno"]]);
+                                            [...userx["147"],"147"],
+                                            [...userx["148"],"148"],
+                                            [...userx["149"],"149"],
+                                            [...userx["157"],"157"],
+                                            [...userx["158"],"158"],
+                                            [...userx["159"],"159"],
+                                            [...userx["257"],"257"],
+                                            [...userx["258"],"258"],
+                                            [...userx["259"],"259"],
+                                            [...userx["267"],"267"],
+                                            [...userx["268"],"268"],
+                                            [...userx["269"],"269"],
+                                            [...userx["347"],"347"],
+                                            [...userx["348"],"348"],
+                                            [...userx["349"],"349"],
+                                            [...userx["357"],"357"],
+                                            [...userx["358"],"358"],
+                                            [...userx["359"],"359"],
+                                            [...userx["367"],"367"],
+                                            [...userx["368"],"368"],
+                                            [...userx["369"],"369"],
+                                            userx["taokeys"],
+                                            userx["frota"],
+                                            userx["promotores"],
+                                            userx["comissao"],
+                                            userx["distribuidores"],
+                                            userx["pas"],
+                                            userx["propaganda"],
+                                            userx["propagandauni"],
+                                            userx["divida"],
+                                            userx["turno"]]);
             }
             else{
                 socket.emit('feedback', ['danger','voce nao pode realizar pesquisas ate que o administrador inicie o turno'])
@@ -1991,6 +2455,30 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             .catch((err) => {console.log('falha em salvar transacao por pesquisa n 307' + err)})
                             }
                             else if(userx['taokeys'] >= 14400 && input.length == 2){
+                                userx.balanco_patrimonial = {
+                                    ativo: {
+                                        circulante: {
+                                            caixa: userx.balanco_patrimonial.ativo.circulante.caixa - 14400,
+                                            estoque: userx.balanco_patrimonial.ativo.circulante.estoque,
+                                            contas_a_receber: userx.balanco_patrimonial.ativo.circulante.contas_a_receber
+        
+                                        },
+                                        n_circulante: {
+                                            imobilizado: {
+                                                pas: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                                frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                                depreciacao_frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                            },
+                                        },
+                                    },
+                                    passivo: {
+                                        contas_a_pagar: userx.balanco_patrimonial.passivo.contas_a_pagar
+                                    },
+                                    patrimonio_liquido: {
+                                        capital_social: userx.balanco_patrimonial.patrimonio_liquido.capital_social,
+                                        lucros_acumulados: userx.balanco_patrimonial.patrimonio_liquido.lucros_acumulados - 14400
+                                    }
+                                }
                                 //console.log(user.taokeys + " <====")
                                 userx.taokeys = userx.taokeys - 14400
                                 userx['npesquisas'] = userx['npesquisas'] + 1 
@@ -2009,29 +2497,29 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                                     }
                                                 }
                                             } 
-                                             socket.emit('resposta-pesquisar-participacao-servicos', respostaP)
+                                             socket.emit('resposta-pesquisa', respostaP)
                                              socket.emit('update', [
-                                                [user["147"],"147"],
-                                                [user["148"],"148"],
-                                                [user["149"],"149"],
-                                                [user["157"],"157"],
-                                                [user["158"],"158"],
-                                                [user["159"],"159"],
-                                                [user["257"],"257"],
-                                                [user["258"],"258"],
-                                                [user["259"],"259"],
-                                                [user["267"],"267"],
-                                                [user["268"],"268"],
-                                                [user["269"],"269"],
-                                                [user["347"],"347"],
-                                                [user["348"],"348"],
-                                                [user["349"],"349"],
-                                                [user["357"],"357"],
-                                                [user["358"],"358"],
-                                                [user["359"],"359"],
-                                                [user["367"],"367"],
-                                                [user["368"],"368"],
-                                                [user["369"],"369"],
+                                                [...userx["147"],"147"],
+                                                [...userx["148"],"148"],
+                                                [...userx["149"],"149"],
+                                                [...userx["157"],"157"],
+                                                [...userx["158"],"158"],
+                                                [...userx["159"],"159"],
+                                                [...userx["257"],"257"],
+                                                [...userx["258"],"258"],
+                                                [...userx["259"],"259"],
+                                                [...userx["267"],"267"],
+                                                [...userx["268"],"268"],
+                                                [...userx["269"],"269"],
+                                                [...userx["347"],"347"],
+                                                [...userx["348"],"348"],
+                                                [...userx["349"],"349"],
+                                                [...userx["357"],"357"],
+                                                [...userx["358"],"358"],
+                                                [...userx["359"],"359"],
+                                                [...userx["367"],"367"],
+                                                [...userx["368"],"368"],
+                                                [...userx["369"],"369"],
                                                 user["taokeys"],
                                                 user["frota"],
                                                 user["promotores"],
@@ -2064,13 +2552,37 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
             .catch(() => { console.log('falha na comunicacao com o banco de dados para o ' +socket.id)
     })
     }) //FALTA COLOCAR O VALOR CERTO DE DINHEIROS PARA A PESQUISA DE UM SO SERVICO E DE DOIS! E FALTA TESTAR // PARA FUNCIONAR CORRETAMENTE OS INPUTS TEM Q SMP VIR DENTRO DE UM ARRAY MSM Q SEJA A PESQUISA DE UM SO SERVIÇO
-    //
+    // BALAN OK
     socket.on('pesquisar-servicos-oferecidos-concorrencia', () => {
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => { 
                     if(userx !== null){
                         //console.log(user.taokeys + ' ccccccccccccccc');
                         if(userx['taokeys'] >= 2160){
+                            userx.balanco_patrimonial = {
+                                ativo: {
+                                    circulante: {
+                                        caixa: userx.balanco_patrimonial.ativo.circulante.caixa - 2160,
+                                        estoque: userx.balanco_patrimonial.ativo.circulante.estoque,
+                                        contas_a_receber: userx.balanco_patrimonial.ativo.circulante.contas_a_receber
+    
+                                    },
+                                    n_circulante: {
+                                        imobilizado: {
+                                            pas: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                            frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                            depreciacao_frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                        },
+                                    },
+                                },
+                                passivo: {
+                                    contas_a_pagar: userx.balanco_patrimonial.passivo.contas_a_pagar
+                                },
+                                patrimonio_liquido: {
+                                    capital_social: userx.balanco_patrimonial.patrimonio_liquido.capital_social,
+                                    lucros_acumulados: userx.balanco_patrimonial.patrimonio_liquido.lucros_acumulados - 2160
+                                }
+                            }
                            //console.log(user.taokeys + " <====")
                            userx.taokeys = userx.taokeys - 2160
                            userx['npesquisas'] = userx['npesquisas'] + 1 
@@ -2080,39 +2592,39 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 Data.findOne({ativo: 1, instancia: userx.instancia})
                                     .then((dados) => {
                                         if(dados !== null){
-                                        socket.emit('resposta-pesquisar-servicos', dados['modelos_oferecidos'])
+                                        socket.emit('resposta-pesquisa', dados['modelos_oferecidos'])
                                         socket.emit('update', [
-                                            [...user["147"],"147"],
-                                            [...user["148"],"148"],
-                                            [...user["149"],"149"],
-                                            [...user["157"],"157"],
-                                            [...user["158"],"158"],
-                                            [...user["159"],"159"],
-                                            [...user["257"],"257"],
-                                            [...user["258"],"258"],
-                                            [...user["259"],"259"],
-                                            [...user["267"],"267"],
-                                            [...user["268"],"268"],
-                                            [...user["269"],"269"],
-                                            [...user["347"],"347"],
-                                            [...user["348"],"348"],
-                                            [...user["349"],"349"],
-                                            [...user["357"],"357"],
-                                            [...user["358"],"358"],
-                                            [...user["359"],"359"],
-                                            [...user["367"],"367"],
-                                            [...user["368"],"368"],
-                                            [...user["369"],"369"],
-                                            user["taokeys"],
-                                            user["frota"],
-                                            user["promotores"],
-                                            user["comissao"],
-                                            user["distribuidores"],
-                                            user["pas"],
-                                            user["propaganda"],
-                                            user["propagandauni"],
-                                            user["divida"],
-                                            user["turno"]]);
+                                            [...userx["147"],"147"],
+                                            [...userx["148"],"148"],
+                                            [...userx["149"],"149"],
+                                            [...userx["157"],"157"],
+                                            [...userx["158"],"158"],
+                                            [...userx["159"],"159"],
+                                            [...userx["257"],"257"],
+                                            [...userx["258"],"258"],
+                                            [...userx["259"],"259"],
+                                            [...userx["267"],"267"],
+                                            [...userx["268"],"268"],
+                                            [...userx["269"],"269"],
+                                            [...userx["347"],"347"],
+                                            [...userx["348"],"348"],
+                                            [...userx["349"],"349"],
+                                            [...userx["357"],"357"],
+                                            [...userx["358"],"358"],
+                                            [...userx["359"],"359"],
+                                            [...userx["367"],"367"],
+                                            [...userx["368"],"368"],
+                                            [...userx["369"],"369"],
+                                            userx["taokeys"],
+                                            userx["frota"],
+                                            userx["promotores"],
+                                            userx["comissao"],
+                                            userx["distribuidores"],
+                                            userx["pas"],
+                                            userx["propaganda"],
+                                            userx["propagandauni"],
+                                            userx["divida"],
+                                            userx["turno"]]);
             }
             else{
                 socket.emit('feedback', ['danger','voce nao pode realizar pesquisas ate que o administrador inicie o turno'])
@@ -2135,7 +2647,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
             }) 
             .catch(() => { console.log('falha na comunicacao com o banco de dados para o ' +socket.id)
     })
-    }) //OK
+    }) //OK BALAN OK
     socket.on('receber-faturamento', () => { 
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => {
@@ -2474,19 +2986,19 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         return DemandaAnual*0.10
                     }
                     else if(adm.turno == 2){
-                        return DemandaAnual*0.10
+                        return DemandaAnual*0.20
                     }
                     else if(adm.turno == 3){    
-                        return DemandaAnual*0.10
+                        return DemandaAnual*0.12
                     }
                     else if(adm.turno == 4){
-                        return DemandaAnual*0.10
+                        return DemandaAnual*0.12
                     }
                     else if(adm.turno == 5){
-                        return DemandaAnual*0.10
+                        return DemandaAnual*0.21
                     }
                     else if(adm.turno == 6){
-                        return DemandaAnual*0.10
+                        return DemandaAnual*0.25
                     }
                     else{
                         console.log('||-=-=-=-=-=-=-=-=-=-=-||==> Game Over <==||-=-=-=-=-=-=-=-=-=-=-||')
@@ -2496,6 +3008,31 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                 }
                 let demanda = sazonalidade(adm['oferta_mercado'])
                 for(let i = 0; i < users.length; i++){
+
+                    users[i].balanco_patrimonial = {
+                        ativo: {
+                            circulante: {
+                                caixa: users[i].balanco_patrimonial.ativo.circulante.caixa - users[i]['promotores']*2160 - users[i]['distribuidores']*2160 - (users[i]['pas'] + users[i]['pas1'] + users[i]['pas2'])*2160,
+                                estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
+                                contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber
+
+                            },
+                            n_circulante: {
+                                imobilizado: {
+                                    pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                    frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                    depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                },
+                            },
+                        },
+                        passivo: {
+                            contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
+                        },
+                        patrimonio_liquido: {
+                            capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
+                            lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - users[i]['promotores']*2160 - users[i]['distribuidores']*2160 - (users[i]['pas'] + users[i]['pas1'] + users[i]['pas2'])*2160
+                        }
+                    }   
 
                     let media_user = users[i]['scorepreco'][1]/users[i]['scorepreco'][0]
                     let scorepp = preco_medio/media_user
