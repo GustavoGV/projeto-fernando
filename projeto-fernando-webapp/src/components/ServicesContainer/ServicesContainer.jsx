@@ -20,6 +20,9 @@ const useStyles = makeStyles(theme => ({
   },
   button:{
     margin:'16px',
+    marginLeft:'auto',
+    marginRight:'auto',
+    display:'flex',
   }
 }));
 
@@ -28,18 +31,29 @@ export default function ServicesContainer() {
   const [game, setGame] = useState([])
 
   useEffect(()=>{
-    console.log('puxando state')
     socket.emit('puxar-state');
-    socket.emit('aumentar-frota', 1);
     socket.on('update', state => {
       console.log('estado atual: ', state)
       setGame(state)
     return ()=>{
       socket.off('update');
-      console.log('unmounting servicesContainer');
     }
     })
   },[])
+
+
+
+  function generateServices(services){
+    return services.filter(service=>service[1]===1).map((service, index)=>{
+      return(
+        <Grid key={index} item xs={12} sm={6}>
+          <Paper className={classes.paper}>
+            <Service service={service} game={game}/>
+          </Paper>
+        </Grid>
+      )
+    })
+  }
 
   return (
     <div className={classes.root}>
@@ -52,19 +66,12 @@ export default function ServicesContainer() {
             <Research gameData={game} />
           </Paper>
         </Grid>
-        <Grid item xs={12} sm={6}>
-          <Paper className={classes.paper}>
-            <Service serviceName="Serviço 1"/>
-          </Paper>
+        {generateServices(game.slice(0,21))}
+        <Grid item xs={12} sm={12}>
+          <Button variant="contained" color="primary" className={classes.button} onClick={()=>{socket.emit('salvar')}}> 
+            Salvar
+          </Button>
         </Grid>
-        <Grid item xs={12} sm={6}>
-          <Paper className={classes.paper}>
-            <Service serviceName="Serviço 2"/>
-          </Paper>
-        </Grid>
-        <Button variant="contained" color="primary" className={classes.button}>
-          Salvar
-        </Button>
       </Grid>
     </div>
   );
