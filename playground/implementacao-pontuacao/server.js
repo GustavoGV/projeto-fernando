@@ -7444,7 +7444,7 @@ for(let o = 0; o < index.length; o++){ //ATUALIZA o estado de cada serviço (se 
             .then((data) => {
 
         
-                if(data !== undefined){
+                if(data !== null){
                  Aluno.findOne({ cooperativa: cooperativa, backup: 1, instancia: data.instancia, turno: turno })                 
                     .then((balancos) => {
                                     
