@@ -536,7 +536,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                 }
                 }
                 else{
-                    socket.emit('feedback', ['danger','voce precisa estar logado para trocar de serviço'])
+                    socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
                 }
             
             })
@@ -746,7 +746,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                 }
                 }
                 else{
-                    socket.emit('feedback', ['danger','voce precisa estar logado para substituir um serviço'])
+                    socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
                 }
             
             })
@@ -824,7 +824,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     }
                 }
                 else{
-                    socket.emit('feedback', ['danger','voce precisa estar logado para encerrar um serviço'])
+                    socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -890,7 +890,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                 else{socket.emit('feedback', ['warning','voce nao pode alterar o preco de venda enquanto o servico estiver em processo de encerramento'])}
             }
                 else{
-                    socket.emit('feedback', ['danger', 'voce precisa estar logado para alerar o volume de vendas planejado'])
+                    socket.emit('feedback', ['danger', 'voce precisa estar logado para puxar o state atual da simulação'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})     
@@ -971,7 +971,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                 })
             }
             else{
-                socket.emit('feedback', ['danger','reconecte-se ao simulador para realizar essa operação'])
+                socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
             }
             })
     }) //OK
@@ -1059,7 +1059,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
              
             }
                 else{
-                    socket.emit('feedback', ['danger','voce precisa estar logado para aumetar a sua frota'])
+                    socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -1072,7 +1072,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     socket.emit('feedback', ['success', 'Situação da sua frota: ' +resp])         
             }
                 else{
-                    socket.emit('feedback', ['danger', 'voce precisa estar logado para checar a sua frota'])
+                    socket.emit('feedback', ['danger', 'voce precisa estar logado para puxar o state atual da simulação'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -1120,20 +1120,6 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
     }) //OK
-    socket.on('state-global', () => {
-        Data.findOne({sockid: socket.id})
-            .then((ll) => {
-                if(ll == null){
-                    socket.emit('feedback', ['danger','voce esta desconectado'])
-                }
-                else{
-                    Aluno.find({ instancia: ll.instancia })
-                        .then((alunos) => { socket.emit('state-global', alunos)})
-                }
-            })
-            .catch(() => {console.log('falha na comunicacao com o Banco de dados n 504 ' +socket.id)})
-
-    })
     socket.on('alterar-preco', (dados) => {
         let tipo = dados[0];
         let preco = Number(dados[1]);
@@ -1200,7 +1186,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
              
             }
                 else{
-                    socket.emit('feedback', ['danger','voce precisa estar conectado para alterar os preços unitarios'])
+                    socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -1264,7 +1250,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
              
             }
                 else{
-                    socket.emit('feedback', ['danger','voce precisa estar logado para aumentar seu numero de promotores'])
+                    socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -1327,7 +1313,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
              
             }
                 else{
-                    socket.emit('feedback', ['danger','voce precisa estar logado para diminuir o seu numero de promotores'])
+                    socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -1407,7 +1393,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     else{socket.emit('feedback', ['warning','apenas valores positivos'])}
             }
                 else{
-                    socket.emit('feedback', ['danger', 'voce precisa estar logado para realizar um emprestimo'])
+                    socket.emit('feedback', ['danger', 'voce precisa estar logado para puxar o state atual da simulação'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -1494,7 +1480,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
              
             }
                 else{
-                    socket.emit('feedback', ['danger', 'voce precisa estar logado para quitar a sua divida'])
+                    socket.emit('feedback', ['danger', 'voce precisa estar logado para puxar o state atual da simulação'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -1558,7 +1544,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
              
             }
                 else{
-                    socket.emit('feedback', ['danger','voce precisa estar logado'])
+                    socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -1619,7 +1605,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
              
             }
                 else{
-                    socket.emit('feedback', ['danger','voce precisa estar logado para alterar o numero  de distribuidores'])
+                    socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -1680,7 +1666,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
              
             }
                 else{
-                    socket.emit('feedback', ['danger', 'voce precisa estar logado para dimunuir o numero de P.A.S.'])
+                    socket.emit('feedback', ['danger', 'voce precisa estar logado para puxar o state atual da simulação'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -1741,7 +1727,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
              
             }
                 else{
-                    socket.emit('feedback', ['danger','voce precisa estar logado para aumentar o numero de P.A.S.'])
+                    socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -1837,7 +1823,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
              
             }
                 else{
-                    socket.emit('feedback', ['danger','voce precisa estar logado para alterar a propaganda unitaria'])
+                    socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -1932,7 +1918,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
              
             }
                 else{
-                    socket.emit('feedback', ['danger', 'voce precisa estar logado para aumentar a propaganda'])
+                    socket.emit('feedback', ['danger', 'voce precisa estar logado para puxar o state atual da simulação'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -1945,7 +1931,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     socket.emit('feedback', ['success', 'Situação dos seus postos avançados de servilo: '+resp])  
             }
                 else{
-                    socket.emit('feedback', ['danger', 'voce precisa estar logado para checar sues P.A.S.'])
+                    socket.emit('feedback', ['danger', 'voce precisa estar logado para puxar o state atual da simulação'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -2005,7 +1991,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
              
             }
                 else{
-                    socket.emit('feedback', ['danger','voce precisa estar logado para alterar a comissao'])
+                    socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -2090,7 +2076,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
 
                 }
                 else{
-                    socket.emit('feedback', ['danger','voce precisa estar logado para ativar um serviço'])
+                    socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -2212,7 +2198,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     //console.log(user.taokeys)
                     }
                     else{
-                        socket.emit('feedback', ['danger','voce precisa estar logado para comprar insumos'])
+                        socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
                     }
             }) 
             .catch((err) => { console.log('falha na comunicacao com o banco de dados para o ' +socket.id+ " - " + err)
@@ -2317,7 +2303,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     //console.log(user.taokeys)
                     }
                     else{
-                        socket.emit('feedback', ['danger','voce precisa estar logado para realizar pesquisas'])
+                        socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
                     }
             }) 
             .catch(() => { console.log('falha na comunicacao com o banco de dados para o ' +socket.id)
@@ -2421,7 +2407,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     //console.log(user.taokeys)
                     }
                     else{
-                        socket.emit('feedback', ['danger','voce precisa estar logado para realizar pesquisas'])
+                        socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
                     }
             }) 
             .catch(() => { console.log('falha na comunicacao com o banco de dados para o ' +socket.id)
@@ -2625,7 +2611,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     //console.log(user.taokeys)
                     }
                     else{
-                        socket.emit('feedback', ['danger','voce precisa estar logado para realizar pesquisas'])
+                        socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
                     }
             }) 
             .catch(() => { console.log('falha na comunicacao com o banco de dados para o ' +socket.id)
@@ -2730,70 +2716,12 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     //console.log(user.taokeys)
                     }
                     else{
-                        socket.emit('feedback',['danger','voce precisa estar estar logado para realizar pesquisas'])
+                        socket.emit('feedback',['danger','voce precisa estar logado para puxar o state atual da simulação'])
                     }
             }) 
             .catch(() => { console.log('falha na comunicacao com o banco de dados para o ' + socket.id)
     })
     }) //OK BALAN OK DRE OK
-    socket.on('receber-faturamento', () => { 
-        Aluno.findOne({sockid: socket.id, temporario: 1})
-            .then((userx) => {
-                let faturamento = 0;
-                if(userx !== null){
-                        if(userx['faturamento'] !== 0){
-                            faturamento = userx['faturamento']
-                            userx['faturamento'] = 0; 
-                            userx.save()
-                                .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
-                                .then((user) => {
-                                    socket.emit('feedback', ['success', 'sua cooperativa teve um faturamento de: ' + faturamento])  
-                                    if(user.taokeys == userx.taokeys){
-                                        socket.emit('update', [
-                                            [...user["147"],"147"],
-                                            [...user["148"],"148"],
-                                            [...user["149"],"149"],
-                                            [...user["157"],"157"],
-                                            [...user["158"],"158"],
-                                            [...user["159"],"159"],
-                                            [...user["257"],"257"],
-                                            [...user["258"],"258"],
-                                            [...user["259"],"259"],
-                                            [...user["267"],"267"],
-                                            [...user["268"],"268"],
-                                            [...user["269"],"269"],
-                                            [...user["347"],"347"],
-                                            [...user["348"],"348"],
-                                            [...user["349"],"349"],
-                                            [...user["357"],"357"],
-                                            [...user["358"],"358"],
-                                            [...user["359"],"359"],
-                                            [...user["367"],"367"],
-                                            [...user["368"],"368"],
-                                            [...user["369"],"369"],
-                                            user["taokeys"],
-                                            user["frota"],
-                                            user["promotores"],
-                                            user["comissao"],
-                                            user["distribuidores"],
-                                            user["pas"],
-                                            user["propaganda"],
-                                            user["propagandauni"],
-                                            user["divida"],
-                                            user["turno"]]);
-        
-                                    }                  
-                                })
-                        .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
-                          
-                    }
-                    else{}
-            }
-                else{
-                }
-            })
-            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
-    }) //OK
     socket.on('puxar-balancos',  (turno) => {
 
         Aluno.findOne({sockid: socket.id, temporario: 1})
@@ -2816,7 +2744,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
 
             }
                 else{
-                    socket.emit('feedback', ['danger','voce precisa estar logado para alterar a comissao'])
+                    socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -2888,7 +2816,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
         Data.findOne({sockid: socket.id})
             .then((ll) => {
                 if(ll == null){
-                    socket.emit('feedback', ['danger','voce esta desconectado'])
+                    socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
                 }
                 else{
                     if(ll.turno == 0){
@@ -2914,6 +2842,8 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
         Data.findOne({sockid: socket.id})
             .then((adm) => {
         if(adm !== null){
+        if(adm.iniciado == 1){
+        adm.finalizado = 1
         adm.ativo = 0; //congela a data base da instancia para os jogadores nao conseguirem altera-la enquanto o faturamento é efetuado
         adm.turno = adm.turno + 1 //contabilia a passagem de turno
         adm.save()
@@ -3180,6 +3110,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         depreciacao_e_amortizacao: users[i].dre.depreciacao_e_amortizacao,
                         ir: users[i].dre.ir
                     }  
+                    
 
                     let uso_frota = 0;
 
@@ -3376,7 +3307,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                         pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
                                         frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
                                         depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
-                                    },
+                                    }
                                 },
                             },
                             passivo: {
@@ -7286,13 +7217,17 @@ for(let o = 0; o < index.length; o++){ //ATUALIZA o estado de cada serviço (se 
                         .then(() => {console.log(users[i]['cooperativa'] + ' Teve seu faturamento processado com sucesso.')})
                         .catch((err) => { console.log('Erro ao salvar os FATURAMENTOS processados. Motivo ==> ' + err)})
                 }
+                sockets.emit('final-turno')
 
             })
             .catch((err) => {console.log('erro n 708 =>' + err + ' .id:' + socket.id)})
           // \/ essa parte de baixo calcula o resultado das pesquisas para serem mostradas no proximo turno mas CUIDADO porque esse bloco debaixo e o e cima rodarao simultaneamente do jeito q estra (precisa botar .then(() = > {logo qnd terminar esse logica botar ela antes do  botar .save() de cim botar a ;)})
             })
+        
         }
-    else{socket.emit('feedback', ['danger',"é necessario reconectar-se ao simulador para efetuar essa operacao"])}
+        else{socket.emit('feedback', ['warning', 'para finalizar o turno antes voce precisa inicia-lo'])}
+        }
+    else{socket.emit('feedback', ['danger',"voce precisa estar logado para puxar o state atual da simulação"])}
             })
             .catch((err) => { console.log(err) }) 
     }) //100% fatura sendo gerado mas falta coletar os dados para os demonstrativos BALAN Ok DRE OK
@@ -7300,7 +7235,7 @@ for(let o = 0; o < index.length; o++){ //ATUALIZA o estado de cada serviço (se 
         Data.findOne({sockid: socket.id})
             .then((pesquisas) => {
                 if(pesquisas !== null){
-                   
+                if(pesquisas.finalizado == 1){
                 Aluno.find({ativo: 1, instancia: pesquisas.instancia, temporario: 0})
                     .then((users) => {
 
@@ -7330,6 +7265,7 @@ for(let o = 0; o < index.length; o++){ //ATUALIZA o estado de cada serviço (se 
                         pesquisas['participacao_modelos'] = part
                         pesquisas['total_distribuidores'] = tdis
                         
+                        pesquisas.iniciado = 1
                         pesquisas.ativo = 1
 
                         pesquisas.save()
@@ -7438,8 +7374,10 @@ for(let o = 0; o < index.length; o++){ //ATUALIZA o estado de cada serviço (se 
                         
                         //
                 }
+                else{socket.emit('feedback', ['warning', 'para iniciar um novo turno voce precisa antes finalizar o atual'])}
+                }
                 else{
-                    socket.emit('feedback', ['danger','necessário reconectar-se ao simulador para realizar essa operação'])
+                    socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
                 }   
 
     })
@@ -7448,7 +7386,7 @@ for(let o = 0; o < index.length; o++){ //ATUALIZA o estado de cada serviço (se 
     socket.on('puxar-tds-states', () => {
         Data.findOne({sockid: socket.id})
             .then((data) => { 
-
+            if(data !== undefined){
             Aluno.find({instancia: data.instancia, temporario: 0, ativo: 1, backup: 0})
                 .then((userxs) => {
                 let resp = []
@@ -7494,6 +7432,8 @@ for(let o = 0; o < index.length; o++){ //ATUALIZA o estado de cada serviço (se 
                 
                 })
                 .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
+            }
+            else{socket.emit('feedback', ['danger', 'voce precisa estar logado para puxar o state atual da simulação'])}
 
             })
             .catch((err) => { console.log(err) })
@@ -7504,7 +7444,7 @@ for(let o = 0; o < index.length; o++){ //ATUALIZA o estado de cada serviço (se 
             .then((data) => {
 
         
-                        
+                if(data !== undefined){
                  Aluno.findOne({ cooperativa: cooperativa, backup: 1, instancia: data.instancia, turno: turno })                 
                     .then((balancos) => {
                                     
@@ -7517,7 +7457,10 @@ for(let o = 0; o < index.length; o++){ //ATUALIZA o estado de cada serviço (se 
                                                       
                     })
                     .catch((err) => {console.log(err)})
-                          
+                }
+                else{
+                    socket.emit('feedback', ['danger', 'voce precisa estar logado para puxar o state atual da simulação'])
+                }
 
             
             })

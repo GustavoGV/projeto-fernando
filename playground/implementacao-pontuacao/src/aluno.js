@@ -67,7 +67,9 @@ const DataSchema = new Schema({
     oferta_mercado: Number,
     total_distribuidores: Number,
     turno: Number,
-    CBG_news: Object
+    CBG_news: Object,
+    iniciado: Number,
+    finalizado: Number
 
 
 })
