@@ -2763,7 +2763,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 Data.findOne({login_adm: creden[0]})
                                     .then((userL) => {
                                         if(userL == null){
-                                            let jogo = new Data({login_adm: creden[0], senha_adm: creden[1], instancia: creden[2], senha_instancia: creden[3], turno: 0, oferta_mercado: 100000})
+                                            let jogo = new Data({login_adm: creden[0], iniciado: 1, senha_adm: creden[1], instancia: creden[2], senha_instancia: creden[3], turno: 0, oferta_mercado: 800000})
                                             jogo.save()
                                                 .then(() => {
                                                     console.log('>>> Instancia: ' + creden[2] + ' registrada com sucesso')    
@@ -6752,7 +6752,7 @@ for(let o = 0; o < index.length; o++){ //ATUALIZA o estado de cada serviço (se 
                             }
                         }
                         else{
-                            users[i].taokeys = users[i].taokeys - (((uso_frota-j)/2000)-frota_soma)*60 //desconta o valor gasto com frota terceirizada
+                            users[i].taokeys = users[i].taokeys - (((uso_frota)/2000)-frota_soma)*60 //desconta o valor gasto com frota terceirizada
                             users[i].balanco_patrimonial = {
                                 ativo: {
                                     circulante: {
