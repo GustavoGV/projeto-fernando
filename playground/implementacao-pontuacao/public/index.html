@@ -667,6 +667,10 @@
             socket.on('login-negado', (cre) => {
                 alert('login negado para tentativa de conexao com '+cre)
             })
+            socket.on('tds-states', (cre) => {
+                alert(cre)
+                console.log(cre)
+            })
             socket.on('feedback', (motivo) => {
                 alert(motivo[1])
             })
