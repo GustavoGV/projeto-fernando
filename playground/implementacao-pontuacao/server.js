@@ -7386,7 +7386,7 @@ for(let o = 0; o < index.length; o++){ //ATUALIZA o estado de cada serviço (se 
     socket.on('puxar-tds-states', () => {
         Data.findOne({sockid: socket.id})
             .then((data) => { 
-            if(data !== undefined){
+            if(data !== null){
             Aluno.find({instancia: data.instancia, temporario: 0, ativo: 1, backup: 0})
                 .then((userxs) => {
                 let resp = []
