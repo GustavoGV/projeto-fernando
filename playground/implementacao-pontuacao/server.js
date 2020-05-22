@@ -149,7 +149,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     console.log('>>registro negado: já existe cooperativa com este nome');
                     socket.emit('feedback', ['danger', 'ja existe uma cooperativa com esse nome na instancia selecionada'])}
                 else{
-                    let jogador = new Aluno({ sockid: socket.id, backup: 0, temporario: 1, instancia: creden[2], npesquisas: 1, turno: 0, scoremod: 0, scorepreco: [0,0], propaganda: 1, propagandauni: 1, faturamento: 0, ativo: 1, taokeys: 18720000, divida: [0,0,0], comissao: 0.05, frota: [10,0,0,0,0,0,0,0,0,0,0,0], cooperativa: creden[0], pas: 30, pas1:0, pas2:0, distribuidores: 640, promotores: 40, senha: creden[1], 
+                    let jogador = new Aluno({ sockid: socket.id, backup: 0, temporario: 1, instancia: creden[2], npesquisas: 1, turno: 0, scoremod: 0, scorepreco: [0,0], propaganda: 1, propagandauni: 1, faturamento: 0, ativo: 1, taokeys: 1872000, divida: [0,0,0], comissao: 0.05, frota: [10,0,0,0,0,0,0,0,0,0,0,0], cooperativa: creden[0], pas: 30, pas1:0, pas2:0, distribuidores: 640, promotores: 40, senha: creden[1], 
                         147:[985,1,288,600,300,0,0,0],
                         159:[0,0,396,0,0,0,0,0],
                         149:[0,0,360,0,0,0,0,0],
@@ -174,7 +174,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         balanco_patrimonial: {
                             ativo: {
                                 circulante: {
-                                    caixa: 18720000,
+                                    caixa: 1872000,
                                     estoque: 288*985,
                                     contas_a_receber: 0
 
@@ -191,7 +191,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 contas_a_pagar: 0
                             },
                             patrimonio_liquido: {
-                                capital_social: 18720000+288*985+10*57600,
+                                capital_social: 1872000+288*985+10*57600,
                                 lucros_acumulados: 0
                             }
                         },
@@ -222,7 +222,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             .then((user) => { 
                                 if(user !== null){
 
-                                    let jogadorR = new Aluno({ sockid: "11994729653", backup: 0, temporario: 0, instancia: creden[2], npesquisas: 1, turno: 0, scoremod: 0, scorepreco: [0,0], propaganda: 1, propagandauni: 1, faturamento: 0, ativo: 1, taokeys: 18720000, divida: [0,0,0], comissao: 0.05, frota: [10,0,0,0,0,0,0,0,0,0,0,0], cooperativa: creden[0], pas: 30, pas1:0, pas2:0, distribuidores: 640, promotores: 40, senha: creden[1], 
+                                    let jogadorR = new Aluno({ sockid: "11994729653", backup: 0, temporario: 0, instancia: creden[2], npesquisas: 1, turno: 0, scoremod: 0, scorepreco: [0,0], propaganda: 1, propagandauni: 1, faturamento: 0, ativo: 1, taokeys: 1872000, divida: [0,0,0], comissao: 0.05, frota: [10,0,0,0,0,0,0,0,0,0,0,0], cooperativa: creden[0], pas: 30, pas1:0, pas2:0, distribuidores: 640, promotores: 40, senha: creden[1], 
                                     147:[985,1,288,600,300,0,0,0],
                                     159:[0,0,396,0,0,0,0,0],
                                     149:[0,0,360,0,0,0,0,0],
@@ -247,7 +247,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                     balanco_patrimonial: {
                                         ativo: {
                                             circulante: {
-                                                caixa: 18720000,
+                                                caixa: 1872000,
                                                 estoque: 288*985,
                                                 contas_a_receber: 0
             
@@ -264,7 +264,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                             contas_a_pagar: 0
                                         },
                                         patrimonio_liquido: {
-                                            capital_social: 18720000+288*985+10*57600,
+                                            capital_social: 1872000+288*985+10*57600,
                                             lucros_acumulados: 0
                                         }
                                     },
@@ -2844,6 +2844,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
         if(adm !== null){
         if(adm.iniciado == 1){
         adm.finalizado = 1
+        adm.iniciado = 0
         adm.ativo = 0; //congela a data base da instancia para os jogadores nao conseguirem altera-la enquanto o faturamento é efetuado
         adm.turno = adm.turno + 1 //contabilia a passagem de turno
         adm.save()
@@ -3079,7 +3080,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     users[i].balanco_patrimonial = { //despesas regulares com PROMOTORES, DISTRIBUIDORES, PAS e despesas de vendas (comissão)
                         ativo: {
                             circulante: {
-                                caixa: users[i].balanco_patrimonial.ativo.circulante.caixa - users[i]['promotores']*2160 - users[i]['distribuidores']*2160 - (users[i]['pas'])*2160 - users[i]['faturamento']*users[i]['comissao'],
+                                caixa: users[i].balanco_patrimonial.ativo.circulante.caixa - users[i]['promotores']*2160 - users[i]['distribuidores']*2160 - users[i]['pas']*2160 - users[i]['faturamento']*users[i]['comissao'],
                                 estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
                                 contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber
 
@@ -3109,15 +3110,22 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         despesas_financeiras: users[i].dre.despesas_financeiras,
                         depreciacao_e_amortizacao: users[i].dre.depreciacao_e_amortizacao,
                         ir: users[i].dre.ir
-                    }  
+
+                    }
+                    console.log("users[i]['faturamento']*users[i]['comissao']: " + users[i]['faturamento']*users[i]['comissao'])
+                    console.log("users[i]['promotores']*2160 + users[i]['distribuidores']*2160 + (users[i]['pas'])*2160 + users[i]['faturamento']*users[i]['comissao']: " + (users[i]['promotores']*2160 + users[i]['distribuidores']*2160 + (users[i]['pas'])*2160 + users[i]['faturamento']*users[i]['comissao']))
+                    users[i].taokeys = users[i].taokeys - users[i]['promotores']*2160
+                    users[i].taokeys = users[i].taokeys - users[i]['faturamento']*users[i]['comissao']
+                    users[i].taokeys = users[i].taokeys - users[i]['distribuidores']*2160
                     
 
                     let uso_frota = 0;
-
+                    
                     users[i].set('147', [users[i]['147'][0], users[i]['147'][1], users[i]['147'][2], users[i]['147'][3], users[i]['147'][4], users[i]['147'][5], 0, users[i]['147'][7]])
                     if(users[i]['147'][4] > 0){
                         //console.log('----------> antes (do recebimento de contas a receber): ' + users[i].taokeys)
                         users[i].taokeys = users[i].taokeys + users[i]['147'][7] //recebendo contas a receber
+
                         users[i].balanco_patrimonial = {
                             ativo: {
                                 circulante: {
@@ -3142,12 +3150,14 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
                             }
                         }
+                        
                         //console.log('----------> depois (do recebimento de contas a receber): ' + users[i].taokeys)
-                        users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['147'][4]*(users[i]['147'][3] - users[i]['147'][2]) // pega a razao do qnt ele vendeu pelo qnt pretendia dai multiplica qnt q pretendia vender de cada servvico e faz vezes o precco - o custo (mas aqui esta recebendo td a grana de uma vez (nada fiado))
+                        users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['147'][4]*(users[i]['147'][3]) - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['147'][4]*users[i]['147'][2] // pega a razao do qnt ele vendeu pelo qnt pretendia dai multiplica qnt q pretendia vender de cada servvico e faz vezes o precco - o custo (mas aqui esta recebendo td a grana de uma vez (nada fiado))
                         let array_insu = [(users[i]['147'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['147'][4]), users[i]['147'][1], users[i]['147'][2], users[i]['147'][3], users[i]['147'][4],(users[i]['147'][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['147'][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['147'][4]*users[i]['147'][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['147'][4]*(users[i]['147'][3])]
                         //(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['147'][4]*users[i]['147'][3] => igual ao faturamento obtido pelo jogador nesse serviço especifico
                         users[i].set('147', array_insu)
                         //users[i].balanco_patrimonial.contas_a_receber = users[i]['147'][7]
+                        
                         users[i].balanco_patrimonial = {
                             ativo: {
                                 circulante: {
@@ -3172,6 +3182,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['147'][4]*(users[i]['147'][2]) + users[i]['147'][7] + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['147'][4]*(users[i]['147'][3])
                             }
                         }
+                        
                         users[i].dre = {
                             receita: users[i].dre.receita + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['147'][4]*(users[i]['147'][3]),
                             cmv: users[i].dre.cmv + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['147'][4]*(users[i]['147'][2]),
@@ -3184,6 +3195,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         //users[i]['147'][0] = users[i]['147'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['147'][4]
                         if(users[i]['147'][0] >= 0){
                             users[i].taokeys = users[i].taokeys - users[i]['147'][0]*36
+
                             users[i].balanco_patrimonial = {
                                 ativo: {
                                     circulante: {
@@ -3208,6 +3220,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                     lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - users[i]['147'][0]*36
                                 }
                             }
+                            
                             users[i].dre = {
                                 receita: users[i].dre.receita,
                                 cmv: users[i].dre.cmv + users[i]['147'][0]*36,
@@ -3221,6 +3234,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         else{
                             users[i].taokeys = users[i].taokeys + users[i]['147'][0]*users[i]['147'][2]*1.2
                             let gamb = users[i].balanco_patrimonial.ativo.circulante.estoque
+                            
                             users[i].balanco_patrimonial = { //MODELO
                                 ativo: {
                                     circulante: {
@@ -3245,6 +3259,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                     lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados + users[i]['147'][0]*users[i]['147'][2]*1.2 + (-1)*(users[i].balanco_patrimonial.ativo.circulante.estoque)
                                 }
                             }
+                            
                             users[i].dre = {
                                 receita: users[i].dre.receita,
                                 cmv: users[i].dre.cmv + (-1)*users[i]['147'][0]*users[i]['147'][2]*1.2 + gamb,
@@ -3290,6 +3305,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         users[i].set('147', array_novo)
 
                         }
+                        /*
 
                       users[i].set('159', [users[i]['159'][0], users[i]['159'][1], users[i]['159'][2], users[i]['159'][3], users[i]['159'][4], users[i]['159'][5], 0, users[i]['159'][7]])
                     if(users[i]['159'][4] > 0){
@@ -6646,6 +6662,8 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         let array_novo = [users[i]['369'][0], users[i]['369'][1], users[i]['369'][2], users[i]['369'][3], users[i]['369'][4], users[i]['369'][5], users[i]['369'][6], 0]
                         users[i].set('369', array_novo)
                         }
+                        */
+                        
                     //
                     
                     users[i]['scoremod'] = 1
@@ -6788,10 +6806,7 @@ for(let o = 0; o < index.length; o++){ //ATUALIZA o estado de cada serviço (se 
                             }
                         }
                     }
-                    
-                    if(users[i]['promotores'] > 0){
-                        users[i].taokeys = users[i].taokeys - users[i]['promotores']*2160
-                    }  
+                      
                 }
                     
                     // -_-_-_-
@@ -7236,6 +7251,7 @@ for(let o = 0; o < index.length; o++){ //ATUALIZA o estado de cada serviço (se 
             .then((pesquisas) => {
                 if(pesquisas !== null){
                 if(pesquisas.finalizado == 1){
+                    pesquisas.finalizado = 0
                 Aluno.find({ativo: 1, instancia: pesquisas.instancia, temporario: 0})
                     .then((users) => {
 
