@@ -19,6 +19,7 @@ function App() {
 
   const notificationAlert = useRef(null);
   const history = useHistory()
+  console.log("history", history);
 
   useEffect(()=>{
     socket.on('feedback', feedback => {
@@ -38,7 +39,12 @@ function App() {
         closeButton: false,
       }
       if(feedback[0]==="danger" && feedback[1]==="voce precisa estar logado para puxar o state atual da simulação"){
-        history.push('/')
+        if(history.location.pathname.includes('admin')){
+          history.push('/admin/login');
+        }
+        else{
+          history.push('/');
+        }
       }
       notificationAlert.current.notificationAlert(options);
     })
