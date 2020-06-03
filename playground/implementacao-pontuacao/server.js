@@ -221,7 +221,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             .then(Aluno.find({ cooperativa: creden[0], temporario: 1, instancia: creden[2]}))
                             .then((user) => { 
                                 if(user !== null){
-
+                                    console.log('usurario: ' + jogador.cooperativa + ' registrado com sucesso')
                                     let jogadorR = new Aluno({ sockid: "11994729653", backup: 0, temporario: 0, instancia: creden[2], npesquisas: 1, turno: 0, scoremod: 0, scorepreco: [0,0], propaganda: 1, propagandauni: 1, faturamento: 0, ativo: 1, taokeys: 1872000, divida: [0,0,0], comissao: 0.05, frota: [10,0,0,0,0,0,0,0,0,0,0,0], cooperativa: creden[0], pas: 30, pas1:0, pas2:0, distribuidores: 640, promotores: 40, senha: creden[1], 
                                     147:[985,1,288,600,300,0,0,0],
                                     159:[0,0,396,0,0,0,0,0],
@@ -7514,8 +7514,8 @@ for(let o = 0; o < index.length; o++){ //ATUALIZA o estado de cada serviço (se 
 
 })
 // PARA TESTES PROFESSOR PRETENDE TER INSTANCIAS COM 8 PESSOAS NA SITUAÇAO IDEAL (basear teste com o parametro 8)
-server.listen(3000, () => {
-    console.log(`--> Server escutando porta: 3000`)
+server.listen(80, () => {
+    console.log(`--> Server escutando porta: 80`)
 })
 
 
