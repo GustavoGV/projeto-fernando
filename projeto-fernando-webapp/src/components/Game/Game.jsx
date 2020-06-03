@@ -21,7 +21,7 @@ import EventNoteIcon from '@material-ui/icons/EventNote';
 import DescriptionIcon from '@material-ui/icons/Description';
 import ListIcon from '@material-ui/icons/List';
 import CachedIcon from '@material-ui/icons/Cached';
-
+import logo from '../../assets/logo.png';
 
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -135,7 +135,7 @@ function Game(props) {
   const drawer = (
     <div>
       <div className={classes.toolbar}>
-        <h1 className={classes.h1}>Simulation 2 Learn</h1>
+        <h1 className={classes.h1}><img src={logo} alt="Desafios de Gestão"/></h1>
       </div>
       <Divider />
       <List>

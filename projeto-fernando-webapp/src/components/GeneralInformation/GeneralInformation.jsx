@@ -114,9 +114,11 @@ function GeneralInformation(props){
             <br/>
             <h4>{props.gameData[27]}</h4>
             <br/>
-            <Button
-              onClick={()=>setModal(true)}
-            >Aumentar</Button>
+            {props.isAdmin
+            ?null
+            :(<Button
+                onClick={()=>setModal(true)}
+              >Aumentar</Button>)}
           </Paper>
         </Grid>
         <Grid item xs={12} sm={4} md={2}>
@@ -126,6 +128,7 @@ function GeneralInformation(props){
             <h4>{calcRevenue()}</h4>
           </Paper>
         </Grid>
+        {props.children ? (props.children) : null}
       </Grid>
       
     </>
