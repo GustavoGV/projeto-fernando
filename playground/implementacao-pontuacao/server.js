@@ -550,7 +550,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     if(userx[velho][1] == 1 && userx[novo][1] !== 3){
                     if(userx[novo][1] !== 1){
                     if(userx['taokeys'] >= userx[velho][0]*30){
-                        if(userx[novo][2] - userx[velho][2] > 0 && userx['taokeys'] >= qnt*30 + qnt*(userx[novo][2] - userx[velho][2])){
+                        if(userx[novo][2] - userx[velho][2] > 0 && userx['taokeys'] >= userx[velho][0]*30 + userx[velho][0]*(userx[novo][2] - userx[velho][2])){
 
                         
                         userx.balanco_patrimonial = {
@@ -727,7 +727,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
                     }
 
-                    if(userx[novo][2] - userx[velho][2] > 0 && userx['taokeys'] < qnt*30 + qnt*(userx[novo][2] - userx[velho][2])){
+                    if(userx[novo][2] - userx[velho][2] > 0 && userx['taokeys'] < userx[velho][0]*30 + userx[velho][0]*(userx[novo][2] - userx[velho][2])){
                         socket.emit('feedback', ['warning', 'falta caixa para realizar essa operacao'])
                     }
                     }
@@ -903,7 +903,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                 Data.findOne({instancia: usert.instancia})
                     .then((check) => {
                         if(check.ativo == 1){
-                Aluno.findOne({cooperativa: cooperativa.usert, instancia: usert.instancia, temporario: 0})
+                Aluno.findOne({cooperativa: usert.cooperativa, instancia: usert.instancia, temporario: 0})
                     .then((userdef) => {
                         userdef.set('npesquisas', usert.npesquisas)
                         userdef.set('turno', usert.turno)
@@ -929,9 +929,9 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 },
                                 n_circulante: {
                                     imobilizado: {
-                                        pas: usert.balanco_patrimonial.n_circulante.imobilizado.pas,
-                                        frota: usert.balanco_patrimonial.n_circulante.imobilizado.frota,
-                                        depreciacao_frota: usert.balanco_patrimonial.n_circulante.imobilizado.depreciacao_frota
+                                        pas: usert.balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: usert.balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: usert.balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
                                     },
                                 },
                             },
@@ -946,7 +946,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         userdef.dre = {
                             receita: usert.dre.receita,
                             cmv: usert.dre.cmv,
-                            despesas_administrativas: usert.dre.despesas_administrativas + qnt,
+                            despesas_administrativas: usert.dre.despesas_administrativas,
                             despesas_vendas: usert.dre.despesas_vendas,
                             despesas_financeiras: usert.dre.despesas_financeiras,
                             depreciacao_e_amortizacao: usert.dre.depreciacao_e_amortizacao,
@@ -1817,7 +1817,10 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
                        
                     }
-                    else{socket.emit('feedback', ['warning','apenas valores positivos'])}
+                    else{
+                        if(userx.taokeys >= qnt){socket.emit('feedback', ['warning','apenas valores positivos'])}
+                        else{socket.emit('feedback', ['warning','sua cooperativa nao possue caixa o suficiente'])}
+                }
                     
                 
              
@@ -2585,16 +2588,16 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                                 [...userx["367"],"367"],
                                                 [...userx["368"],"368"],
                                                 [...userx["369"],"369"],
-                                                user["taokeys"],
-                                                user["frota"],
-                                                user["promotores"],
-                                                user["comissao"],
-                                                user["distribuidores"],
-                                                user["pas"],
-                                                user["propaganda"],
-                                                user["propagandauni"],
-                                                user["divida"],
-                                                user["turno"]]);
+                                                userx["taokeys"],
+                                                userx["frota"],
+                                                userx["promotores"],
+                                                userx["comissao"],
+                                                userx["distribuidores"],
+                                                userx["pas"],
+                                                userx["propaganda"],
+                                                userx["propagandauni"],
+                                                userx["divida"],
+                                                userx["turno"]]);
                  }
                  else{
                      socket.emit('feedback', ['danger', 'voce nao pode realizar pesquisas ate que o administrador inicie o turno'])
