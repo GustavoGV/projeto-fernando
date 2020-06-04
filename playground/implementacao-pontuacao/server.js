@@ -65,6 +65,8 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
     socket.on('limpar-data', () => {
         mongoose.connection.collections.datas.drop()
     })
+    socket.on('teste', () => {console.log('teste OK: ' + socket.id)
+    })
     socket.on('login-client', (creden) => {
             Aluno.findOne({sockid: socket.id, temporario: 1}) // se n achar retorna Null e se vc tentar fazer essa pesquisa com um String sendo q no Schema ta como Number vai ir pro Catch ou vai pro Catch tb se n conseguir se conectar com o MongoDB
             .then((ll) => {
