@@ -60,8 +60,9 @@ export default function ServicesContainer() {
   function generateRounds(){
     const currentRound = game[30] ? game[30] : 0;
     let rounds = []
-    for(var i=1; i===currentRound-1; i++){
-      rounds.push(i);
+    let i;
+    for(i=1; i<currentRound; i++){
+      rounds.push({value:i, label:i});
     }
     return rounds
   }
@@ -78,6 +79,7 @@ export default function ServicesContainer() {
       socket.off('update');
     }});
     socket.on('balancos', balanco => {
+      console.log("balancos", balanco)
       setDownloadInfo(balanco)
     });
   },[])
@@ -130,7 +132,7 @@ export default function ServicesContainer() {
             defaultValue={game[30] ? game[30]-1 : 0}
             options={generateRounds()}
             onChange={event=>{
-              socket.emit('puxar-balancos-adm', [event])
+              socket.emit('puxar-balancos', event.value);
             }}
           />
           <CsvDownload className={classes.csvButton} data={downloadInfo}>

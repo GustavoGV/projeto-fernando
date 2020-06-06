@@ -24,6 +24,9 @@ const useStyles = makeStyles(theme => ({
   button: {
     marginLeft:'auto',
     marginRight:'auto',
+  },
+  dialog:{
+    height:'400px',
   }
 }));
 
@@ -61,7 +64,7 @@ const Service = (props) => {
   <div>
     <Dialog open={changeServiceModal} aria-labelledby="simple-dialog-title" onClose={()=>setChangeServiceModal(!changeServiceModal)}>
       <DialogTitle id="simple-dialog-title">Escolha a sua Simulação</DialogTitle>
-      <DialogContent>
+      <DialogContent className={classes.dialog}>
       <Select
         defaultValue={allOptions[0]}
         options={allOptions}

@@ -15,6 +15,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import MailIcon from '@material-ui/icons/Mail';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import SaveIcon from '@material-ui/icons/Save';
+import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
 import MenuIcon from '@material-ui/icons/Menu';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import EventNoteIcon from '@material-ui/icons/EventNote';
@@ -78,7 +79,7 @@ const useStyles = makeStyles(theme => ({
     color: 'white',
   },
   // necessary for content to be below app bar
-  toolbar: theme.mixins.toolbar,
+  //toolbar: theme.mixins.toolbar,
   drawerPaper: {
     width: drawerWidth,
   },
@@ -139,6 +140,12 @@ function Game(props) {
       </div>
       <Divider />
       <List>
+          <Link to='/game/inputs'>
+            <ListItem button>
+              <ListItemIcon><PlayCircleOutlineIcon/></ListItemIcon>
+              <ListItemText primary={"Simulação"} />
+            </ListItem>
+          </Link>
         {sidebarComponents.map((sidebarComponent, index) => (
           <Link to={sidebarComponent.path} key={index}>
             <ListItem button key={sidebarComponent.label}>
