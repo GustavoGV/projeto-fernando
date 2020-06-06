@@ -75,6 +75,7 @@ function GeneralInformation(props){
   const [newDistributors, setNewDistributors] = useState();
 
   function calcRevenue(){
+    console.log(">>>>>>>>>>>state do jogo:", props.gameData);
     let revenue = 0;
     props.gameData.slice(0,21).filter(service=>service[1]===1).forEach(service=>{
       revenue += service[3] * service[4]
@@ -176,16 +177,10 @@ function GeneralInformation(props){
             placeholder='Comissão'
           />
           <Button  onClick={()=>{
-            socket.emit('aumentar-comissao', newComission);
+            socket.emit('comissao', newComission);
             setComissionModal(false);
           }}>
-            Aumentar
-          </Button>
-          <Button onClick={()=>{
-            socket.emit('diminuir-comissao', newComission);
-            setComissionModal(false);
-          }}>
-            Diminuir
+            Alterar
           </Button>
         </DialogContent>
       </Dialog>
