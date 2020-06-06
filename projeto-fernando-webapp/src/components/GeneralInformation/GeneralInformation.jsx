@@ -175,7 +175,7 @@ function GeneralInformation(props){
             onChange={(event)=>{setNewComission(event.target.value)}}
             placeholder='Comissão'
           />
-          <Button onClick={()=>{
+          <Button  onClick={()=>{
             socket.emit('aumentar-comissao', newComission);
             setComissionModal(false);
           }}>
@@ -248,6 +248,7 @@ function GeneralInformation(props){
             {props.isAdmin
             ?null
             :(<Button
+                variant="contained" color="primary"
                 onClick={()=>setFleetModal(true)}
               >Alterar</Button>)}
           </Paper>
@@ -261,6 +262,7 @@ function GeneralInformation(props){
             {props.isAdmin
             ?null
             :(<Button
+                variant="contained" color="primary"
                 onClick={()=>setPromotersModal(true)}
               >Alterar</Button>)}
           </Paper>
@@ -274,6 +276,7 @@ function GeneralInformation(props){
             {props.isAdmin
             ?null
             :(<Button
+                variant="contained" color="primary"
                 onClick={()=>setAdsModal(true)}
               >Alterar</Button>)}
           </Paper>
@@ -294,6 +297,7 @@ function GeneralInformation(props){
             {props.isAdmin
             ?null
             :(<Button
+                variant="contained" color="primary"
                 onClick={()=>setComissionModal(true)}
               >Alterar</Button>)}
           </Paper>
@@ -307,6 +311,7 @@ function GeneralInformation(props){
             {props.isAdmin
             ?null
             :(<Button
+                variant="contained" color="primary"
                 onClick={()=>setPasModal(true)}
               >Alterar</Button>)}
           </Paper>
@@ -320,11 +325,12 @@ function GeneralInformation(props){
             {props.isAdmin
             ?null
             :(<Button
+                variant="contained" color="primary"
                 onClick={()=>setDistributorsModal(true)}
               >Alterar</Button>)}
           </Paper>
         </Grid>
-        <Grid item xs={12} sm={4} md={2}>
+        <Grid item xs={12} sm={8} md={4}>
           <Paper className={classes.paper}>
             <h3>Dívida / Empréstimo</h3>
             <br/>
@@ -333,13 +339,21 @@ function GeneralInformation(props){
             {props.isAdmin
             ?null
             :(<Button
+                variant="contained" color="primary"
                 onClick={()=>setDebtModal(true)}
               >Quitar</Button>)}
           </Paper>
         </Grid>
+        <Grid item xs={12} sm={4} md={2}>
+          <Paper className={classes.paper}>
+            <h3>Turno</h3>
+            <br/>
+            <h4>{props.gameData[30]?props.gameData[29]:'-'}</h4>
+            <br/>
+          </Paper>
+        </Grid>
         {props.children ? (props.children) : null}
       </Grid>
-      
     </>
   )
 }

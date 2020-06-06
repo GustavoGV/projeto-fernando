@@ -78,7 +78,7 @@ const useStyles = makeStyles(theme => ({
     color: 'white',
   },
   // necessary for content to be below app bar
-  toolbar: theme.mixins.toolbar,
+  //toolbar: theme.mixins.toolbar,
   drawerPaper: {
     width: drawerWidth,
   },
@@ -171,7 +171,7 @@ function Game(props) {
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <AppBar position="fixed" className={classes.appBar}>
+      {/* <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -183,7 +183,7 @@ function Game(props) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap>
-            {/* Desafiosdegestao */}
+            {/* Desafiosdegestao 
           </Typography>
           <SelectRound/>
           <SelectReport/>
@@ -194,7 +194,7 @@ function Game(props) {
             <SaveIcon/>
           </IconButton>
         </Toolbar>
-      </AppBar>
+      </AppBar> */}
       <nav className={classes.drawer} aria-label="mailbox folders">
         {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Hidden smUp implementation="css">
