@@ -98,6 +98,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                                 usert.set('pas2', userdef.pas2)
                                                 usert.set('distribuidores', userdef.distribuidores)
                                                 usert.set('promotores', userdef.promotores)
+                                                usert.set('divida', [userdef["divida"][0],userdef["divida"][1],userdef["divida"][2]])
                                                 //console.log(index)
                                                 
                                                 for(let s = 0; s < index.length; s++){
@@ -936,6 +937,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         userdef.set('pas2', usert.pas2)
                         userdef.set('distribuidores', usert.distribuidores)
                         userdef.set('promotores', usert.promotores)
+                        userdef.set('divida', [usert["divida"][0],usert["divida"][1],usert["divida"][2]])
                         //console.log(index)
 
                         userdef.balanco_patrimonial = {
@@ -1024,6 +1026,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         usert.set('pas2', userdef.pas2)
                         usert.set('distribuidores', userdef.distribuidores)
                         usert.set('promotores', userdef.promotores)
+                        usert.set('divida', [userdef["divida"][0],userdef["divida"][1],userdef["divida"][2]])
                         //console.log(index)
 
                         usert.balanco_patrimonial = {
@@ -1068,6 +1071,38 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         
                         usert.save()
                             .then(() => {
+                                socket.emit('update', [
+                                    [...usert["147"],"147"],
+                                    [...usert["148"],"148"],
+                                    [...usert["149"],"149"],
+                                    [...usert["157"],"157"],
+                                    [...usert["158"],"158"],
+                                    [...usert["159"],"159"],
+                                    [...usert["257"],"257"],
+                                    [...usert["258"],"258"],
+                                    [...usert["259"],"259"],
+                                    [...usert["267"],"267"],
+                                    [...usert["268"],"268"],
+                                    [...usert["269"],"269"],
+                                    [...usert["347"],"347"],
+                                    [...usert["348"],"348"],
+                                    [...usert["349"],"349"],
+                                    [...usert["357"],"357"],
+                                    [...usert["358"],"358"],
+                                    [...usert["359"],"359"],
+                                    [...usert["367"],"367"],
+                                    [...usert["368"],"368"],
+                                    [...usert["369"],"369"],
+                                    usert["taokeys"],
+                                    usert["frota"],
+                                    usert["promotores"],
+                                    usert["comissao"],
+                                    usert["distribuidores"],
+                                    usert["pas"],
+                                    usert["propaganda"],
+                                    usert["propagandauni"],
+                                    (usert["divida"][0]+usert["divida"][1]+usert["divida"][2]),
+                                    usert["turno"]]);
                                 socket.emit('resetado')
                             })
                             .catch((err) => {socket.emit('feedback', ['danger','falha ao salvar os dados no servidor'])})
@@ -4268,6 +4303,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                                 usert.set('distribuidores', users[i].distribuidores)
                                                 usert.set('promotores', users[i].promotores)
                                                 usert.set('faturamento', users[i].faturamento)
+                                                usert.set('divida', [users[i]["divida"][0],users[i]["divida"][1],users[i]["divida"][2]])
                                                 //console.log(index)
                                                 usert.balanco_patrimonial = {
                                                     ativo: {
