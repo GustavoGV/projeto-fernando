@@ -4284,8 +4284,47 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                 }
 
                 
-
+                let resp = []
                 for(let i = 0; i < users.length; i++){
+                
+
+                    resp.push([
+                        [...userxs[i]["147"],"147"],
+                        [...userxs[i]["148"],"148"],
+                        [...userxs[i]["149"],"149"],
+                        [...userxs[i]["157"],"157"],
+                        [...userxs[i]["158"],"158"],
+                        [...userxs[i]["159"],"159"],
+                        [...userxs[i]["257"],"257"],
+                        [...userxs[i]["258"],"258"],
+                        [...userxs[i]["259"],"259"],
+                        [...userxs[i]["267"],"267"],
+                        [...userxs[i]["268"],"268"],
+                        [...userxs[i]["269"],"269"],
+                        [...userxs[i]["347"],"347"],
+                        [...userxs[i]["348"],"348"],
+                        [...userxs[i]["349"],"349"],
+                        [...userxs[i]["357"],"357"],
+                        [...userxs[i]["358"],"358"],
+                        [...userxs[i]["359"],"359"],
+                        [...userxs[i]["367"],"367"],
+                        [...userxs[i]["368"],"368"],
+                        [...userxs[i]["369"],"369"],
+                        userxs[i]["taokeys"],
+                        userxs[i]["frota"],
+                        userxs[i]["promotores"],
+                        userxs[i]["comissao"],
+                        userxs[i]["distribuidores"],
+                        userxs[i]["pas"],
+                        userxs[i]["propaganda"],
+                        userxs[i]["propagandauni"],
+                        userxs[i]["divida"],
+                        userxs[i]["turno"],
+                        userxs[i].cooperativa
+                    ])
+
+                
+                socket.emit('tds-states', resp)
 
                     //
                     Aluno.findOne({cooperativa: users[i].cooperativa, instancia: adm.instancia, temporario: 1, ativo: 1})
