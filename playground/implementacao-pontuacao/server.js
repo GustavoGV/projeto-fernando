@@ -2732,7 +2732,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                                     respostaP = dados['participacao_modelos'][ss]
                                                 }
                                             }
-                                        socket.emit('resposta-pesquisar-participacao-servicos', respostaP)
+                                        socket.emit('resposta-pesquisa', respostaP)
                                         socket.emit('update', [
                                             [...userx["147"],"147"],
                                             [...userx["148"],"148"],
