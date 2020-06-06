@@ -84,7 +84,8 @@ function Research(props) {
 
   return(
     <>
-      {console.log(">>>>>>>>>>>>>>>>>", researchData.researchType)}
+      {console.log("tipo da pesquisa:", researchData.researchType)}
+      {console.log("input da pesquisa:", researchData)}
       <h3>Pesquisas</h3>
       <Form className={classes.form}>
       <Select
@@ -132,7 +133,7 @@ function Research(props) {
         ?(
           <>
             <label>Resultado:</label>
-            {response}
+            {Array.isArray(response)? `${researchData.researchService1}:${response[0]}  ${researchData.researchService2}:${response[1]}` :Math.round(response)}
           </>
         )
         :null
