@@ -44,7 +44,7 @@ const useStyles = makeStyles(theme => ({
     borderRadius:'4px',
   },
   dialog:{
-    height:'200px',
+    height:'400px',
   }
 }));
 
