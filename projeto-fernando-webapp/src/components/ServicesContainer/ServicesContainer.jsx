@@ -13,6 +13,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import CsvDownload from 'react-json-to-csv';
 import Select from 'react-select';
+import { height } from '@material-ui/system';
 
 
 const useStyles = makeStyles(theme => ({
@@ -29,6 +30,21 @@ const useStyles = makeStyles(theme => ({
     marginLeft:'auto',
     marginRight:'auto',
     display:'flex',
+  },
+  csvButton:{
+    margin:'16px',
+    marginLeft:'auto',
+    marginRight:'auto',
+    display:'flex',
+    backgroundColor:'#3f51b5',
+    color:'#fff',
+    borderColor:'transparent',
+    textTransform:'uppercase',
+    padding:'8px',
+    borderRadius:'4px',
+  },
+  dialog:{
+    height:'200px',
   }
 }));
 
@@ -75,6 +91,8 @@ export default function ServicesContainer() {
   }
 
   function generateServicesOptions(){
+    console.log(">>>>>>>>>Game:",game)
+    console.log(">>>>>>>>>Options:",game.slice(0,21).map(service=>service[8]))
     return game.slice(0,21).map(service=>service[8])
   }
 
@@ -84,7 +102,7 @@ export default function ServicesContainer() {
         <DialogTitle>
           Novo Serviço
         </DialogTitle>
-        <DialogContent>
+        <DialogContent className={classes.dialog}>
           <Select
             defaultValue={game[0] ? game[0][8] : ''}
             options={generateServicesOptions()}
@@ -92,7 +110,7 @@ export default function ServicesContainer() {
               setSelectedService(event)
             }}
           />
-          <Button onClick={()=>{socket.emit('ativar-servico', selectedService)}}>
+          <Button variant="contained" color="primary" className={classes.button} onClick={()=>{socket.emit('ativar-servico', selectedService)}}>
             Adicionar Serviço
           </Button>
         </DialogContent>
@@ -109,8 +127,8 @@ export default function ServicesContainer() {
               socket.emit('puxar-balancos-adm', [event])
             }}
           />
-          <CsvDownload data={downloadInfo}>
-            Baixar Balanços
+          <CsvDownload className={classes.csvButton} data={downloadInfo}>
+            Baixar balanços
           </CsvDownload>
         </DialogContent>
       </Dialog>
@@ -128,11 +146,14 @@ export default function ServicesContainer() {
           <Button variant="contained" color="primary" className={classes.button} onClick={()=>setServiceModal(true)}> 
             Novo Serviço
           </Button>
-          <Button variant="contained" color="primary" className={classes.button} onClick={()=>{socket.emit('salvar')}}> 
+          <Button variant="contained" color="primary" className={classes.button} onClick={()=>{setDownloadModal(true)}}> 
             Baixar Balanço
           </Button>
           <Button variant="contained" color="primary" className={classes.button} onClick={()=>{socket.emit('salvar')}}> 
             Salvar
+          </Button>
+          <Button className={classes.button} onClick={()=>{socket.emit('salvar')}}> 
+            Resetar Jogada
           </Button>
         </Grid>
       </Grid>
