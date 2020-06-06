@@ -102,13 +102,13 @@ const Service = (props) => {
       <Input
         onChange={(event)=>{setRoundData({...roundData, volume:event.target.value})}}
         placeholder='Volume'
-        onBlur={()=>{socket.emit('trocar-servico',[props.service[8],roundData.volume])}}
+        onBlur={()=>{socket.emit('alterar-volume',[props.service[8],roundData.volume])}}
       />
       <label className={classes.label}>Alterar Preço</label>
       <Input
         onChange={(event)=>{setRoundData({...roundData, price:event.target.value})}}
         placeholder='Preço'
-        onBlur={()=>{socket.emit('trocar-servico',[props.service[8],roundData.price])}}
+        onBlur={()=>{socket.emit('alterar-preco',[props.service[8],roundData.price])}}
       />
       <Button onClick={()=>setChangeServiceModal(true)}>
         Substituir Serviço
