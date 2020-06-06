@@ -38,7 +38,7 @@ function Research(props) {
   ]
 
   const [researchData, setResearchData] = useState({});
-  const [response, setResponse] = useState()
+  const [response, setResponse] = useState(null)
   const classes = useStyles();
 
   const serviceOptions = generateAllOptions();
@@ -128,7 +128,7 @@ function Research(props) {
       </Button>
 
       {
-        response
+        response !== null
         ?(
           <>
             <label>Resultado:</label>

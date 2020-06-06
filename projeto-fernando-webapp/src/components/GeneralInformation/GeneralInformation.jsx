@@ -343,7 +343,7 @@ function GeneralInformation(props){
           <Paper className={classes.paper}>
             <h3>Turno</h3>
             <br/>
-            <h4>{props.gameData[30]?props.gameData[29]:'-'}</h4>
+            <h4>{props.gameData[30]?props.gameData[30]:'-'}</h4>
             <br/>
           </Paper>
         </Grid>
