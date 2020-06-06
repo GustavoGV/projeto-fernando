@@ -92,45 +92,6 @@ const Service = (props) => {
         placeholder='Investimento'
         onBlur={()=>{socket.emit('propaganda-unitaria', [roundData.unitaryAdsInvestiment])}}
       />
-      <label className={classes.label}>Contratar/Demitir promotores</label> 
-      <Select
-        defaultValue={{value:'contratar', label:'contratar'}}
-        options={[{value:'contratar', label:'contratar'}, {value:'demitir', label:'demitir'}]}
-        onChange={event=>{
-          setRoundData({...roundData, hireOrFire:event.value})}}
-      />     
-      <Input
-        onChange={(event)=>{setRoundData({...roundData, hireOrFirePromoters:event.target.value})}}
-        placeholder='número de promotores'
-        onBlur={()=>{
-          if(roundData.hireOrFire==='contratar'){
-            socket.emit('aumentar-promotores', roundData.hireOrFirePromoters)
-          }
-          else{
-            socket.emit('diminuir-promotores', roundData.hireOrFirePromoters)
-          }
-        }}
-      />
-      <label className={classes.label}>Aumentar/Diminuir a frota de veículos</label>
-      <Select
-        defaultValue={{value:'aumentar', label:'diminuir'}}
-        options={[{value:'aumentar', label:'aumentar'}, {value:'diminuir', label:'diminuir'}]}
-        onChange={event=>{
-          setRoundData({...roundData, incDecVehicles:event.value})
-        }}
-      />   
-      <Input
-        onChange={(event)=>{setRoundData({...roundData, vehiclesToChange:event.target.value})}}
-        placeholder='Veículos'
-        onBlur={()=>{
-          if(roundData.incDecVehicles==='aumentar'){
-            socket.emit('aumentar-frota', roundData.vehiclesToChange)
-          }
-          else{
-            socket.emit('diminuir-frota', roundData.vehiclesToChange)
-          }
-        }}
-      />
       <label className={classes.label}>Alterar Volume</label>
       <Input
         onChange={(event)=>{setRoundData({...roundData, volume:event.target.value})}}
