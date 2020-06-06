@@ -8,6 +8,7 @@ const Data = estrutura[1]
 
 //import { isMainThread } from 'worker_threads'
 import mongoose from 'mongoose'
+import { Socket } from 'dgram'
 
 //import { createCipher } from 'crypto'
 
@@ -1531,7 +1532,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => {
                 if(userx !== null){
-                        if(qnt > 0){
+                        if(qnt > 0 && userx['promotores'] >= qnt){
                             let novaf = userx['promotores'] - qnt
                             userx.set('promotores', novaf) 
                             userx.save()
@@ -1849,7 +1850,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => {
                 if(userx !== null){
-                        if(qnt > 0){
+                        if(qnt > 0 && userx['distribuidores'] >= qnt){
                             let novaf = userx['distribuidores'] - qnt
                             userx.set('distribuidores', novaf) 
                             userx.save()
@@ -1910,7 +1911,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => {
                 if(userx !== null){
-                        if(qnt > 0){
+                        if(qnt > 0 && userx['pas'] >= qnt){
                             let novaf = userx['pas'] - qnt
                             userx.set('pas', novaf) 
                             userx.save()
@@ -1978,6 +1979,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
                                 .then((user) => {
                                     if(user.taokeys == userx.taokeys){
+                                        socket.emit('feedback', ['success', 'ordem de aquisição de PAS realizada para ' + qnt +' postos (entraram em atividade após 2 turnos)'])
                                         socket.emit('update', [
                                             [...user["147"],"147"],
                                             [...user["148"],"148"],
@@ -3032,9 +3034,9 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 .then((balancos) => {
                                     
                                         socket.emit('balancos', { 
-                                            balanco_patrimonial: balancos.balanco_patrimonial,
-                                            dre: balancos.dre,
-                                            fluxo_de_caixa: balancos.fluxo_de_caixa
+                                            nome: "Afonso",
+                                            sobrenome: "Gay",
+                                            idade: 42
                                          });
         
                                                       
@@ -4397,7 +4399,9 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     users[i].turno = users[i].turno + 1
 
                     users[i].save()
-                        .then(() => {console.log(users[i]['cooperativa'] + ' Teve seu faturamento processado com sucesso.')})
+                        .then(() => {
+                            console.log(users[i]['cooperativa'] + ' Teve seu faturamento processado com sucesso.')
+                        })
                         .catch((err) => { console.log('Erro ao salvar os FATURAMENTOS processados. Motivo ==> ' + err)})
                 }
                 sockets.emit('final-turno')
