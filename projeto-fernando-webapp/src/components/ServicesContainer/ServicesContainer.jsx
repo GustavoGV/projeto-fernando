@@ -36,7 +36,9 @@ export default function ServicesContainer() {
 
   const classes = useStyles();
   const [game, setGame] = useState([])
-  const [modal, setModal] = useState(false)
+  const [downloadModal, setDownloadModal] = useState(false);
+  const [serviceModal, setServiceModal] = useState(false);
+  const [selectedService, setSelectedService] = useState(false);
   const [downloadInfo, setDownloadInfo] = useState({})
   const currentRound = game[30] ? game[30] : 0;
   let rounds = []
@@ -72,9 +74,30 @@ export default function ServicesContainer() {
     })
   }
 
+  function generateServicesOptions(){
+    return game.slice(0,21).map(service=>service[8])
+  }
+
   return (
     <div className={classes.root}>
-      <Dialog open={modal} aria-labelledby="simple-dialog-title" onClose={()=>setModal(!modal)}>
+      <Dialog open={serviceModal} aria-labelledby="simple-dialog-title" onClose={()=>setServiceModal(prevState=>!prevState)}>
+        <DialogTitle>
+          Novo Serviço
+        </DialogTitle>
+        <DialogContent>
+          <Select
+            defaultValue={game[0] ? game[0][8] : ''}
+            options={generateServicesOptions()}
+            onChange={event=>{
+              setSelectedService(event)
+            }}
+          />
+          <Button onClick={()=>{socket.emit('ativar-servico', selectedService)}}>
+            Adicionar Serviço
+          </Button>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={downloadModal} aria-labelledby="simple-dialog-title" onClose={()=>setDownloadModal(prevState=>!prevState)}>
         <DialogTitle>
           Selecione um turno
         </DialogTitle>
@@ -102,6 +125,9 @@ export default function ServicesContainer() {
         </Grid>
         {generateServices(game.slice(0,21))}
         <Grid item xs={12} sm={12}>
+          <Button variant="contained" color="primary" className={classes.button} onClick={()=>setServiceModal(true)}> 
+            Novo Serviço
+          </Button>
           <Button variant="contained" color="primary" className={classes.button} onClick={()=>{socket.emit('salvar')}}> 
             Baixar Balanço
           </Button>

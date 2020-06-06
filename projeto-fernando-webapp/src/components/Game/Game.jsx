@@ -135,7 +135,7 @@ function Game(props) {
   const drawer = (
     <div>
       <div className={classes.toolbar}>
-        <h1 className={classes.h1}><img src={logo} alt="Desafios de Gestão"/></h1>
+        <h1 className={classes.h1}><img style={{width:'60px', height:'60px'}} src={logo} alt="Desafios de Gestão"/></h1>
       </div>
       <Divider />
       <List>

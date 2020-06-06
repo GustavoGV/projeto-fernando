@@ -58,8 +58,21 @@ function GeneralInformation(props){
 
   const classes = useStyles();
 
-  const [modal, setModal] = useState(false);
-  const [adsInvestment, setAdsInvestment] = useState()
+  const [adsModal, setAdsModal] = useState(false);
+  const [fleetModal, setFleetModal] =useState(false);
+  const [promotersModal, setPromotersModal] = useState(false);
+  const [comissionModal, setComissionModal] = useState(false);
+  const [debtModal, setDebtModal] = useState(false);
+  const [pasModal, setPasModal] = useState(false);
+  const [distributorsModal, setDistributorsModal] = useState(false);
+
+  const [adsInvestment, setAdsInvestment] = useState();
+  const [newFleet, setNewFleet] = useState();
+  const [newPromoters, setNewPromoters] = useState();
+  const [newComission, setNewComission] = useState();
+  const [newDebt, setNewDebt] = useState();
+  const [newPas, setNewPas] = useState();
+  const [newDistributors, setNewDistributors] = useState();
 
   function calcRevenue(){
     let revenue = 0;
@@ -71,8 +84,8 @@ function GeneralInformation(props){
 
   return(
     <>
-      <Dialog open={modal} aria-labelledby="simple-dialog-title" onClose={()=>setModal(!modal)}>
-        <DialogTitle id="simple-dialog-title">Aumentar Investimento em Propaganda</DialogTitle>
+      <Dialog open={adsModal} aria-labelledby="simple-dialog-title" onClose={()=>setAdsModal(prevState=>!prevState)}>
+        <DialogTitle id="simple-dialog-title">Alterar Investimento em Propaganda</DialogTitle>
         <DialogContent>
           <Input
             onChange={(event)=>{setAdsInvestment(event.target.value)}}
@@ -80,9 +93,141 @@ function GeneralInformation(props){
           />
           <Button onClick={()=>{
             socket.emit('aumentar-propaganda', adsInvestment);
-            setModal(false);
+            setAdsModal(false);
           }}>
             Investir
+          </Button>
+          <Button onClick={()=>{
+            socket.emit('diminuir-propaganda', adsInvestment);
+            setAdsModal(false);
+          }}>
+            Diminuir Investimento
+          </Button>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={distributorsModal} aria-labelledby="simple-dialog-title" onClose={()=>setDistributorsModal(prevState=>!prevState)}>
+        <DialogTitle id="simple-dialog-title">Alterar Distribuidores</DialogTitle>
+        <DialogContent>
+          <Input
+            onChange={(event)=>{setNewDistributors(event.target.value)}}
+            placeholder='Distribuidores'
+          />
+          <Button onClick={()=>{
+            socket.emit('aumentar-distribuidores', newDistributors);
+            setDistributorsModal(false);
+          }}>
+            Aumentar
+          </Button>
+          <Button onClick={()=>{
+            socket.emit('diminuir-distribuidores', newDistributors);
+            setDistributorsModal(false);
+          }}>
+            Diminuir
+          </Button>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={fleetModal} aria-labelledby="simple-dialog-title" onClose={()=>setFleetModal(prevState=>!prevState)}>
+        <DialogTitle id="simple-dialog-title">Alterar Frota</DialogTitle>
+        <DialogContent>
+          <Input
+            onChange={(event)=>{setNewFleet(event.target.value)}}
+            placeholder='Veículos'
+          />
+          <Button onClick={()=>{
+            socket.emit('aumentar-frota', newFleet);
+            setFleetModal(false);
+          }}>
+            Aumentar
+          </Button>
+          <Button onClick={()=>{
+            socket.emit('diminuir-frota', newFleet);
+            setFleetModal(false);
+          }}>
+            Diminuir
+          </Button>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={promotersModal} aria-labelledby="simple-dialog-title" onClose={()=>setPromotersModal(prevState=>!prevState)}>
+        <DialogTitle id="simple-dialog-title">Alterar Promotores</DialogTitle>
+        <DialogContent>
+          <Input
+            onChange={(event)=>{setNewPromoters(event.target.value)}}
+            placeholder='Novos Promotores'
+          />
+          <Button onClick={()=>{
+            socket.emit('aumentar-promotores', newPromoters);
+            setPromotersModal(false);
+          }}>
+            Investir
+          </Button>
+          <Button onClick={()=>{
+            socket.emit('diminuir-promotores', newPromoters);
+            setPromotersModal(false);
+          }}>
+            Diminuir Investimento
+          </Button>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={comissionModal} aria-labelledby="simple-dialog-title" onClose={()=>setComissionModal(prevState=>!prevState)}>
+        <DialogTitle id="simple-dialog-title">Alterar Comissão</DialogTitle>
+        <DialogContent>
+          <Input
+            onChange={(event)=>{setNewComission(event.target.value)}}
+            placeholder='Comissão'
+          />
+          <Button onClick={()=>{
+            socket.emit('aumentar-comissao', newComission);
+            setComissionModal(false);
+          }}>
+            Aumentar
+          </Button>
+          <Button onClick={()=>{
+            socket.emit('diminuir-comissao', newComission);
+            setComissionModal(false);
+          }}>
+            Diminuir
+          </Button>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={debtModal} aria-labelledby="simple-dialog-title" onClose={()=>setDebtModal(prevState=>!prevState)}>
+        <DialogTitle id="simple-dialog-title">Dívida / Empréstimo</DialogTitle>
+        <DialogContent>
+          <Input
+            onChange={(event)=>{setNewDebt(event.target.value)}}
+            placeholder='Valor'
+          />
+          <Button onClick={()=>{
+            socket.emit('quitar-divida', newDebt);
+            setDebtModal(false);
+          }}>
+            Quitar
+          </Button>
+          <Button onClick={()=>{
+            socket.emit('emprestimo', newDebt);
+            setDebtModal(false);
+          }}>
+            Fazer Empréstimo
+          </Button>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={pasModal} aria-labelledby="simple-dialog-title" onClose={()=>setPasModal(prevState=>!prevState)}>
+        <DialogTitle id="simple-dialog-title">Alterar PAS</DialogTitle>
+        <DialogContent>
+          <Input
+            onChange={(event)=>{setNewPas(event.target.value)}}
+            placeholder='PAS'
+          />
+          <Button onClick={()=>{
+            socket.emit('aumentar-pas', newPas);
+            setPasModal(false);
+          }}>
+            Aumentar
+          </Button>
+          <Button onClick={()=>{
+            socket.emit('diminuir-pas', newPas);
+            setPasModal(false);
+          }}>
+            Diminuir
           </Button>
         </DialogContent>
       </Dialog>
@@ -99,26 +244,38 @@ function GeneralInformation(props){
             <h3>Frota</h3>
             <br/>
             <h4>{props.gameData[22]?props.gameData[22].reduce((a, b)=> a + b) : '-'}</h4>
+            <br/>
+            {props.isAdmin
+            ?null
+            :(<Button
+                onClick={()=>setFleetModal(true)}
+              >Alterar</Button>)}
           </Paper>
         </Grid>
         <Grid item xs={12} sm={4} md={2}>
           <Paper className={classes.paper}>
             <h3>Promotores</h3>
             <br/>
-            <h4>{props.gameData[23]}</h4>
+            <h4>{props.gameData[23]?props.gameData[23]:'-'}</h4>
+            <br/>
+            {props.isAdmin
+            ?null
+            :(<Button
+                onClick={()=>setPromotersModal(true)}
+              >Alterar</Button>)}
           </Paper>
         </Grid>
         <Grid item xs={12} sm={8} md={4}>
           <Paper className={classes.paper}>
             <h3>Propaganda Institucional</h3>
             <br/>
-            <h4>{props.gameData[27]}</h4>
+            <h4>{props.gameData[27]?props.gameData[27]:'-'}</h4>
             <br/>
             {props.isAdmin
             ?null
             :(<Button
-                onClick={()=>setModal(true)}
-              >Aumentar</Button>)}
+                onClick={()=>setAdsModal(true)}
+              >Alterar</Button>)}
           </Paper>
         </Grid>
         <Grid item xs={12} sm={4} md={2}>
@@ -126,6 +283,58 @@ function GeneralInformation(props){
             <h3>Faturamento Esperado</h3>
             <br/>
             <h4>{calcRevenue()}</h4>
+          </Paper>
+        </Grid>
+        <Grid item xs={12} sm={4} md={2}>
+          <Paper className={classes.paper}>
+            <h3>Comissão</h3>
+            <br/>
+            <h4>{props.gameData[24]?props.gameData[24]:'-'}</h4>
+            <br/>
+            {props.isAdmin
+            ?null
+            :(<Button
+                onClick={()=>setComissionModal(true)}
+              >Alterar</Button>)}
+          </Paper>
+        </Grid>
+        <Grid item xs={12} sm={4} md={2}>
+          <Paper className={classes.paper}>
+            <h3>PAS</h3>
+            <br/>
+            <h4>{props.gameData[26]?props.gameData[26]:'-'}</h4>
+            <br/>
+            {props.isAdmin
+            ?null
+            :(<Button
+                onClick={()=>setPasModal(true)}
+              >Alterar</Button>)}
+          </Paper>
+        </Grid>
+        <Grid item xs={12} sm={4} md={2}>
+          <Paper className={classes.paper}>
+            <h3>Distribuidores</h3>
+            <br/>
+            <h4>{props.gameData[25]?props.gameData[25]:'-'}</h4>
+            <br/>
+            {props.isAdmin
+            ?null
+            :(<Button
+                onClick={()=>setDistributorsModal(true)}
+              >Alterar</Button>)}
+          </Paper>
+        </Grid>
+        <Grid item xs={12} sm={4} md={2}>
+          <Paper className={classes.paper}>
+            <h3>Dívida / Empréstimo</h3>
+            <br/>
+            <h4>{props.gameData[29]?props.gameData[29]:'-'}</h4>
+            <br/>
+            {props.isAdmin
+            ?null
+            :(<Button
+                onClick={()=>setDebtModal(true)}
+              >Quitar</Button>)}
           </Paper>
         </Grid>
         {props.children ? (props.children) : null}
