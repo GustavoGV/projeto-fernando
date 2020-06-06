@@ -13,6 +13,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import CsvDownload from 'react-json-to-csv';
 import Select from 'react-select';
+import { height } from '@material-ui/system';
 
 
 const useStyles = makeStyles(theme => ({
@@ -29,6 +30,21 @@ const useStyles = makeStyles(theme => ({
     marginLeft:'auto',
     marginRight:'auto',
     display:'flex',
+  },
+  csvButton:{
+    margin:'16px',
+    marginLeft:'auto',
+    marginRight:'auto',
+    display:'flex',
+    backgroundColor:'#3f51b5',
+    color:'#fff',
+    borderColor:'transparent',
+    textTransform:'uppercase',
+    padding:'8px',
+    borderRadius:'4px',
+  },
+  dialog:{
+    height:'400px',
   }
 }));
 
@@ -36,7 +52,9 @@ export default function ServicesContainer() {
 
   const classes = useStyles();
   const [game, setGame] = useState([])
-  const [modal, setModal] = useState(false)
+  const [downloadModal, setDownloadModal] = useState(false);
+  const [serviceModal, setServiceModal] = useState(false);
+  const [selectedService, setSelectedService] = useState(false);
   const [downloadInfo, setDownloadInfo] = useState({})
   const currentRound = game[30] ? game[30] : 0;
   let rounds = []
@@ -49,13 +67,12 @@ export default function ServicesContainer() {
     socket.on('update', state => {
       console.log('estado atual: ', state)
       setGame(state)
-    socket.on('balancos', balanco => {
-      setDownloadInfo(balanco)
-    })
     return ()=>{
       socket.off('update');
-    }
-    })
+    }});
+    socket.on('balancos', balanco => {
+      setDownloadInfo(balanco)
+    });
   },[])
 
 
@@ -72,13 +89,34 @@ export default function ServicesContainer() {
     })
   }
 
+  function generateServicesOptions(){
+    return game.slice(0,21).map(service=>{return{value:service[8], label:service[8]}})
+  }
+
   return (
     <div className={classes.root}>
-      <Dialog open={modal} aria-labelledby="simple-dialog-title" onClose={()=>setModal(!modal)}>
+      <Dialog open={serviceModal} aria-labelledby="simple-dialog-title" onClose={()=>setServiceModal(prevState=>!prevState)}>
+        <DialogTitle>
+          Novo Serviço
+        </DialogTitle>
+        <DialogContent className={classes.dialog}>
+          <Select
+            defaultValue={game[0] ? game[0][8] : ''}
+            options={generateServicesOptions()}
+            onChange={event=>{
+              setSelectedService(event)
+            }}
+          />
+          <Button variant="contained" color="primary" className={classes.button} onClick={()=>{socket.emit('ativar-servico', selectedService)}}>
+            Adicionar Serviço
+          </Button>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={downloadModal} aria-labelledby="simple-dialog-title" onClose={()=>setDownloadModal(prevState=>!prevState)}>
         <DialogTitle>
           Selecione um turno
         </DialogTitle>
-        <DialogContent>
+        <DialogContent className={classes.dialog}>
           <Select
             defaultValue={currentRound}
             options={rounds}
@@ -86,8 +124,8 @@ export default function ServicesContainer() {
               socket.emit('puxar-balancos-adm', [event])
             }}
           />
-          <CsvDownload data={downloadInfo}>
-            Baixar Balanços
+          <CsvDownload className={classes.csvButton} data={downloadInfo}>
+            Baixar balanços
           </CsvDownload>
         </DialogContent>
       </Dialog>
@@ -102,11 +140,17 @@ export default function ServicesContainer() {
         </Grid>
         {generateServices(game.slice(0,21))}
         <Grid item xs={12} sm={12}>
-          <Button variant="contained" color="primary" className={classes.button} onClick={()=>{socket.emit('salvar')}}> 
+          <Button variant="contained" color="primary" className={classes.button} onClick={()=>setServiceModal(true)}> 
+            Novo Serviço
+          </Button>
+          <Button variant="contained" color="primary" className={classes.button} onClick={()=>{setDownloadModal(true)}}> 
             Baixar Balanço
           </Button>
           <Button variant="contained" color="primary" className={classes.button} onClick={()=>{socket.emit('salvar')}}> 
             Salvar
+          </Button>
+          <Button className={classes.button} onClick={()=>{socket.emit('resetar')}}> 
+            Resetar Jogada
           </Button>
         </Grid>
       </Grid>

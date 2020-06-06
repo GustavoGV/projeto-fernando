@@ -77,6 +77,7 @@ function Research(props) {
 
   useEffect(()=>{
     socket.on('resposta-pesquisa', response => {
+      console.log('resposta-pesquisa:', response);
       setResponse(response);
     })
   },[])

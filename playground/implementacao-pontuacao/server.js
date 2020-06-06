@@ -65,6 +65,8 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
     socket.on('limpar-data', () => {
         mongoose.connection.collections.datas.drop()
     })
+    socket.on('teste', () => {console.log('teste OK: ' + socket.id)
+    })
     socket.on('login-client', (creden) => {
             Aluno.findOne({sockid: socket.id, temporario: 1}) // se n achar retorna Null e se vc tentar fazer essa pesquisa com um String sendo q no Schema ta como Number vai ir pro Catch ou vai pro Catch tb se n conseguir se conectar com o MongoDB
             .then((ll) => {
@@ -341,12 +343,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             return false
                         }
                     }
+                    if(novo !== velho){
                     if(userx[novo][1] == 1 || check_1_servico_ativo()){ 
                     if(userx['taokeys'] >= qnt*30 && userx[velho][0] >= qnt){
                         if(userx[novo][1] == 1){
 
-                        if(userx[novo][2] - userx[velho][2] > 0 && userx['taokeys'] >= qnt*30 + qnt*(userx[novo][2] - userx[velho][2])){
-
+                        if(userx[novo][2] - userx[velho][2] > 0){
+                            if(userx['taokeys'] >= qnt*30 + qnt*(userx[novo][2] - userx[velho][2])){
                         
                             userx.balanco_patrimonial = {
                                 ativo: {
@@ -398,6 +401,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 //console.log(userx[velho][0] + ' <----userx(Schema trabalhado aqui)')
                                 //console.log(user[velho][0] + ' <=====user(recem pesquisado)')
                                 if(user.taokeys == userx.taokeys){
+                                socket.emit('feedback', ['success', qnt + ' insumos transferidos do serviço: '+ velho +' com sucesso para o serviço: ' + novo])
                                 socket.emit('update', [
                                 [...user["147"],"147"],
                                 [...user["148"],"148"],
@@ -428,14 +432,16 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 user["pas"],
                                 user["propaganda"],
                                 user["propagandauni"],
-                                user["divida"],
+                                (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                 user["turno"]]);
         
                                     }                  
                                 })
                             .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
+                            }
+                            else{socket.emit('feedback', ['warning','a cooperativa não possue caixa o suficiente para realizar essa operação'])}
                         }
-                            else{
+                        else{
                                 userx.balanco_patrimonial = {
                                     ativo: {
                                         circulante: {
@@ -459,7 +465,16 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                         capital_social: userx.balanco_patrimonial.patrimonio_liquido.capital_social,
                                         lucros_acumulados: userx.balanco_patrimonial.patrimonio_liquido.lucros_acumulados - qnt*30 + (userx[novo][2] - userx[velho][2])*qnt //na DRE isso vai entrar como despesa de operação
                                     }
-                                }     
+                                }
+                                userx.dre = {
+                                    receita: userx.dre.receita,
+                                    cmv: userx.dre.cmv + (-1)*(userx[novo][2] - userx[velho][2])*qnt,
+                                    despesas_administrativas: userx.dre.despesas_administrativas,
+                                    despesas_vendas: userx.dre.despesas_vendas,
+                                    despesas_financeiras: userx.dre.despesas_financeiras,
+                                    depreciacao_e_amortizacao: userx.dre.depreciacao_e_amortizacao,
+                                    ir: userx.dre.ir
+                                } //aqui    
                             let insu_velho = Number(userx[velho][0]) - Number(qnt)
                             let array_dados_velho = [insu_velho,1,userx[velho][2], userx[velho][3], userx[velho][4], userx[velho][5], userx[velho][6], userx[velho][7]];
                             let insu_novo = Number(userx[novo][0]) + Number(qnt)
@@ -486,6 +501,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                     //console.log(userx[velho][0] + ' <----userx(Schema trabalhado aqui)')
                                     //console.log(user[velho][0] + ' <=====user(recem pesquisado)')
                                     if(user.taokeys == userx.taokeys){
+                                    socket.emit('feedback', ['success', qnt + ' insumos transferidos do serviço: '+ velho +' com sucesso para o serviço: ' + novo])
                                     socket.emit('update', [
                                     [...user["147"],"147"],
                                     [...user["148"],"148"],
@@ -516,7 +532,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                     user["pas"],
                                     user["propaganda"],
                                     user["propagandauni"],
-                                    user["divida"],
+                                    (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                     user["turno"]]);
             
                                         }                  
@@ -524,9 +540,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
 
                             }
-                        if(userx[novo][2] - userx[velho][2] > 0 && userx['taokeys'] <= qnt*30 + qnt*(userx[novo][2] - userx[velho][2])){
-                            socket.emit('feedback', ['warning', 'falta caixa para realizar essa operação'])
-                        }
+    
                     }
                     else{socket.emit('feedback', ['warning','voce nao pode transferir insumos para um servico que nao esta ativo'])}
                     }
@@ -534,6 +548,8 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                 else{
                     socket.emit('feedback', ['warning','voce nao pode ter mais de dois serviços ativos simultaneamente'])
                 }
+                }
+                else{socket.emit('feedback', ['warning','voce nao pode trocar insumos de um serviço para ele mesmo'])}
                 }
                 else{
                     socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
@@ -550,7 +566,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     if(userx[velho][1] == 1 && userx[novo][1] !== 3){
                     if(userx[novo][1] !== 1){
                     if(userx['taokeys'] >= userx[velho][0]*30){
-                        if(userx[novo][2] - userx[velho][2] > 0 && userx['taokeys'] >= qnt*30 + qnt*(userx[novo][2] - userx[velho][2])){
+                        if(userx[novo][2] - userx[velho][2] > 0 && userx['taokeys'] >= userx[velho][0]*30 + userx[velho][0]*(userx[novo][2] - userx[velho][2])){
 
                         
                         userx.balanco_patrimonial = {
@@ -602,6 +618,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 //console.log(userx[velho][0] + ' <----userx(Schema trabalhado aqui)')
                                 //console.log(user[velho][0] + ' <=====user(recem pesquisado)')
                                 if(user.taokeys == userx.taokeys){
+                                    socket.emit('feedback', ['success','voce substituiu o serviço '+ velho +' pelo: '+ novo +' com sucesso'])
                                     socket.emit('update', [
                                         [...user["147"],"147"],
                                         [...user["148"],"148"],
@@ -632,7 +649,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                         user["pas"],
                                         user["propaganda"],
                                         user["propagandauni"],
-                                        user["divida"],
+                                        (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                         user["turno"]]);
         
                                     }                  
@@ -719,7 +736,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                         user["pas"],
                                         user["propaganda"],
                                         user["propagandauni"],
-                                        user["divida"],
+                                        (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                         user["turno"]]);
         
                                     }                  
@@ -727,7 +744,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
                     }
 
-                    if(userx[novo][2] - userx[velho][2] > 0 && userx['taokeys'] < qnt*30 + qnt*(userx[novo][2] - userx[velho][2])){
+                    if(userx[novo][2] - userx[velho][2] > 0 && userx['taokeys'] < userx[velho][0]*30 + userx[velho][0]*(userx[novo][2] - userx[velho][2])){
                         socket.emit('feedback', ['warning', 'falta caixa para realizar essa operacao'])
                     }
                     }
@@ -772,6 +789,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
                             .then((user) => {
                                     if(user.taokeys == userx.taokeys){
+                                        socket.emit('feedback', ['success', tipo + ' encerrado com sucesso e ficara indisponivel durante o proximo turno'])
                                         socket.emit('update', [
                                             [...user["147"],"147"],
                                             [...user["148"],"148"],
@@ -802,7 +820,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                             user["pas"],
                                             user["propaganda"],
                                             user["propagandauni"],
-                                            user["divida"],
+                                            (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                             user["turno"]]);
         
                                     }                  
@@ -845,6 +863,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
                                 .then((user) => {
                                     if(user.taokeys == userx.taokeys){
+                                        socket.emit('feedback', ['success', 'volume de vendas planejado do serviço: ' + tipo + ' alterado para ' + volume + ' com sucesso'])
                                         socket.emit('update', [
                                             [...user["147"],"147"],
                                             [...user["148"],"148"],
@@ -875,7 +894,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                             user["pas"],
                                             user["propaganda"],
                                             user["propagandauni"],
-                                            user["divida"],
+                                            (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                             user["turno"]]);
         
                                     }                  
@@ -903,7 +922,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                 Data.findOne({instancia: usert.instancia})
                     .then((check) => {
                         if(check.ativo == 1){
-                Aluno.findOne({cooperativa: cooperativa.usert, instancia: usert.instancia, temporario: 0})
+                Aluno.findOne({cooperativa: usert.cooperativa, instancia: usert.instancia, temporario: 0})
                     .then((userdef) => {
                         userdef.set('npesquisas', usert.npesquisas)
                         userdef.set('turno', usert.turno)
@@ -929,9 +948,9 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 },
                                 n_circulante: {
                                     imobilizado: {
-                                        pas: usert.balanco_patrimonial.n_circulante.imobilizado.pas,
-                                        frota: usert.balanco_patrimonial.n_circulante.imobilizado.frota,
-                                        depreciacao_frota: usert.balanco_patrimonial.n_circulante.imobilizado.depreciacao_frota
+                                        pas: usert.balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: usert.balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: usert.balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
                                     },
                                 },
                             },
@@ -946,7 +965,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         userdef.dre = {
                             receita: usert.dre.receita,
                             cmv: usert.dre.cmv,
-                            despesas_administrativas: usert.dre.despesas_administrativas + qnt,
+                            despesas_administrativas: usert.dre.despesas_administrativas,
                             despesas_vendas: usert.dre.despesas_vendas,
                             despesas_financeiras: usert.dre.despesas_financeiras,
                             depreciacao_e_amortizacao: usert.dre.depreciacao_e_amortizacao,
@@ -987,6 +1006,83 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
             }
             })
     }) //OK
+    socket.on('resetar', () => {
+        Aluno.findOne({sockid: socket.id, temporario: 1})
+            .then((usert) => {
+                if(usert !== null){
+                Aluno.findOne({cooperativa: usert.cooperativa, instancia: usert.instancia, temporario: 0})
+                    .then((userdef) => {
+                        usert.set('npesquisas', userdef.npesquisas)
+                        usert.set('turno', userdef.turno)
+                        usert.set('propaganda', userdef.propaganda)
+                        usert.set('propagandauni', userdef.propagandauni)
+                        usert.set('taokeys', userdef.taokeys)
+                        usert.set('comissao', userdef.comissao)
+                        //console.log('PASt: ' + usert.pas)
+                        usert.set('pas', userdef.pas)
+                        usert.set('pas1', userdef.pas1)
+                        usert.set('pas2', userdef.pas2)
+                        usert.set('distribuidores', userdef.distribuidores)
+                        usert.set('promotores', userdef.promotores)
+                        //console.log(index)
+
+                        usert.balanco_patrimonial = {
+                            ativo: {
+                                circulante: {
+                                    caixa: userdef.balanco_patrimonial.ativo.circulante.caixa,
+                                    estoque: userdef.balanco_patrimonial.ativo.circulante.estoque,
+                                    contas_a_receber: userdef.balanco_patrimonial.ativo.circulante.contas_a_receber
+
+                                },
+                                n_circulante: {
+                                    imobilizado: {
+                                        pas: userdef.balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
+                                        frota: userdef.balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
+                                        depreciacao_frota: userdef.balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
+                                    },
+                                },
+                            },
+                            passivo: {
+                                contas_a_pagar: userdef.balanco_patrimonial.passivo.contas_a_pagar
+                            },
+                            patrimonio_liquido: {
+                                capital_social: userdef.balanco_patrimonial.patrimonio_liquido.capital_social,
+                                lucros_acumulados: userdef.balanco_patrimonial.patrimonio_liquido.lucros_acumulados
+                            }
+                        }
+                        usert.dre = {
+                            receita: userdef.dre.receita,
+                            cmv: userdef.dre.cmv,
+                            despesas_administrativas: userdef.dre.despesas_administrativas,
+                            despesas_vendas: userdef.dre.despesas_vendas,
+                            despesas_financeiras: userdef.dre.despesas_financeiras,
+                            depreciacao_e_amortizacao: userdef.dre.depreciacao_e_amortizacao,
+                            ir: userdef.dre.ir
+                        }
+                        
+                        for(let s = 0; s < index.length; s++){
+                            //console.log(index[s])
+                            let serv = index[s]
+                            usert.set(serv, [userdef[serv][0], userdef[serv][1], userdef[serv][2], userdef[serv][3], userdef[serv][4], userdef[serv][5], userdef[serv][6], userdef[serv][7]])
+                        }
+                        
+                        usert.save()
+                            .then(() => {
+                                socket.emit('resetado')
+                            })
+                            .catch((err) => {socket.emit('feedback', ['danger','falha ao salvar os dados no servidor'])})
+                        
+
+
+                    })
+                
+                
+            }
+            else{
+                socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
+            }
+            })
+    })
     socket.on('aumentar-frota', (dados) => {
         let qnt = Number(dados)
         Aluno.findOne({sockid: socket.id, temporario: 1})
@@ -1067,7 +1163,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                             user["pas"],
                                             user["propaganda"],
                                             user["propagandauni"],
-                                            user["divida"],
+                                            (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                             user["turno"]]);
                                     }                  
                                 })
@@ -1182,7 +1278,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                             user["pas"],
                                             user["propaganda"],
                                             user["propagandauni"],
-                                            user["divida"],
+                                            (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                             user["turno"]]);
                                     }                  
                                 })
@@ -1249,7 +1345,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         userx["pas"],
                         userx["propaganda"],
                         userx["propagandauni"],
-                        userx["divida"],
+                        (userx["divida"][0]+userx["divida"][1]+userx["divida"][2]),
                         userx["turno"]]);
                 }
                 else{
@@ -1272,6 +1368,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
                                 .then((user) => {
                                     if(user.taokeys == userx.taokeys){
+                                        socket.emit('feedback', ['success', 'preço do serviço: ' + tipo + ' alterado para: ' + preco + ' com sucesso'])
                                         socket.emit('update', [
                                             [...user["147"],"147"],
                                             [...user["148"],"148"],
@@ -1302,7 +1399,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                             user["pas"],
                                             user["propaganda"],
                                             user["propagandauni"],
-                                            user["divida"],
+                                            (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                             user["turno"]]);
         
                                     }                  
@@ -1371,7 +1468,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                             user["pas"],
                                             user["propaganda"],
                                             user["propagandauni"],
-                                            user["divida"],
+                                            (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                             user["turno"]]);
         
                                     }                  
@@ -1435,7 +1532,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                             user["pas"],
                                             user["propaganda"],
                                             user["propagandauni"],
-                                            user["divida"],
+                                            (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                             user["turno"]]);
                                     }                  
                                 })
@@ -1534,7 +1631,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                             user["pas"],
                                             user["propaganda"],
                                             user["propagandauni"],
-                                            user["divida"],
+                                            (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                             user["turno"]]);
                                     }                  
                                 })
@@ -1627,7 +1724,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                             user["pas"],
                                             user["propaganda"],
                                             user["propagandauni"],
-                                            user["divida"],
+                                            (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                             user["turno"]]);
                                     }                  
                                 })
@@ -1689,7 +1786,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                             user["pas"],
                                             user["propaganda"],
                                             user["propagandauni"],
-                                            user["divida"],
+                                            (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                             user["turno"]]);
         
                                     }                  
@@ -1753,7 +1850,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                             user["pas"],
                                             user["propaganda"],
                                             user["propagandauni"],
-                                            user["divida"],
+                                            (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                             user["turno"]]);
         
                                     }                  
@@ -1814,7 +1911,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                             user["pas"],
                                             user["propaganda"],
                                             user["propagandauni"],
-                                            user["divida"],
+                                            (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                             user["turno"]]);
         
                                     }                  
@@ -1875,7 +1972,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                             user["pas"],
                                             user["propaganda"],
                                             user["propagandauni"],
-                                            user["divida"],
+                                            (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                             user["turno"]]);
         
                                     }                  
@@ -1941,6 +2038,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
                                 .then((user) => {
                                     if(user.taokeys == userx.taokeys){
+                                        socket.emit('feedback', ['success', 'investimento em propaganda unitária, no valor de:  '+ qnt +', relizado com sucesso'])
                                         socket.emit('update', [
                                             [...user["147"],"147"],
                                             [...user["148"],"148"],
@@ -1971,7 +2069,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                             user["pas"],
                                             user["propaganda"],
                                             user["propagandauni"],
-                                            user["divida"],
+                                            (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                             user["turno"]]);
         
                                     }                  
@@ -1979,7 +2077,10 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
                        
                     }
-                    else{socket.emit('feedback', ['warning','apenas valores positivos'])}
+                    else{
+                        if(userx.taokeys >= qnt){socket.emit('feedback', ['warning','apenas valores positivos'])}
+                        else{socket.emit('feedback', ['warning','sua cooperativa nao possue caixa o suficiente'])}
+                }
                     
                 
              
@@ -2066,7 +2167,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                             user["pas"],
                                             user["propaganda"],
                                             user["propagandauni"],
-                                            user["divida"],
+                                            (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                             user["turno"]]);
         
                                     }                  
@@ -2133,13 +2234,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                             [...user["369"],"369"],
                                             user["taokeys"],
                                             user["frota"],
-                                            user["promotores"],
-                                            user["comissao"],
-                                            user["distribuidores"],
-                                            user["pas"],
+                                            user["promotores"],//23
+                                            user["comissao"],//24
+                                            user["distribuidores"],//25
+                                            user["pas"],//26
                                             user["propaganda"],
                                             user["propagandauni"],
-                                            user["divida"],
+                                            (user["divida"][0]+user["divida"][1]+user["divida"][2]),//29
                                             user["turno"]]);
         
                                     }                  
@@ -2218,7 +2319,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                             user["pas"],
                                             user["propaganda"],
                                             user["propagandauni"],
-                                            user["divida"],
+                                            (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                             user["turno"]]);
         
                                     }
@@ -2308,6 +2409,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                   //  console.log(userx[tipo][1] + ' <----userx(Schema trabalhado aqui)')
                                   //  console.log(user[tipo][1] + ' <=====user(recem pesquisado)')
                                     if(user.taokeys == userx.taokeys){
+                                        socket.emit('feedback', ['success', qnti + ' insumos comprados com sucesso para o serviço: ' + tipo])
                                         socket.emit('update', [
                                             [...user["147"],"147"],
                                             [...user["148"],"148"],
@@ -2338,7 +2440,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                             user["pas"],
                                             user["propaganda"],
                                             user["propagandauni"],
-                                            user["divida"],
+                                            (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                             user["turno"]]);
                 
                                             }                  
@@ -2445,7 +2547,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                             userx["pas"],
                                             userx["propaganda"],
                                             userx["propagandauni"],
-                                            userx["divida"],
+                                            (userx["divida"][0]+userx["divida"][1]+userx["divida"][2]),
                                             userx["turno"]]);
                                     }
                                     else{
@@ -2550,7 +2652,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                             userx["pas"],
                                             userx["propaganda"],
                                             userx["propagandauni"],
-                                            userx["divida"],
+                                            (userx["divida"][0]+userx["divida"][1]+userx["divida"][2]),
                                             userx["turno"]]);
                                         }
                 else{
@@ -2661,7 +2763,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                             userx["pas"],
                                             userx["propaganda"],
                                             userx["propagandauni"],
-                                            userx["divida"],
+                                            (userx["divida"][0]+userx["divida"][1]+userx["divida"][2]),
                                             userx["turno"]]);
             }
             else{
@@ -2747,16 +2849,16 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                                 [...userx["367"],"367"],
                                                 [...userx["368"],"368"],
                                                 [...userx["369"],"369"],
-                                                user["taokeys"],
-                                                user["frota"],
-                                                user["promotores"],
-                                                user["comissao"],
-                                                user["distribuidores"],
-                                                user["pas"],
-                                                user["propaganda"],
-                                                user["propagandauni"],
-                                                user["divida"],
-                                                user["turno"]]);
+                                                userx["taokeys"],
+                                                userx["frota"],
+                                                userx["promotores"],
+                                                userx["comissao"],
+                                                userx["distribuidores"],
+                                                userx["pas"],
+                                                userx["propaganda"],
+                                                userx["propagandauni"],
+                                                (userx["divida"][0]+userx["divida"][1]+userx["divida"][2]),
+                                                userx["turno"]]);
                  }
                  else{
                      socket.emit('feedback', ['danger', 'voce nao pode realizar pesquisas ate que o administrador inicie o turno'])
@@ -2859,7 +2961,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                             userx["pas"],
                                             userx["propaganda"],
                                             userx["propagandauni"],
-                                            userx["divida"],
+                                            (userx["divida"][0]+userx["divida"][1]+userx["divida"][2]),
                                             userx["turno"]]);
             }
             else{
