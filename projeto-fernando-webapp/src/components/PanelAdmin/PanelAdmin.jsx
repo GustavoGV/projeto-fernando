@@ -183,16 +183,8 @@ function PanelAdmin(props) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap>
-            {/* Desafiosdegestao */}
+            Desafiosdegestao
           </Typography>
-          <SelectRound/>
-          <SelectReport/>
-          <IconButton className={classes.navbarButton}>
-            <CheckCircleIcon/>
-          </IconButton>
-          <IconButton className={classes.navbarButton}>
-            <SaveIcon/>
-          </IconButton>
         </Toolbar>
       </AppBar>
       <nav className={classes.drawer} aria-label="mailbox folders">

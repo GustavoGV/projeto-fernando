@@ -64,6 +64,9 @@ export default function ServicesContainer() {
 
   useEffect(()=>{
     socket.emit('puxar-state');
+    socket.on('final-turno',()=>{
+      socket.emit('puxar-state');
+    })
     socket.on('update', state => {
       console.log('estado atual: ', state)
       setGame(state)
