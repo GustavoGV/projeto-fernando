@@ -1231,6 +1231,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                     soma_f = soma_f + userx.frota[i]
                                 }
                             }
+                            console.log(soma_f)
                             if(soma_f <= qnt){
                                 let falta = qnt
                                 let k = 11
