@@ -171,7 +171,7 @@ function Game(props) {
   return (
     <div className={classes.root}>
       <CssBaseline />
-      {/* <AppBar position="fixed" className={classes.appBar}>
+      <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -183,18 +183,10 @@ function Game(props) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap>
-            {/* Desafiosdegestao 
+            Desafiosdegestao 
           </Typography>
-          <SelectRound/>
-          <SelectReport/>
-          <IconButton className={classes.navbarButton}>
-            <CheckCircleIcon/>
-          </IconButton>
-          <IconButton className={classes.navbarButton}>
-            <SaveIcon/>
-          </IconButton>
         </Toolbar>
-      </AppBar> */}
+      </AppBar>
       <nav className={classes.drawer} aria-label="mailbox folders">
         {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Hidden smUp implementation="css">

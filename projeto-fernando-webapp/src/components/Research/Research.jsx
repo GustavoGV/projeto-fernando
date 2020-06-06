@@ -110,13 +110,13 @@ function Research(props) {
       ?
       <div>
         <Select
-          defaultValue={serviceOptions[0]}
+          defaultValue={''}
           options={serviceOptions}
           onChange={event=>setResearchData({...researchData, researchService1:event.value})}
           className={classes.select}
         />
         <Select
-          defaultValue={serviceOptions[0]}
+          defaultValue={''}
           options={serviceOptions}
           onChange={event=>setResearchData({...researchData, researchService2:event.value})}
           className={classes.select}
