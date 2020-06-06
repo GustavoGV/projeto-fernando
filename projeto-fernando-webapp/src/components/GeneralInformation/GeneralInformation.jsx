@@ -231,7 +231,7 @@ function GeneralInformation(props){
           <Paper className={classes.paper}>
             <h3>Caixa</h3>
             <br/>
-            <h4>{props.gameData[21]}</h4>
+            <h4>{Math.round(props.gameData[21])}</h4>
           </Paper>
         </Grid>
         <Grid item xs={12} sm={4} md={2}>
@@ -280,7 +280,7 @@ function GeneralInformation(props){
           <Paper className={classes.paper}>
             <h3>Faturamento Esperado</h3>
             <br/>
-            <h4>{calcRevenue()}</h4>
+            <h4>{Math.round(calcRevenue())}</h4>
           </Paper>
         </Grid>
         <Grid item xs={12} sm={4} md={2}>
@@ -329,7 +329,7 @@ function GeneralInformation(props){
           <Paper className={classes.paper}>
             <h3>Dívida / Empréstimo</h3>
             <br/>
-            <h4>{props.gameData[29]?props.gameData[29]:'-'}</h4>
+            <h4>{props.gameData[29]?Math.round(props.gameData[29]):'-'}</h4>
             <br/>
             {props.isAdmin
             ?null

@@ -73,7 +73,7 @@ const Service = (props) => {
       </DialogContent>
     </Dialog>
     <h3>Serviço {props.service[8]}</h3>
-    <h4>Insumos: {props.service[0]}</h4>
+    <h4>Insumos: {Math.round(props.service[0])}</h4>
     <Form className={classes.form}>
       <label className={classes.label}>Comprar Insumos</label>
       <Input
