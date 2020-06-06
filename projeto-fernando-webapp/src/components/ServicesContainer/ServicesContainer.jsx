@@ -55,11 +55,15 @@ export default function ServicesContainer() {
   const [downloadModal, setDownloadModal] = useState(false);
   const [serviceModal, setServiceModal] = useState(false);
   const [selectedService, setSelectedService] = useState(false);
-  const [downloadInfo, setDownloadInfo] = useState({})
-  const currentRound = game[30] ? game[30] : 0;
-  let rounds = []
-  for(var i=1; i===currentRound; i++){
-    rounds.push(i);
+  const [downloadInfo, setDownloadInfo] = useState({})  
+
+  function generateRounds(){
+    const currentRound = game[30] ? game[30] : 0;
+    let rounds = []
+    for(var i=1; i===currentRound-1; i++){
+      rounds.push(i);
+    }
+    return rounds
   }
 
   useEffect(()=>{
@@ -121,9 +125,10 @@ export default function ServicesContainer() {
           Selecione um turno
         </DialogTitle>
         <DialogContent className={classes.dialog}>
+          {console.log("turnos:", generateRounds())}
           <Select
-            defaultValue={currentRound}
-            options={rounds}
+            defaultValue={game[30] ? game[30]-1 : 0}
+            options={generateRounds()}
             onChange={event=>{
               socket.emit('puxar-balancos-adm', [event])
             }}
