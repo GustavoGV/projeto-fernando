@@ -91,9 +91,7 @@ export default function ServicesContainer() {
   }
 
   function generateServicesOptions(){
-    console.log(">>>>>>>>>Game:",game)
-    console.log(">>>>>>>>>Options:",game.slice(0,21).map(service=>service[8]))
-    return game.slice(0,21).map(service=>service[8])
+    return game.slice(0,21).map(service=>{return{value:service[8], label:service[8]}})
   }
 
   return (
