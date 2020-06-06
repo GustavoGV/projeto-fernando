@@ -2966,11 +2966,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 Data.findOne({ativo: 1, instancia: userx.instancia})
                                     .then((dados) => {
                                         if(dados !== null){
-                                            let respp
-                                            for(let li = 0; li < dados['modelos_oferecidos'].length; li++){
-                                                respp = respp + ' || ' + String(dados['modelos_oferecidos'][li])
-                                            }
-                                        socket.emit('resposta-pesquisa', respp)
+                                        socket.emit('resposta-pesquisa', String(dados['modelos_oferecidos']))
                                         socket.emit('update', [
                                             [...userx["147"],"147"],
                                             [...userx["148"],"148"],
