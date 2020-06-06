@@ -1232,7 +1232,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 }
                             }
                             console.log(soma_f)
-                            if(soma_f <= qnt){
+                            if(soma_f >= qnt){
                                 let falta = qnt
                                 let k = 11
                                 while(falta !== 0){
@@ -2966,7 +2966,11 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 Data.findOne({ativo: 1, instancia: userx.instancia})
                                     .then((dados) => {
                                         if(dados !== null){
-                                        socket.emit('resposta-pesquisa', dados['modelos_oferecidos'])
+                                            let respp
+                                            for(let li = 0; li < dados['modelos_oferecidos'].length; li++){
+                                                respp = respp + ' || ' + String(dados['modelos_oferecidos'][li])
+                                            }
+                                        socket.emit('resposta-pesquisa', respp)
                                         socket.emit('update', [
                                             [...userx["147"],"147"],
                                             [...userx["148"],"148"],
