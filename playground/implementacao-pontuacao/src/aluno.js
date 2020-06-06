@@ -63,6 +63,7 @@ const DataSchema = new Schema({
     senha_instancia: String,
     modelos_oferecidos: Array,
     participacao_modelos: Array, //array com length de 21 (= index) e cada elemento representa qnt do faturamento global acabou sendo alocado para cada serviço (participaçao desse serviço no faturamento global)
+    total_participacao_modelos: Number,
     total_pas: Number,
     oferta_mercado: Number,
     total_distribuidores: Number,
