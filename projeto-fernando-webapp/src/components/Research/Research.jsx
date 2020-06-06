@@ -133,7 +133,7 @@ function Research(props) {
         ?(
           <>
             <label>Resultado:</label>
-            {Array.isArray(response)? `${researchData.researchService1}:${Math.round(response[0])}  ${researchData.researchService2}:${Math.round(response[1])}` :Math.round(response)}
+            {Math.round(response)}
           </>
         )
         :null

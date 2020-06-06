@@ -110,6 +110,7 @@ export default function ServicesContainer() {
               setSelectedService(event)
             }}
           />
+          {console.log("servico-selecionado:", selectedService)}
           <Button variant="contained" color="primary" className={classes.button} onClick={()=>{socket.emit('ativar-servico', selectedService)}}>
             Adicionar Serviço
           </Button>
