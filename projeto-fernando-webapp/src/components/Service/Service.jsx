@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {Form, Input} from 'reactstrap';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -34,6 +34,12 @@ const Service = (props) => {
   const [changeServiceModal, setChangeServiceModal] = useState(false);
   const options=generateOptions();
   const allOptions=generateAllOptions();
+
+  useEffect(()=>{
+    socket.on('resetado', () => {
+      setRoundData({volume:0, price:0});
+    });
+  })
 
   function generateOptions(){
     let options=[];
