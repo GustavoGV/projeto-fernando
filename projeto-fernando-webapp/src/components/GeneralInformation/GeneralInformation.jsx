@@ -140,7 +140,7 @@ function GeneralInformation(props){
             Aumentar
           </Button>
           <Button onClick={()=>{
-            socket.emit('diminuir-frota', newFleet);
+            socket.emit('vender-frota', newFleet);
             setFleetModal(false);
           }}>
             Diminuir
