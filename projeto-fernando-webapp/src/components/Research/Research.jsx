@@ -89,7 +89,7 @@ function Research(props) {
       <h3>Pesquisas</h3>
       <Form className={classes.form}>
       <Select
-        defaultValue={options[0]}
+        defaultValue={''}
         options={options}
         onChange={event=>setResearchData({...researchData, researchType:event.value})}
         className={classes.select}
@@ -98,7 +98,7 @@ function Research(props) {
       ?
       <div>
         <Select
-          defaultValue={serviceOptions[0]}
+          defaultValue={''}
           options={serviceOptions}
           onChange={event=>setResearchData({...researchData, researchService1:event.value})}
           className={classes.select}
