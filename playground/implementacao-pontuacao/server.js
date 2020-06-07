@@ -84,7 +84,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 else{ 
                                     Data.findOne({instancia: usert.instancia}) //filtro para apenas liberar o login se o turno estiver ATIVO aqui se necessário
                                         .then((check2) => {
-                                if(check2 !== null){ 
+                                if(check2.ativo == 1){ 
                                         Aluno.findOne({cooperativa: usert.cooperativa, temporario: 0, instancia: usert.instancia})
                                             .then((userdef) => {
                                                 usert.set('npesquisas', userdef.npesquisas)
@@ -3065,7 +3065,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 Data.findOne({login_adm: creden[0]})
                                     .then((userL) => {
                                         if(userL == null){
-                                            let jogo = new Data({login_adm: creden[0], iniciado: 1, senha_adm: creden[1], instancia: creden[2], senha_instancia: creden[3], turno: 0, oferta_mercado: 800000})
+                                            let jogo = new Data({login_adm: creden[0], iniciado: 0, senha_adm: creden[1], instancia: creden[2], senha_instancia: creden[3], turno: 0, oferta_mercado: 800000, ativo: 0})
                                             jogo.save()
                                                 .then(() => {
                                                     console.log('>>> Instancia: ' + creden[2] + ' registrada com sucesso')    
