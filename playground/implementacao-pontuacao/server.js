@@ -144,7 +144,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                 else{
                     Data.findOne({instancia: creden[2], senha_instancia: creden[3]})
                         .then((inst) => {
-                            if(inst !== null){
+                            if(inst !== null && inst.turno > 0){
 
                             
         Aluno.findOne({cooperativa: creden[0], instancia: creden[2]})
