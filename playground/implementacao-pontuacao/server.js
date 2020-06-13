@@ -176,48 +176,59 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         368:[0,0,540,0,0,0,0,0],
                         369:[0,0,576,0,0,0,0,0],
                         balanco_patrimonial: {
-                            ativo: {
-                                circulante: {
-                                    caixa: 1872000,
-                                    estoque: 288*985,
-                                    contas_a_receber: 0
-
-                                },
-                                n_circulante: {
-                                    imobilizado: {
-                                        pas: 30,
-                                        frota: 10*57600,
-                                        depreciacao_frota: 0
-                                    }
-                                }
-                            },
-                            passivo: {
-                                contas_a_pagar: 0
-                            },
-                            patrimonio_liquido: {
-                                capital_social: 1872000+288*985+10*57600,
-                                lucros_acumulados: 0
-                            }
+                            caixa: 1800000,
+                            estoque: 200,
+                            contas_a_receber60: 200,
+                            contas_a_receber120: 200,
+                            maquinas: 200,
+                            depreciacao_maquinas: -200,
+                            veiculos: 200,
+                            depreciacao_veiculos: -200,
+                            tributos_a_pagar_anterior: 200,
+                            tributos_a_pagar_atual: 200,
+                            emprestimos: 200,
+                            capial: 200,
+                            lucros_acumulados: 300
                         },
                         dre: {
                             receita: 0,
-                            cmv: 0,
+                            csp: 0,
+                            estoque_inicial: 0,
+                            custo_prestacao_servico: 0,
+                            custo_estocagem: 0,
+                            custo_troca_insumos: 0,
+                            hora_extra: 0,
+                            capacidade_n_utilizada: 0,
+                            margem_bruta: 0,
                             despesas_administrativas: 0,
-                            despesas_vendas: 0,
-                            despesas_financeiras: 0,
-                            depreciacao_e_amortizacao: 0,
-                            ir: 0
+                            promotores: 0,
+
                         },
                         fluxo_de_caixa: {
 
-                            lucro_bruto: 0,
+                            faturamento: 0,
                             contas_a_receber: 0,
                             contas_a_receber_recebidas: 0, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
-                            despesas: 0,
-                            fluxo_operacional: 0,
-                            fluxo_financeiro: 0, // entra + emprestimos tomados e entra - empréstimos pagos 
-                            fluxo_investimento: 0, // entra negativo tds as compras de VEICULOS e entra positivo todo o valor da venda de veiculos
-                            fluxo: 0
+                            custo_de_servico_prestado: 0,
+                            emprestimos_contratados: 0,
+                            emprestimos_pagos: 0,
+                            veiculos_vendidos: 0,
+                            depreciacao_de_veiculos: 0,
+                            depreciacao_de_maquinas: 0,
+                            veiculos_comprados: 0,
+                            tributos: 0,
+                            promotores: 0,
+                            propaganda: 0,
+                            pesquisas: 0,
+                            pas: 0,
+                            uso_frota: 0,
+                            despesas_operacionais_n_planejadas: 0,
+                            despesas_administrativas: 0,
+                            encargos_financiamento: 0
+
+                            //fluxo_financeiro: 0, // entra + emprestimos tomados e entra - empréstimos pagos 
+                            //fluxo_investimento: 0, // entra negativo tds as compras de VEICULOS e entra positivo todo o valor da venda de veiculos
+                            //fluxo: 0
                         
                         }
                     });
@@ -3059,6 +3070,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     Data.findOne({instancia: creden[2]})
                         .then((ll) => {
                             if(ll !== null){
+                                socket.emit('resposta-root', 'ja existe uma instacia com esse nome (OPERACAO NEGADA)')
                                 socket.emit('feedback', ['danger','ja existe uma instancia com esse nome'])
                             }
                             else{
@@ -3069,11 +3081,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                             jogo.save()
                                                 .then(() => {
                                                     console.log('>>> Instancia: ' + creden[2] + ' registrada com sucesso')    
+                                                    socket.emit('resposta-root', 'instancia '+ creden[2]+ ' criada com sucesso')
                                                     //socket.emit('registro-instancia-completo', creden[0])
                                                 })
                                                 .catch((err) => {console.log(err)})
                                         }
                                         else{
+                                            socket.emit('resposta-root', 'ja existe ums instancia com esse LOGIN de administrador (OPERACAO NEGADA)')
                                             socket.emit('feedback', ['danger','ja existe ums instancia com esse LOGIN de administrador'])
                                         }
 
@@ -3081,7 +3095,9 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             }
                         })
                 }
-                else{socket.emit('feedback', ['danger','senha mestra incorreta'])}  
+                else{
+                    socket.emit('resposta-root', 'senha mestra incorreta (OPERACAO NEGADA)')
+                    socket.emit('feedback', ['danger','senha mestra incorreta'])}  
     })
     socket.on('login-adm', (creden) => {
         Data.findOne({sockid: socket.id})
@@ -4640,7 +4656,9 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
             })
             .catch((err) => { console.log(err) })
     })
-    socket.on('puxar-balancos-adm',  ([cooperativa, turno]) => {
+    socket.on('puxar-balancos-adm',  (dados) => {
+        let cooperativa = dados[0]
+        let turno = dados[1]
 
         Data.findOne({sockid: socket.id})
             .then((data) => {
@@ -4670,7 +4688,9 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
 
     })
 
-    socket.on('deletar-instancia', ([senha_mestra, instancia]) => {
+    socket.on('deletar-instancia', (dados) => {
+        let senha_mestra = dados[0]
+        let instancia = dados[1]
         if(senha_mestra == 'senha-mestra'){
             Data.find({instancia: instancia})
                 .then((data) => {
@@ -4678,21 +4698,57 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     if(data.length > 0){ 
 
                         Aluno.find({instancia: instancia}) //pega os saves, status temporarios e n_temporarios
-                            .then((alunos) => { 
-                                alunos.remove()
-                                    .then(() => {
-                                        data.remove()
+                                    .then((alunos) => {
+                                        for(let h = 0; h < data.length; h++){
+                                            let nom = data[h].instancia
+                                            data[h].remove()
+                                                .then(()=> {socket.emit('resposta-root', 'instancia '+nom+' deletada')})
+                                                .catch((err) => {socket.emit('resposta-root', err)})
+                                        }
+                                        for(let h = 0; h < alunos.length; h++){
+                                            alunos[h].remove()
+                                                .then(()=> {})
+                                                .catch(() => {socket.emit('resposta-root', err)})
+                                        }
                                     })
-                            })
+                            
 
                     }
                     else{
+                        socket.emit('resposta-root', 'instancia nao encontrada')
                         socket.emit('feedback', ['warning', 'instancia nao encontrada'])
                     }
 
                 })
         }
         else{
+            socket.emit('resposta-root', 'senha mestra incorreta (OPERACAO NEGADA)')
+            socket.emit('feedback', ['warning', 'senha-mestra incorreta'])
+        }
+    })
+    socket.on('verificar-instancias', (dados) => {
+        let senha_mestra = dados
+        if(senha_mestra == 'senha-mestra'){
+            Data.find()
+                .then((data) => {
+
+                    if(data.length > 0){ 
+                        let resp = []
+                       for(let i = 0; i < data.length; i++){
+                        resp.push(data[i].instancia + ' (turno: ' + data[i].turno + ' )')
+                       }
+                       socket.emit('resposta-root', resp)
+
+                    }
+                    else{
+                        socket.emit('resposta-root', 'nenhuma instancia foi encontrada')
+                        socket.emit('feedback', ['warning', 'instancia nao encontrada'])
+                    }
+
+                })
+        }
+        else{
+            socket.emit('resposta-root', 'senha mestra incorreta (OPERACAO NEGADA)')
             socket.emit('feedback', ['warning', 'senha-mestra incorreta'])
         }
     })
