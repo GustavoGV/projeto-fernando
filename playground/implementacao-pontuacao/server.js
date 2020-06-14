@@ -415,28 +415,19 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             if(userx['taokeys'] >= qnt*30 + qnt*(userx[novo][2] - userx[velho][2])){
                         
                             userx.balanco_patrimonial = {
-                                ativo: {
-                                    circulante: {
-                                        caixa: userx.balanco_patrimonial.ativo.circulante.caixa - qnt*30 - (userx[novo][2] - userx[velho][2])*qnt,
-                                        estoque: userx.balanco_patrimonial.ativo.circulante.estoque + (userx[novo][2] - userx[velho][2])*qnt,
-                                        contas_a_receber: userx.balanco_patrimonial.ativo.circulante.contas_a_receber
-    
-                                    },
-                                    n_circulante: {
-                                        imobilizado: {
-                                            pas: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                            frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
-                                            depreciacao_frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
-                                        },
-                                    },
-                                },
-                                passivo: {
-                                    contas_a_pagar: userx.balanco_patrimonial.passivo.contas_a_pagar
-                                },
-                                patrimonio_liquido: {
-                                    capital_social: userx.balanco_patrimonial.patrimonio_liquido.capital_social,
-                                    lucros_acumulados: userx.balanco_patrimonial.patrimonio_liquido.lucros_acumulados - qnt*30
-                                }
+                                caixa: userx.balanco_patrimonial.caixa - qnt*30 - (userx[novo][2] - userx[velho][2])*qnt,
+                                estoque: userx.balanco_patrimonial.estoque + (userx[novo][2] - userx[velho][2])*qnt,
+                                contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
+                                contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
+                                maquinas: userx.balanco_patrimonial.maquinas,
+                                depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_de_maquinas,
+                                veiculos: userx.balanco_patrimonial.veiculos,
+                                depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos,
+                                tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
+                                tributos_a_pagar_atual: userx.balanco_patrimonial.tributos_a_pagar_atual,
+                                emprestimos: userx.balanco_patrimonial.emprestimos,
+                                capial: userx.balanco_patrimonial.capial,
+                                lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados - qnt*30
                             }     
                         let insu_velho = Number(userx[velho][0]) - Number(qnt)
                         let array_dados_velho = [insu_velho,1,userx[velho][2], userx[velho][3], userx[velho][4], userx[velho][5], userx[velho][6], userx[velho][7]];
@@ -505,29 +496,21 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             else{socket.emit('feedback', ['warning','a cooperativa não possue caixa o suficiente para realizar essa operação'])}
                         }
                         else{
+                                
                                 userx.balanco_patrimonial = {
-                                    ativo: {
-                                        circulante: {
-                                            caixa: userx.balanco_patrimonial.ativo.circulante.caixa - qnt*30,
-                                            estoque: userx.balanco_patrimonial.ativo.circulante.estoque + (userx[novo][2] - userx[velho][2])*qnt,
-                                            contas_a_receber: userx.balanco_patrimonial.ativo.circulante.contas_a_receber
-        
-                                        },
-                                        n_circulante: {
-                                            imobilizado: {
-                                                pas: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                                frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
-                                                depreciacao_frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
-                                            },
-                                        },
-                                    },
-                                    passivo: {
-                                        contas_a_pagar: userx.balanco_patrimonial.passivo.contas_a_pagar
-                                    },
-                                    patrimonio_liquido: {
-                                        capital_social: userx.balanco_patrimonial.patrimonio_liquido.capital_social,
-                                        lucros_acumulados: userx.balanco_patrimonial.patrimonio_liquido.lucros_acumulados - qnt*30 + (userx[novo][2] - userx[velho][2])*qnt //na DRE isso vai entrar como despesa de operação
-                                    }
+                                    caixa: userx.balanco_patrimonial.caixa - qnt*30,
+                                    estoque: userx.balanco_patrimonial.estoque + (userx[novo][2] - userx[velho][2])*qnt,
+                                    contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
+                                    contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
+                                    maquinas: userx.balanco_patrimonial.maquinas,
+                                    depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_de_maquinas,
+                                    veiculos: userx.balanco_patrimonial.veiculos,
+                                    depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos,
+                                    tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
+                                    tributos_a_pagar_atual: userx.balanco_patrimonial.tributos_a_pagar_atual,
+                                    emprestimos: userx.balanco_patrimonial.emprestimos,
+                                    capial: userx.balanco_patrimonial.capial,
+                                    lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados - qnt*30 + (userx[novo][2] - userx[velho][2])*qnt
                                 }
                                 userx.dre = {
                                     receita: userx.dre.receita,
@@ -633,28 +616,19 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
 
                         
                         userx.balanco_patrimonial = {
-                            ativo: {
-                                circulante: {
-                                    caixa: userx.balanco_patrimonial.ativo.circulante.caixa - userx[velho][0]*30 - (userx[novo][2] - userx[velho][2])*userx[velho][0],
-                                    estoque: userx.balanco_patrimonial.ativo.circulante.estoque + (userx[novo][2] - userx[velho][2])*userx[velho][0],
-                                    contas_a_receber: userx.balanco_patrimonial.ativo.circulante.contas_a_receber
-
-                                },
-                                n_circulante: {
-                                    imobilizado: {
-                                        pas: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                        frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
-                                        depreciacao_frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
-                                    },
-                                },
-                            },
-                            passivo: {
-                                contas_a_pagar: userx.balanco_patrimonial.passivo.contas_a_pagar
-                            },
-                            patrimonio_liquido: {
-                                capital_social: userx.balanco_patrimonial.patrimonio_liquido.capital_social,
-                                lucros_acumulados: userx.balanco_patrimonial.patrimonio_liquido.lucros_acumulados - userx[velho][0]*30
-                            }
+                            caixa: userx.balanco_patrimonial.caixa - userx[velho][0]*30 - (userx[novo][2] - userx[velho][2])*userx[velho][0],
+                            estoque: userx.balanco_patrimonial.estoque + (userx[novo][2] - userx[velho][2])*userx[velho][0],
+                            contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
+                            contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
+                            maquinas: userx.balanco_patrimonial.maquinas,
+                            depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_de_maquinas,
+                            veiculos: userx.balanco_patrimonial.veiculos,
+                            depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos,
+                            tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
+                            tributos_a_pagar_atual: userx.balanco_patrimonial.tributos_a_pagar_atual,
+                            emprestimos: userx.balanco_patrimonial.emprestimos,
+                            capial: userx.balanco_patrimonial.capial,
+                            lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados - userx[velho][0]*30
                         }
                         let array_dados_velho = [0,2,userx[velho][2], userx[velho][3], userx[velho][4], userx[velho][5], userx[velho][6], userx[velho][7]];
                         let insu_novo = Number(userx[novo][0]) + Number(userx[velho][0])
@@ -720,30 +694,23 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
                     }
                     else{
+                        
                         userx.balanco_patrimonial = {
-                            ativo: {
-                                circulante: {
-                                    caixa: userx.balanco_patrimonial.ativo.circulante.caixa - userx[velho][0]*30,
-                                    estoque: userx.balanco_patrimonial.ativo.circulante.estoque + (userx[novo][2] - userx[velho][2])*userx[velho][0],
-                                    contas_a_receber: userx.balanco_patrimonial.ativo.circulante.contas_a_receber
-
-                                },
-                                n_circulante: {
-                                    imobilizado: {
-                                        pas: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                        frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
-                                        depreciacao_frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
-                                    },
-                                },
-                            },
-                            passivo: {
-                                contas_a_pagar: userx.balanco_patrimonial.passivo.contas_a_pagar
-                            },
-                            patrimonio_liquido: {
-                                capital_social: userx.balanco_patrimonial.patrimonio_liquido.capital_social,
-                                lucros_acumulados: userx.balanco_patrimonial.patrimonio_liquido.lucros_acumulados - userx[velho][0]*30 + (userx[novo][2] - userx[velho][2])*userx[velho][0]
-                            }
+                            caixa: userx.balanco_patrimonial.caixa - userx[velho][0]*30,
+                            estoque: userx.balanco_patrimonial.estoque + (userx[novo][2] - userx[velho][2])*userx[velho][0],
+                            contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
+                            contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
+                            maquinas: userx.balanco_patrimonial.maquinas,
+                            depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_de_maquinas,
+                            veiculos: userx.balanco_patrimonial.veiculos,
+                            depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos,
+                            tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
+                            tributos_a_pagar_atual: userx.balanco_patrimonial.tributos_a_pagar_atual,
+                            emprestimos: userx.balanco_patrimonial.emprestimos,
+                            capial: userx.balanco_patrimonial.capial,
+                            lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados - userx[velho][0]*30 + (userx[novo][2] - userx[velho][2])*userx[velho][0]
                         }
+                        
                         let array_dados_velho = [0,2,userx[velho][2], userx[velho][3], userx[velho][4], userx[velho][5], userx[velho][6], userx[velho][7]];
                         let insu_novo = Number(userx[novo][0]) + Number(userx[velho][0])
                         let array_dados_novo
@@ -1001,30 +968,20 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         userdef.set('promotores', usert.promotores)
                         userdef.set('divida', [usert["divida"][0],usert["divida"][1],usert["divida"][2]])
                         //console.log(index)
-
                         userdef.balanco_patrimonial = {
-                            ativo: {
-                                circulante: {
-                                    caixa: usert.balanco_patrimonial.ativo.circulante.caixa,
-                                    estoque: usert.balanco_patrimonial.ativo.circulante.estoque,
-                                    contas_a_receber: usert.balanco_patrimonial.ativo.circulante.contas_a_receber
-
-                                },
-                                n_circulante: {
-                                    imobilizado: {
-                                        pas: usert.balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                        frota: usert.balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
-                                        depreciacao_frota: usert.balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
-                                    },
-                                },
-                            },
-                            passivo: {
-                                contas_a_pagar: usert.balanco_patrimonial.passivo.contas_a_pagar
-                            },
-                            patrimonio_liquido: {
-                                capital_social: usert.balanco_patrimonial.patrimonio_liquido.capital_social,
-                                lucros_acumulados: usert.balanco_patrimonial.patrimonio_liquido.lucros_acumulados
-                            }
+                            caixa: usert.balanco_patrimonial.caixa,
+                            estoque: usert.balanco_patrimonial.estoque,
+                            contas_a_receber60: usert.balanco_patrimonial.contas_a_receber60,
+                            contas_a_receber120: usert.balanco_patrimonial.contas_a_receber120,
+                            maquinas: usert.balanco_patrimonial.maquinas,
+                            depreciacao_maquinas: usert.balanco_patrimonial.depreciacao_de_maquinas,
+                            veiculos: usert.balanco_patrimonial.veiculos,
+                            depreciacao_veiculos: usert.balanco_patrimonial.depreciacao_veiculos,
+                            tributos_a_pagar_anterior: usert.balanco_patrimonial.tributos_a_pagar_anterior,
+                            tributos_a_pagar_atual: usert.balanco_patrimonial.tributos_a_pagar_atual,
+                            emprestimos: usert.balanco_patrimonial.emprestimos,
+                            capial: usert.balanco_patrimonial.capial,
+                            lucros_acumulados: usert.balanco_patrimonial.lucros_acumulados
                         }
                         userdef.dre = {
                             receita: usert.dre.receita,
@@ -1090,31 +1047,22 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         usert.set('promotores', userdef.promotores)
                         usert.set('divida', [userdef["divida"][0],userdef["divida"][1],userdef["divida"][2]])
                         //console.log(index)
-
                         usert.balanco_patrimonial = {
-                            ativo: {
-                                circulante: {
-                                    caixa: userdef.balanco_patrimonial.ativo.circulante.caixa,
-                                    estoque: userdef.balanco_patrimonial.ativo.circulante.estoque,
-                                    contas_a_receber: userdef.balanco_patrimonial.ativo.circulante.contas_a_receber
-
-                                },
-                                n_circulante: {
-                                    imobilizado: {
-                                        pas: userdef.balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                        frota: userdef.balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
-                                        depreciacao_frota: userdef.balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
-                                    },
-                                },
-                            },
-                            passivo: {
-                                contas_a_pagar: userdef.balanco_patrimonial.passivo.contas_a_pagar
-                            },
-                            patrimonio_liquido: {
-                                capital_social: userdef.balanco_patrimonial.patrimonio_liquido.capital_social,
-                                lucros_acumulados: userdef.balanco_patrimonial.patrimonio_liquido.lucros_acumulados
-                            }
+                            caixa: userdef.balanco_patrimonial.caixa,
+                            estoque: userdef.balanco_patrimonial.estoque,
+                            contas_a_receber60: userdef.balanco_patrimonial.contas_a_receber60,
+                            contas_a_receber120: userdef.balanco_patrimonial.contas_a_receber120,
+                            maquinas: userdef.balanco_patrimonial.maquinas,
+                            depreciacao_maquinas: userdef.balanco_patrimonial.depreciacao_de_maquinas,
+                            veiculos: userdef.balanco_patrimonial.veiculos,
+                            depreciacao_veiculos: userdef.balanco_patrimonial.depreciacao_veiculos,
+                            tributos_a_pagar_anterior: userdef.balanco_patrimonial.tributos_a_pagar_anterior,
+                            tributos_a_pagar_atual: userdef.balanco_patrimonial.tributos_a_pagar_atual,
+                            emprestimos: userdef.balanco_patrimonial.emprestimos,
+                            capial: userdef.balanco_patrimonial.capial,
+                            lucros_acumulados: userdef.balanco_patrimonial.lucros_acumulados
                         }
+
                         usert.dre = {
                             receita: userdef.dre.receita,
                             cmv: userdef.dre.cmv,
@@ -1199,29 +1147,20 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             
                             }
                             userx.balanco_patrimonial = {
-                                ativo: {
-                                    circulante: {
-                                        caixa: userx.balanco_patrimonial.ativo.circulante.caixa - qnt*57600,
-                                        estoque: userx.balanco_patrimonial.ativo.circulante.estoque,
-                                        contas_a_receber: userx.balanco_patrimonial.ativo.circulante.contas_a_receber
-    
-                                    },
-                                    n_circulante: {
-                                        imobilizado: {
-                                            pas: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                            frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.frota + qnt*57600,
-                                            depreciacao_frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
-                                        },
-                                    },
-                                },
-                                passivo: {
-                                    contas_a_pagar: userx.balanco_patrimonial.passivo.contas_a_pagar
-                                },
-                                patrimonio_liquido: {
-                                    capital_social: userx.balanco_patrimonial.patrimonio_liquido.capital_social,
-                                    lucros_acumulados: userx.balanco_patrimonial.patrimonio_liquido.lucros_acumulados
-                                }
-                            }   
+                                caixa: userx.balanco_patrimonial.caixa - qnt*57600,
+                                estoque: userx.balanco_patrimonial.estoque,
+                                contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
+                                contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
+                                maquinas: userx.balanco_patrimonial.maquinas,
+                                depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_de_maquinas,
+                                veiculos: userx.balanco_patrimonial.veiculos + qnt*57600,
+                                depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos,
+                                tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
+                                tributos_a_pagar_atual: userx.balanco_patrimonial.tributos_a_pagar_atual,
+                                emprestimos: userx.balanco_patrimonial.emprestimos,
+                                capial: userx.balanco_patrimonial.capial,
+                                lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados
+                            } 
                             let novaf = userx['frota'][0] + qnt
                             let array_dados = [novaf, userx['frota'][1], userx['frota'][2], userx['frota'][3], userx['frota'][4], userx['frota'][5], userx['frota'][6], userx['frota'][7], userx['frota'][8], userx['frota'][9], userx['frota'][10], userx['frota'][11], userx['frota'][12], userx['frota'][13], userx['frota'][14], userx['frota'][15], userx['frota'][16], userx['frota'][17], userx['frota'][18], userx['frota'][19], userx['frota'][20], userx['frota'][21], userx['frota'][22], userx['frota'][23]]
                             userx.taokeys = userx.taokeys - 57600*Number(dados)
@@ -1314,29 +1253,21 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                         
                                         }
                                         userx.balanco_patrimonial = {
-                                            ativo: {
-                                                circulante: {
-                                                    caixa: userx.balanco_patrimonial.ativo.circulante.caixa + userx.frota[k]*(57600/12)*(12-k),
-                                                    estoque: userx.balanco_patrimonial.ativo.circulante.estoque,
-                                                    contas_a_receber: userx.balanco_patrimonial.ativo.circulante.contas_a_receber
-                
-                                                },
-                                                n_circulante: {
-                                                    imobilizado: {
-                                                        pas: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                                        frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.frota - qnt*57600,
-                                                        depreciacao_frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota + userx.frota[k]*(57600/12)*(k)
-                                                    },
-                                                },
-                                            },
-                                            passivo: {
-                                                contas_a_pagar: userx.balanco_patrimonial.passivo.contas_a_pagar
-                                            },
-                                            patrimonio_liquido: {
-                                                capital_social: userx.balanco_patrimonial.patrimonio_liquido.capital_social,
-                                                lucros_acumulados: userx.balanco_patrimonial.patrimonio_liquido.lucros_acumulados
-                                            }
-                                        }
+                                            caixa: userx.balanco_patrimonial.caixa + userx.frota[k]*(57600/12)*(12-k),
+                                            estoque: userx.balanco_patrimonial.estoque,
+                                            contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
+                                            contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
+                                            maquinas: userx.balanco_patrimonial.maquinas,
+                                            depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_de_maquinas,
+                                            veiculos: userx.balanco_patrimonial.veiculos - qnt*57600,
+                                            depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos + userx.frota[k]*(57600/12)*(k),
+                                            tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
+                                            tributos_a_pagar_atual: userx.balanco_patrimonial.tributos_a_pagar_atual,
+                                            emprestimos: userx.balanco_patrimonial.emprestimos,
+                                            capial: userx.balanco_patrimonial.capial,
+                                            lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados
+                                        } 
+                                       
                                     }
                                     k--
                                 }
@@ -1658,28 +1589,19 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                 if(userx !== null){
                         if(qnt > 0){
                             userx.balanco_patrimonial = {
-                                ativo: {
-                                    circulante: {
-                                        caixa: userx.balanco_patrimonial.ativo.circulante.caixa + qnt,
-                                        estoque: userx.balanco_patrimonial.ativo.circulante.estoque,
-                                        contas_a_receber: userx.balanco_patrimonial.ativo.circulante.contas_a_receber
-    
-                                    },
-                                    n_circulante: {
-                                        imobilizado: {
-                                            pas: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                            frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
-                                            depreciacao_frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
-                                        },
-                                    },
-                                },
-                                passivo: {
-                                    contas_a_pagar: userx.balanco_patrimonial.passivo.contas_a_pagar + qnt
-                                },
-                                patrimonio_liquido: {
-                                    capital_social: userx.balanco_patrimonial.patrimonio_liquido.capital_social,
-                                    lucros_acumulados: userx.balanco_patrimonial.patrimonio_liquido.lucros_acumulados
-                                }
+                                caixa: userx.balanco_patrimonial.caixa + qnt,
+                                estoque: userx.balanco_patrimonial.estoque,
+                                contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
+                                contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
+                                maquinas: userx.balanco_patrimonial.maquinas,
+                                depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_de_maquinas,
+                                veiculos: userx.balanco_patrimonial.veiculos,
+                                depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos,
+                                tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
+                                tributos_a_pagar_atual: userx.balanco_patrimonial.tributos_a_pagar_atual,
+                                emprestimos: userx.balanco_patrimonial.emprestimos + qnt,
+                                capial: userx.balanco_patrimonial.capial,
+                                lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados
                             }
                             userx.fluxo_de_caixa = {
 
@@ -1750,28 +1672,19 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                 if(userx !== null){
                     if(userx.taokeys >= (userx['divida'][0] + userx['divida'][1] + userx['divida'][2])){
                         userx.balanco_patrimonial = {
-                            ativo: {
-                                circulante: {
-                                    caixa: userx.balanco_patrimonial.ativo.circulante.caixa - (userx['divida'][0] + userx['divida'][1] + userx['divida'][2]),
-                                    estoque: userx.balanco_patrimonial.ativo.circulante.estoque,
-                                    contas_a_receber: userx.balanco_patrimonial.ativo.circulante.contas_a_receber
-
-                                },
-                                n_circulante: {
-                                    imobilizado: {
-                                        pas: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                        frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
-                                        depreciacao_frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
-                                    },
-                                },
-                            },
-                            passivo: {
-                                contas_a_pagar: userx.balanco_patrimonial.passivo.contas_a_pagar - (userx['divida'][0] + userx['divida'][1] + userx['divida'][2])
-                            },
-                            patrimonio_liquido: {
-                                capital_social: userx.balanco_patrimonial.patrimonio_liquido.capital_social,
-                                lucros_acumulados: userx.balanco_patrimonial.patrimonio_liquido.lucros_acumulados
-                            }
+                            caixa: userx.balanco_patrimonial.caixa - (userx['divida'][0] + userx['divida'][1] + userx['divida'][2]),
+                            estoque: userx.balanco_patrimonial.estoque,
+                            contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
+                            contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
+                            maquinas: userx.balanco_patrimonial.maquinas,
+                            depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_de_maquinas,
+                            veiculos: userx.balanco_patrimonial.veiculos,
+                            depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos,
+                            tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
+                            tributos_a_pagar_atual: userx.balanco_patrimonial.tributos_a_pagar_atual,
+                            emprestimos: userx.balanco_patrimonial.emprestimos - (userx['divida'][0] + userx['divida'][1] + userx['divida'][2]),
+                            capial: userx.balanco_patrimonial.capial,
+                            lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados
                         }
                         userx.fluxo_de_caixa = {
 
@@ -2097,28 +2010,19 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                 if(userx !== null){
                         if(qnt > 0 && userx.taokeys >= qnt){
                             userx.balanco_patrimonial = {
-                                ativo: {
-                                    circulante: {
-                                        caixa: userx.balanco_patrimonial.ativo.circulante.caixa - qnt,
-                                        estoque: userx.balanco_patrimonial.ativo.circulante.estoque,
-                                        contas_a_receber: userx.balanco_patrimonial.ativo.circulante.contas_a_receber
-    
-                                    },
-                                    n_circulante: {
-                                        imobilizado: {
-                                            pas: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                            frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
-                                            depreciacao_frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
-                                        },
-                                    },
-                                },
-                                passivo: {
-                                    contas_a_pagar: userx.balanco_patrimonial.passivo.contas_a_pagar
-                                },
-                                patrimonio_liquido: {
-                                    capital_social: userx.balanco_patrimonial.patrimonio_liquido.capital_social,
-                                    lucros_acumulados: userx.balanco_patrimonial.patrimonio_liquido.lucros_acumulados - qnt
-                                }
+                                caixa: userx.balanco_patrimonial.caixa - qnt,
+                                estoque: userx.balanco_patrimonial.estoque,
+                                contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
+                                contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
+                                maquinas: userx.balanco_patrimonial.maquinas,
+                                depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_de_maquinas,
+                                veiculos: userx.balanco_patrimonial.veiculos,
+                                depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos,
+                                tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
+                                tributos_a_pagar_atual: userx.balanco_patrimonial.tributos_a_pagar_atual,
+                                emprestimos: userx.balanco_patrimonial.emprestimos,
+                                capial: userx.balanco_patrimonial.capial,
+                                lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados - qnt
                             }
                             userx.dre = {
                                 receita: userx.dre.receita,
@@ -2197,28 +2101,19 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                 if(userx !== null){
                         if(qnt > 0 && userx.taokeys >= qnt){
                             userx.balanco_patrimonial = {
-                                ativo: {
-                                    circulante: {
-                                        caixa: userx.balanco_patrimonial.ativo.circulante.caixa - qnt,
-                                        estoque: userx.balanco_patrimonial.ativo.circulante.estoque,
-                                        contas_a_receber: userx.balanco_patrimonial.ativo.circulante.contas_a_receber
-    
-                                    },
-                                    n_circulante: {
-                                        imobilizado: {
-                                            pas: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                            frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
-                                            depreciacao_frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
-                                        },
-                                    },
-                                },
-                                passivo: {
-                                    contas_a_pagar: userx.balanco_patrimonial.passivo.contas_a_pagar
-                                },
-                                patrimonio_liquido: {
-                                    capital_social: userx.balanco_patrimonial.patrimonio_liquido.capital_social,
-                                    lucros_acumulados: userx.balanco_patrimonial.patrimonio_liquido.lucros_acumulados - qnt
-                                }
+                                caixa: userx.balanco_patrimonial.caixa - qnt,
+                                estoque: userx.balanco_patrimonial.estoque,
+                                contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
+                                contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
+                                maquinas: userx.balanco_patrimonial.maquinas,
+                                depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_de_maquinas,
+                                veiculos: userx.balanco_patrimonial.veiculos,
+                                depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos,
+                                tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
+                                tributos_a_pagar_atual: userx.balanco_patrimonial.tributos_a_pagar_atual,
+                                emprestimos: userx.balanco_patrimonial.emprestimos,
+                                capial: userx.balanco_patrimonial.capial,
+                                lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados - qnt
                             }
                             userx.dre = {
                                 receita: userx.dre.receita,
@@ -2452,28 +2347,19 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         //console.log(user.taokeys + ' ccccccccccccccc');
                         if(userx['taokeys'] >= qnti*userx[tipo][2] && userx[tipo][1] !== 2){
                             userx.balanco_patrimonial = {
-                                ativo: {
-                                    circulante: {
-                                        caixa: userx.balanco_patrimonial.ativo.circulante.caixa - qnti*userx[tipo][2],
-                                        estoque: userx.balanco_patrimonial.ativo.circulante.estoque + qnti*userx[tipo][2],
-                                        contas_a_receber: userx.balanco_patrimonial.ativo.circulante.contas_a_receber
-    
-                                    },
-                                    n_circulante: {
-                                        imobilizado: {
-                                            pas: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                            frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
-                                            depreciacao_frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
-                                        },
-                                    },
-                                },
-                                passivo: {
-                                    contas_a_pagar: userx.balanco_patrimonial.passivo.contas_a_pagar
-                                },
-                                patrimonio_liquido: {
-                                    capital_social: userx.balanco_patrimonial.patrimonio_liquido.capital_social,
-                                    lucros_acumulados: userx.balanco_patrimonial.patrimonio_liquido.lucros_acumulados
-                                }
+                                caixa: userx.balanco_patrimonial.caixa - qnti*userx[tipo][2],
+                                estoque: userx.balanco_patrimonial.estoque + qnti*userx[tipo][2],
+                                contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
+                                contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
+                                maquinas: userx.balanco_patrimonial.maquinas,
+                                depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_de_maquinas,
+                                veiculos: userx.balanco_patrimonial.veiculos,
+                                depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos,
+                                tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
+                                tributos_a_pagar_atual: userx.balanco_patrimonial.tributos_a_pagar_atual,
+                                emprestimos: userx.balanco_patrimonial.emprestimos,
+                                capial: userx.balanco_patrimonial.capial,
+                                lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados
                             }
                             if(userx[tipo][1] !== 3 && userx[tipo][1] !== 0){
                            //console.log(userx[tipo][1] + " <====")
@@ -2572,28 +2458,19 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
             .then((userx) => { 
                     if(userx !== null){
                         userx.balanco_patrimonial = {
-                            ativo: {
-                                circulante: {
-                                    caixa: userx.balanco_patrimonial.ativo.circulante.caixa - 2160,
-                                    estoque: userx.balanco_patrimonial.ativo.circulante.estoque,
-                                    contas_a_receber: userx.balanco_patrimonial.ativo.circulante.contas_a_receber
-
-                                },
-                                n_circulante: {
-                                    imobilizado: {
-                                        pas: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                        frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
-                                        depreciacao_frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
-                                    },
-                                },
-                            },
-                            passivo: {
-                                contas_a_pagar: userx.balanco_patrimonial.passivo.contas_a_pagar
-                            },
-                            patrimonio_liquido: {
-                                capital_social: userx.balanco_patrimonial.patrimonio_liquido.capital_social,
-                                lucros_acumulados: userx.balanco_patrimonial.patrimonio_liquido.lucros_acumulados - 2160
-                            }
+                            caixa: userx.balanco_patrimonial.caixa - 2160,
+                            estoque: userx.balanco_patrimonial.estoque,
+                            contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
+                            contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
+                            maquinas: userx.balanco_patrimonial.maquinas,
+                            depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_de_maquinas,
+                            veiculos: userx.balanco_patrimonial.veiculos,
+                            depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos,
+                            tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
+                            tributos_a_pagar_atual: userx.balanco_patrimonial.tributos_a_pagar_atual,
+                            emprestimos: userx.balanco_patrimonial.emprestimos,
+                            capial: userx.balanco_patrimonial.capial,
+                            lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados - 2160
                         }
                         userx.dre = {
                             receita: userx.dre.receita,
@@ -2677,28 +2554,19 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
             .then((userx) => { 
                     if(userx !== null){
                         userx.balanco_patrimonial = {
-                            ativo: {
-                                circulante: {
-                                    caixa: userx.balanco_patrimonial.ativo.circulante.caixa - 2160,
-                                    estoque: userx.balanco_patrimonial.ativo.circulante.estoque,
-                                    contas_a_receber: userx.balanco_patrimonial.ativo.circulante.contas_a_receber
-
-                                },
-                                n_circulante: {
-                                    imobilizado: {
-                                        pas: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                        frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
-                                        depreciacao_frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
-                                    },
-                                },
-                            },
-                            passivo: {
-                                contas_a_pagar: userx.balanco_patrimonial.passivo.contas_a_pagar
-                            },
-                            patrimonio_liquido: {
-                                capital_social: userx.balanco_patrimonial.patrimonio_liquido.capital_social,
-                                lucros_acumulados: userx.balanco_patrimonial.patrimonio_liquido.lucros_acumulados - 2160
-                            }
+                            caixa: userx.balanco_patrimonial.caixa - 2160,
+                            estoque: userx.balanco_patrimonial.estoque,
+                            contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
+                            contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
+                            maquinas: userx.balanco_patrimonial.maquinas,
+                            depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_de_maquinas,
+                            veiculos: userx.balanco_patrimonial.veiculos,
+                            depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos,
+                            tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
+                            tributos_a_pagar_atual: userx.balanco_patrimonial.tributos_a_pagar_atual,
+                            emprestimos: userx.balanco_patrimonial.emprestimos,
+                            capial: userx.balanco_patrimonial.capial,
+                            lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados - 2160
                         }
                         userx.dre = {
                             receita: userx.dre.receita,
@@ -2784,28 +2652,19 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         //console.log(user.taokeys + ' ccccccccccccccc');
                         if(userx['taokeys'] >= 10800 && input.length == 1){
                             userx.balanco_patrimonial = {
-                                ativo: {
-                                    circulante: {
-                                        caixa: userx.balanco_patrimonial.ativo.circulante.caixa - 10800,
-                                        estoque: userx.balanco_patrimonial.ativo.circulante.estoque,
-                                        contas_a_receber: userx.balanco_patrimonial.ativo.circulante.contas_a_receber
-    
-                                    },
-                                    n_circulante: {
-                                        imobilizado: {
-                                            pas: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                            frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
-                                            depreciacao_frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
-                                        },
-                                    },
-                                },
-                                passivo: {
-                                    contas_a_pagar: userx.balanco_patrimonial.passivo.contas_a_pagar
-                                },
-                                patrimonio_liquido: {
-                                    capital_social: userx.balanco_patrimonial.patrimonio_liquido.capital_social,
-                                    lucros_acumulados: userx.balanco_patrimonial.patrimonio_liquido.lucros_acumulados - 10800
-                                }
+                                caixa: userx.balanco_patrimonial.caixa - 10800,
+                                estoque: userx.balanco_patrimonial.estoque,
+                                contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
+                                contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
+                                maquinas: userx.balanco_patrimonial.maquinas,
+                                depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_de_maquinas,
+                                veiculos: userx.balanco_patrimonial.veiculos,
+                                depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos,
+                                tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
+                                tributos_a_pagar_atual: userx.balanco_patrimonial.tributos_a_pagar_atual,
+                                emprestimos: userx.balanco_patrimonial.emprestimos,
+                                capial: userx.balanco_patrimonial.capial,
+                                lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados - 10800
                             }
                             userx.dre = {
                                 receita: userx.dre.receita,
@@ -2875,28 +2734,19 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             }
                             else if(userx['taokeys'] >= 14400 && input.length == 2){
                                 userx.balanco_patrimonial = {
-                                    ativo: {
-                                        circulante: {
-                                            caixa: userx.balanco_patrimonial.ativo.circulante.caixa - 14400,
-                                            estoque: userx.balanco_patrimonial.ativo.circulante.estoque,
-                                            contas_a_receber: userx.balanco_patrimonial.ativo.circulante.contas_a_receber
-        
-                                        },
-                                        n_circulante: {
-                                            imobilizado: {
-                                                pas: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                                frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
-                                                depreciacao_frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
-                                            },
-                                        },
-                                    },
-                                    passivo: {
-                                        contas_a_pagar: userx.balanco_patrimonial.passivo.contas_a_pagar
-                                    },
-                                    patrimonio_liquido: {
-                                        capital_social: userx.balanco_patrimonial.patrimonio_liquido.capital_social,
-                                        lucros_acumulados: userx.balanco_patrimonial.patrimonio_liquido.lucros_acumulados - 14400
-                                    }
+                                    caixa: userx.balanco_patrimonial.caixa - 14400,
+                                    estoque: userx.balanco_patrimonial.estoque,
+                                    contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
+                                    contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
+                                    maquinas: userx.balanco_patrimonial.maquinas,
+                                    depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_de_maquinas,
+                                    veiculos: userx.balanco_patrimonial.veiculos,
+                                    depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos,
+                                    tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
+                                    tributos_a_pagar_atual: userx.balanco_patrimonial.tributos_a_pagar_atual,
+                                    emprestimos: userx.balanco_patrimonial.emprestimos,
+                                    capial: userx.balanco_patrimonial.capial,
+                                    lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados - 14400
                                 }
                                 userx.dre = {
                                     receita: userx.dre.receita,
@@ -2988,28 +2838,19 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         //console.log(user.taokeys + ' ccccccccccccccc');
                         if(userx['taokeys'] >= 2160){
                             userx.balanco_patrimonial = {
-                                ativo: {
-                                    circulante: {
-                                        caixa: userx.balanco_patrimonial.ativo.circulante.caixa - 2160,
-                                        estoque: userx.balanco_patrimonial.ativo.circulante.estoque,
-                                        contas_a_receber: userx.balanco_patrimonial.ativo.circulante.contas_a_receber
-    
-                                    },
-                                    n_circulante: {
-                                        imobilizado: {
-                                            pas: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                            frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
-                                            depreciacao_frota: userx.balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
-                                        },
-                                    },
-                                },
-                                passivo: {
-                                    contas_a_pagar: userx.balanco_patrimonial.passivo.contas_a_pagar
-                                },
-                                patrimonio_liquido: {
-                                    capital_social: userx.balanco_patrimonial.patrimonio_liquido.capital_social,
-                                    lucros_acumulados: userx.balanco_patrimonial.patrimonio_liquido.lucros_acumulados - 2160
-                                }
+                                caixa: userx.balanco_patrimonial.caixa - 2160,
+                                estoque: userx.balanco_patrimonial.estoque,
+                                contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
+                                contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
+                                maquinas: userx.balanco_patrimonial.maquinas,
+                                depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_de_maquinas,
+                                veiculos: userx.balanco_patrimonial.veiculos,
+                                depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos,
+                                tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
+                                tributos_a_pagar_atual: userx.balanco_patrimonial.tributos_a_pagar_atual,
+                                emprestimos: userx.balanco_patrimonial.emprestimos,
+                                capial: userx.balanco_patrimonial.capial,
+                                lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados - 2160
                             }
                             userx.dre = {
                                 receita: userx.dre.receita,
@@ -3095,9 +2936,9 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 .then((balancos) => {
                                     
                                         socket.emit('balancos', { 
-                                            nome: "Afonso",
-                                            sobrenome: "Gay",
-                                            idade: 42
+                                            balanco_patrimonial: balancos.balanco_patrimonial,
+                                            dre: balancos.dre,
+                                            fluxo: balancos.fluxo_de_caixa
                                          });
         
                                                       
@@ -3333,30 +3174,20 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     for(let f = 0; f < 12; f++){
                         somaF = somaF + users[i]['frota'][f]
                         if(users[i]['frota'][f] > 0){
-                            
-                            users[i].balanco_patrimonial = {
-                                ativo: {
-                                    circulante: {
-                                        caixa: users[i].balanco_patrimonial.ativo.circulante.caixa,
-                                        estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
-                                        contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber
-    
-                                    },
-                                    n_circulante: {
-                                        imobilizado: {
-                                            pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                            frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
-                                            depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota - 2400*users[i]['frota'][f]
-                                        }
-                                    }
-                                },
-                                passivo: {
-                                    contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
-                                },
-                                patrimonio_liquido: {
-                                    capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
-                                    lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - 2400*users[i]['frota'][f]
-                                }
+                            userx.balanco_patrimonial = {
+                                caixa: userx.balanco_patrimonial.caixa - 2400*users[i]['frota'][f],
+                                estoque: userx.balanco_patrimonial.estoque,
+                                contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
+                                contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
+                                maquinas: userx.balanco_patrimonial.maquinas,
+                                depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_de_maquinas,
+                                veiculos: userx.balanco_patrimonial.veiculos,
+                                depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos,
+                                tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
+                                tributos_a_pagar_atual: userx.balanco_patrimonial.tributos_a_pagar_atual,
+                                emprestimos: userx.balanco_patrimonial.emprestimos,
+                                capial: userx.balanco_patrimonial.capial,
+                                lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados - 2400*users[i]['frota'][f]
                             }
                             users[i].dre = {
                                 receita: users[i].dre.receita,
@@ -3369,29 +3200,20 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             }
                         }
                         if(users[i]['frota'][f] > 0 && f == 11){
-                            users[i].balanco_patrimonial = {
-                                ativo: {
-                                    circulante: {
-                                        caixa: users[i].balanco_patrimonial.ativo.circulante.caixa,
-                                        estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
-                                        contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber
-    
-                                    },
-                                    n_circulante: {
-                                        imobilizado: {
-                                            pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                            frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota - 57600*users[i]['frota'][f],
-                                            depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota - 57600*users[i]['frota'][f]
-                                        },
-                                    },
-                                },
-                                passivo: {
-                                    contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
-                                },
-                                patrimonio_liquido: {
-                                    capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
-                                    lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
-                                }
+                            userx.balanco_patrimonial = {
+                                caixa: userx.balanco_patrimonial.caixa,
+                                estoque: userx.balanco_patrimonial.estoque,
+                                contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
+                                contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
+                                maquinas: userx.balanco_patrimonial.maquinas,
+                                depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_de_maquinas,
+                                veiculos: userx.balanco_patrimonial.veiculos - 57600*users[i]['frota'][f],
+                                depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos - 57600*users[i]['frota'][f],
+                                tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
+                                tributos_a_pagar_atual: userx.balanco_patrimonial.tributos_a_pagar_atual,
+                                emprestimos: userx.balanco_patrimonial.emprestimos,
+                                capial: userx.balanco_patrimonial.capial,
+                                lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados
                             }
                         }
                     }
@@ -3449,30 +3271,21 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     
                     //  -_-_-_-
                     //Apos a computacao do faturamento do player no codigo abaixo altera-se no Schema o lucro resultante desse faturamento levando em conta o faturamento planejado do player, como o professor instruiu \/
-                  
-                    users[i].balanco_patrimonial = { //despesas regulares com PROMOTORES, DISTRIBUIDORES, PAS e despesas de vendas (comissão)
-                        ativo: {
-                            circulante: {
-                                caixa: users[i].balanco_patrimonial.ativo.circulante.caixa - users[i]['promotores']*2160 - users[i]['distribuidores']*2160 - users[i]['pas']*2160 - users[i]['faturamento']*users[i]['comissao'],
-                                estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
-                                contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber
-
-                            },
-                            n_circulante: {
-                                imobilizado: {
-                                    pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                    frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
-                                    depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
-                                },
-                            },
-                        },
-                        passivo: {
-                            contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
-                        },
-                        patrimonio_liquido: {
-                            capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
-                            lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - users[i]['promotores']*2160 - users[i]['distribuidores']*2160 - users[i]['pas']*2160 - users[i]['faturamento']*users[i]['comissao']
-                        }
+                    users[i].taokeys = users[i].taokeys + users[i].balanco_patrimonial.contas_a_receber60 - users[i]['promotores']*2160 - users[i]['distribuidores']*2160 - users[i]['pas']*2160 - users[i]['faturamento']*users[i]['comissao']
+                    users[i].balanco_patrimonial = {
+                        caixa: users[i].balanco_patrimonial.caixa + users[i].balanco_patrimonial.contas_a_receber60 - users[i]['promotores']*2160 - users[i]['distribuidores']*2160 - users[i]['pas']*2160 - users[i]['faturamento']*users[i]['comissao'],
+                        estoque: users[i].balanco_patrimonial.estoque,
+                        contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60 - users[i].balanco_patrimonial.contas_a_receber60 + users[i].balanco_patrimonial.contas_a_receber120,
+                        contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120 - users[i].balanco_patrimonial.contas_a_receber120,
+                        maquinas: users[i].balanco_patrimonial.maquinas,
+                        depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
+                        veiculos: users[i].balanco_patrimonial.veiculos,
+                        depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
+                        tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
+                        tributos_a_pagar_atual: users[i].balanco_patrimonial.tributos_a_pagar_atual,
+                        emprestimos: users[i].balanco_patrimonial.emprestimos,
+                        capial: users[i].balanco_patrimonial.capial,
+                        lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - users[i]['promotores']*2160 - users[i]['distribuidores']*2160 - users[i]['pas']*2160 - users[i]['faturamento']*users[i]['comissao']
                     }
                     users[i].dre = {
 
@@ -3486,9 +3299,6 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
 
                     }
 
-                    users[i].taokeys = users[i].taokeys - users[i]['promotores']*2160
-                    users[i].taokeys = users[i].taokeys - users[i]['faturamento']*users[i]['comissao']
-                    users[i].taokeys = users[i].taokeys - users[i]['distribuidores']*2160
                     
 
                     let uso_frota = 0;
@@ -3497,76 +3307,29 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         users[i].set(index[o],[users[i][index[o]][0], users[i][index[o]][1], users[i][index[o]][2], users[i][index[o]][3], users[i][index[o]][4], users[i][index[o]][5], 0, users[i][index[o]][7]])
                         if(users[i][index[o]][4] > 0){
                             //console.log('----------> antes (do recebimento de contas a receber): ' + users[i].taokeys)
-                            users[i].taokeys = users[i].taokeys + users[i][index[o]][7] //recebendo contas a receber
-                            
-                            users[i].fluxo_de_caixa = {
-
-                                lucro_bruto: users[i].fluxo_de_caixa.lucro_bruto,
-                                contas_a_receber: users[i].fluxo_de_caixa.contas_a_receber,
-                                contas_a_receber_recebidas: users[i].fluxo_de_caixa.contas_a_receber_recebidas + users[i][index[o]][7], //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
-                                despesas: users[i].fluxo_de_caixa.despesas,
-                                fluxo_operacional: users[i].fluxo_de_caixa.fluxo_operacional,
-                                fluxo_financeiro: users[i].fluxo_de_caixa.fluxo_financeiro, // entra + emprestimos tomados e entra - empréstimos pagos 
-                                fluxo_investimento: users[i].fluxo_de_caixa.fluxo_investimento, // entra negativo tds as compras de VEICULOS e entra positivo todo o valor da venda de veiculos
-                                fluxo: 0
-                            
-                            }  
-                            users[i].balanco_patrimonial = {
-                                ativo: {
-                                    circulante: {
-                                        caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i][index[o]][7],
-                                        estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
-                                        contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i][index[o]][7]
-    
-                                    },
-                                    n_circulante: {
-                                        imobilizado: {
-                                            pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                            frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
-                                            depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
-                                        },
-                                    },
-                                },
-                                passivo: {
-                                    contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
-                                },
-                                patrimonio_liquido: {
-                                    capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
-                                    lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
-                                }
-                            }
                             
                             //console.log('----------> depois (do recebimento de contas a receber): ' + users[i].taokeys)
-                            users[i].taokeys = users[i].taokeys + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][3])// - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*users[i][index[o]][2] //erro de contabilidade resolvido
+                            // - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*users[i][index[o]][2] //erro de contabilidade resolvido
                             let array_insu = [(users[i][index[o]][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]), users[i][index[o]][1], users[i][index[o]][2], users[i][index[o]][3], users[i][index[o]][4],(users[i][index[o]][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*users[i][index[o]][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][3])]
                             //(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['147'][4]*users[i]['147'][3] => igual ao faturamento obtido pelo jogador nesse serviço especifico
                             users[i].set(index[o], array_insu)
                             //users[i].balanco_patrimonial.contas_a_receber = users[i]['147'][7]
-                            
                             users[i].balanco_patrimonial = {
-                                ativo: {
-                                    circulante: {
-                                        caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][3]),
-                                        estoque: users[i].balanco_patrimonial.ativo.circulante.estoque - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][2]),
-                                        contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber + users[i][index[o]][7]
-    
-                                    },
-                                    n_circulante: {
-                                        imobilizado: {
-                                            pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                            frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
-                                            depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
-                                        },
-                                    },
-                                },
-                                passivo: {
-                                    contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
-                                },
-                                patrimonio_liquido: {
-                                    capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
-                                    lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][2]) + users[i][index[o]][7] + 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][3])
-                                }
-                            }
+                                caixa: users[i].balanco_patrimonial.caixa,
+                                estoque: users[i].balanco_patrimonial.estoque - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][2]),
+                                contas_a_receber60: users[i][index[o]][7] + userx.balanco_patrimonial.contas_a_receber60,
+                                contas_a_receber120: users[i][index[o]][7] + userx.balanco_patrimonial.contas_a_receber120,
+                                maquinas: users[i].balanco_patrimonial.maquinas,
+                                depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
+                                veiculos: users[i].balanco_patrimonial.veiculos,
+                                depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
+                                tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
+                                tributos_a_pagar_atual: users[i].balanco_patrimonial.tributos_a_pagar_atual,
+                                emprestimos: users[i].balanco_patrimonial.emprestimos,
+                                capial: users[i].balanco_patrimonial.capial,
+                                lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][2]) + users[i][index[o]][7]*2
+                            }  
+                            
                             
                             users[i].dre = {
                                 receita: users[i].dre.receita + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][3]),
@@ -3581,30 +3344,22 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             if(users[i][index[o]][0] >= 0){
                                 users[i].taokeys = users[i].taokeys - users[i][index[o]][0]*36
     
+
                                 users[i].balanco_patrimonial = {
-                                    ativo: {
-                                        circulante: {
-                                            caixa: users[i].balanco_patrimonial.ativo.circulante.caixa - users[i][index[o]][0]*36, 
-                                            estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
-                                            contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber
-        
-                                        },
-                                        n_circulante: {
-                                            imobilizado: {
-                                                pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                                frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
-                                                depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
-                                            },
-                                        },
-                                    },
-                                    passivo: {
-                                        contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
-                                    },
-                                    patrimonio_liquido: {
-                                        capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
-                                        lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - users[i][index[o]][0]*36
-                                    }
-                                }
+                                caixa: users[i].balanco_patrimonial.caixa - users[i][index[o]][0]*36,
+                                estoque: users[i].balanco_patrimonial.estoque,
+                                contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
+                                contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
+                                maquinas: users[i].balanco_patrimonial.maquinas,
+                                depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
+                                veiculos: users[i].balanco_patrimonial.veiculos,
+                                depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
+                                tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
+                                tributos_a_pagar_atual: users[i].balanco_patrimonial.tributos_a_pagar_atual,
+                                emprestimos: users[i].balanco_patrimonial.emprestimos,
+                                capial: users[i].balanco_patrimonial.capial,
+                                lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - users[i][index[o]][0]*36
+                            }
                                 
                                 users[i].dre = {
                                     receita: users[i].dre.receita,
@@ -3619,30 +3374,22 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             else{
                                 users[i].taokeys = users[i].taokeys + users[i][index[o]][0]*users[i][index[o]][2]*1.2
                                 
-                                users[i].balanco_patrimonial = { //MODELO
-                                    ativo: {
-                                        circulante: {
-                                            caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i][index[o]][0]*users[i][index[o]][2]*1.2,
-                                            estoque: users[i].balanco_patrimonial.ativo.circulante.estoque + (-1)*(users[i][index[o]][0]*users[i][index[o]][2]),
-                                            contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber
-        
-                                        },
-                                        n_circulante: {
-                                            imobilizado: {
-                                                pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                                frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
-                                                depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
-                                            },
-                                        },
-                                    },
-                                    passivo: {
-                                        contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
-                                    },
-                                    patrimonio_liquido: {
-                                        capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
-                                        lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados + users[i][index[o]][0]*users[i][index[o]][2]*1.2 + (-1)*(users[i][index[o]][0]*users[i][index[o]][2])
-                                    }
+                                users[i].balanco_patrimonial = {
+                                    caixa: users[i].balanco_patrimonial.caixa + users[i][index[o]][0]*users[i][index[o]][2]*1.2,
+                                    estoque: users[i].balanco_patrimonial.estoque + (-1)*(users[i][index[o]][0]*users[i][index[o]][2]),
+                                    contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
+                                    contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
+                                    maquinas: users[i].balanco_patrimonial.maquinas,
+                                    depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
+                                    veiculos: users[i].balanco_patrimonial.veiculos,
+                                    depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
+                                    tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
+                                    tributos_a_pagar_atual: users[i].balanco_patrimonial.tributos_a_pagar_atual,
+                                    emprestimos: users[i].balanco_patrimonial.emprestimos,
+                                    capial: users[i].balanco_patrimonial.capial,
+                                    lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados + users[i][index[o]][0]*users[i][index[o]][2]*1.2 + (-1)*(users[i][index[o]][0]*users[i][index[o]][2])
                                 }
+
                                 
                                 users[i].dre = {
                                     receita: users[i].dre.receita,
@@ -3666,48 +3413,6 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             else{}
 
                         }
-                        else{ 
-                            users[i].taokeys = users[i].taokeys + users[i][index[o]][7]; //recebendo contas a receber, aqui no caso se o serviço n estiver mais sendo utilizado
-                            users[i].balanco_patrimonial = {
-                                ativo: {
-                                    circulante: {
-                                        caixa: users[i].balanco_patrimonial.ativo.circulante.caixa + users[i][index[o]][7],
-                                        estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
-                                        contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber - users[i][index[o]][7]
-    
-                                    },
-                                    n_circulante: {
-                                        imobilizado: {
-                                            pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                            frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
-                                            depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
-                                        },
-                                    },
-                                },
-                                passivo: {
-                                    contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
-                                },
-                                patrimonio_liquido: {
-                                    capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
-                                    lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
-                                }
-                            }
-                            users[i].fluxo_de_caixa = {
-
-                                lucro_bruto: users[i].fluxo_de_caixa.lucro_bruto,
-                                contas_a_receber: users[i].fluxo_de_caixa.contas_a_receber,
-                                contas_a_receber_recebidas: users[i].fluxo_de_caixa.contas_a_receber_recebidas + users[i][index[o]][7], //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
-                                despesas: users[i].fluxo_de_caixa.despesas,
-                                fluxo_operacional: users[i].fluxo_de_caixa.fluxo_operacional,
-                                fluxo_financeiro: users[i].fluxo_de_caixa.fluxo_financeiro, // entra + emprestimos tomados e entra - empréstimos pagos 
-                                fluxo_investimento: users[i].fluxo_de_caixa.fluxo_investimento, // entra negativo tds as compras de VEICULOS e entra positivo todo o valor da venda de veiculos
-                                fluxo: 0
-                            
-                            }          
-                            let array_novo = [users[i][index[o]][0], users[i][index[o]][1], users[i][index[o]][2], users[i][index[o]][3], users[i][index[o]][4], users[i][index[o]][5], users[i][index[o]][6], 0]
-                            users[i].set(index[o], array_novo)
-    
-                            }
                     }
                     
                     users[i]['scoremod'] = 1
@@ -3737,28 +3442,19 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     if(frota_soma > 0){
                         users[i].taokeys = users[i].taokeys - frota_soma*10800
                         users[i].balanco_patrimonial = {
-                            ativo: {
-                                circulante: {
-                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa - frota_soma*10800,
-                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
-                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber
-
-                                },
-                                n_circulante: {
-                                    imobilizado: {
-                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
-                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
-                                    },
-                                },
-                            },
-                            passivo: {
-                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
-                            },
-                            patrimonio_liquido: {
-                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
-                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - frota_soma*10800
-                            }
+                            caixa: users[i].balanco_patrimonial.caixa - frota_soma*10800,
+                            estoque: users[i].balanco_patrimonial.estoque,
+                            contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
+                            contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
+                            maquinas: users[i].balanco_patrimonial.maquinas,
+                            depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
+                            veiculos: users[i].balanco_patrimonial.veiculos,
+                            depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
+                            tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
+                            tributos_a_pagar_atual: users[i].balanco_patrimonial.tributos_a_pagar_atual,
+                            emprestimos: users[i].balanco_patrimonial.emprestimos,
+                            capial: users[i].balanco_patrimonial.capial,
+                            lucros_acumulados: users[i].balanco_patrimonial.lucros_acumuladossao - frota_soma*10800
                         }
                         users[i].dre = {
                             receita: users[i].dre.receita,
@@ -3780,28 +3476,19 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         if(j > 0){
                             users[i].taokeys = users[i].taokeys - (((uso_frota-j)/2000)-frota_soma+1)*60 //desconta o valor gasto com frota terceirizada
                             users[i].balanco_patrimonial = {
-                                ativo: {
-                                    circulante: {
-                                        caixa: users[i].balanco_patrimonial.ativo.circulante.caixa - (((uso_frota-j)/2000)-frota_soma+1)*60,
-                                        estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
-                                        contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber
-    
-                                    },
-                                    n_circulante: {
-                                        imobilizado: {
-                                            pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                            frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
-                                            depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
-                                        },
-                                    },
-                                },
-                                passivo: {
-                                    contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
-                                },
-                                patrimonio_liquido: {
-                                    capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
-                                    lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - (((uso_frota-j)/2000)-frota_soma+1)*60
-                                }
+                                caixa: users[i].balanco_patrimonial.caixa - (((uso_frota-j)/2000)-frota_soma+1)*60,
+                                estoque: users[i].balanco_patrimonial.estoque,
+                                contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60 - users[i].balanco_patrimonial.contas_a_receber60 + users[i].balanco_patrimonial.contas_a_receber120,
+                                contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120 - users[i].balanco_patrimonial.contas_a_receber120,
+                                maquinas: users[i].balanco_patrimonial.maquinas,
+                                depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
+                                veiculos: users[i].balanco_patrimonial.veiculos,
+                                depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
+                                tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
+                                tributos_a_pagar_atual: users[i].balanco_patrimonial.tributos_a_pagar_atual,
+                                emprestimos: users[i].balanco_patrimonial.emprestimos,
+                                capial: users[i].balanco_patrimonial.capial,
+                                lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - (((uso_frota-j)/2000)-frota_soma+1)*60
                             }
                             users[i].dre = {
                                 receita: users[i].dre.receita,
@@ -3816,28 +3503,19 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         else{
                             users[i].taokeys = users[i].taokeys - (((uso_frota)/2000)-frota_soma)*60 //desconta o valor gasto com frota terceirizada
                             users[i].balanco_patrimonial = {
-                                ativo: {
-                                    circulante: {
-                                        caixa: users[i].balanco_patrimonial.ativo.circulante.caixa - (((uso_frota-j)/2000)-frota_soma)*60,
-                                        estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
-                                        contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber
-    
-                                    },
-                                    n_circulante: {
-                                        imobilizado: {
-                                            pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                            frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
-                                            depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
-                                        },
-                                    },
-                                },
-                                passivo: {
-                                    contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
-                                },
-                                patrimonio_liquido: {
-                                    capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
-                                    lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - (((uso_frota-j)/2000)-frota_soma)*60
-                                }
+                                caixa: users[i].balanco_patrimonial.caixa - (((uso_frota-j)/2000)-frota_soma)*60,
+                                estoque: users[i].balanco_patrimonial.estoque,
+                                contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
+                                contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
+                                maquinas: users[i].balanco_patrimonial.maquinas,
+                                depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
+                                veiculos: users[i].balanco_patrimonial.veiculos,
+                                depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
+                                tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
+                                tributos_a_pagar_atual: users[i].balanco_patrimonial.tributos_a_pagar_atual,
+                                emprestimos: users[i].balanco_patrimonial.emprestimos,
+                                capial: users[i].balanco_patrimonial.capial,
+                                lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - (((uso_frota-j)/2000)-frota_soma)*60
                             }
                             users[i].dre = {
                                 receita: users[i].dre.receita,
@@ -3860,29 +3538,20 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     
                     if(users[i].taokeys >= users[i]['divida'][0]/3 + users[i]['divida'][0]*0.08){
                         users[i].taokeys = users[i].taokeys - (users[i]['divida'][0]/3 + users[i]['divida'][0]*0.08)
-                        users[i].balanco_patrimonial = { // Adding despesas financeiras
-                            ativo: {
-                                circulante: {
-                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa - users[i]['divida'][0]/3 - users[i]['divida'][0]*0.08,
-                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
-                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber
-
-                                },
-                                n_circulante: {
-                                    imobilizado: {
-                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
-                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
-                                    },
-                                },
-                            },
-                            passivo: {
-                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar - users[i]['divida'][0]/3
-                            },
-                            patrimonio_liquido: {
-                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
-                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - users[i]['divida'][0]*0.08
-                            }
+                        users[i].balanco_patrimonial = {
+                            caixa: users[i].balanco_patrimonial.caixa - users[i]['divida'][0]/3 - users[i]['divida'][0]*0.08,
+                            estoque: users[i].balanco_patrimonial.estoque,
+                            contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
+                            contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
+                            maquinas: users[i].balanco_patrimonial.maquinas,
+                            depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
+                            veiculos: users[i].balanco_patrimonial.veiculos,
+                            depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
+                            tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
+                            tributos_a_pagar_atual: users[i].balanco_patrimonial.tributos_a_pagar_atual,
+                            emprestimos: users[i].balanco_patrimonial.emprestimos - users[i]['divida'][0]/3,
+                            capial: users[i].balanco_patrimonial.capial,
+                            lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - users[i]['divida'][0]*0.08
                         }
                         users[i].fluxo_de_caixa = {
 
@@ -3910,30 +3579,22 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     else if(users[i].taokeys > users[i]['divida'][0]*0.08){
                         let gamb = (users[i]['divida'][0]/3 + users[i]['divida'][0]*0.08) - users[i].taokeys
                         users[i].taokeys = 0
-                        users[i].balanco_patrimonial = { // Adding despesas financeiras
-                            ativo: {
-                                circulante: {
-                                    caixa: 0,
-                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
-                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber
-
-                                },
-                                n_circulante: {
-                                    imobilizado: {
-                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
-                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
-                                    },
-                                },
-                            },
-                            passivo: {
-                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar - (users[i]['divida'][0]/3 - gamb)
-                            },
-                            patrimonio_liquido: {
-                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
-                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - users[i]['divida'][0]*0.08
-                            }
+                        users[i].balanco_patrimonial = {
+                            caixa: 0,
+                            estoque: users[i].balanco_patrimonial.estoque,
+                            contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
+                            contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
+                            maquinas: users[i].balanco_patrimonial.maquinas,
+                            depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
+                            veiculos: users[i].balanco_patrimonial.veiculos,
+                            depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
+                            tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
+                            tributos_a_pagar_atual: users[i].balanco_patrimonial.tributos_a_pagar_atual,
+                            emprestimos: users[i].balanco_patrimonial.emprestimos - (users[i]['divida'][0]/3 - gamb),
+                            capial: users[i].balanco_patrimonial.capial,
+                            lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - users[i]['divida'][0]*0.08
                         }
+                        
                         users[i].fluxo_de_caixa = {
 
                             lucro_bruto: users[i].fluxo_de_caixa.lucro_bruto,
@@ -3958,29 +3619,20 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         users[i].set('divida', [users[i]['divida'][0]*(2/3) + gamb, users[i]['divida'][1], users[i]['divida'][2]])
                     }
                     else{
-                        users[i].balanco_patrimonial = { // Adding despesas financeiras
-                            ativo: {
-                                circulante: {
-                                    caixa: 0,
-                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
-                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber
-
-                                },
-                                n_circulante: {
-                                    imobilizado: {
-                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
-                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
-                                    },
-                                },
-                            },
-                            passivo: {
-                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar + (users[i]['divida'][0]*0.08 - users[i].taokeys)
-                            },
-                            patrimonio_liquido: {
-                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
-                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - users[i]['divida'][0]*0.08
-                            }
+                        users[i].balanco_patrimonial = {
+                            caixa: 0,
+                            estoque: users[i].balanco_patrimonial.estoque,
+                            contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
+                            contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
+                            maquinas: users[i].balanco_patrimonial.maquinas,
+                            depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
+                            veiculos: users[i].balanco_patrimonial.veiculos,
+                            depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
+                            tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
+                            tributos_a_pagar_atual: users[i].balanco_patrimonial.tributos_a_pagar_atual,
+                            emprestimos: users[i].balanco_patrimonial.emprestimos + (users[i]['divida'][0]*0.08 - users[i].taokeys),
+                            capial: users[i].balanco_patrimonial.capial,
+                            lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - users[i]['divida'][0]*0.08
                         }
                         users[i].fluxo_de_caixa = {
 
@@ -4009,29 +3661,20 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
 
                     if(users[i].taokeys >= users[i]['divida'][1]/2 + users[i]['divida'][1]*0.08){
                         users[i].taokeys = users[i].taokeys - (users[i]['divida'][1]/2 + users[i]['divida'][1]*0.08)
-                        users[i].balanco_patrimonial = { // Adding despesas financeiras
-                            ativo: {
-                                circulante: {
-                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa - users[i]['divida'][1]/2 - users[i]['divida'][1]*0.08,
-                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
-                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber
-
-                                },
-                                n_circulante: {
-                                    imobilizado: {
-                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
-                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
-                                    },
-                                },
-                            },
-                            passivo: {
-                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar - users[i]['divida'][1]/2
-                            },
-                            patrimonio_liquido: {
-                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
-                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - users[i]['divida'][1]*0.08
-                            }
+                        users[i].balanco_patrimonial = {
+                            caixa: users[i].balanco_patrimonial.ativo.circulante.caixa - users[i]['divida'][1]/2 - users[i]['divida'][1]*0.08,
+                            estoque: users[i].balanco_patrimonial.estoque,
+                            contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
+                            contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
+                            maquinas: users[i].balanco_patrimonial.maquinas,
+                            depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
+                            veiculos: users[i].balanco_patrimonial.veiculos,
+                            depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
+                            tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
+                            tributos_a_pagar_atual: users[i].balanco_patrimonial.tributos_a_pagar_atual,
+                            emprestimos: users[i].balanco_patrimonial.emprestimos - users[i]['divida'][1]/2,
+                            capial: users[i].balanco_patrimonial.capial,
+                            lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - users[i]['divida'][0]*0.08
                         }
                         users[i].fluxo_de_caixa = {
 
@@ -4059,29 +3702,20 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     else if(users[i].taokeys > users[i]['divida'][1]*0.08){
                         let gamb = (users[i]['divida'][1]/2 + users[i]['divida'][1]*0.08) - users[i].taokeys
                         users[i].taokeys = 0
-                        users[i].balanco_patrimonial = { // Adding despesas financeiras
-                            ativo: {
-                                circulante: {
-                                    caixa: 0,
-                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
-                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber
-
-                                },
-                                n_circulante: {
-                                    imobilizado: {
-                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
-                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
-                                    },
-                                },
-                            },
-                            passivo: {
-                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar - (users[i]['divida'][1]/2 - gamb)
-                            },
-                            patrimonio_liquido: {
-                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
-                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - users[i]['divida'][1]*0.08
-                            }
+                        users[i].balanco_patrimonial = {
+                            caixa: 0,
+                            estoque: users[i].balanco_patrimonial.estoque,
+                            contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
+                            contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
+                            maquinas: users[i].balanco_patrimonial.maquinas,
+                            depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
+                            veiculos: users[i].balanco_patrimonial.veiculos,
+                            depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
+                            tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
+                            tributos_a_pagar_atual: users[i].balanco_patrimonial.tributos_a_pagar_atual,
+                            emprestimos: users[i].balanco_patrimonial.emprestimos - (users[i]['divida'][1]/2 - gamb),
+                            capial: users[i].balanco_patrimonial.capial,
+                            lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - users[i]['divida'][0]*0.08
                         }
                         users[i].fluxo_de_caixa = {
 
@@ -4108,29 +3742,20 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     
                     }
                     else{
-                        users[i].balanco_patrimonial = { // Adding despesas financeiras
-                            ativo: {
-                                circulante: {
-                                    caixa: 0,
-                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
-                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber
-
-                                },
-                                n_circulante: {
-                                    imobilizado: {
-                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
-                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
-                                    },
-                                },
-                            },
-                            passivo: {
-                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar + (users[i]['divida'][1]*0.08 - users[i].taokeys)
-                            },
-                            patrimonio_liquido: {
-                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
-                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - users[i]['divida'][1]*0.08
-                            }
+                        users[i].balanco_patrimonial = {
+                            caixa: 0,
+                            estoque: users[i].balanco_patrimonial.estoque,
+                            contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
+                            contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
+                            maquinas: users[i].balanco_patrimonial.maquinas,
+                            depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
+                            veiculos: users[i].balanco_patrimonial.veiculos,
+                            depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
+                            tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
+                            tributos_a_pagar_atual: users[i].balanco_patrimonial.tributos_a_pagar_atual,
+                            emprestimos: users[i].balanco_patrimonial.emprestimos + (users[i]['divida'][1]*0.08 - users[i].taokeys),
+                            capial: users[i].balanco_patrimonial.capial,
+                            lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - users[i]['divida'][0]*0.08
                         }
                         users[i].fluxo_de_caixa = {
 
@@ -4160,30 +3785,22 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
         
                     if(users[i].taokeys >= users[i]['divida'][2]*1.08){
                         users[i].taokeys = users[i].taokeys - users[i]['divida'][2]*1.08
-                        users[i].balanco_patrimonial = { // Adding despesas financeiras
-                            ativo: {
-                                circulante: {
-                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa - users[i]['divida'][2]*0.08 - users[i]['divida'][2],
-                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
-                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber
-
-                                },
-                                n_circulante: {
-                                    imobilizado: {
-                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
-                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
-                                    },
-                                },
-                            },
-                            passivo: {
-                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar - users[i]['divida'][2]
-                            },
-                            patrimonio_liquido: {
-                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
-                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - users[i]['divida'][2]*0.08
-                            }
+                        users[i].balanco_patrimonial = {
+                            caixa: users[i].balanco_patrimonial.ativo.circulante.caixa - users[i]['divida'][2]*0.08 - users[i]['divida'][2],
+                            estoque: users[i].balanco_patrimonial.estoque,
+                            contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
+                            contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
+                            maquinas: users[i].balanco_patrimonial.maquinas,
+                            depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
+                            veiculos: users[i].balanco_patrimonial.veiculos,
+                            depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
+                            tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
+                            tributos_a_pagar_atual: users[i].balanco_patrimonial.tributos_a_pagar_atual,
+                            emprestimos: users[i].balanco_patrimonial.emprestimos - users[i]['divida'][2],
+                            capial: users[i].balanco_patrimonial.capial,
+                            lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - users[i]['divida'][2]*0.08
                         }
+                        
                         users[i].fluxo_de_caixa = {
 
                             lucro_bruto: users[i].fluxo_de_caixa.lucro_bruto,
@@ -4209,29 +3826,20 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     }
                     else if(users[i].taokeys > users[i]['divida'][2]*0.08){
                         let gamb = users[i]['divida'][2] + users[i]['divida'][2]*0.08 + (-1)*users[i].taokeys
-                        users[i].balanco_patrimonial = { // Adding despesas financeiras
-                            ativo: {
-                                circulante: {
-                                    caixa: 0,
-                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
-                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber
-
-                                },
-                                n_circulante: {
-                                    imobilizado: {
-                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
-                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
-                                    },
-                                },
-                            },
-                            passivo: {
-                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar - (users[i]['divida'][2] - gamb)
-                            },
-                            patrimonio_liquido: {
-                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
-                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - users[i]['divida'][2]*0.08
-                            }
+                        users[i].balanco_patrimonial = {
+                            caixa: 0,
+                            estoque: users[i].balanco_patrimonial.estoque,
+                            contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
+                            contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
+                            maquinas: users[i].balanco_patrimonial.maquinas,
+                            depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
+                            veiculos: users[i].balanco_patrimonial.veiculos,
+                            depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
+                            tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
+                            tributos_a_pagar_atual: users[i].balanco_patrimonial.tributos_a_pagar_atual,
+                            emprestimos: users[i].balanco_patrimonial.emprestimos - (users[i]['divida'][2] - gamb),
+                            capial: users[i].balanco_patrimonial.capial,
+                            lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - users[i]['divida'][2]*0.08
                         }
                         users[i].fluxo_de_caixa = {
 
@@ -4260,30 +3868,22 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         users[i].taokeys = 0
                     }
                     else{
-                        users[i].balanco_patrimonial = { // Adding despesas financeiras
-                            ativo: {
-                                circulante: {
-                                    caixa: 0,
-                                    estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
-                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber
-
-                                },
-                                n_circulante: {
-                                    imobilizado: {
-                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
-                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
-                                    },
-                                },
-                            },
-                            passivo: {
-                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar + (users[i]['divida'][2]*0.08 - users[i].taokeys)
-                            },
-                            patrimonio_liquido: {
-                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
-                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados - users[i]['divida'][2]*0.08
-                            }
+                        users[i].balanco_patrimonial = {
+                            caixa: 0,
+                            estoque: users[i].balanco_patrimonial.estoque,
+                            contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
+                            contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
+                            maquinas: users[i].balanco_patrimonial.maquinas,
+                            depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
+                            veiculos: users[i].balanco_patrimonial.veiculos,
+                            depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
+                            tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
+                            tributos_a_pagar_atual: users[i].balanco_patrimonial.tributos_a_pagar_atual,
+                            emprestimos: users[i].balanco_patrimonial.emprestimos + (users[i]['divida'][2]*0.08 - users[i].taokeys),
+                            capial: users[i].balanco_patrimonial.capial,
+                            lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - users[i]['divida'][2]*0.08
                         }
+                        
                         users[i].fluxo_de_caixa = {
 
                             lucro_bruto: users[i].fluxo_de_caixa.lucro_bruto,
@@ -4310,30 +3910,22 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     }
 
                     if(users[i].balanco_patrimonial.ativo.circulante.estoque > -0.1 && users[i].balanco_patrimonial.ativo.circulante.estoque < 0.1){
-                        users[i].balanco_patrimonial = { //MODELO
-                            ativo: {
-                                circulante: {
-                                    caixa: users[i].balanco_patrimonial.ativo.circulante.caixa,
-                                    estoque: 0,
-                                    contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber
-    
-                                },
-                                n_circulante: {
-                                    imobilizado: {
-                                        pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                        frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
-                                        depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
-                                    },
-                                },
-                            },
-                            passivo: {
-                                contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
-                            },
-                            patrimonio_liquido: {
-                                capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
-                                lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
-                            }
+                        users[i].balanco_patrimonial = {
+                            caixa: users[i].balanco_patrimonial.ativo.circulante.caixa,
+                            estoque: 0,
+                            contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
+                            contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
+                            maquinas: users[i].balanco_patrimonial.maquinas,
+                            depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
+                            veiculos: users[i].balanco_patrimonial.veiculos,
+                            depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
+                            tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
+                            tributos_a_pagar_atual: users[i].balanco_patrimonial.tributos_a_pagar_atual,
+                            emprestimos: users[i].balanco_patrimonial.emprestimos,
+                            capial: users[i].balanco_patrimonial.capial,
+                            lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados
                         }
+                        
                     }
 
                     users[i].fluxo_de_caixa = {
@@ -4589,18 +4181,6 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                             }
                                         });
 
-                                        backup.fluxo_de_caixa = {
-
-                                            lucro_bruto: users[i].fluxo_de_caixa.lucro_bruto,
-                                            contas_a_receber: users[i].fluxo_de_caixa.contas_a_receber,
-                                            contas_a_receber_recebidas: users[i].fluxo_de_caixa.contas_a_receber_recebidas, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
-                                            despesas: users[i].fluxo_de_caixa.despesas,
-                                            fluxo_operacional: users[i].fluxo_de_caixa.fluxo_operacional,
-                                            fluxo_financeiro: users[i].fluxo_de_caixa.fluxo_financeiro, // entra + emprestimos tomados e entra - empréstimos pagos 
-                                            fluxo_investimento: users[i].fluxo_de_caixa.fluxo_investimento, // entra negativo tds as compras de VEICULOS e entra positivo todo o valor da venda de veiculos
-                                            fluxo: users[i].fluxo_de_caixa.fluxo_operacional + users[i].fluxo_de_caixa.fluxo_financeiro + users[i].fluxo_de_caixa.fluxo_investimento
-                                        
-                                        }
                                         users[i].dre = {
                                             
                                             receita: 0,
