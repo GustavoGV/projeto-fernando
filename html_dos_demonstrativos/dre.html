@@ -1,0 +1,512 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+
+        <style>
+            table, td, th {
+            
+                border: 1px solid black;
+                padding: 2px;
+
+            }
+            table {
+                border-collapse: collapse;
+                width: 80%;
+            }
+            th {
+                height: 25px;
+            }
+
+
+
+           </style>
+           <table id="myTable">
+            <tr>
+                <td>TIPO DE SERVIÇO</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>147</td>
+                <td></td>
+            </tr>
+            <tr>
+                <th>FATURAMENTO TOTAL</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>$ Preço Médio</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td># Atendimentos</td>
+                <td></td>
+            </tr>
+            <tr>
+                <th>(-) CUSTOS SERVIÇOS PRESTADOS (CSP)</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Custo 147</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Custo 157</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>CAPACIDADE INSTALADA INICIAL DE </BR> PRESTAÇÃO DE SERVIÇO</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td># Estoque Inicial</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>CUSTO DE PRESTAÇÃO DOS SERVIÇOS</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>CUSTO DE CAPACIDADE INSTALADA NÃO</BR>UTILIZADA PARA A PRESTAÇÃO DE SERVIÇOS</BR>($ 36 / unit.)</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td># Total não</br> utilizado</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>CUSTO DE ALTERAÇÃO DE TIPO DE SERVIÇO</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>ATENDIMENTO NA BASE DE HORA EXTRA</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>TOTAL EM DISPONIBILIDADE</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>(-) CAPACIDADE INSTALADA NÃO UTILIZADA</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td># Serviços não prestados</td>
+                <td></td>
+            </tr>
+            <tr>
+                <th>(-) CSP</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <th>MARGEM BRUTA</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <th>MARGEM BRUTA TOTAL</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <th>TOTAL DE SERVIÇOS PRESTADOS</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <th>(-) DESPESAS OPERACIONAIS</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>DESPESAS ADMINISTRATIVAS</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Unitário</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>VENDEDORES / PROMOTORES</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td># Promotores</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>SALÁRIOS</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>% Comissão</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>COMISSÕES</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>$ Salário Unitário</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>PROPAGANDA</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>INSTITUCIONAL</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>PRODUTOS</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>DEPRECIAÇÃO DE MÁQUINAS & EQUIPAMENTOS</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Período depreciação</br>máquinas (ANOS)</td>
+                <td># 15</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Valor unitário</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>ENCARGOS SOBRE FINANCIAMENTO</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Taxa de juros</td>
+                <td>8%</td>
+            </tr>
+            <tr>
+                <td>TRANSPORTE</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td># Motorista</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>SALÁRIOS</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Salários Unitário</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>LUBRIFICAÇÃO E MANUTENÇÃO</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Manutenção</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>DEPRECIAÇÃO DE VEÍCULOS</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Valor de Veículo</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>FROTA DE TERCEIROS</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Depreciação</br>(ANOS)</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Valor unitário</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>DESPESAS NÃO PLANEJADAS</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>POSTOS AVANÇADOS DE</BR>SERVIÇO (PAS)</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td># Postos</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>PESQUISAS DE MERCADO CONTRATADAS</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Custo Unitário</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Custo Fixo</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>TOTAL DESPESAS OPERACIONAIS</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <th>RESULTADOS ANTES DE</BR>CONSIDERAR OS TRIBUTOS</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>TRIBUTOS E TAXAS TOTAIS</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <th style="color: green">RESULTADO DA OPERAÇÃO</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+          </table>
+    
+
+        
+       
+</div>
+        
+    </head>
+    <body>
+        <script>
+            let dre = {
+                            receita: 0,
+                            csp: 0,
+                            estoque_inicial: 283680,
+                            custo_prestacao_servico: 0,
+                            custo_estocagem: 0,
+                            custo_troca_insumos: 0,
+                            hora_extra: 0,
+                            capacidade_n_utilizada: 0,
+                            margem_bruta: 0,
+                            despesas_administrativas: 0,
+                            salario_promotores: 0,
+                            comissao: 0,
+                            propaganda_institucional: 0,
+                            propaganda_unitaria: 0,
+                            depreciacao_de_maquinas: 0,
+                            encargos_financiamento: 0,
+                            salario_frota: 0,
+                            manutencao_frota: 0,
+                            depreciacao_de_veiculos,
+                            frota_terceirizada: 0,
+                            despesas_operacionais_n_planejadas: 0,
+                            pas: 0,
+                            pesquisas: 0,
+                            tributos: 0,
+                            servicos: [['147',288],['158',324]], //
+                            preco_medio: 500,
+                            atendimentos: 400
+                        }
+            function update(d) {
+                let table = document.getElementById("myTable");
+                if(d.servicos.length == 1){
+                table.rows[0].cells[6].innerHTML = d.servicos[0][0] + ' e ' + d.servicos[1][0]
+                }
+                else{
+                table.rows[0].cells[6].innerHTML = d.servicos[0][0]
+                }
+                table.rows[1].cells[3].innerHTML = d.receita
+                table.rows[2].cells[7].innerHTML = d.atendimentos
+                table.rows[3].cells[6].innerHTML = 'Custo ' + d.servicos[0][0]
+                table.rows[3].cells[7].innerHTML = d.servicos[0][1]
+                if(servicos.length == 2){
+                    table.rows[4].cells[6].innerHTML = 'Custo ' + d.servicos[1][0]
+                    table.rows[4].cells[7].innerHTML = d.servicos[1][1]
+                }
+                table.rows[5].cells[2].innerHTML = d.estoque_inicial
+                table.rows[5].cells[7].innerHTML = d.estoque_inicial
+                table.rows[6].cells[1].innerHTML = d.custo_prestacao_servico
+                table.rows[7].cells[1].innerHTML = d.custo_estocagem
+                table.rows[7].cells[7].innerHTML = d.custo_estocagem/36
+                table.rows[8].cells[1].innerHTML = d.custo_troca_insumos
+                table.rows[9].cells[1].innerHTML = d.hora_extra
+                table.rows[9].cells[2].innerHTML = d.custo_prestacao_servico + d.hora_extra + d.custo_troca_insumos + d.custo_estocagem
+                table.rows[10].cells[2].innerHTML = d.custo_prestacao_servico + d.hora_extra + d.custo_troca_insumos + d.custo_estocagem + d.estoque_inicial
+                table.rows[11].cells[2].innerHTML = d.capacidade_n_utilizada
+                table.rows[11].cells[7].innerHTML =
+                table.rows[10].cells[2].innerHTML =
+                table.rows[10].cells[2].innerHTML =
+                table.rows[26].cells[5].innerHTML = '100%'
+                table.rows[0].cells[0].style.backgroundColor = "gray"
+                table.rows[8].cells[0].style.backgroundColor = "gray"
+                table.rows[13].cells[0].style.backgroundColor = "gray"
+                table.rows[26].cells[0].style.backgroundColor = "gray"
+            }
+            //update(dre)
+        </script>
+    </body>
+</html>

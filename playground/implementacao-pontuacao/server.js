@@ -214,12 +214,15 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             despesas_operacionais_n_planejadas: 0,
                             pas: 0,
                             pesquisas: 0,
-                            tributos: 0
+                            tributos: 0,
+                            servicos: ['147'],
+                            preco_medio: 0,
+                            atendimentos: 0
 
 
                         },
                         fluxo_de_caixa: {
-
+                            saldo_anterior: 0,
                             faturamento: 0,
                             contas_a_receber: 0,
                             contas_a_receber_recebidas: 0, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
@@ -238,7 +241,9 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             uso_frota: 0,
                             despesas_operacionais_n_planejadas: 0,
                             despesas_administrativas: 0,
-                            encargos_financiamento: 0
+                            encargos_financiamento: 0,
+                            maquinas: 0,
+
 
                             //fluxo_financeiro: 0, // entra + emprestimos tomados e entra - empréstimos pagos 
                             //fluxo_investimento: 0, // entra negativo tds as compras de VEICULOS e entra positivo todo o valor da venda de veiculos
@@ -312,12 +317,15 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                         despesas_operacionais_n_planejadas: 0,
                                         pas: 0,
                                         pesquisas: 0,
-                                        tributos: 0
+                                        tributos: 0,
+                                        servicos: ['147'],
+                                        preco_medio: 0,
+                                        atendimentos: 0
             
             
                                     },
                                     fluxo_de_caixa: {
-            
+                                        saldo_anterior: 0,
                                         faturamento: 0,
                                         contas_a_receber: 0,
                                         contas_a_receber_recebidas: 0, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
@@ -336,7 +344,8 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                         uso_frota: 0,
                                         despesas_operacionais_n_planejadas: 0,
                                         despesas_administrativas: 0,
-                                        encargos_financiamento: 0
+                                        encargos_financiamento: 0,
+                                        maquinas: 0
             
                                         //fluxo_financeiro: 0, // entra + emprestimos tomados e entra - empréstimos pagos 
                                         //fluxo_investimento: 0, // entra negativo tds as compras de VEICULOS e entra positivo todo o valor da venda de veiculos
