@@ -215,9 +215,10 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             pas: 0,
                             pesquisas: 0,
                             tributos: 0,
-                            servicos: ['147'],
+                            servicos: [['147',288]],
                             preco_medio: 0,
-                            atendimentos: 0
+                            atendimentos: 0,
+                            insumos_em_estoque: 985
 
 
                         },
@@ -318,9 +319,10 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                         pas: 0,
                                         pesquisas: 0,
                                         tributos: 0,
-                                        servicos: ['147'],
+                                        servicos: [['147',288]],
                                         preco_medio: 0,
-                                        atendimentos: 0
+                                        atendimentos: 0,
+                                        insumos_em_estoque: 985
             
             
                                     },
