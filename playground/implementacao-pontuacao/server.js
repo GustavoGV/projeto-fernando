@@ -176,24 +176,24 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         368:[0,0,540,0,0,0,0,0],
                         369:[0,0,576,0,0,0,0,0],
                         balanco_patrimonial: {
-                            caixa: 1800000,
-                            estoque: 200,
-                            contas_a_receber60: 200,
-                            contas_a_receber120: 200,
-                            maquinas: 200,
-                            depreciacao_maquinas: -200,
-                            veiculos: 200,
-                            depreciacao_veiculos: -200,
-                            tributos_a_pagar_anterior: 200,
-                            tributos_a_pagar_atual: 200,
-                            emprestimos: 200,
-                            capial: 200,
-                            lucros_acumulados: 300
+                            caixa: 1119081,
+                            estoque: 283680,
+                            contas_a_receber60: 2683845,
+                            contas_a_receber120: 1405464,
+                            maquinas: 17280000,
+                            depreciacao_maquinas: 1152000,
+                            veiculos: 576000,
+                            depreciacao_veiculos: 144000,
+                            tributos_a_pagar_anterior: 913221,
+                            tributos_a_pagar_atual: 0,
+                            emprestimos: 288000,
+                            capial: 18720000,
+                            lucros_acumulados: 2130849
                         },
                         dre: {
                             receita: 0,
                             csp: 0,
-                            estoque_inicial: 0,
+                            estoque_inicial: 283680,
                             custo_prestacao_servico: 0,
                             custo_estocagem: 0,
                             custo_troca_insumos: 0,
@@ -201,7 +201,21 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             capacidade_n_utilizada: 0,
                             margem_bruta: 0,
                             despesas_administrativas: 0,
-                            promotores: 0,
+                            salario_promotores: 0,
+                            comissao: 0,
+                            propaganda_institucional: 0,
+                            propaganda_unitaria: 0,
+                            depreciacao_de_maquinas: 0,
+                            encargos_financiamento: 0,
+                            salario_frota: 0,
+                            manutencao_frota: 0,
+                            depreciacao_de_veiculos,
+                            frota_terceirizada: 0,
+                            despesas_operacionais_n_planejadas: 0,
+                            pas: 0,
+                            pesquisas: 0,
+                            tributos: 0
+
 
                         },
                         fluxo_de_caixa: {
@@ -260,48 +274,73 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                     368:[0,0,540,0,0,0,0,0],
                                     369:[0,0,576,0,0,0,0,0],
                                     balanco_patrimonial: {
-                                        ativo: {
-                                            circulante: {
-                                                caixa: 1872000,
-                                                estoque: 288*985,
-                                                contas_a_receber: 0
-            
-                                            },
-                                            n_circulante: {
-                                                imobilizado: {
-                                                    pas: 30,
-                                                    frota: 10*57600,
-                                                    depreciacao_frota: 0
-                                                },
-                                            },
-                                        },
-                                        passivo: {
-                                            contas_a_pagar: 0
-                                        },
-                                        patrimonio_liquido: {
-                                            capital_social: 1872000+288*985+10*57600,
-                                            lucros_acumulados: 0
-                                        }
+                                        caixa: 1119081,
+                                        estoque: 283680,
+                                        contas_a_receber60: 2683845,
+                                        contas_a_receber120: 1405464,
+                                        maquinas: 17280000,
+                                        depreciacao_maquinas: 1152000,
+                                        veiculos: 576000,
+                                        depreciacao_veiculos: 144000,
+                                        tributos_a_pagar_anterior: 913221,
+                                        tributos_a_pagar_atual: 0,
+                                        emprestimos: 288000,
+                                        capial: 18720000,
+                                        lucros_acumulados: 2130849
                                     },
                                     dre: {
                                         receita: 0,
-                                        cmv: 0,
+                                        csp: 0,
+                                        estoque_inicial: 283680,
+                                        custo_prestacao_servico: 0,
+                                        custo_estocagem: 0,
+                                        custo_troca_insumos: 0,
+                                        hora_extra: 0,
+                                        capacidade_n_utilizada: 0,
+                                        margem_bruta: 0,
                                         despesas_administrativas: 0,
-                                        despesas_vendas: 0,
-                                        despesas_financeiras: 0,
-                                        depreciacao_e_amortizacao: 0,
-                                        ir: 0
+                                        salario_promotores: 0,
+                                        comissao: 0,
+                                        propaganda_institucional: 0,
+                                        propaganda_unitaria: 0,
+                                        depreciacao_de_maquinas: 0,
+                                        encargos_financiamento: 0,
+                                        salario_frota: 0,
+                                        manutencao_frota: 0,
+                                        depreciacao_de_veiculos,
+                                        frota_terceirizada: 0,
+                                        despesas_operacionais_n_planejadas: 0,
+                                        pas: 0,
+                                        pesquisas: 0,
+                                        tributos: 0
+            
+            
                                     },
                                     fluxo_de_caixa: {
-
-                                        lucro_bruto: 0,
+            
+                                        faturamento: 0,
                                         contas_a_receber: 0,
                                         contas_a_receber_recebidas: 0, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
-                                        despesas: 0,
-                                        fluxo_operacional: 0,
-                                        fluxo_financeiro: 0, // entra + emprestimos tomados e entra - empréstimos pagos 
-                                        fluxo_investimento: 0, // entra negativo tds as compras de VEICULOS e entra positivo todo o valor da venda de veiculos
-                                        fluxo: 0
+                                        custo_de_servico_prestado: 0,
+                                        emprestimos_contratados: 0,
+                                        emprestimos_pagos: 0,
+                                        veiculos_vendidos: 0,
+                                        depreciacao_de_veiculos: 0,
+                                        depreciacao_de_maquinas: 0,
+                                        veiculos_comprados: 0,
+                                        tributos: 0,
+                                        promotores: 0,
+                                        propaganda: 0,
+                                        pesquisas: 0,
+                                        pas: 0,
+                                        uso_frota: 0,
+                                        despesas_operacionais_n_planejadas: 0,
+                                        despesas_administrativas: 0,
+                                        encargos_financiamento: 0
+            
+                                        //fluxo_financeiro: 0, // entra + emprestimos tomados e entra - empréstimos pagos 
+                                        //fluxo_investimento: 0, // entra negativo tds as compras de VEICULOS e entra positivo todo o valor da venda de veiculos
+                                        //fluxo: 0
                                     
                                     }
                                     });

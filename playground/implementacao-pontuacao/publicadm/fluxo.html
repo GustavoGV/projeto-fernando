@@ -1,0 +1,284 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+
+        <style>
+            table, td, th {
+            
+                border: 1px solid black;
+
+            }
+            table {
+                border-collapse: collapse;
+                width: 35%;
+            }
+            th {
+                height: 25px;
+            }
+
+
+
+           </style>
+           <table id="myTable">
+            <tr>
+                <th>(+) ENTRADAS</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>SALDO ANTERIOR ($)</td>
+                <td></td>
+                <td></td>
+                <td>18720000</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>EMPRÉSTIMOS CONTRATADOS ($)</td>
+                <td></td>
+                <td></td>
+                <td>288000</td>
+                <td></td>
+                <td></td>
+            </tr> 
+            <tr>
+                <td>FATURAMENTO ($)</td>
+                <td></td>
+                <td>32828091</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>VEÍCULOS VENDIDOS ($)</td>
+                <td></td>
+                <td>0</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <td>DEPRECIAÇÃO DE VEÍCULOS</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>DEPRECIAÇÃO DE MÁQUINAS E </BR>EQUIPAMENTOS ($)</td>
+                <td></td>
+                <td>1152000</td>
+                <td>34124091</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>53132091</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>(-) SAÍDAS</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>CUSTO DE PRESTAÇÃO DOS SERVIÇOS ($)</td>
+                <td></td>
+                <td>21502500</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>VEÍCULOS COMPRADOS ($)</td>
+                <td></td>
+                <td></td>
+                <td>576000</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>MÁQUINAS E EQUIPAMENTOS</td>
+                <td></td>
+                <td></td>
+                <td>17280000</td>
+                <td></td>
+                <td></td>
+            </tr>
+            </tr>
+            <tr>
+                <th>PAGAMENTO DE PARCELA DE TRIBUTOS ($)</th>
+                <td></td>
+                <td>0</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <th>DESPESAS OPERACIONAIS</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>VENDEDORES / PROMOTORES DA </BR> COOPERATIVA ($)</td>
+                <td>2364270</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>PROPAGANDA E PROMOCAO</BR> - DESTE EXERCÍCIO ($)</td>
+                <td></td>  
+                <td>0</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>FINANCIAMENTO DAS OPERAÇÕES</BR> (EMPRÉSTIMOS) ($)</td>
+                <td></td>
+                <td>288000</td>
+                <td>1201221</td>
+                
+            </tr>
+            <tr>
+                <th>PATRIMÔNIO LIQUIDO</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                
+            </tr>
+            <tr>
+                <td>CAPITAL ($)</td>
+                <td></td>
+                <td>18720000</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>RESULTADO OPERACIONAL</BR> ACUMULADO ($)</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>ANO X0 ($)</td>
+                <td></td>
+                <td>2130849</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>ANO X1 ($)</td>
+                <td></td>
+                <td>0</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>ANO X2 ($)</td>
+                <td></td>
+                <td>0</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>20850849</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>PASSIVO TOTAL ($)</td>
+                <td></td>
+                <td></td>
+                <td>22052070</td>
+                <td></td>
+                <td></td>
+            </tr>
+          </table>
+    
+
+        
+       
+</div>
+        
+    </head>
+    <body>
+        <script>
+            let balanco_patrimonial = {
+                            caixa: 1119081,
+                            estoque: 283680,
+                            contas_a_receber60: 2683845,
+                            contas_a_receber120: 1405464,
+                            maquinas: 17280000,
+                            depreciacao_maquinas: 1152000,
+                            veiculos: 576000,
+                            depreciacao_veiculos: 144000,
+                            tributos_a_pagar_anterior: 913221,
+                            tributos_a_pagar_atual: 0,
+                            emprestimos: 288000,
+                            capial: 18720000,
+                            lucros_acumulados: 2130849
+                        }
+            function update(b) {
+                let table = document.getElementById("myTable");
+                table.rows[1].cells[2].innerHTML = b.caixa
+                table.rows[2].cells[2].innerHTML = b.estoque
+                table.rows[4].cells[1].innerHTML = b.contas_a_receber60
+                table.rows[5].cells[1].innerHTML = b.contas_a_receber120
+                table.rows[5].cells[2].innerHTML = b.contas_a_receber120 + b.contas_a_receber60
+                table.rows[5].cells[3].innerHTML = b.contas_a_receber120 + b.contas_a_receber60 + b.estoque + b.caixa
+                table.rows[7].cells[1].innerHTML = b.maquinas
+                table.rows[8].cells[1].innerHTML = b.depreciacao_maquinas
+                table.rows[8].cells[2].innerHTML = b.maquinas - b.depreciacao_maquinas
+                table.rows[9].cells[1].innerHTML = b.veiculos
+                table.rows[10].cells[1].innerHTML = b.depreciacao_veiculos
+                table.rows[10].cells[2].innerHTML = b.veiculos - b.depreciacao_veiculos
+                table.rows[10].cells[3].innerHTML = b.maquinas - b.depreciacao_maquinas + b.veiculos - b.depreciacao_veiculos
+                table.rows[11].cells[3].innerHTML = b.maquinas - b.depreciacao_maquinas + b.veiculos - b.depreciacao_veiculos + b.contas_a_receber120 + b.contas_a_receber60 + b.estoque + b.caixa
+                table.rows[14].cells[2].innerHTML = b.tributos_a_pagar_anterior
+                table.rows[15].cells[2].innerHTML = b.tributos_a_pagar_atual
+                table.rows[16].cells[2].innerHTML = b.emprestimos
+                table.rows[16].cells[3].innerHTML = b.tributos_a_pagar_atual + b.tributos_a_pagar_anterior + b.emprestimos
+                table.rows[18].cells[2].innerHTML = b.capial
+                table.rows[21].cells[2].innerHTML = b.lucros_acumulados
+                table.rows[23].cells[3].innerHTML = b.lucros_acumulados + 2130849
+                table.rows[24].cells[3].innerHTML = b.lucros_acumulados + 2130849 + b.tributos_a_pagar_atual + b.tributos_a_pagar_anterior + b.emprestimos
+                table.rows[0].cells[0].style.backgroundColor = "gray"
+                table.rows[6].cells[0].style.backgroundColor = "gray"
+                table.rows[11].cells[0].style.backgroundColor = "gray"
+                table.rows[12].cells[0].style.backgroundColor = "gray"
+                table.rows[13].cells[0].style.backgroundColor = "gray"
+                table.rows[17].cells[0].style.backgroundColor = "gray"
+                table.rows[24].cells[0].style.backgroundColor = "gray"
+            }
+            update(balanco_patrimonial)
+        </script>
+    </body>
+</html>
