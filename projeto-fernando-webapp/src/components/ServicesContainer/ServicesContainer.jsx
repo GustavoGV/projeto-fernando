@@ -55,7 +55,7 @@ export default function ServicesContainer() {
   const [downloadModal, setDownloadModal] = useState(false);
   const [serviceModal, setServiceModal] = useState(false);
   const [selectedService, setSelectedService] = useState(false);
-  const [downloadInfo, setDownloadInfo] = useState({})  
+  const [downloadInfo, setDownloadInfo] = useState({frango:true})  
 
   function generateRounds(){
     const currentRound = game[30] ? game[30] : 0;
