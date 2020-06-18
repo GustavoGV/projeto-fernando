@@ -10,7 +10,8 @@ import { Row } from 'reactstrap';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
-import CsvDownload from 'react-json-to-csv'
+import CsvDownload from 'react-json-to-csv';
+import {useHistory} from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -35,7 +36,9 @@ function AdminOptions(){
   const [globalState, setGlobalState] = useState([]);
   const [selectedState, setSelectedState] = useState({});
   const [modal, setModal] = useState(false);
-  const [downloadInfo, setDownloadInfo] = useState({})
+  const [downloadInfo, setDownloadInfo] = useState({});
+  const [round, setRound] = useState();
+  const history = useHistory();
 
   const classes = useStyles();
 
@@ -95,12 +98,14 @@ function AdminOptions(){
             defaultValue={currentRound}
             options={rounds}
             onChange={event=>{
-              socket.emit('puxar-balancos-adm', [selectedState.label, event])
+              setRound(event.value);
             }}
           />
-          <CsvDownload data={downloadInfo}>
-            Baixar Balanços
-          </CsvDownload>
+          <Button onClick={()=>{
+            history.push(`/reports/${round}`)
+          }}>
+            Ver Balanços
+          </Button>
         </DialogContent>
         
       </Dialog>
@@ -132,7 +137,7 @@ function AdminOptions(){
         </Grid>
         <br/>
         <Button className={classes.button} onClick={()=>setModal(true)} variant="contained" color="primary">
-          Baixar Balanços
+          Balanços
         </Button>
       </GeneralInformation>
       : null

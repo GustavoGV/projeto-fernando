@@ -62,22 +62,18 @@ const useStyles = makeStyles(theme => ({
 
 export default function Login(props) {
   const classes = useStyles();
-  const [modal, setModal] = useState(false);
   const [error, setError] = useState(false);
   const [signInData, setSignInData] = useState({
     cooperative:null,
     instance:null,
     password:null,
   })
-  function handleClickModal(){
-    setModal(!modal)
-  };
 
   function onSimulationClick(){
     const {cooperative, instance, password} = signInData
     const creden = [cooperative, password, instance];
     login(creden)
-    props.history.push('/game/inputs')
+    props.history.push('/game/manual')
     setError(true);
   }
 
@@ -85,7 +81,7 @@ export default function Login(props) {
     console.log('component mounted')
     socket.on('login-client-aprovado',creden=>{
       console.log('login aprovado',creden)
-      props.history.push('/game/inputs')
+      props.history.push('/game/manual')
     })
     return(()=>{
       console.log('component unmounted')
@@ -95,11 +91,6 @@ export default function Login(props) {
 
   return (
     <>
-    <Dialog open={modal} aria-labelledby="simple-dialog-title" onClose={()=>setModal(!modal)}>
-      <DialogTitle id="simple-dialog-title">Escolha a sua Simulação</DialogTitle>
-      <Button onClick={()=>onSimulationClick()}>CBG</Button>
-      <Button onClick={()=>props.history.push('/game/inputs?round=t1')}>HSG</Button>
-    </Dialog>
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
       <Hidden xsDown>
@@ -167,7 +158,7 @@ export default function Login(props) {
               variant="contained"
               color="primary"
               className={classes.submit}
-              onClick={()=>handleClickModal()}
+              onClick={()=>onSimulationClick()}
             >
               Entrar
             </Button>

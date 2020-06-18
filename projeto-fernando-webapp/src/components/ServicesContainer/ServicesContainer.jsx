@@ -14,6 +14,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import CsvDownload from 'react-json-to-csv';
 import Select from 'react-select';
 import { height } from '@material-ui/system';
+import {useHistory} from 'react-router-dom';
 
 
 const useStyles = makeStyles(theme => ({
@@ -56,6 +57,9 @@ export default function ServicesContainer() {
   const [serviceModal, setServiceModal] = useState(false);
   const [selectedService, setSelectedService] = useState(false);
   const [downloadInfo, setDownloadInfo] = useState({frango:true})  
+  const [round, setRound] = useState();
+
+  const history = useHistory();
 
   function generateRounds(){
     const currentRound = game[30] ? game[30] : 0;
@@ -132,12 +136,15 @@ export default function ServicesContainer() {
             defaultValue={game[30] ? game[30]-1 : 0}
             options={generateRounds()}
             onChange={event=>{
-              socket.emit('puxar-balancos', event.value);
+              setRound(event.value)
             }}
           />
-          <CsvDownload className={classes.csvButton} data={downloadInfo}>
-            Baixar balanços
-          </CsvDownload>
+          <Button
+            onClick={round ? history.push(`/reports/${round}`) : null}
+          >
+            Ver Demonstrativos
+          </Button>
+          
         </DialogContent>
       </Dialog>
       <Grid container justify="center" spacing={2}>
@@ -155,7 +162,7 @@ export default function ServicesContainer() {
             Novo Serviço
           </Button>
           <Button variant="contained" color="primary" className={classes.button} onClick={()=>{setDownloadModal(true)}}> 
-            Baixar Balanço
+            Balanço
           </Button>
           <Button variant="contained" color="primary" className={classes.button} onClick={()=>{socket.emit('salvar')}}> 
             Salvar

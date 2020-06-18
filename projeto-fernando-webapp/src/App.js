@@ -6,6 +6,8 @@ import Register from './components/Register/Register';
 import Game from './components/Game/Game';
 import LoginAdmin from './components/LoginAdmin/LoginAdmin';
 import NotificationAlert from 'react-notification-alert';
+import SimSelect from './components/SimSelect/SimSelect';
+import Reports from './components/Reports/Reports';
 import './App.css';
 import "react-notification-alert/dist/animate.css";
 import './alerts.css';
@@ -43,7 +45,7 @@ function App() {
           history.push('/admin/login');
         }
         else{
-          history.push('/');
+          history.push('/login');
         }
       }
       notificationAlert.current.notificationAlert(options);
@@ -56,11 +58,13 @@ function App() {
         <Normalize/>
         <Switch>
             <Route exact path="/">
-              <Redirect to="/login"/>
+              <Redirect to="/select"/>
             </Route>
+            <Route path="/select" component={SimSelect}/>
             <Route path="/login" component={Login} />
             <Route path="/register" component={Register} />
             <Route path="/game" component={Game} />
+            <Route path="/reports/:round" component={Reports}/>
             <Route path="/admin">
               <Route path="/admin/login">
                 <LoginAdmin/>

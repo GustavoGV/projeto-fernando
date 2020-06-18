@@ -336,7 +336,7 @@ function GeneralInformation(props){
             :(<Button
                 variant="contained" color="primary"
                 onClick={()=>setDebtModal(true)}
-              >Quitar</Button>)}
+              >Empréstimo</Button>)}
           </Paper>
         </Grid>
         <Grid item xs={12} sm={4} md={2}>
