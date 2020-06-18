@@ -144,7 +144,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                 else{
                     Data.findOne({instancia: creden[2], senha_instancia: creden[3]})
                         .then((inst) => {
-                            if(inst !== null && inst.turno > 0){
+                            if(inst !== null && inst.turno == 0){
 
                             
         Aluno.findOne({cooperativa: creden[0], instancia: creden[2]})
@@ -209,7 +209,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             encargos_financiamento: 0,
                             salario_frota: 0,
                             manutencao_frota: 0,
-                            depreciacao_de_veiculos,
+                            depreciacao_de_veiculos: 0,
                             frota_terceirizada: 0,
                             despesas_operacionais_n_planejadas: 0,
                             pas: 0,
@@ -313,7 +313,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                         encargos_financiamento: 0,
                                         salario_frota: 0,
                                         manutencao_frota: 0,
-                                        depreciacao_de_veiculos,
+                                        depreciacao_de_veiculos: 0,
                                         frota_terceirizada: 0,
                                         despesas_operacionais_n_planejadas: 0,
                                         pas: 0,
