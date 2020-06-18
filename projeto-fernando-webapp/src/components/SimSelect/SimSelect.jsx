@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
   },
   image:{
     objectFit:'cover',
-    height:'100vh',
+    height:'100%',
     width:'100%'
   },
   grid:{
@@ -54,7 +54,7 @@ function SimSelect(props){
           </Typography>
           <Typography component="p" variant="p" className={classes.button}>
             Aqui esperamos que você apreenda se divertindo. 
-            E dessa forma possa entender de forma bacana como os vários elementos 
+            E dessa forma possa entender de forma dinâmica como os vários elementos 
             da administração interferem no processo de gestão.
           </Typography>
             <Button
