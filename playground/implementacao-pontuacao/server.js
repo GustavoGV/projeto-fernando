@@ -3012,7 +3012,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 Data.findOne({login_adm: creden[0]})
                                     .then((userL) => {
                                         if(userL == null){
-                                            let jogo = new Data({login_adm: creden[0], iniciado: 0, senha_adm: creden[1], instancia: creden[2], senha_instancia: creden[3], turno: 0, oferta_mercado: 800000, ativo: 0})
+                                            let jogo = new Data({login_adm: creden[0], iniciado: 1, senha_adm: creden[1], instancia: creden[2], senha_instancia: creden[3], turno: 0, oferta_mercado: 800000, ativo: 1})
                                             jogo.save()
                                                 .then(() => {
                                                     console.log('>>> Instancia: ' + creden[2] + ' registrada com sucesso')    
