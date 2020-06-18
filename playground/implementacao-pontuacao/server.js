@@ -144,7 +144,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                 else{
                     Data.findOne({instancia: creden[2], senha_instancia: creden[3]})
                         .then((inst) => {
-                            if(inst !== null && inst.turno > 0){
+                            if(inst !== null && inst.turno == 0){
 
                             
         Aluno.findOne({cooperativa: creden[0], instancia: creden[2]})
@@ -209,7 +209,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             encargos_financiamento: 0,
                             salario_frota: 0,
                             manutencao_frota: 0,
-                            depreciacao_de_veiculos,
+                            depreciacao_de_veiculos: 0,
                             frota_terceirizada: 0,
                             despesas_operacionais_n_planejadas: 0,
                             pas: 0,
@@ -313,7 +313,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                         encargos_financiamento: 0,
                                         salario_frota: 0,
                                         manutencao_frota: 0,
-                                        depreciacao_de_veiculos,
+                                        depreciacao_de_veiculos: 0,
                                         frota_terceirizada: 0,
                                         despesas_operacionais_n_planejadas: 0,
                                         pas: 0,
@@ -1235,12 +1235,55 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             console.log(soma_f)
                             if(soma_f >= qnt){
                                 let falta = qnt
-                                let k = 11
-                                while(falta !== 0){
+                                for(let k = 11; k >= 0; k--){
+                                    let retirada = 0
                                     if(userx.frota[k] > 0){
-                                        falta = falta - userx.frota[k]
-                                        userx.taokeys = userx.taokeys + userx.frota[k]*(57600/12)*(12-k)
-                                        userx.fluxo_de_caixa = {
+                                        if(userx.frota[k] > falta){
+                                            retirada = falta
+                                            userx.taokeys = userx.taokeys + retirada*(57600/12)*(12-k)
+                                            userx.fluxo_de_caixa = {
+
+                                                lucro_bruto: userx.fluxo_de_caixa.lucro_bruto,
+                                                contas_a_receber: userx.fluxo_de_caixa.contas_a_receber,
+                                                contas_a_receber_recebidas: userx.fluxo_de_caixa.contas_a_receber_recebidas, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
+                                                despesas: userx.fluxo_de_caixa.despesas,
+                                                fluxo_operacional: userx.fluxo_de_caixa.fluxo_operacional,
+                                                fluxo_financeiro: userx.fluxo_de_caixa.fluxo_financeiro, // entra + emprestimos tomados e entra - empréstimos pagos 
+                                                fluxo_investimento: userx.fluxo_de_caixa.fluxo_investimento + userx.frota[k]*(57600/12)*(12-k), // entra negativo tds as compras de VEICULOS e entra positivo todo o valor da venda de veiculos
+                                                fluxo: userx.fluxo_de_caixa.fluxo
+                                            
+                                            }
+                                            userx.balanco_patrimonial = {
+                                                caixa: userx.balanco_patrimonial.caixa + userx.frota[k]*(57600/12)*(12-k),
+                                                estoque: userx.balanco_patrimonial.estoque,
+                                                contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
+                                                contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
+                                                maquinas: userx.balanco_patrimonial.maquinas,
+                                                depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_de_maquinas,
+                                                veiculos: userx.balanco_patrimonial.veiculos - qnt*57600,
+                                                depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos + userx.frota[k]*(57600/12)*(k),
+                                                tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
+                                                tributos_a_pagar_atual: userx.balanco_patrimonial.tributos_a_pagar_atual,
+                                                emprestimos: userx.balanco_patrimonial.emprestimos,
+                                                capial: userx.balanco_patrimonial.capial,
+                                                lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados
+                                            }
+                                            let array = [userx.frota[0],userx.frota[1],userx.frota[2],userx.frota[3],userx.frota[4],userx.frota[5],userx.frota[6],userx.frota[7],userx.frota[8],userx.frota[9],userx.frota[10],userx.frota[11]]
+                                            array[k] = userx.frota[k] - retirada;
+                                            userx.set('frota', array)
+                                            
+                                            //userx.set('frota', [userx.frota[0],userx.frota[1],userx.frota[2],userx.frota[3],userx.frota[4],userx.frota[5],])
+                                            break 
+                                        }
+                                        else{
+                                            retirada = userx.frota[k]
+                                            falta = falta - userx.frota[k]
+                                            let array = [userx.frota[0],userx.frota[1],userx.frota[2],userx.frota[3],userx.frota[4],userx.frota[5],userx.frota[6],userx.frota[7],userx.frota[8],userx.frota[9],userx.frota[10],userx.frota[11]]
+                                            array[k] = 0
+                                            userx.set('frota', array)
+                                            userx.taokeys = userx.taokeys + retirada*(57600/12)*(12-k)
+
+                                            userx.fluxo_de_caixa = {
 
                                             lucro_bruto: userx.fluxo_de_caixa.lucro_bruto,
                                             contas_a_receber: userx.fluxo_de_caixa.contas_a_receber,
@@ -1251,8 +1294,8 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                             fluxo_investimento: userx.fluxo_de_caixa.fluxo_investimento + userx.frota[k]*(57600/12)*(12-k), // entra negativo tds as compras de VEICULOS e entra positivo todo o valor da venda de veiculos
                                             fluxo: userx.fluxo_de_caixa.fluxo
                                         
-                                        }
-                                        userx.balanco_patrimonial = {
+                                            }
+                                            userx.balanco_patrimonial = {
                                             caixa: userx.balanco_patrimonial.caixa + userx.frota[k]*(57600/12)*(12-k),
                                             estoque: userx.balanco_patrimonial.estoque,
                                             contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
@@ -1266,10 +1309,11 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                             emprestimos: userx.balanco_patrimonial.emprestimos,
                                             capial: userx.balanco_patrimonial.capial,
                                             lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados
-                                        } 
+                                            }
+
+                                        }
                                        
                                     }
-                                    k--
                                 }
                             
                         
@@ -3100,61 +3144,61 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
            
                       }
                     if(users[i]['149'][1] == 1){
-                        users[i]['scoremod'] = users[i]['scoremod'] + users[i]['149'][4]*5          
+                        users[i]['scoremod'] = users[i]['scoremod'] + users[i]['149'][4]*4          
                             }
                     if(users[i]['148'][1] == 1){
-                        users[i]['scoremod'] = users[i]['scoremod'] + users[i]['148'][4]*5            
+                        users[i]['scoremod'] = users[i]['scoremod'] + users[i]['148'][4]*4            
                             }
                     if(users[i]['158'][1] == 1){
-                        users[i]['scoremod'] = users[i]['scoremod'] + users[i]['158'][4]*5        
+                        users[i]['scoremod'] = users[i]['scoremod'] + users[i]['158'][4]*4        
                             }
                     if(users[i]['157'][1] == 1){
-                        users[i]['scoremod'] = users[i]['scoremod'] + users[i]['157'][4]*5            
+                        users[i]['scoremod'] = users[i]['scoremod'] + users[i]['157'][4]*4            
                             }
                     if(users[i]['257'][1] == 1){
-                        users[i]['scoremod'] = users[i]['scoremod'] + users[i]['257'][4]*6         
+                        users[i]['scoremod'] = users[i]['scoremod'] + users[i]['257'][4]*5         
                     }
                     if(users[i]['258'][1] == 1){
-                        users[i]['scoremod'] = users[i]['scoremod'] + users[i]['258'][4]*6        
+                        users[i]['scoremod'] = users[i]['scoremod'] + users[i]['258'][4]*5        
                     }
                     if(users[i]['259'][1] == 1){
-                        users[i]['scoremod'] = users[i]['scoremod'] + users[i]['259'][4]*6          
+                        users[i]['scoremod'] = users[i]['scoremod'] + users[i]['259'][4]*5          
                     }
                     if(users[i]['267'][1] == 1){
-                        users[i]['scoremod'] = users[i]['scoremod'] + users[i]['267'][4]*6          
+                        users[i]['scoremod'] = users[i]['scoremod'] + users[i]['267'][4]*5          
                     }
                     if(users[i]['268'][1] == 1){
-                        users[i]['scoremod'] = users[i]['scoremod'] + users[i]['268'][4]*6           
+                        users[i]['scoremod'] = users[i]['scoremod'] + users[i]['268'][4]*5           
                     }
                     if(users[i]['269'][1] == 1){
-                        users[i]['scoremod'] = users[i]['scoremod'] + users[i]['269'][4]*6          
+                        users[i]['scoremod'] = users[i]['scoremod'] + users[i]['269'][4]*5          
                     }
                     if(users[i]['347'][1] == 1){
-                        users[i]['scoremod'] = users[i]['scoremod'] + users[i]['347'][4]*7           
+                        users[i]['scoremod'] = users[i]['scoremod'] + users[i]['347'][4]*6           
                     }
                     if(users[i]['348'][1] == 1){
-                        users[i]['scoremod'] = users[i]['scoremod'] + users[i]['348'][4]*7            
+                        users[i]['scoremod'] = users[i]['scoremod'] + users[i]['348'][4]*6            
                     }
                     if(users[i]['349'][1] == 1){
-                        users[i]['scoremod'] = users[i]['scoremod'] + users[i]['349'][4]*7           
+                        users[i]['scoremod'] = users[i]['scoremod'] + users[i]['349'][4]*6           
                     }
                     if(users[i]['357'][1] == 1){
-                        users[i]['scoremod'] = users[i]['scoremod'] + users[i]['357'][4]*7          
+                        users[i]['scoremod'] = users[i]['scoremod'] + users[i]['357'][4]*6          
                     }
                     if(users[i]['358'][1] == 1){
-                        users[i]['scoremod'] = users[i]['scoremod'] + users[i]['358'][4]*7          
+                        users[i]['scoremod'] = users[i]['scoremod'] + users[i]['358'][4]*6          
                     }
                     if(users[i]['359'][1] == 1){
-                        users[i]['scoremod'] = users[i]['scoremod'] + users[i]['359'][4]*7          
+                        users[i]['scoremod'] = users[i]['scoremod'] + users[i]['359'][4]*6          
                     }
                     if(users[i]['367'][1] == 1){
-                        users[i]['scoremod'] = users[i]['scoremod'] + users[i]['367'][4]*7         
+                        users[i]['scoremod'] = users[i]['scoremod'] + users[i]['367'][4]*6         
                     }
                     if(users[i]['368'][1] == 1){
-                        users[i]['scoremod'] = users[i]['scoremod'] + users[i]['368'][4]*7           
+                        users[i]['scoremod'] = users[i]['scoremod'] + users[i]['368'][4]*6           
                     }
                     if(users[i]['369'][1] == 1){
-                        users[i]['scoremod'] = users[i]['scoremod'] + users[i]['369'][4]*7      
+                        users[i]['scoremod'] = users[i]['scoremod'] + users[i]['369'][4]*6      
                     }
                 }
                 for(let i = 0; i < users.length; i++){
@@ -3271,12 +3315,12 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     
                     //  -_-_-_-
                     //Apos a computacao do faturamento do player no codigo abaixo altera-se no Schema o lucro resultante desse faturamento levando em conta o faturamento planejado do player, como o professor instruiu \/
-                    users[i].taokeys = users[i].taokeys + users[i].balanco_patrimonial.contas_a_receber60 - users[i]['promotores']*2160 - users[i]['distribuidores']*2160 - users[i]['pas']*2160 - users[i]['faturamento']*users[i]['comissao']
+                    users[i].taokeys = users[i].taokeys + users[i].balanco_patrimonial.contas_a_receber60 - users[i]['promotores']*2160 - users[i]['distribuidores']*640 - users[i]['pas']*2160 - users[i]['faturamento']*users[i]['comissao']
                     users[i].balanco_patrimonial = {
                         caixa: users[i].balanco_patrimonial.caixa + users[i].balanco_patrimonial.contas_a_receber60 - users[i]['promotores']*2160 - users[i]['distribuidores']*2160 - users[i]['pas']*2160 - users[i]['faturamento']*users[i]['comissao'],
                         estoque: users[i].balanco_patrimonial.estoque,
                         contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60 - users[i].balanco_patrimonial.contas_a_receber60 + users[i].balanco_patrimonial.contas_a_receber120,
-                        contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120 - users[i].balanco_patrimonial.contas_a_receber120,
+                        contas_a_receber120: 0,
                         maquinas: users[i].balanco_patrimonial.maquinas,
                         depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
                         veiculos: users[i].balanco_patrimonial.veiculos,
@@ -3285,17 +3329,38 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         tributos_a_pagar_atual: users[i].balanco_patrimonial.tributos_a_pagar_atual,
                         emprestimos: users[i].balanco_patrimonial.emprestimos,
                         capial: users[i].balanco_patrimonial.capial,
-                        lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - users[i]['promotores']*2160 - users[i]['distribuidores']*2160 - users[i]['pas']*2160 - users[i]['faturamento']*users[i]['comissao']
+                        lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - users[i]['promotores']*2160 - users[i]['distribuidores']*360 - users[i]['pas']*2160 - users[i]['faturamento']*users[i]['comissao']
                     }
                     users[i].dre = {
-
                         receita: users[i].dre.receita,
-                        cmv: users[i].dre.cmv,
+                        csp: users[i].dre.csp,
+                        estoque_inicial: users[i].dre.estoque_inicial,
+                        custo_prestacao_servico: users[i].dre.custo_prestacao_servico,
+                        custo_estocagem: users[i].dre.custo_estocagem,
+                        custo_troca_insumos: users[i].dre.custo_troca_insumos,
+                        hora_extra: users[i].dre.hora_extra,
+                        capacidade_n_utilizada: users[i].dre.capacidade_n_utilizada,
+                        margem_bruta: users[i].dre.margem_bruta,
                         despesas_administrativas: users[i].dre.despesas_administrativas,
-                        despesas_vendas: users[i].dre.despesas_vendas + users[i]['promotores']*2160 + users[i]['distribuidores']*2160 + users[i]['pas']*2160 + users[i]['faturamento']*users[i]['comissao'],
-                        despesas_financeiras: users[i].dre.despesas_financeiras,
-                        depreciacao_e_amortizacao: users[i].dre.depreciacao_e_amortizacao,
-                        ir: users[i].dre.ir
+                        salario_promotores: users[i].dre.salario_promotores + users[i]['promotores']*2160 + users[i]['distribuidores']*360, //gambiarra
+                        comissao: users[i].dre.comissao + users[i]['faturamento']*users[i]['comissao'],
+                        propaganda_institucional: users[i].dre.propaganda_institucional,
+                        propaganda_unitaria: users[i].dre.propaganda_unitaria,
+                        depreciacao_de_maquinas: users[i].dre.depreciacao_de_maquinas,
+                        encargos_financiamento: users[i].dre.encargos_financiamento,
+                        salario_frota: users[i].dre.salario_frota,
+                        manutencao_frota: users[i].dre.manutencao_frota,
+                        depreciacao_de_veiculos: users[i].dre.depreciacao_de_veiculos,
+                        frota_terceirizada: users[i].dre.frota_terceirizada,
+                        despesas_operacionais_n_planejadas: users[i].dre.despesas_operacionais_n_planejadas,
+                        pas: users[i].dre.pas + users[i]['pas']*2160,
+                        pesquisas: users[i].dre.pesquisas,
+                        tributos: users[i].dre.tributos,
+                        servicos: [[users[i].dre.servicos[0],users[i].dre.servicos[1]]],
+                        preco_medio: users[i].dre.preco_medio,
+                        atendimentos: users[i].dre.atendimentos,
+                        insumos_em_estoque: users[i].dre.insumos_em_estoque
+
 
                     }
 
@@ -3306,14 +3371,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     for(let o = 0; o < index.length; o++){
                         users[i].set(index[o],[users[i][index[o]][0], users[i][index[o]][1], users[i][index[o]][2], users[i][index[o]][3], users[i][index[o]][4], users[i][index[o]][5], 0, users[i][index[o]][7]])
                         if(users[i][index[o]][4] > 0){
-                            //console.log('----------> antes (do recebimento de contas a receber): ' + users[i].taokeys)
                             
-                            //console.log('----------> depois (do recebimento de contas a receber): ' + users[i].taokeys)
-                            // - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*users[i][index[o]][2] //erro de contabilidade resolvido
-                            let array_insu = [(users[i][index[o]][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]), users[i][index[o]][1], users[i][index[o]][2], users[i][index[o]][3], users[i][index[o]][4],(users[i][index[o]][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*users[i][index[o]][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][3])]
-                            //(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['147'][4]*users[i]['147'][3] => igual ao faturamento obtido pelo jogador nesse serviço especifico
-                            users[i].set(index[o], array_insu)
-                            //users[i].balanco_patrimonial.contas_a_receber = users[i]['147'][7]
                             users[i].balanco_patrimonial = {
                                 caixa: users[i].balanco_patrimonial.caixa,
                                 estoque: users[i].balanco_patrimonial.estoque - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][2]),
@@ -3328,18 +3386,46 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 emprestimos: users[i].balanco_patrimonial.emprestimos,
                                 capial: users[i].balanco_patrimonial.capial,
                                 lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][2]) + users[i][index[o]][7]*2
-                            }  
-                            
-                            
-                            users[i].dre = {
-                                receita: users[i].dre.receita + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][3]),
-                                cmv: users[i].dre.cmv + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][2]),
-                                despesas_administrativas: users[i].dre.despesas_administrativas,
-                                despesas_vendas: users[i].dre.despesas_vendas,
-                                despesas_financeiras: users[i].dre.despesas_financeiras,
-                                depreciacao_e_amortizacao: users[i].dre.depreciacao_e_amortizacao,
-                                ir: users[i].dre.ir
                             }
+                            users[i].dre = {
+                                receita: users[i].dre.receita + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][3]), 
+                                csp: users[i].dre.csp + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][2]),
+                                estoque_inicial: users[i].dre.estoque_inicial + users[i][index[o]][0]*users[i][index[o]][2],
+                                custo_prestacao_servico: users[i].dre.custo_prestacao_servico,
+                                custo_estocagem: users[i].dre.custo_estocagem,
+                                custo_troca_insumos: users[i].dre.custo_troca_insumos,
+                                hora_extra: users[i].dre.hora_extra,
+                                capacidade_n_utilizada: users[i].dre.capacidade_n_utilizada,
+                                margem_bruta: users[i].dre.margem_bruta,
+                                despesas_administrativas: users[i].dre.despesas_administrativas,
+                                salario_promotores: users[i].dre.salario_promotores,
+                                comissao: users[i].dre.comissao,
+                                propaganda_institucional: users[i].dre.propaganda_institucional,
+                                propaganda_unitaria: users[i].dre.propaganda_unitaria,
+                                depreciacao_de_maquinas: users[i].dre.depreciacao_de_maquinas,
+                                encargos_financiamento: users[i].dre.encargos_financiamento,
+                                salario_frota: users[i].dre.salario_frota,
+                                manutencao_frota: users[i].dre.manutencao_frota,
+                                depreciacao_de_veiculos: users[i].dre.depreciacao_de_veiculos,
+                                frota_terceirizada: users[i].dre.frota_terceirizada,
+                                despesas_operacionais_n_planejadas: users[i].dre.despesas_operacionais_n_planejadas,
+                                pas: users[i].dre.pas,
+                                pesquisas: users[i].dre.pesquisas,
+                                tributos: users[i].dre.tributos,
+                                servicos: [[users[i].dre.servicos[0],users[i].dre.servicos[1]]],
+                                preco_medio: users[i].dre.preco_medio,
+                                atendimentos: users[i].dre.atendimentos,
+                                insumos_em_estoque: users[i].dre.insumos_em_estoque + (users[i][index[o]][0]*users[i][index[o]][2] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][2]))
+        
+        
+                            }
+
+
+                            let array_insu = [(users[i][index[o]][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]), users[i][index[o]][1], users[i][index[o]][2], users[i][index[o]][3], users[i][index[o]][4],(users[i][index[o]][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*users[i][index[o]][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][3])]
+                            //(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['147'][4]*users[i]['147'][3] => igual ao faturamento obtido pelo jogador nesse serviço especifico
+                            users[i].set(index[o], array_insu)
+                            //users[i].balanco_patrimonial.contas_a_receber = users[i]['147'][7]
+                            
                             //users[i][index[o]][0] = users[i]['147'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['147'][4]
                             if(users[i][index[o]][0] >= 0){
                                 users[i].taokeys = users[i].taokeys - users[i][index[o]][0]*36
@@ -3388,6 +3474,38 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                     emprestimos: users[i].balanco_patrimonial.emprestimos,
                                     capial: users[i].balanco_patrimonial.capial,
                                     lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados + users[i][index[o]][0]*users[i][index[o]][2]*1.2 + (-1)*(users[i][index[o]][0]*users[i][index[o]][2])
+                                }
+                                users[i].dre = {
+                                    receita: users[i].dre.receita, 
+                                    csp: users[i].dre.csp + users[i][index[o]][0]*(users[i][index[o]][2]) + (-1)*users[i][index[o]][0]*users[i][index[o]][2]*1.2,
+                                    estoque_inicial: users[i].dre.estoque_inicial,
+                                    custo_prestacao_servico: users[i].dre.custo_prestacao_servico,
+                                    custo_estocagem: users[i].dre.custo_estocagem,
+                                    custo_troca_insumos: users[i].dre.custo_troca_insumos,
+                                    hora_extra: users[i].dre.hora_extra,
+                                    capacidade_n_utilizada: users[i].dre.capacidade_n_utilizada,
+                                    margem_bruta: users[i].dre.margem_bruta,
+                                    despesas_administrativas: users[i].dre.despesas_administrativas,
+                                    salario_promotores: users[i].dre.salario_promotores,
+                                    comissao: users[i].dre.comissao,
+                                    propaganda_institucional: users[i].dre.propaganda_institucional,
+                                    propaganda_unitaria: users[i].dre.propaganda_unitaria,
+                                    depreciacao_de_maquinas: users[i].dre.depreciacao_de_maquinas,
+                                    encargos_financiamento: users[i].dre.encargos_financiamento,
+                                    salario_frota: users[i].dre.salario_frota,
+                                    manutencao_frota: users[i].dre.manutencao_frota,
+                                    depreciacao_de_veiculos: users[i].dre.depreciacao_de_veiculos,
+                                    frota_terceirizada: users[i].dre.frota_terceirizada,
+                                    despesas_operacionais_n_planejadas: users[i].dre.despesas_operacionais_n_planejadas,
+                                    pas: users[i].dre.pas,
+                                    pesquisas: users[i].dre.pesquisas,
+                                    tributos: users[i].dre.tributos,
+                                    servicos: [[users[i].dre.servicos[0],users[i].dre.servicos[1]]],
+                                    preco_medio: users[i].dre.preco_medio,
+                                    atendimentos: users[i].dre.atendimentos,
+                                    insumos_em_estoque: users[i].dre.insumos_em_estoque + users[i][index[o]][0]*users[i][index[o]][2]
+            
+            
                                 }
 
                                 
@@ -3466,7 +3584,6 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             ir: users[i].dre.ir
                         }
                     }
-                    users[i].taokeys = users[i].taokeys - users[i].pas*2160 //despesas do PAS
                     users[i].pas = users[i].pas + users[i].pas1;
                     users[i].pas1 = users[i].pas2;
                     users[i].pas2 = 0;
@@ -3478,8 +3595,8 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             users[i].balanco_patrimonial = {
                                 caixa: users[i].balanco_patrimonial.caixa - (((uso_frota-j)/2000)-frota_soma+1)*60,
                                 estoque: users[i].balanco_patrimonial.estoque,
-                                contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60 - users[i].balanco_patrimonial.contas_a_receber60 + users[i].balanco_patrimonial.contas_a_receber120,
-                                contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120 - users[i].balanco_patrimonial.contas_a_receber120,
+                                contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
+                                contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
                                 maquinas: users[i].balanco_patrimonial.maquinas,
                                 depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
                                 veiculos: users[i].balanco_patrimonial.veiculos,
@@ -3988,7 +4105,15 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                 socket.emit('tds-states', resp)
 
                     //
-                    Aluno.findOne({cooperativa: users[i].cooperativa, instancia: adm.instancia, temporario: 1, ativo: 1})
+
+                    // (IGUALANDO O BANCO TEMPORARIO COM O OFICIAL)
+                    
+                    users[i].turno = users[i].turno + 1
+
+                    users[i].save()
+                        .then(() => {
+                            console.log(users[i]['cooperativa'] + ' Teve seu faturamento processado com sucesso.')
+                            Aluno.findOne({cooperativa: users[i].cooperativa, instancia: adm.instancia, temporario: 1, ativo: 1})
                                             .then((usert) => {
                                                 usert.set('npesquisas', users[i].npesquisas)
                                                 usert.set('turno', users[i].turno)
@@ -4006,28 +4131,19 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                                 usert.set('divida', [users[i]["divida"][0],users[i]["divida"][1],users[i]["divida"][2]])
                                                 //console.log(index)
                                                 usert.balanco_patrimonial = {
-                                                    ativo: {
-                                                        circulante: {
-                                                            caixa: users[i].balanco_patrimonial.ativo.circulante.caixa,
-                                                            estoque: users[i].balanco_patrimonial.ativo.circulante.estoque,
-                                                            contas_a_receber: users[i].balanco_patrimonial.ativo.circulante.contas_a_receber
-                        
-                                                        },
-                                                        n_circulante: {
-                                                            imobilizado: {
-                                                                pas: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.pas,
-                                                                frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.frota,
-                                                                depreciacao_frota: users[i].balanco_patrimonial.ativo.n_circulante.imobilizado.depreciacao_frota
-                                                            },
-                                                        },
-                                                    },
-                                                    passivo: {
-                                                        contas_a_pagar: users[i].balanco_patrimonial.passivo.contas_a_pagar
-                                                    },
-                                                    patrimonio_liquido: {
-                                                        capital_social: users[i].balanco_patrimonial.patrimonio_liquido.capital_social,
-                                                        lucros_acumulados: users[i].balanco_patrimonial.patrimonio_liquido.lucros_acumulados
-                                                    }
+                                                    caixa: users[i].caixa,
+                                                    estoque: users[i].estoque,
+                                                    contas_a_receber60: users[i].contas_a_receber60,
+                                                    contas_a_receber120: users[i].contas_a_receber120,
+                                                    maquinas: users[i].maquinas,
+                                                    depreciacao_maquinas: users[i].depreciacao_de_maquinas,
+                                                    veiculos: users[i].veiculos,
+                                                    depreciacao_veiculos: users[i].depreciacao_de_veiculos,
+                                                    tributos_a_pagar_anterior: users[i].tributos_a_pagar_anterior,
+                                                    tributos_a_pagar_atual: users[i].tributos_a_pagar_atual,
+                                                    emprestimos: users[i].emprestimos,
+                                                    capial: users[i].capital,
+                                                    lucros_acumulados: users[i].lucros_acumulados
                                                 }
                                                 usert.dre = {
                                                     receita: users[i].dre.receita,
@@ -4046,19 +4162,12 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                                 }
                                                 usert.save()
                                                     .then(() => {
-                                                        socket.emit('feedback', ['success', 'turno foi finalizado (tem q implementar um socket.on no front q qnd recebe o socket debaixo pede pro server o seu faturamento!'])
+                                                        socket.emit('feedback', ['success', 'turno foi finalizado'])
                                                         sockets.emit('final-turno') //manda a info pra tds os sockets conectados de que acabou o turno e para eles requisitarem (!!socket.emit('receber-faturamento')!!) o novo state pós FATURAMENTO e se o jogador n esriver conectado qnd acontecer o processo de faturamento essa puxada de dados tb smp acontece qnd ele se loga
                                                     })
                                                     .catch((err) => {socket.emit('feedback', ['danger', 'falha ao salvar os dados no servidor (' + err + ')'])})
                                      
                                             })
-                    // (IGUALANDO O BANCO TEMPORARIO COM O OFICIAL)
-                    
-                    users[i].turno = users[i].turno + 1
-
-                    users[i].save()
-                        .then(() => {
-                            console.log(users[i]['cooperativa'] + ' Teve seu faturamento processado com sucesso.')
                         })
                         .catch((err) => { console.log('Erro ao salvar os FATURAMENTOS processados. Motivo ==> ' + err)})
                 }
