@@ -2912,7 +2912,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                                     }
                                                 }
                                             } 
-                                             socket.emit('resposta-pesquisa', respostaP)
+                                             socket.emit('resposta-pesquisa', toString(respostaP))
                                              socket.emit('update', [
                                                 [...userx["147"],"147"],
                                                 [...userx["148"],"148"],
