@@ -52,7 +52,7 @@ function SimSelect(props){
           <Typography component="h1" variant="h5" className={classes.button}>
             Bem vindo ao Desafio de Gestão!
           </Typography>
-          <Typography component="p" variant="p" className={classes.button}>
+          <Typography component="p" variant="body1" className={classes.button}>
             Aqui esperamos que você apreenda se divertindo. 
             E dessa forma possa entender de forma dinâmica como os vários elementos 
             da administração interferem no processo de gestão.

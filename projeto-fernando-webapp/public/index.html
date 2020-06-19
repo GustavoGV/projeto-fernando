@@ -28,6 +28,12 @@
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
+    <script>
+      console.log(">>>>",window.location.pathname)
+      if(window.location.pathname === 'www.desafiosdegestao.com.br'){
+        window.location.replace('www.desafiosdegestao.com.br/select')
+      }
+    </script>
     <div id="root"></div>
     <!--
       This HTML file is a template.
