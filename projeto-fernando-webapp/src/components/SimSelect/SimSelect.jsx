@@ -75,7 +75,7 @@ function SimSelect(props){
               }}
               className={classes.button}
             >
-              CBG - Corporate Business Game
+              CBG - Cooperative Business Game
             </Button>
           </div>
         </Grid>

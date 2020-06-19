@@ -78,13 +78,10 @@ export default function Login(props) {
   }
 
   useEffect(()=>{
-    console.log('component mounted')
     socket.on('login-client-aprovado',creden=>{
-      console.log('login aprovado',creden)
       props.history.push('/game/manual')
     })
     return(()=>{
-      console.log('component unmounted')
       socket.off('login-aprovado')
     })
   }, [])

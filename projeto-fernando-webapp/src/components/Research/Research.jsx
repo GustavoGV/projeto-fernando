@@ -77,15 +77,12 @@ function Research(props) {
 
   useEffect(()=>{
     socket.on('resposta-pesquisa', response => {
-      console.log('resposta-pesquisa:', response);
       setResponse(response);
     })
   },[])
 
   return(
     <>
-      {console.log("tipo da pesquisa:", researchData.researchType)}
-      {console.log("input da pesquisa:", researchData)}
       <h3>Pesquisas</h3>
       <Form className={classes.form}>
       <Select

@@ -77,13 +77,11 @@ export default function ServicesContainer() {
       socket.emit('puxar-state');
     })
     socket.on('update', state => {
-      console.log('estado atual: ', state)
       setGame(state)
     return ()=>{
       socket.off('update');
     }});
     socket.on('balancos', balanco => {
-      console.log("balancos", balanco)
       setDownloadInfo(balanco)
     });
   },[])
@@ -120,7 +118,6 @@ export default function ServicesContainer() {
               setSelectedService(event)
             }}
           />
-          {console.log("servico-selecionado:", selectedService)}
           <Button variant="contained" color="primary" className={classes.button} onClick={()=>{socket.emit('ativar-servico', selectedService.value)}}>
             Adicionar Serviço
           </Button>
@@ -131,7 +128,6 @@ export default function ServicesContainer() {
           Selecione um turno
         </DialogTitle>
         <DialogContent className={classes.dialog}>
-          {console.log("turnos:", generateRounds())}
           <Select
             defaultValue={game[30] ? game[30]-1 : 0}
             options={generateRounds()}

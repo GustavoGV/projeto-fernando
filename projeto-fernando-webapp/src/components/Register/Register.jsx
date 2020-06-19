@@ -82,19 +82,15 @@ export default function Register(props) {
     if(cooperative && instance && password){
       let creden = [cooperative, password, instance, instancePassword]
       socket.emit('register-client', creden )
-      console.log()
     }
     
   }
 
   useEffect(()=>{
     socket.on('login-client-aprovado',data=>{
-      console.log('login aprovado')
-      console.log(data)
       props.history.push('/game/inputs')
     })
     return(()=>{
-      console.log('component unmounted')
       socket.off('login-client-aprovado')
     })
   })

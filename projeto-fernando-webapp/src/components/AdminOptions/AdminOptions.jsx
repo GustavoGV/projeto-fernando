@@ -51,12 +51,10 @@ function AdminOptions(){
   }
 
   function startRound(){
-    console.log('iniciando o turno')
     socket.emit('iniciar-turno')
   }
 
   function finishRound(){
-    console.log('finalizando o turno')
     socket.emit('finalizar-turno')
   }
 
@@ -79,14 +77,11 @@ function AdminOptions(){
   const activeServices = gameData ? gameData.slice(0,21).filter(service => service[1] === 1) : null;
   const activeServicesNames = activeServices ? activeServices.map(activeService => activeService[8]).join(", ") : null;
   const currentRound = globalState[0] ? globalState[0].gameData ? globalState[0].gameData[30] : 0 : 0;
-  console.log("global state", globalState);
   let rounds = []
   for(var i=1; i===currentRound; i++){
     rounds.push(i);
   }
   
-  console.log("round:", rounds);
-
   return(
     <>
       <Dialog open={modal} aria-labelledby="simple-dialog-title" onClose={()=>setModal(!modal)}>

@@ -3,16 +3,28 @@ import Typography from '@material-ui/core/Typography'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
+import Paper from '@material-ui/core/Paper';
+import { makeStyles } from '@material-ui/core/styles';
+
+
 //import socket from '../../connection';
 //socket.emit("teste", "dados")
 
+const useStyles = makeStyles(theme => ({
+  paper: {
+    padding: theme.spacing(2),
+    //color: theme.palette.text.secondary,
+  },
+  title:{
+    textAlign:'center'
+  }
+}))
 
 export default function Manual() {
 
   //TODO: Move lists to here
-   
 
-  const basicActions = []
+  const classes = useStyles();
 
   function generateListItems(itensArray) {
     return itensArray.map(item=>(
@@ -26,15 +38,23 @@ export default function Manual() {
   }
 
   return(
-    <>
-    <Typography variant="h5">Corporative Business Game – Como funciona?</Typography>
+    <div style={{margin:'0 80px'}}>
+    <Paper className={classes.paper}>
+    <Typography variant="h4" className={classes.title}>Cooperative Business Game</Typography>
+    <br/>
+    <br/>
+    <br/>
+    <Typography variant="h5">Como funciona?</Typography>
     <Typography variant="body1">
       O jogo é separado por turnos e cada turno representa 1 bimestre, encerrando ao se completar
     1 ano. Cabe ao jogador fazer as melhores escolhas/compras e previsão para se sobressair no
     jogo.
     </Typography>
+    <br/>
+    <br/>
     <Typography variant="h5">Quais ações eu posso fazer por turno?</Typography>
-    <Typography variant="h5">Ações básicas:</Typography>
+    <br/>
+    <Typography variant="h6">Ações básicas:</Typography>
     <List>
       <ListItem>
         <ListItemText
@@ -69,7 +89,7 @@ export default function Manual() {
         />
       </ListItem>  
     </List>   
-    <Typography variant="h5">Ações de consulta:</Typography> 
+    <Typography variant="h6">Ações de consulta:</Typography> 
     <List>
       <ListItem>
         <ListItemText
@@ -96,7 +116,9 @@ export default function Manual() {
           primary="Participação da concorrência – serviços múltiplos"
         />
       </ListItem> 
-    </List> 
+    </List>
+    <br/>
+    <br/>
     <Typography variant="h5">Qual o funcionamento por turno?</Typography>
     <Typography variant="body1">
     Ao iniciar um turno, cada jogador irá fazer as devidas alterações e consultas de acordo com sua
@@ -111,6 +133,8 @@ despesas básicas, o sistema automaticamente acionará o empréstimo bancário, 
 juros sobre o saldo devedor, e este deverá ser pago em no máximo 3 turnos, caso contrário
 será decretada falência da coorporativa.
     </Typography>
+    <br/>
+    <br/>
     <Typography variant="h5">Quais ações estão fora do controle do jogador?</Typography>
     <Typography variant="body1">
     Ao não acerto da previsão de vendas, o jogador é exposto a uma séries de interações que
@@ -139,6 +163,8 @@ funcionários quanto custos administrativos fixos como imposto de renda. As cont
 pagas ao jogador seguem a métrica de metade de imediato (no momento que a compra foi
 efetuada) e a outra metade no próximo bimestre.
     </Typography>
+    <br/>
+    <br/>
     <Typography variant="h5">
       Mais dúvidas?
     </Typography>
@@ -146,10 +172,7 @@ efetuada) e a outra metade no próximo bimestre.
     Caso seja encontrados bugs, ou dúvidas não esclarecidas por este manual ou afins, favor
 reportar para e-mail@gmail.com
     </Typography>
-
-  
-
-
-    </>
+    </Paper>
+    </div>
   )
 }

@@ -21,11 +21,9 @@ function App() {
 
   const notificationAlert = useRef(null);
   const history = useHistory()
-  console.log("history", history);
 
   useEffect(()=>{
     socket.on('feedback', feedback => {
-      console.log(feedback);
       var options = {
         place: 'tc' ,
         message: (
@@ -39,6 +37,14 @@ function App() {
         icon: 'fas fa-bell',
         autoDismiss: 3,
         closeButton: false,
+      }
+      if(feedback[0]==="danger" && feedback[1].includes('login negado para')){
+        if(history.location.pathname.includes('admin')){
+          history.push('/admin/login');
+        }
+        else{
+          history.push('/login');
+        }
       }
       if(feedback[0]==="danger" && feedback[1]==="voce precisa estar logado para puxar o state atual da simulação"){
         if(history.location.pathname.includes('admin')){
