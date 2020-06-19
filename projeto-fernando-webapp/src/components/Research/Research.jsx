@@ -130,7 +130,7 @@ function Research(props) {
         ?(
           <>
             <label>Resultado:</label>
-            {Math.round(response)}
+            {response}
           </>
         )
         :null
