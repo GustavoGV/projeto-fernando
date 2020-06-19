@@ -23,15 +23,15 @@ function Reports (props){
     <div>
       <Grid container component="main">
       <Grid item xs={false} sm={12} md={7}>
-        <Balanco/>
+        <Balanco round={round}/>
       </Grid>
         <br/>
       <Grid item xs={false} sm={12} md={7}>
-        <Dre/>
+        <Dre round={round}/>
       </Grid>
         <br/>
       <Grid item xs={false} sm={12} md={7}>
-        <Fluxo/>
+        <Fluxo round={round}/>
       </Grid>
       </Grid>
       
