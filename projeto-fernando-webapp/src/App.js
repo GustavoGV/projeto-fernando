@@ -62,9 +62,6 @@ function App() {
       <>
         <NotificationAlert ref={notificationAlert} />
         <Normalize/>
-        <Route exact path="">
-          <Redirect to="/select"/>
-        </Route>
         <Switch>
             <Route exact path="/">
               <Redirect to="/select"/>

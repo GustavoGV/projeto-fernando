@@ -28,8 +28,10 @@ function Balanco (props) {
   useEffect(()=>{
     socket.emit('puxar-balancos', props.round);
     socket.on('balancos', balanco => {
-      console.log("balancos", balanco)
-      update(balanco)
+      console.log("balancos", balanco.balanco_patrimonial)
+      if(balanco.balanco_patrimonial){
+        update(balanco.balanco_patrimonial)
+      }
     });
   },[])
 

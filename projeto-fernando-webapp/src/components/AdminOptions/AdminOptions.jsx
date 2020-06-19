@@ -59,7 +59,11 @@ function AdminOptions(){
   }
 
   useEffect(()=>{
-    socket.emit('puxar-tds-states')
+    socket.emit('puxar-tds-states');
+    socket.on('final-turno',()=>{
+      socket.emit('puxar-state');
+
+    });
     socket.on('tds-states', state => {
       console.log("global state:", state);
       setGlobalState(state);
@@ -76,7 +80,18 @@ function AdminOptions(){
   const gameData = globalState.find(user => user[31] === selectedState.label);
   const activeServices = gameData ? gameData.slice(0,21).filter(service => service[1] === 1) : null;
   const activeServicesNames = activeServices ? activeServices.map(activeService => activeService[8]).join(", ") : null;
-  const currentRound = globalState[0] ? globalState[0].gameData ? globalState[0].gameData[30] : 0 : 0;
+  const currentRound = gameData ? gameData[30] || 0 : 0;
+
+  function generateRounds(){
+    const currentRound = gameData ? gameData[30] || 0 : 0;
+    let rounds = []
+    let i;
+    for(i=1; i<currentRound; i++){
+      rounds.push({value:i, label:i});
+    }
+    return rounds
+  }
+
   let rounds = []
   for(var i=1; i===currentRound; i++){
     rounds.push(i);
@@ -91,7 +106,7 @@ function AdminOptions(){
         <DialogContent>
           <Select
             defaultValue={currentRound}
-            options={rounds}
+            options={generateRounds()}
             onChange={event=>{
               setRound(event.value);
             }}

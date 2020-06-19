@@ -26,8 +26,10 @@ function Dre(props){
   useEffect(()=>{
     socket.emit('puxar-balancos', props.round);
     socket.on('balancos', balanco => {
-      console.log("balancos", balanco)
-      update(balanco)
+      console.log("fluxo", balanco.fluxo)
+      if(balanco.fluxo){
+        update(balanco.fluxo)
+      }
     });
   },[])
 
