@@ -220,7 +220,6 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             atendimentos: 0,
                             insumos_em_estoque: 985
 
-
                         },
                         fluxo_de_caixa: {
                             saldo_anterior: 0,
@@ -513,6 +512,39 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                     lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados - qnt*30 + (userx[novo][2] - userx[velho][2])*qnt
                                 }
                                 userx.dre = {
+                                    receita: 0,
+                                    csp: 0,
+                                    estoque_inicial: 283680,
+                                    custo_prestacao_servico: 0,
+                                    custo_estocagem: 0,
+                                    custo_troca_insumos: 0,
+                                    hora_extra: 0,
+                                    capacidade_n_utilizada: 0,
+                                    margem_bruta: 0,
+                                    despesas_administrativas: 0,
+                                    salario_promotores: 0,
+                                    comissao: 0,
+                                    propaganda_institucional: 0,
+                                    propaganda_unitaria: 0,
+                                    depreciacao_de_maquinas: 0,
+                                    encargos_financiamento: 0,
+                                    salario_frota: 0,
+                                    manutencao_frota: 0,
+                                    depreciacao_de_veiculos: 0,
+                                    frota_terceirizada: 0,
+                                    despesas_operacionais_n_planejadas: 0,
+                                    pas: 0,
+                                    pesquisas: 0,
+                                    tributos: 0,
+                                    servicos: [['147',288]],
+                                    preco_medio: 0,
+                                    atendimentos: 0,
+                                    insumos_em_estoque: 985
+        
+        
+                                }
+                                /*
+                                userx.dre = {
                                     receita: userx.dre.receita,
                                     cmv: userx.dre.cmv + (-1)*(userx[novo][2] - userx[velho][2])*qnt,
                                     despesas_administrativas: userx.dre.despesas_administrativas,
@@ -521,6 +553,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                     depreciacao_e_amortizacao: userx.dre.depreciacao_e_amortizacao,
                                     ir: userx.dre.ir
                                 } //aqui    
+                                */
                             let insu_velho = Number(userx[velho][0]) - Number(qnt)
                             let array_dados_velho = [insu_velho,1,userx[velho][2], userx[velho][3], userx[velho][4], userx[velho][5], userx[velho][6], userx[velho][7]];
                             let insu_novo = Number(userx[novo][0]) + Number(qnt)
@@ -983,6 +1016,39 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             capial: usert.balanco_patrimonial.capial,
                             lucros_acumulados: usert.balanco_patrimonial.lucros_acumulados
                         }
+                        userx.dre = {
+                            receita: 0,
+                            csp: 0,
+                            estoque_inicial: 283680,
+                            custo_prestacao_servico: 0,
+                            custo_estocagem: 0,
+                            custo_troca_insumos: 0,
+                            hora_extra: 0,
+                            capacidade_n_utilizada: 0,
+                            margem_bruta: 0,
+                            despesas_administrativas: 0,
+                            salario_promotores: 0,
+                            comissao: 0,
+                            propaganda_institucional: 0,
+                            propaganda_unitaria: 0,
+                            depreciacao_de_maquinas: 0,
+                            encargos_financiamento: 0,
+                            salario_frota: 0,
+                            manutencao_frota: 0,
+                            depreciacao_de_veiculos: 0,
+                            frota_terceirizada: 0,
+                            despesas_operacionais_n_planejadas: 0,
+                            pas: 0,
+                            pesquisas: 0,
+                            tributos: 0,
+                            servicos: [['147',288]],
+                            preco_medio: 0,
+                            atendimentos: 0,
+                            insumos_em_estoque: 985
+
+
+                        }
+                        /*
                         userdef.dre = {
                             receita: usert.dre.receita,
                             cmv: usert.dre.cmv,
@@ -1004,6 +1070,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             fluxo: usert.fluxo_de_caixa.fluxo
                         
                         }
+                        */
                         
                         for(let s = 0; s < index.length; s++){
                             //console.log(index[s])
@@ -1062,7 +1129,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             capial: userdef.balanco_patrimonial.capial,
                             lucros_acumulados: userdef.balanco_patrimonial.lucros_acumulados
                         }
-
+                        /*
                         usert.dre = {
                             receita: userdef.dre.receita,
                             cmv: userdef.dre.cmv,
@@ -1072,7 +1139,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             depreciacao_e_amortizacao: userdef.dre.depreciacao_e_amortizacao,
                             ir: userdef.dre.ir
                         }
-                        
+                        */
                         for(let s = 0; s < index.length; s++){
                             //console.log(index[s])
                             let serv = index[s]
@@ -1134,6 +1201,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
             .then((userx) => {
                 if(userx !== null){
                         if(qnt > 0 && userx.taokeys > qnt*57600){
+                            /*
                             userx.fluxo_de_caixa = {
 
                                 lucro_bruto: userx.fluxo_de_caixa.lucro_bruto,
@@ -1146,6 +1214,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 fluxo: userx.fluxo_de_caixa.fluxo
                             
                             }
+                            */
                             userx.balanco_patrimonial = {
                                 caixa: userx.balanco_patrimonial.caixa - qnt*57600,
                                 estoque: userx.balanco_patrimonial.estoque,
@@ -1241,6 +1310,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                         if(userx.frota[k] > falta){
                                             retirada = falta
                                             userx.taokeys = userx.taokeys + retirada*(57600/12)*(12-k)
+                                            /*
                                             userx.fluxo_de_caixa = {
 
                                                 lucro_bruto: userx.fluxo_de_caixa.lucro_bruto,
@@ -1253,6 +1323,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                                 fluxo: userx.fluxo_de_caixa.fluxo
                                             
                                             }
+                                            */
                                             userx.balanco_patrimonial = {
                                                 caixa: userx.balanco_patrimonial.caixa + userx.frota[k]*(57600/12)*(12-k),
                                                 estoque: userx.balanco_patrimonial.estoque,
@@ -1282,7 +1353,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                             array[k] = 0
                                             userx.set('frota', array)
                                             userx.taokeys = userx.taokeys + retirada*(57600/12)*(12-k)
-
+                                            /*
                                             userx.fluxo_de_caixa = {
 
                                             lucro_bruto: userx.fluxo_de_caixa.lucro_bruto,
@@ -1295,6 +1366,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                             fluxo: userx.fluxo_de_caixa.fluxo
                                         
                                             }
+                                            */
                                             userx.balanco_patrimonial = {
                                             caixa: userx.balanco_patrimonial.caixa + userx.frota[k]*(57600/12)*(12-k),
                                             estoque: userx.balanco_patrimonial.estoque,
@@ -1647,6 +1719,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 capial: userx.balanco_patrimonial.capial,
                                 lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados
                             }
+                            /*
                             userx.fluxo_de_caixa = {
 
                                 lucro_bruto: userx.dre.receita - userx.dre.cmv, //ok
@@ -1659,6 +1732,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 fluxo: 0
                             
                             }
+                            */
                             userx.set('divida', [(qnt+userx['divida'][0]), userx['divida'][1], userx['divida'][2]]) 
                             userx.taokeys = userx.taokeys + qnt
                             userx.save()
@@ -1730,6 +1804,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             capial: userx.balanco_patrimonial.capial,
                             lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados
                         }
+                        /*
                         userx.fluxo_de_caixa = {
 
                             lucro_bruto: userx.dre.receita - userx.dre.cmv, //ok
@@ -1742,6 +1817,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             fluxo: 0
                         
                         }
+                        */
                         userx.taokeys = userx.taokeys - (userx['divida'][0] + userx['divida'][1] + userx['divida'][2])
                         userx.set('divida', [0,0,0])
     
@@ -2068,6 +2144,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 capial: userx.balanco_patrimonial.capial,
                                 lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados - qnt
                             }
+                            /*
                             userx.dre = {
                                 receita: userx.dre.receita,
                                 cmv: userx.dre.cmv,
@@ -2077,6 +2154,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 depreciacao_e_amortizacao: userx.dre.depreciacao_e_amortizacao,
                                 ir: userx.dre.ir
                             }
+                            */
                             
                             let novaf = Number(userx['propagandauni']) + qnt
                             userx.taokeys = userx.taokeys - qnt
@@ -2159,6 +2237,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 capial: userx.balanco_patrimonial.capial,
                                 lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados - qnt
                             }
+                            /*
                             userx.dre = {
                                 receita: userx.dre.receita,
                                 cmv: userx.dre.cmv,
@@ -2168,6 +2247,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 depreciacao_e_amortizacao: userx.dre.depreciacao_e_amortizacao,
                                 ir: userx.dre.ir
                             }   
+                            */
                             let novaf = userx['propaganda'] + qnt
                             userx.taokeys = userx.taokeys - qnt
                             userx.set('propaganda', novaf) 
@@ -2388,6 +2468,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => { 
                     if(userx !== null){
+                        if(typeof qnti == Number){ 
                         //console.log(user.taokeys + ' ccccccccccccccc');
                         if(userx['taokeys'] >= qnti*userx[tipo][2] && userx[tipo][1] !== 2){
                             userx.balanco_patrimonial = {
@@ -2488,6 +2569,10 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             socket.emit('feedback', ['warning','falta caixa']);
                             //console.log('hlu')
                     }
+                     }
+                     else{
+                        socket.emit('feedback', ['danger','Apenas numeros sao aceitos nessa campo'])
+                     }
                     //console.log(user.taokeys)
                     }
                     else{
@@ -2516,6 +2601,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             capial: userx.balanco_patrimonial.capial,
                             lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados - 2160
                         }
+                        /*
                         userx.dre = {
                             receita: userx.dre.receita,
                             cmv: userx.dre.cmv,
@@ -2525,6 +2611,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             depreciacao_e_amortizacao: userx.dre.depreciacao_e_amortizacao,
                             ir: userx.dre.ir
                         }
+                        */
                         //console.log(user.taokeys + ' ccccccccccccccc');
                         if(userx['taokeys'] >= 2160){
                            //console.log(user.taokeys + " <====")
@@ -2612,6 +2699,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             capial: userx.balanco_patrimonial.capial,
                             lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados - 2160
                         }
+                        /*
                         userx.dre = {
                             receita: userx.dre.receita,
                             cmv: userx.dre.cmv,
@@ -2621,6 +2709,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             depreciacao_e_amortizacao: userx.dre.depreciacao_e_amortizacao,
                             ir: userx.dre.ir
                         }
+                        */
                         //console.log(user.taokeys + ' ccccccccccccccc');
                         if(userx['taokeys'] >= 2160){
                            //console.log(user.taokeys + " <====")
@@ -2710,6 +2799,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 capial: userx.balanco_patrimonial.capial,
                                 lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados - 10800
                             }
+                            /*
                             userx.dre = {
                                 receita: userx.dre.receita,
                                 cmv: userx.dre.cmv,
@@ -2719,6 +2809,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 depreciacao_e_amortizacao: userx.dre.depreciacao_e_amortizacao,
                                 ir: userx.dre.ir
                             }
+                            */
                            //console.log(user.taokeys + " <====")
                            userx.taokeys = userx.taokeys - 10800
                            userx['npesquisas'] = userx['npesquisas'] + 1     
@@ -2792,6 +2883,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                     capial: userx.balanco_patrimonial.capial,
                                     lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados - 14400
                                 }
+                                /*
                                 userx.dre = {
                                     receita: userx.dre.receita,
                                     cmv: userx.dre.cmv,
@@ -2801,6 +2893,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                     depreciacao_e_amortizacao: userx.dre.depreciacao_e_amortizacao,
                                     ir: userx.dre.ir
                                 }
+                                */
                                 //console.log(user.taokeys + " <====")
                                 userx.taokeys = userx.taokeys - 14400
                                 userx['npesquisas'] = userx['npesquisas'] + 1 
@@ -2896,6 +2989,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 capial: userx.balanco_patrimonial.capial,
                                 lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados - 2160
                             }
+                            /*
                             userx.dre = {
                                 receita: userx.dre.receita,
                                 cmv: userx.dre.cmv,
@@ -2905,6 +2999,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 depreciacao_e_amortizacao: userx.dre.depreciacao_e_amortizacao,
                                 ir: userx.dre.ir
                             }
+                            */
                            //console.log(user.taokeys + " <====")
                            userx.taokeys = userx.taokeys - 2160
                            userx['npesquisas'] = userx['npesquisas'] + 1 
@@ -3047,6 +3142,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                     .then(() => {
                                         Aluno.find({instancia: adm.instancia, temporario: 0})
                                             .then((cooperativas) => {
+                                                console.log(`adm connected`)
                                                 socket.emit('state-gloal', cooperativas)
                                             })
                                         socket.emit('feedback', ['success', 'login aprovado para ' + adm.instancia])
@@ -3218,21 +3314,22 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     for(let f = 0; f < 12; f++){
                         somaF = somaF + users[i]['frota'][f]
                         if(users[i]['frota'][f] > 0){
-                            userx.balanco_patrimonial = {
-                                caixa: userx.balanco_patrimonial.caixa - 2400*users[i]['frota'][f],
-                                estoque: userx.balanco_patrimonial.estoque,
-                                contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
-                                contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
-                                maquinas: userx.balanco_patrimonial.maquinas,
-                                depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_de_maquinas,
-                                veiculos: userx.balanco_patrimonial.veiculos,
-                                depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos,
-                                tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
-                                tributos_a_pagar_atual: userx.balanco_patrimonial.tributos_a_pagar_atual,
-                                emprestimos: userx.balanco_patrimonial.emprestimos,
-                                capial: userx.balanco_patrimonial.capial,
-                                lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados - 2400*users[i]['frota'][f]
+                            users[i].balanco_patrimonial = {
+                                caixa: users[i].balanco_patrimonial.caixa - 2400*users[i]['frota'][f],
+                                estoque: users[i].balanco_patrimonial.estoque,
+                                contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
+                                contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
+                                maquinas: users[i].balanco_patrimonial.maquinas,
+                                depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
+                                veiculos: users[i].balanco_patrimonial.veiculos,
+                                depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
+                                tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
+                                tributos_a_pagar_atual: users[i].balanco_patrimonial.tributos_a_pagar_atual,
+                                emprestimos: users[i].balanco_patrimonial.emprestimos,
+                                capial: users[i].balanco_patrimonial.capial,
+                                lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - 2400*users[i]['frota'][f]
                             }
+                            /*
                             users[i].dre = {
                                 receita: users[i].dre.receita,
                                 cmv: users[i].dre.cmv,
@@ -3242,22 +3339,23 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 depreciacao_e_amortizacao: users[i].dre.depreciacao_e_amortizacao + 2400*users[i]['frota'][f],
                                 ir: users[i].dre.ir
                             }
+                            */
                         }
                         if(users[i]['frota'][f] > 0 && f == 11){
-                            userx.balanco_patrimonial = {
-                                caixa: userx.balanco_patrimonial.caixa,
-                                estoque: userx.balanco_patrimonial.estoque,
-                                contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
-                                contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
-                                maquinas: userx.balanco_patrimonial.maquinas,
-                                depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_de_maquinas,
-                                veiculos: userx.balanco_patrimonial.veiculos - 57600*users[i]['frota'][f],
-                                depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos - 57600*users[i]['frota'][f],
-                                tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
-                                tributos_a_pagar_atual: userx.balanco_patrimonial.tributos_a_pagar_atual,
-                                emprestimos: userx.balanco_patrimonial.emprestimos,
-                                capial: userx.balanco_patrimonial.capial,
-                                lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados
+                            users[i].balanco_patrimonial = {
+                                caixa: users[i].balanco_patrimonial.caixa,
+                                estoque: users[i].balanco_patrimonial.estoque,
+                                contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
+                                contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
+                                maquinas: users[i].balanco_patrimonial.maquinas,
+                                depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
+                                veiculos: users[i].balanco_patrimonial.veiculos - 57600*users[i]['frota'][f],
+                                depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos - 57600*users[i]['frota'][f],
+                                tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
+                                tributos_a_pagar_atual: users[i].balanco_patrimonial.tributos_a_pagar_atual,
+                                emprestimos: users[i].balanco_patrimonial.emprestimos,
+                                capial: users[i].balanco_patrimonial.capial,
+                                lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados
                             }
                         }
                     }
@@ -3375,8 +3473,8 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             users[i].balanco_patrimonial = {
                                 caixa: users[i].balanco_patrimonial.caixa,
                                 estoque: users[i].balanco_patrimonial.estoque - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][2]),
-                                contas_a_receber60: users[i][index[o]][7] + userx.balanco_patrimonial.contas_a_receber60,
-                                contas_a_receber120: users[i][index[o]][7] + userx.balanco_patrimonial.contas_a_receber120,
+                                contas_a_receber60: (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][3])*0.5 + users[i].balanco_patrimonial.contas_a_receber60,
+                                contas_a_receber120: (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][3])*0.5 + users[i].balanco_patrimonial.contas_a_receber120,
                                 maquinas: users[i].balanco_patrimonial.maquinas,
                                 depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
                                 veiculos: users[i].balanco_patrimonial.veiculos,
@@ -3385,13 +3483,13 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 tributos_a_pagar_atual: users[i].balanco_patrimonial.tributos_a_pagar_atual,
                                 emprestimos: users[i].balanco_patrimonial.emprestimos,
                                 capial: users[i].balanco_patrimonial.capial,
-                                lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][2]) + users[i][index[o]][7]*2
+                                lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][2]) + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][3])
                             }
                             users[i].dre = {
                                 receita: users[i].dre.receita + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][3]), 
                                 csp: users[i].dre.csp + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][2]),
                                 estoque_inicial: users[i].dre.estoque_inicial + users[i][index[o]][0]*users[i][index[o]][2],
-                                custo_prestacao_servico: users[i].dre.custo_prestacao_servico,
+                                custo_prestacao_servico: users[i].dre.custo_prestacao_servico + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][2]),
                                 custo_estocagem: users[i].dre.custo_estocagem,
                                 custo_troca_insumos: users[i].dre.custo_troca_insumos,
                                 hora_extra: users[i].dre.hora_extra,
@@ -3434,8 +3532,8 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 users[i].balanco_patrimonial = {
                                 caixa: users[i].balanco_patrimonial.caixa - users[i][index[o]][0]*36,
                                 estoque: users[i].balanco_patrimonial.estoque,
-                                contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
-                                contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
+                                contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
+                                contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
                                 maquinas: users[i].balanco_patrimonial.maquinas,
                                 depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
                                 veiculos: users[i].balanco_patrimonial.veiculos,
@@ -3448,14 +3546,38 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             }
                                 
                                 users[i].dre = {
-                                    receita: users[i].dre.receita,
-                                    cmv: users[i].dre.cmv + users[i][index[o]][0]*36,
+                                    receita: users[i].dre.receita, 
+                                    csp: users[i].dre.csp + users[i][index[o]][0]*36,
+                                    estoque_inicial: users[i].dre.estoque_inicial,
+                                    custo_prestacao_servico: users[i].dre.custo_prestacao_servico,
+                                    custo_estocagem: users[i].dre.custo_estocagem + users[i][index[o]][0]*36,
+                                    custo_troca_insumos: users[i].dre.custo_troca_insumos,
+                                    hora_extra: users[i].dre.hora_extra,
+                                    capacidade_n_utilizada: users[i].dre.capacidade_n_utilizada,
+                                    margem_bruta: users[i].dre.margem_bruta,
                                     despesas_administrativas: users[i].dre.despesas_administrativas,
-                                    despesas_vendas: users[i].dre.despesas_vendas,
-                                    despesas_financeiras: users[i].dre.despesas_financeiras,
-                                    depreciacao_e_amortizacao: users[i].dre.depreciacao_e_amortizacao,
-                                    ir: users[i].dre.ir
+                                    salario_promotores: users[i].dre.salario_promotores,
+                                    comissao: users[i].dre.comissao,
+                                    propaganda_institucional: users[i].dre.propaganda_institucional,
+                                    propaganda_unitaria: users[i].dre.propaganda_unitaria,
+                                    depreciacao_de_maquinas: users[i].dre.depreciacao_de_maquinas,
+                                    encargos_financiamento: users[i].dre.encargos_financiamento,
+                                    salario_frota: users[i].dre.salario_frota,
+                                    manutencao_frota: users[i].dre.manutencao_frota,
+                                    depreciacao_de_veiculos: users[i].dre.depreciacao_de_veiculos,
+                                    frota_terceirizada: users[i].dre.frota_terceirizada,
+                                    despesas_operacionais_n_planejadas: users[i].dre.despesas_operacionais_n_planejadas,
+                                    pas: users[i].dre.pas,
+                                    pesquisas: users[i].dre.pesquisas,
+                                    tributos: users[i].dre.tributos,
+                                    servicos: [[users[i].dre.servicos[0],users[i].dre.servicos[1]]],
+                                    preco_medio: users[i].dre.preco_medio,
+                                    atendimentos: users[i].dre.atendimentos,
+                                    insumos_em_estoque: users[i].dre.insumos_em_estoque
+            
+            
                                 }
+
                             }
                             else{
                                 users[i].taokeys = users[i].taokeys + users[i][index[o]][0]*users[i][index[o]][2]*1.2
@@ -3463,8 +3585,8 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 users[i].balanco_patrimonial = {
                                     caixa: users[i].balanco_patrimonial.caixa + users[i][index[o]][0]*users[i][index[o]][2]*1.2,
                                     estoque: users[i].balanco_patrimonial.estoque + (-1)*(users[i][index[o]][0]*users[i][index[o]][2]),
-                                    contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
-                                    contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
+                                    contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
+                                    contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
                                     maquinas: users[i].balanco_patrimonial.maquinas,
                                     depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
                                     veiculos: users[i].balanco_patrimonial.veiculos,
@@ -3508,16 +3630,6 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
             
                                 }
 
-                                
-                                users[i].dre = {
-                                    receita: users[i].dre.receita,
-                                    cmv: users[i].dre.cmv + (-1)*users[i][index[o]][0]*users[i][index[o]][2]*1.2 + users[i][index[o]][0]*users[i][index[o]][2],
-                                    despesas_administrativas: users[i].dre.despesas_administrativas,
-                                    despesas_vendas: users[i].dre.despesas_vendas,
-                                    despesas_financeiras: users[i].dre.despesas_financeiras,
-                                    depreciacao_e_amortizacao: users[i].dre.depreciacao_e_amortizacao,
-                                    ir: users[i].dre.ir
-                                }
                                 
                                 users[i].set(index[o], [0, users[i][index[o]][1], users[i][index[o]][2], users[i][index[o]][3], users[i][index[o]][4], users[i][index[o]][5], users[i][index[o]][6], users[i][index[o]][7]])
                             }
@@ -3574,6 +3686,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             capial: users[i].balanco_patrimonial.capial,
                             lucros_acumulados: users[i].balanco_patrimonial.lucros_acumuladossao - frota_soma*10800
                         }
+                        /*
                         users[i].dre = {
                             receita: users[i].dre.receita,
                             cmv: users[i].dre.cmv,
@@ -3583,6 +3696,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             depreciacao_e_amortizacao: users[i].dre.depreciacao_e_amortizacao,
                             ir: users[i].dre.ir
                         }
+                        */
                     }
                     users[i].pas = users[i].pas + users[i].pas1;
                     users[i].pas1 = users[i].pas2;
@@ -3607,6 +3721,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 capial: users[i].balanco_patrimonial.capial,
                                 lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - (((uso_frota-j)/2000)-frota_soma+1)*60
                             }
+                            /*
                             users[i].dre = {
                                 receita: users[i].dre.receita,
                                 cmv: users[i].dre.cmv,
@@ -3616,6 +3731,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 depreciacao_e_amortizacao: users[i].dre.depreciacao_e_amortizacao,
                                 ir: users[i].dre.ir
                             }
+                            */
                         }
                         else{
                             users[i].taokeys = users[i].taokeys - (((uso_frota)/2000)-frota_soma)*60 //desconta o valor gasto com frota terceirizada
@@ -3634,6 +3750,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 capial: users[i].balanco_patrimonial.capial,
                                 lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - (((uso_frota-j)/2000)-frota_soma)*60
                             }
+                            /*
                             users[i].dre = {
                                 receita: users[i].dre.receita,
                                 cmv: users[i].dre.cmv,
@@ -3643,6 +3760,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                 depreciacao_e_amortizacao: users[i].dre.depreciacao_e_amortizacao,
                                 ir: users[i].dre.ir
                             }
+                            */
                         }
                     }
                       
@@ -3670,6 +3788,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             capial: users[i].balanco_patrimonial.capial,
                             lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - users[i]['divida'][0]*0.08
                         }
+                        /*
                         users[i].fluxo_de_caixa = {
 
                             lucro_bruto: users[i].fluxo_de_caixa.lucro_bruto,
@@ -3682,6 +3801,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             fluxo: users[i].fluxo_de_caixa.fluxo
                         
                         }
+                        
                         users[i].dre = {
                             receita: users[i].dre.receita,
                             cmv: users[i].dre.cmv,
@@ -3691,6 +3811,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             depreciacao_e_amortizacao: users[i].dre.depreciacao_e_amortizacao,
                             ir: users[i].dre.ir
                         }
+                        */
                         users[i].set('divida', [users[i]['divida'][0]*(2/3), users[i]['divida'][1], users[i]['divida'][2]]) //contabilizando a passagem de tempo
                     }
                     else if(users[i].taokeys > users[i]['divida'][0]*0.08){
@@ -3711,7 +3832,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             capial: users[i].balanco_patrimonial.capial,
                             lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - users[i]['divida'][0]*0.08
                         }
-                        
+                        /*
                         users[i].fluxo_de_caixa = {
 
                             lucro_bruto: users[i].fluxo_de_caixa.lucro_bruto,
@@ -3724,6 +3845,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             fluxo: users[i].fluxo_de_caixa.fluxo
                         
                         }
+                        
                         users[i].dre = {
                             receita: users[i].dre.receita,
                             cmv: users[i].dre.cmv,
@@ -3733,6 +3855,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             depreciacao_e_amortizacao: users[i].dre.depreciacao_e_amortizacao,
                             ir: users[i].dre.ir
                         }
+                        */
                         users[i].set('divida', [users[i]['divida'][0]*(2/3) + gamb, users[i]['divida'][1], users[i]['divida'][2]])
                     }
                     else{
@@ -3751,6 +3874,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             capial: users[i].balanco_patrimonial.capial,
                             lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - users[i]['divida'][0]*0.08
                         }
+                        /*
                         users[i].fluxo_de_caixa = {
 
                             lucro_bruto: users[i].fluxo_de_caixa.lucro_bruto,
@@ -3763,6 +3887,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             fluxo: users[i].fluxo_de_caixa.fluxo
                         
                         }
+                        
                         users[i].dre = {
                             receita: users[i].dre.receita,
                             cmv: users[i].dre.cmv,
@@ -3772,6 +3897,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             depreciacao_e_amortizacao: users[i].dre.depreciacao_e_amortizacao,
                             ir: users[i].dre.ir
                         }
+                        */
                         users[i].set('divida', [users[i]['divida'][0] + (users[i]['divida'][0]*0.08 - users[i].taokeys), users[i]['divida'][1], users[i]['divida'][2]])
                         users[i].taokeys = 0
                     }
@@ -3779,7 +3905,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     if(users[i].taokeys >= users[i]['divida'][1]/2 + users[i]['divida'][1]*0.08){
                         users[i].taokeys = users[i].taokeys - (users[i]['divida'][1]/2 + users[i]['divida'][1]*0.08)
                         users[i].balanco_patrimonial = {
-                            caixa: users[i].balanco_patrimonial.ativo.circulante.caixa - users[i]['divida'][1]/2 - users[i]['divida'][1]*0.08,
+                            caixa: users[i].balanco_patrimonial.caixa - users[i]['divida'][1]/2 - users[i]['divida'][1]*0.08,
                             estoque: users[i].balanco_patrimonial.estoque,
                             contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
                             contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
@@ -3793,6 +3919,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             capial: users[i].balanco_patrimonial.capial,
                             lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - users[i]['divida'][0]*0.08
                         }
+                        /*
                         users[i].fluxo_de_caixa = {
 
                             lucro_bruto: users[i].fluxo_de_caixa.lucro_bruto,
@@ -3805,6 +3932,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             fluxo: users[i].fluxo_de_caixa.fluxo
                         
                         }
+                        
                         users[i].dre = {
                             receita: users[i].dre.receita,
                             cmv: users[i].dre.cmv,
@@ -3814,6 +3942,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             depreciacao_e_amortizacao: users[i].dre.depreciacao_e_amortizacao,
                             ir: users[i].dre.ir
                         }
+                        */
                         users[i].set('divida', [users[i]['divida'][0], users[i]['divida'][1]/2, users[i]['divida'][2]]) //contabilizando a passagem de tempo
                     }
                     else if(users[i].taokeys > users[i]['divida'][1]*0.08){
@@ -3834,6 +3963,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             capial: users[i].balanco_patrimonial.capial,
                             lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - users[i]['divida'][0]*0.08
                         }
+                        /*
                         users[i].fluxo_de_caixa = {
 
                             lucro_bruto: users[i].fluxo_de_caixa.lucro_bruto,
@@ -3855,6 +3985,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             depreciacao_e_amortizacao: users[i].dre.depreciacao_e_amortizacao,
                             ir: users[i].dre.ir
                         }
+                        */
                         users[i].set('divida', [users[i]['divida'][0], users[i]['divida'][1]/2 + gamb, users[i]['divida'][2]])
                     
                     }
@@ -3874,6 +4005,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             capial: users[i].balanco_patrimonial.capial,
                             lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - users[i]['divida'][0]*0.08
                         }
+                        /*
                         users[i].fluxo_de_caixa = {
 
                             lucro_bruto: users[i].fluxo_de_caixa.lucro_bruto,
@@ -3895,6 +4027,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             depreciacao_e_amortizacao: users[i].dre.depreciacao_e_amortizacao,
                             ir: users[i].dre.ir
                         }
+                        */
                         users[i].set('divida', [users[i]['divida'][0], users[i]['divida'][1] + (users[i]['divida'][1]*0.08 - users[i].taokeys), users[i]['divida'][2]])
                         users[i].taokeys = 0
 
@@ -3903,7 +4036,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                     if(users[i].taokeys >= users[i]['divida'][2]*1.08){
                         users[i].taokeys = users[i].taokeys - users[i]['divida'][2]*1.08
                         users[i].balanco_patrimonial = {
-                            caixa: users[i].balanco_patrimonial.ativo.circulante.caixa - users[i]['divida'][2]*0.08 - users[i]['divida'][2],
+                            caixa: users[i].balanco_patrimonial.caixa - users[i]['divida'][2]*0.08 - users[i]['divida'][2],
                             estoque: users[i].balanco_patrimonial.estoque,
                             contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
                             contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
@@ -3917,7 +4050,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             capial: users[i].balanco_patrimonial.capial,
                             lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - users[i]['divida'][2]*0.08
                         }
-                        
+                        /*
                         users[i].fluxo_de_caixa = {
 
                             lucro_bruto: users[i].fluxo_de_caixa.lucro_bruto,
@@ -3939,6 +4072,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             depreciacao_e_amortizacao: users[i].dre.depreciacao_e_amortizacao,
                             ir: users[i].dre.ir
                         }
+                        */
                         users[i].set('divida', [0, users[i]['divida'][0], users[i]['divida'][1]]) //contabilizando a passagem de tempo
                     }
                     else if(users[i].taokeys > users[i]['divida'][2]*0.08){
@@ -3958,6 +4092,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             capial: users[i].balanco_patrimonial.capial,
                             lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - users[i]['divida'][2]*0.08
                         }
+                        /*
                         users[i].fluxo_de_caixa = {
 
                             lucro_bruto: users[i].fluxo_de_caixa.lucro_bruto,
@@ -3979,6 +4114,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             depreciacao_e_amortizacao: users[i].dre.depreciacao_e_amortizacao,
                             ir: users[i].dre.ir
                         }
+                        */
                         //users[i]['divida'].pop();
                         //users[i]['divida'].unshift(gamb*1.08); //cobrar multa aqui
                         users[i].set('divida', [gamb + users[i]['divida'][2], users[i]['divida'][0], users[i]['divida'][1]])
@@ -4000,7 +4136,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             capial: users[i].balanco_patrimonial.capial,
                             lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - users[i]['divida'][2]*0.08
                         }
-                        
+                        /*
                         users[i].fluxo_de_caixa = {
 
                             lucro_bruto: users[i].fluxo_de_caixa.lucro_bruto,
@@ -4022,13 +4158,14 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                             depreciacao_e_amortizacao: users[i].dre.depreciacao_e_amortizacao,
                             ir: users[i].dre.ir
                         }
+                        */
                         users[i].set('divida', [users[i]['divida'][2] + (users[i]['divida'][2]*0.08 - users[i].taokeys), users[i]['divida'][0], users[i]['divida'][1]])
                         users[i].taokeys = 0
                     }
 
-                    if(users[i].balanco_patrimonial.ativo.circulante.estoque > -0.1 && users[i].balanco_patrimonial.ativo.circulante.estoque < 0.1){
+                    if(users[i].balanco_patrimonial.estoque > -0.1 && users[i].balanco_patrimonial.estoque < 0.1){
                         users[i].balanco_patrimonial = {
-                            caixa: users[i].balanco_patrimonial.ativo.circulante.caixa,
+                            caixa: users[i].balanco_patrimonial.caixa,
                             estoque: 0,
                             contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
                             contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
@@ -4044,7 +4181,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         }
                         
                     }
-
+                    /*
                     users[i].fluxo_de_caixa = {
 
                         lucro_bruto: users[i].dre.receita - users[i].dre.cmv, //ok
@@ -4057,6 +4194,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                         fluxo: 0
                     
                     }
+                    */
                     
 
                 }
@@ -4145,6 +4283,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                                     capial: users[i].capital,
                                                     lucros_acumulados: users[i].lucros_acumulados
                                                 }
+                                                /*
                                                 usert.dre = {
                                                     receita: users[i].dre.receita,
                                                     cmv: users[i].dre.cmv,
@@ -4154,6 +4293,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                                     depreciacao_e_amortizacao: users[i].dre.depreciacao_e_amortizacao,
                                                     ir: users[i].dre.ir
                                                 }
+                                                */
                                                 
                                                 for(let s = 0; s < index.length; s++){
                                                     //console.log(index[s])
@@ -4252,6 +4392,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                             367:[users[i]['367'][0],users[i]['367'][1],users[i]['367'][2],users[i]['367'][3],users[i]['367'][4],users[i]['367'][5],users[i]['367'][6],users[i]['367'][7]],
                                             368:[users[i]['368'][0],users[i]['368'][1],users[i]['368'][2],users[i]['368'][3],users[i]['368'][4],users[i]['368'][5],users[i]['368'][6],users[i]['368'][7]],
                                             369:[users[i]['369'][0],users[i]['369'][1],users[i]['369'][2],users[i]['369'][3],users[i]['369'][4],users[i]['369'][5],users[i]['369'][6],users[i]['369'][7]],
+                                            /*
                                             balanco_patrimonial: {
                                                 ativo: {
                                                     circulante: {
@@ -4288,8 +4429,9 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                             fluxo_de_caixa: {
                                                 
                                             }
+                                            */
                                         });
-
+                                        /*
                                         users[i].dre = {
                                             
                                             receita: 0,
@@ -4301,6 +4443,7 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                             ir: 0
                         
                                         }
+                                        
                                         users[i].fluxo_de_caixa = {
 
                                             lucro_bruto: 0,
@@ -4313,6 +4456,8 @@ sockets.on('connection', (socket) => { //conversa do server com os clients(n ADM
                                             fluxo: 0
                                         
                                         }
+                                        */
+                                        
 
                                         backup.save() 
                                             .then(() => {
