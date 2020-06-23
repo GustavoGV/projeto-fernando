@@ -78,6 +78,7 @@ sockets.on('connection', (socket) => {
                                 if(u.cooperativa !== 'provisorio'){
                                     Aluno.findOne({ cooperativa: u.cooperativa, instancia: u.instancia, temporario: 1 })
                                             .then((usert) => {
+                                                if(usert !== null){
                                                 Data.findOne({instancia: usert.instancia}) //filtro para apenas liberar o login se o turno estiver ATIVO aqui se necessário
                                                     .then((check2) => {
                                                         if(check2.ativo == 1){ 
@@ -121,7 +122,11 @@ sockets.on('connection', (socket) => {
                                     })
                                     .catch((errr) => {console.log(errr + ' <=> Falha na comunicacao com o Banco de dados n 403.0 ' + socket.id)})       
                             
-                                                })
+                                }
+                                else{
+                                    socket.emit('feedback', ['danger','nenhuma cooperativa encontrada (entre em contato com o suporte tecnico)'])
+                                }
+                            })
                                         
                                 }
                                 else{
@@ -143,12 +148,17 @@ sockets.on('connection', (socket) => {
         if(inf.senha_mestra == 'senha-mestra'){
             Usuario.findOne({login: inf.login})
                 .then((u) => {
+                    if(u !== null){
                     u.cooperativa = inf.cooperativa
                     u.instancia = inf.instancia
                     u.save()
                         .then(() => {
                             socket.emit('feedback', ['success', 'vinculacao de ' + u.login + ' com ' + u.cooperativa + ' e ' + u.instancia + ' com sucesso'])
                         })
+                    }
+                    else{
+                        socket.emit('feedback', ['danger', 'login nao encontrado'])
+                    }
                 })
         }
         else{
@@ -207,7 +217,7 @@ sockets.on('connection', (socket) => {
                 } 
             })
             .catch((err) => {console.log(err+'. id:' + socket.id)})
-    }) //falta teste
+    }) //falta concertar checagem de dados recebidos...
     socket.on('register-cooperativa', (creden) => {
         Aluno.findOne({sockid: socket.id, temporario: 1}) // se n achar retorna Null e se vc tentar fazer essa pesquisa com um String sendo q no Schema ta como Number vai ir pro Catch ou vai pro Catch tb se n conseguir se conectar com o MongoDB
             .then((ll) => {
