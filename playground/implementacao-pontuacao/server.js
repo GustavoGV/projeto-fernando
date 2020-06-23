@@ -156,24 +156,24 @@ sockets.on('connection', (socket) => {
         }
     }) //new falta testar
     socket.on('register-client', (creden) => {
+        let erro = []
         function formatCheck(c) {
             let a = 0
-            let err = []
             if(c.cpf.length > 10){a=a+1}
-            else{err.push('cpf invalido')}
+            else{erro.push('cpf invalido')}
             if(c.login.length > 0){a=a+1}
-            else{err.push('login invalido')}
+            else{erro.push('login invalido')}
             if(c.email.length > 3){a=a+1}
-            else{err.push('email invalido')}
+            else{erro.push('email invalido')}
             if(c.telefone.length > 7){a=a+1}
-            else{err.push('telefone invalido')}
+            else{erro.push('telefone invalido')}
             if(c.senha.length > 0){a=a+1}
-            else{err.push('senha invalida')}
+            else{erro.push('senha invalida')}
             if(c.nome.length > 0){a=a+1}
-            else{err.push('nome invalido')}
+            else{erro.push('nome invalido')}
 
             if(a == 6){return 'fino'}
-            else{return err}
+            else{return erro}
         }
         Aluno.findOne({sockid: socket.id, temporario: 1}) // se n achar retorna Null e se vc tentar fazer essa pesquisa com um String sendo q no Schema ta como Number vai ir pro Catch ou vai pro Catch tb se n conseguir se conectar com o MongoDB
             .then((ll) => {
@@ -194,7 +194,7 @@ sockets.on('connection', (socket) => {
                                             .then(socket.emit('feedback', ['success', 'registro realizado com sucesso para ' + creden.login]))
                                             .catch((wrr) => {console.log(wrr)})
                                 }
-                                else{socket.emit('feedback', ['danger', 'falha na tentativa de registro: ' + String(err)])
+                                else{socket.emit('feedback', ['danger', 'falha na tentativa de registro: ' + String(erro)])
                                 }
                             }
                         }) 
