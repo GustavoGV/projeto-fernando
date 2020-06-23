@@ -75,7 +75,13 @@ const DataSchema = new Schema({
 
 })
 
-const Aluno = mongoose.model('aluno', UserSchema)
-const Data = mongoose.model('data', DataSchema)
-let estrutura  = [Aluno, Data]
+const UsuarioSchema = new Schema({
+
+})
+
+const Usuario = mongoose.model('usuario', UsuarioSchema) //pessoa fisica
+const Aluno = mongoose.model('aluno', UserSchema) //pessoa JURIDICA
+const Data = mongoose.model('data', DataSchema) //INSTANCIA
+let estrutura  = [Aluno, Data, Usuario]
 export default estrutura
+
