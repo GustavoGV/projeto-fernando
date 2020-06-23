@@ -5,12 +5,8 @@ import estrutura from './src/aluno.js'
 const Aluno = estrutura[0]
 const Data = estrutura[1]
 const Usuario = estrutura[2] //login individual
-
-
+const Deci = estrutura[3]
 import mongoose from 'mongoose'
-
-
-
 
 mongoose.connect('mongodb://localhost/aluno_teste')
 mongoose.connection
@@ -76,47 +72,45 @@ sockets.on('connection', (socket) => {
                     socket.emit('feedback', ['warning','voce ja esta conectado com: ' + ll.cooperativa]) 
                 }
                 else{
-                    Aluno.findOne({ cooperativa: creden[0], senha: creden[1], temporario: 1, instancia: creden[2]})
-                        .then((usert) => { if(usert == null){
-                                console.log('>>login não permitido: credenciais invalidas', creden[0], creden[1], creden[2])
-                                socket.emit('feedback', ['danger', 'login negado para: ' + creden[0]])
-                                }
-                                else{ 
-                                    Data.findOne({instancia: usert.instancia}) //filtro para apenas liberar o login se o turno estiver ATIVO aqui se necessário
-                                        .then((check2) => {
-                                if(check2.ativo == 1){ 
-                                        Aluno.findOne({cooperativa: usert.cooperativa, temporario: 0, instancia: usert.instancia})
-                                            .then((userdef) => {
-                                                usert.set('npesquisas', userdef.npesquisas)
-                                                usert.set('turno', userdef.turno)
-                                                usert.set('propaganda', userdef.propaganda)
-                                                usert.set('propagandauni', userdef.propagandauni)
-                                                usert.set('taokeys', userdef.taokeys)
-                                                usert.set('comissao', userdef.comissao)
-                                               
-                                                usert.set('pas', userdef.pas)
-                                                usert.set('pas1', userdef.pas1)
-                                                usert.set('pas2', userdef.pas2)
-                                                usert.set('distribuidores', userdef.distribuidores)
-                                                usert.set('promotores', userdef.promotores)
-                                                usert.set('divida', [userdef["divida"][0],userdef["divida"][1],userdef["divida"][2]])
-                                                
-                                                
-                                                for(let s = 0; s < index.length; s++){
-                                                   
-                                                    let serv = index[s]
-                                                    usert.set(serv, [userdef[serv][0], userdef[serv][1], userdef[serv][2], userdef[serv][3], userdef[serv][4], userdef[serv][5], userdef[serv][6], userdef[serv][7]])
-                                                }
+                    Usuario.findOne({ login: creden.login, senha: creden.senha })
+                        .then((u) => {
+                            if(u !== null){
+                                if(u.cooperativa !== 'provisorio'){
+                                    Aluno.findOne({ cooperativa: u.cooperativa, instancia: u.instancia, temporario: 1 })
+                                            .then((usert) => {
+                                                Data.findOne({instancia: usert.instancia}) //filtro para apenas liberar o login se o turno estiver ATIVO aqui se necessário
+                                                    .then((check2) => {
+                                                        if(check2.ativo == 1){ 
+                                                            Aluno.findOne({cooperativa: usert.cooperativa, temporario: 0, instancia: usert.instancia})
+                                                                .then((userdef) => {
+                                                                    usert.set('npesquisas', userdef.npesquisas)
+                                                                    usert.set('turno', userdef.turno)
+                                                                    usert.set('propaganda', userdef.propaganda)
+                                                                    usert.set('propagandauni', userdef.propagandauni)
+                                                                    usert.set('taokeys', userdef.taokeys)
+                                                                    usert.set('comissao', userdef.comissao)
+                                                                    usert.set('pas', userdef.pas)
+                                                                    usert.set('pas1', userdef.pas1)
+                                                                    usert.set('pas2', userdef.pas2)
+                                                                    usert.set('distribuidores', userdef.distribuidores)
+                                                                    usert.set('promotores', userdef.promotores)
+                                                                    usert.set('divida', [userdef["divida"][0],userdef["divida"][1],userdef["divida"][2]])
+                                                                    
+                                                                    for(let s = 0; s < index.length; s++){
+                                                                        let serv = index[s]
+                                                                        usert.set(serv, [userdef[serv][0], userdef[serv][1], userdef[serv][2], userdef[serv][3], userdef[serv][4], userdef[serv][5], userdef[serv][6], userdef[serv][7]])
+                                                                    }
 
-                                                usert.sockid = socket.id;
-                                                usert.save()
-                                                    .then(() => {
-                                                        console.log('>>login efetuado com sucesso')
-                                                        socket.emit('feedback', ['success', 'login aprovado para: ' + creden[0]]) 
-                                                        socket.emit('login-client-aprovado')
-
-                                                    })
-                                                    .catch((err) => {socket.emit('feedback', ['danger','falha ao salvar os dados no servidor -> ' + err])})
+                                                                    usert.sockid = socket.id;
+                                                                    usert.modificador = u.nome
+                                                                    usert.save()
+                                                                        .then(() => {
+                                                                            console.log('>>login efetuado com sucesso')
+                                                                            socket.emit('feedback', ['success', 'login aprovado para: ' + creden.login]) 
+                                                                            socket.emit('login-client-aprovado')
+                                                                        
+                                                                        })
+                                                                        .catch((err) => {socket.emit('feedback', ['danger','falha ao salvar os dados no servidor -> ' + err])})
                                      
                                             })
                               
@@ -126,15 +120,89 @@ sockets.on('connection', (socket) => {
                                         }        
                                     })
                                     .catch((errr) => {console.log(errr + ' <=> Falha na comunicacao com o Banco de dados n 403.0 ' + socket.id)})       
-                            }})
+                            
+                                                })
+                                        
+                                }
+                                else{
+                                    socket.emit('feedback', ['danger', 'essa conta ainda nao foi vinculada com nenhuma Cooperativa (duvidas: sac@desafiosdegestao.com.br)'])    
+                                }
+                            }
+                            else{
+                                socket.emit('feedback', ['danger', 'credenciais invalidas'])
+                            }
+                        })
                         .catch((err) => {console.log(err + ' <=> Falha na comunicacao com o Banco de dados n 403.1 ' + socket.id)})
                         }
             })
             .catch(() => {console.log('falha na comunicacao com o Banco de dados n 504 ' +socket.id)})
 
                        
-    })
+    }) //falta teste
+    socket.on('vincular-pessoa', (inf) => {
+        if(inf.senha_mestra == 'senha-mestra'){
+            Usuario.findOne({login: inf.login})
+                .then((u) => {
+                    u.cooperativa = inf.cooperativa
+                    u.instancia = inf.instancia
+                    u.save()
+                        .then(() => {
+                            socket.emit('feedback', ['success', 'vinculacao de ' + u.login + ' com ' + u.cooperativa + ' e ' + u.instancia + ' com sucesso'])
+                        })
+                })
+        }
+        else{
+            socket.emit('feedback', ['danger', 'senha-mestra incorreta'])
+        }
+    }) //new falta testar
     socket.on('register-client', (creden) => {
+        function formatCheck(c) {
+            let a = 0
+            let err = []
+            if(c.cpf.length > 10){a=a+1}
+            else{err.push('cpf invalido')}
+            if(c.login.length > 0){a=a+1}
+            else{err.push('login invalido')}
+            if(c.email.length > 3){a=a+1}
+            else{err.push('email invalido')}
+            if(c.telefone.length > 7){a=a+1}
+            else{err.push('telefone invalido')}
+            if(c.senha.length > 0){a=a+1}
+            else{err.push('senha invalida')}
+            if(c.nome.length > 0){a=a+1}
+            else{err.push('nome invalido')}
+
+            if(a == 6){return 'fino'}
+            else{return err}
+        }
+        Aluno.findOne({sockid: socket.id, temporario: 1}) // se n achar retorna Null e se vc tentar fazer essa pesquisa com um String sendo q no Schema ta como Number vai ir pro Catch ou vai pro Catch tb se n conseguir se conectar com o MongoDB
+            .then((ll) => {
+                if(ll !== null){
+                    console.log('>>usuario ja conectado')
+                    socket.emit('feedback', ['warning','voce ja esta conectado com: ' + ll.cooperativa])
+                }
+                else{             
+                    Usuario.findOne({login: creden.login})
+                        .then((userx) => { 
+                            if(userx !== null){
+                                console.log('>>registro negado: esse nome de login ja esta sendo usado');
+                                socket.emit('feedback', ['danger', 'esse nome de login ja esta sendo usado'])}
+                            else{
+                                if(formatCheck(creden) == 'fino'){
+                                    let jogador = new Usuario({login: creden.login, senha: creden.senha, email: creden.email, cpf: creden.cpf, telefone: creden.telefone, nome: creden.nome, cooperativa: 'provisorio', instancia: 'provisorio'})
+                                        jogador.save()
+                                            .then(socket.emit('feedback', ['success', 'registro realizado com sucesso para ' + creden.login]))
+                                            .catch((wrr) => {console.log(wrr)})
+                                }
+                                else{socket.emit('feedback', ['danger', 'falha na tentativa de registro: ' + String(err)])
+                                }
+                            }
+                        }) 
+                } 
+            })
+            .catch((err) => {console.log(err+'. id:' + socket.id)})
+    }) //falta teste
+    socket.on('register-cooperativa', (creden) => {
         Aluno.findOne({sockid: socket.id, temporario: 1}) // se n achar retorna Null e se vc tentar fazer essa pesquisa com um String sendo q no Schema ta como Number vai ir pro Catch ou vai pro Catch tb se n conseguir se conectar com o MongoDB
             .then((ll) => {
                 if(ll !== null){
@@ -1158,7 +1226,7 @@ sockets.on('connection', (socket) => {
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})     
     }) 
     socket.on('salvar', () => {
-        //console.log('inicio-salvamento')
+        //console.log('inicio-salvamento'
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((usert) => {
                 if(usert !== null){
@@ -1167,6 +1235,152 @@ sockets.on('connection', (socket) => {
                         if(check.ativo == 1){
                 Aluno.findOne({cooperativa: usert.cooperativa, instancia: usert.instancia, temporario: 0})
                     .then((userdef) => {
+                        let dec = new Deci({
+                        balanco_patrimonial_antigo: {
+                            caixa: userdef.balanco_patrimonial.caixa,
+                            estoque: userdef.balanco_patrimonial.estoque,
+                            contas_a_receber60: userdef.balanco_patrimonial.contas_a_receber60,
+                            contas_a_receber120: userdef.balanco_patrimonial.contas_a_receber120,
+                            maquinas: userdef.balanco_patrimonial.maquinas,
+                            depreciacao_maquinas: userdef.balanco_patrimonial.depreciacao_de_maquinas,
+                            veiculos: userdef.balanco_patrimonial.veiculos,
+                            depreciacao_veiculos: userdef.balanco_patrimonial.depreciacao_veiculos,
+                            tributos_a_pagar_anterior: userdef.balanco_patrimonial.tributos_a_pagar_anterior,
+                            tributos_a_pagar_atual: userdef.balanco_patrimonial.tributos_a_pagar_atual,
+                            emprestimos: userdef.balanco_patrimonial.emprestimos,
+                            capial: userdef.balanco_patrimonial.capial,
+                            lucros_acumulados: userdef.balanco_patrimonial.lucros_acumulados
+                        },
+                        balanco_patrimonial_novo: {
+                            caixa: usert.balanco_patrimonial.caixa,
+                            estoque: usert.balanco_patrimonial.estoque,
+                            contas_a_receber60: usert.balanco_patrimonial.contas_a_receber60,
+                            contas_a_receber120: usert.balanco_patrimonial.contas_a_receber120,
+                            maquinas: usert.balanco_patrimonial.maquinas,
+                            depreciacao_maquinas: usert.balanco_patrimonial.depreciacao_de_maquinas,
+                            veiculos: usert.balanco_patrimonial.veiculos,
+                            depreciacao_veiculos: usert.balanco_patrimonial.depreciacao_veiculos,
+                            tributos_a_pagar_anterior: usert.balanco_patrimonial.tributos_a_pagar_anterior,
+                            tributos_a_pagar_atual: usert.balanco_patrimonial.tributos_a_pagar_atual,
+                            emprestimos: usert.balanco_patrimonial.emprestimos,
+                            capial: usert.balanco_patrimonial.capial,
+                            lucros_acumulados: usert.balanco_patrimonial.lucros_acumulados
+                        },
+                        dre_antiga: {
+                            receita: userdef.dre.receita,
+                            csp: userdef.dre.csp,
+                            estoque_inicial: userdef.dre.estoque_inicial,
+                            custo_prestacao_servico: userdef.dre.custo_prestacao_servico,
+                            custo_estocagem: userdef.dre.custo_estocagem,
+                            custo_troca_insumos: userdef.dre.custo_troca_insumos,
+                            hora_extra: userdef.dre.hora_extra,
+                            capacidade_n_utilizada: userdef.dre.capacidade_n_utilizada,
+                            margem_bruta: userdef.dre.margem_bruta,
+                            despesas_administrativas: userdef.dre.despesas_administrativas,
+                            salario_promotores: userdef.dre.salario_promotores,
+                            comissao: userdef.dre.comissao,
+                            propaganda_institucional: userdef.dre.propaganda_institucional,
+                            propaganda_unitaria: userdef.dre.propaganda_unitaria,
+                            depreciacao_de_maquinas: userdef.dre.depreciacao_de_maquinas,
+                            encargos_financiamento: userdef.dre.encargos_financiamento,
+                            salario_frota: userdef.dre.salario_frota,
+                            manutencao_frota: userdef.dre.manutencao_frota,
+                            depreciacao_de_veiculos: userdef.dre.depreciacao_de_veiculos,
+                            frota_terceirizada: userdef.dre.frota_terceirizada,
+                            despesas_operacionais_n_planejadas: userdef.dre.despesas_operacionais_n_planejadas,
+                            pas: userdef.dre.pas,
+                            pesquisas: userdef.dre.pesquisas,
+                            tributos: userdef.dre.tributos,
+                            servicos: [[userdef.dre.servicos[0][0], userdef.dre.servicos[0][1]], [userdef.dre.servicos[1][0], userdef.dre.servicos[1][1]]],
+                            preco_medio: userdef.dre.preco_medio,
+                            atendimentos: userdef.dre.atendimentos,
+                            insumos_em_estoque: userdef.dre.insumos_em_estoque,
+                            distribuidores: userdef.dre.distribuidores
+
+                        },
+                        dre_nova: {
+                            receita: usert.dre.receita,
+                            csp: usert.dre.csp,
+                            estoque_inicial: usert.dre.estoque_inicial,
+                            custo_prestacao_servico: usert.dre.custo_prestacao_servico,
+                            custo_estocagem: usert.dre.custo_estocagem,
+                            custo_troca_insumos: usert.dre.custo_troca_insumos,
+                            hora_extra: usert.dre.hora_extra,
+                            capacidade_n_utilizada: usert.dre.capacidade_n_utilizada,
+                            margem_bruta: usert.dre.margem_bruta,
+                            despesas_administrativas: usert.dre.despesas_administrativas,
+                            salario_promotores: usert.dre.salario_promotores,
+                            comissao: usert.dre.comissao,
+                            propaganda_institucional: usert.dre.propaganda_institucional,
+                            propaganda_unitaria: usert.dre.propaganda_unitaria,
+                            depreciacao_de_maquinas: usert.dre.depreciacao_de_maquinas,
+                            encargos_financiamento: usert.dre.encargos_financiamento,
+                            salario_frota: usert.dre.salario_frota,
+                            manutencao_frota: usert.dre.manutencao_frota,
+                            depreciacao_de_veiculos: usert.dre.depreciacao_de_veiculos,
+                            frota_terceirizada: usert.dre.frota_terceirizada,
+                            despesas_operacionais_n_planejadas: usert.dre.despesas_operacionais_n_planejadas,
+                            pas: usert.dre.pas,
+                            pesquisas: usert.dre.pesquisas,
+                            tributos: usert.dre.tributos,
+                            servicos: [[usert.dre.servicos[0][0], usert.dre.servicos[0][1]], [usert.dre.servicos[1][0], usert.dre.servicos[1][1]]],
+                            preco_medio: usert.dre.preco_medio,
+                            atendimentos: usert.dre.atendimentos,
+                            insumos_em_estoque: usert.dre.insumos_em_estoque,
+                            distribuidores: usert.dre.distribuidores
+
+                        },
+                        fluxo_de_caixa_antigo: {
+                            saldo_anterior: userdef.fluxo_de_caixa.saldo_anterior,
+                            faturamento: userdef.fluxo_de_caixa.faturamento,
+                            contas_a_receber: userdef.fluxo_de_caixa.contas_a_receber,
+                            contas_a_receber_recebidas: userdef.fluxo_de_caixa.contas_a_receber_recebidas, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
+                            custo_de_servico_prestado: userdef.fluxo_de_caixa.custo_de_servico_prestado,
+                            emprestimos_contratados: userdef.fluxo_de_caixa.emprestimos_contratados,
+                            emprestimos_pagos: userdef.fluxo_de_caixa.emprestimos_pagos,
+                            veiculos_vendidos: userdef.fluxo_de_caixa.veiculos_vendidos,
+                            depreciacao_de_veiculos: userdef.fluxo_de_caixa.depreciacao_de_veiculos,
+                            depreciacao_de_maquinas: userdef.fluxo_de_caixa.depreciacao_de_maquinas,
+                            veiculos_comprados: userdef.fluxo_de_caixa.veiculos_comprados,
+                            tributos: userdef.fluxo_de_caixa.tributos,
+                            promotores: userdef.fluxo_de_caixa.promotores,
+                            propaganda: userdef.fluxo_de_caixa.propaganda,
+                            pesquisas: userdef.fluxo_de_caixa.pesquisas,
+                            pas: userdef.fluxo_de_caixa.pas,
+                            uso_frota: userdef.fluxo_de_caixa.uso_frota,
+                            despesas_operacionais_n_planejadas: userdef.fluxo_de_caixa.despesas_operacionais_n_planejadas,
+                            despesas_administrativas: userdef.fluxo_de_caixa.despesas_administrativas,
+                            encargos_financiamento: userdef.fluxo_de_caixa.encargos_financiamento,
+                            maquinas: userdef.fluxo_de_caixa.maquinas,
+                            distribuidores: userdef.fluxo_de_caixa.distribuidores
+                        },
+                        fluxo_de_caixa_novo: {
+                            saldo_anterior: usert.fluxo_de_caixa.saldo_anterior,
+                            faturamento: usert.fluxo_de_caixa.faturamento,
+                            contas_a_receber: usert.fluxo_de_caixa.contas_a_receber,
+                            contas_a_receber_recebidas: usert.fluxo_de_caixa.contas_a_receber_recebidas, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
+                            custo_de_servico_prestado: usert.fluxo_de_caixa.custo_de_servico_prestado,
+                            emprestimos_contratados: usert.fluxo_de_caixa.emprestimos_contratados,
+                            emprestimos_pagos: usert.fluxo_de_caixa.emprestimos_pagos,
+                            veiculos_vendidos: usert.fluxo_de_caixa.veiculos_vendidos,
+                            depreciacao_de_veiculos: usert.fluxo_de_caixa.depreciacao_de_veiculos,
+                            depreciacao_de_maquinas: usert.fluxo_de_caixa.depreciacao_de_maquinas,
+                            veiculos_comprados: usert.fluxo_de_caixa.veiculos_comprados,
+                            tributos: usert.fluxo_de_caixa.tributos,
+                            promotores: usert.fluxo_de_caixa.promotores,
+                            propaganda: usert.fluxo_de_caixa.propaganda,
+                            pesquisas: usert.fluxo_de_caixa.pesquisas,
+                            pas: usert.fluxo_de_caixa.pas,
+                            uso_frota: usert.fluxo_de_caixa.uso_frota,
+                            despesas_operacionais_n_planejadas: usert.fluxo_de_caixa.despesas_operacionais_n_planejadas,
+                            despesas_administrativas: usert.fluxo_de_caixa.despesas_administrativas,
+                            encargos_financiamento: usert.fluxo_de_caixa.encargos_financiamento,
+                            maquinas: usert.fluxo_de_caixa.maquinas,
+                            distribuidores: usert.fluxo_de_caixa.distribuidores
+                        },
+                        modificador: usert.modificador,
+                        turno: usert.turno
+                    })
                         userdef.set('npesquisas', usert.npesquisas)
                         userdef.set('turno', usert.turno)
                         userdef.set('propaganda', usert.propaganda)
@@ -1196,70 +1410,77 @@ sockets.on('connection', (socket) => {
                             capial: usert.balanco_patrimonial.capial,
                             lucros_acumulados: usert.balanco_patrimonial.lucros_acumulados
                         }
-                        userx.dre = {
-                            receita: 0,
-                            csp: 0,
-                            estoque_inicial: 283680,
-                            custo_prestacao_servico: 0,
-                            custo_estocagem: 0,
-                            custo_troca_insumos: 0,
-                            hora_extra: 0,
-                            capacidade_n_utilizada: 0,
-                            margem_bruta: 0,
-                            despesas_administrativas: 0,
-                            salario_promotores: 0,
-                            comissao: 0,
-                            propaganda_institucional: 0,
-                            propaganda_unitaria: 0,
-                            depreciacao_de_maquinas: 0,
-                            encargos_financiamento: 0,
-                            salario_frota: 0,
-                            manutencao_frota: 0,
-                            depreciacao_de_veiculos: 0,
-                            frota_terceirizada: 0,
-                            despesas_operacionais_n_planejadas: 0,
-                            pas: 0,
-                            pesquisas: 0,
-                            tributos: 0,
-                            servicos: [['147',288],[0,0]],
-                            preco_medio: 0,
-                            atendimentos: 0,
-                            insumos_em_estoque: 985
-
-
-                        }
-                        /*
                         userdef.dre = {
                             receita: usert.dre.receita,
-                            cmv: usert.dre.cmv,
+                            csp: usert.dre.csp,
+                            estoque_inicial: usert.dre.estoque_inicial,
+                            custo_prestacao_servico: usert.dre.custo_prestacao_servico,
+                            custo_estocagem: usert.dre.custo_estocagem,
+                            custo_troca_insumos: usert.dre.custo_troca_insumos,
+                            hora_extra: usert.dre.hora_extra,
+                            capacidade_n_utilizada: usert.dre.capacidade_n_utilizada,
+                            margem_bruta: usert.dre.margem_bruta,
                             despesas_administrativas: usert.dre.despesas_administrativas,
-                            despesas_vendas: usert.dre.despesas_vendas,
-                            despesas_financeiras: usert.dre.despesas_financeiras,
-                            depreciacao_e_amortizacao: usert.dre.depreciacao_e_amortizacao,
-                            ir: usert.dre.ir
+                            salario_promotores: usert.dre.salario_promotores,
+                            comissao: usert.dre.comissao,
+                            propaganda_institucional: usert.dre.propaganda_institucional,
+                            propaganda_unitaria: usert.dre.propaganda_unitaria,
+                            depreciacao_de_maquinas: usert.dre.depreciacao_de_maquinas,
+                            encargos_financiamento: usert.dre.encargos_financiamento,
+                            salario_frota: usert.dre.salario_frota,
+                            manutencao_frota: usert.dre.manutencao_frota,
+                            depreciacao_de_veiculos: usert.dre.depreciacao_de_veiculos,
+                            frota_terceirizada: usert.dre.frota_terceirizada,
+                            despesas_operacionais_n_planejadas: usert.dre.despesas_operacionais_n_planejadas,
+                            pas: usert.dre.pas,
+                            pesquisas: usert.dre.pesquisas,
+                            tributos: usert.dre.tributos,
+                            servicos: [[usert.dre.servicos[0][0], usert.dre.servicos[0][1]], [usert.dre.servicos[1][0], usert.dre.servicos[1][1]]],
+                            preco_medio: usert.dre.preco_medio,
+                            atendimentos: usert.dre.atendimentos,
+                            insumos_em_estoque: usert.dre.insumos_em_estoque,
+                            distribuidores: usert.dre.distribuidores
+
                         }
                         userdef.fluxo_de_caixa = {
-
-                            lucro_bruto: usert.fluxo_de_caixa.lucro_bruto,
+                            saldo_anterior: usert.fluxo_de_caixa.saldo_anterior,
+                            faturamento: usert.fluxo_de_caixa.faturamento,
                             contas_a_receber: usert.fluxo_de_caixa.contas_a_receber,
                             contas_a_receber_recebidas: usert.fluxo_de_caixa.contas_a_receber_recebidas, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
-                            despesas: usert.fluxo_de_caixa.despesas,
-                            fluxo_operacional: usert.fluxo_de_caixa.fluxo_operacional,
-                            fluxo_financeiro: usert.fluxo_de_caixa.fluxo_financeiro, // entra + emprestimos tomados e entra - empréstimos pagos 
-                            fluxo_investimento: usert.fluxo_de_caixa.fluxo_investimento, // entra negativo tds as compras de VEICULOS e entra positivo todo o valor da venda de veiculos
-                            fluxo: usert.fluxo_de_caixa.fluxo
-                        
+                            custo_de_servico_prestado: usert.fluxo_de_caixa.custo_de_servico_prestado,
+                            emprestimos_contratados: usert.fluxo_de_caixa.emprestimos_contratados,
+                            emprestimos_pagos: usert.fluxo_de_caixa.emprestimos_pagos,
+                            veiculos_vendidos: usert.fluxo_de_caixa.veiculos_vendidos,
+                            depreciacao_de_veiculos: usert.fluxo_de_caixa.depreciacao_de_veiculos,
+                            depreciacao_de_maquinas: usert.fluxo_de_caixa.depreciacao_de_maquinas,
+                            veiculos_comprados: usert.fluxo_de_caixa.veiculos_comprados,
+                            tributos: usert.fluxo_de_caixa.tributos,
+                            promotores: usert.fluxo_de_caixa.promotores,
+                            propaganda: usert.fluxo_de_caixa.propaganda,
+                            pesquisas: usert.fluxo_de_caixa.pesquisas,
+                            pas: usert.fluxo_de_caixa.pas,
+                            uso_frota: usert.fluxo_de_caixa.uso_frota,
+                            despesas_operacionais_n_planejadas: usert.fluxo_de_caixa.despesas_operacionais_n_planejadas,
+                            despesas_administrativas: usert.fluxo_de_caixa.despesas_administrativas,
+                            encargos_financiamento: usert.fluxo_de_caixa.encargos_financiamento,
+                            maquinas: usert.fluxo_de_caixa.maquinas,
+                            distribuidores: usert.fluxo_de_caixa.distribuidores
                         }
-                        */
                         
                         for(let s = 0; s < index.length; s++){
                             //console.log(index[s])
                             let serv = index[s]
                             userdef.set(serv, [usert[serv][0], usert[serv][1], usert[serv][2], usert[serv][3], usert[serv][4], usert[serv][5], usert[serv][6], usert[serv][7]])
                         }
-                        
+                        userdef.modificador = usert.modificador
                         userdef.save()
-                            .then(() => {socket.emit('feedback', ['success','os dados foram salvos com sucesso'])})
+                            .then(() => {
+                                dec.save()
+                                    .then(() => {
+                                        socket.emit('feedback', ['success','os dados foram salvos com sucesso'])
+                                    })
+
+                            })
                             .catch((err) => {socket.emit('feedback', ['danger','falha ao salvar os dados no servidor'])})
                         
 
@@ -1273,7 +1494,7 @@ sockets.on('connection', (socket) => {
                 socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
             }
             })
-    }) 
+    }) //OKK falta teste
     socket.on('resetar', () => {
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((usert) => {
@@ -3421,7 +3642,7 @@ sockets.on('connection', (socket) => {
                                                     }
                                                 }
                                             } 
-                                             socket.emit('resposta-pesquisa', toString(respostaP))
+                                             socket.emit('resposta-pesquisa', String(respostaP))
                                              socket.emit('update', [
                                                 [...userx["147"],"147"],
                                                 [...userx["148"],"148"],

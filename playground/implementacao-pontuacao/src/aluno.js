@@ -25,6 +25,7 @@ const UserSchema = new Schema({
     scoremod: Number, //auxilio para calculo de faturamento por diferencaod e tipo de serviço (top, med, low)
     scorepreco: Array, //auxilia calculo de faturamento referente ao preco de venda
     scorepro: Number,
+    modificador: String,
     temporario: Number, // 0 ou 1 fala se é o Schema temporario ou o oficial
         147:Array, //nessa array (com 6 de length) sendo que   
         148:Array,
@@ -76,12 +77,33 @@ const DataSchema = new Schema({
 })
 
 const UsuarioSchema = new Schema({
+    cpf: String,
+    nome: String,
+    senha: String,
+    login: String,
+    telefone: String,
+    email: String,
+    instancia: String,
+    sockid: String,
+    cooperativa: String
 
 })
 
+const DeciSchema = new Schema({
+    modificador: String,
+    turno: String,
+    balanco_patrimonial_antigo: Object,
+    balanco_patrimonial_novo: Object,
+    dre_antiga: Object,
+    dre_nova: Object,
+    fluxo_de_caixa_antigo: Object,
+    fluxo_de_caixa_novo: Object
+})
+
+const Deci = mongoose.model('decisoes', DeciSchema) //decisoes da pessoa fisica
 const Usuario = mongoose.model('usuario', UsuarioSchema) //pessoa fisica
 const Aluno = mongoose.model('aluno', UserSchema) //pessoa JURIDICA
 const Data = mongoose.model('data', DataSchema) //INSTANCIA
-let estrutura  = [Aluno, Data, Usuario]
+let estrutura  = [Aluno, Data, Usuario, Deci]
 export default estrutura
 
