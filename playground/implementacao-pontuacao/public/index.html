@@ -99,6 +99,9 @@
             socket.on('resposta-root', (dados) => {
                 alert('PARECER: ' + dados)
             })
+            socket.on('feedback', (f) => {
+                alert('TIPO: ' + f[0] + ' => ' + f[1])
+            })
             function criar() {
                 let canvas = document.getElementById("myCanvas");
                 let ctx = canvas.getContext("2d");

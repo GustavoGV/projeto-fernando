@@ -156,6 +156,7 @@ sockets.on('connection', (socket) => {
         }
     }) //new falta testar
     socket.on('register-client', (creden) => {
+        console.log(creden)
         let erro = []
         function formatCheck(c) {
             let a = 0
@@ -171,6 +172,8 @@ sockets.on('connection', (socket) => {
             else{erro.push('senha invalida')}
             if(c.nome.length > 0){a=a+1}
             else{erro.push('nome invalido')}
+
+            return 'fino'
 
             if(a == 6){return 'fino'}
             else{return erro}
@@ -188,13 +191,16 @@ sockets.on('connection', (socket) => {
                                 console.log('>>registro negado: esse nome de login ja esta sendo usado');
                                 socket.emit('feedback', ['danger', 'esse nome de login ja esta sendo usado'])}
                             else{
+                                
                                 if(formatCheck(creden) == 'fino'){
                                     let jogador = new Usuario({login: creden.login, senha: creden.senha, email: creden.email, cpf: creden.cpf, telefone: creden.telefone, nome: creden.nome, cooperativa: 'provisorio', instancia: 'provisorio'})
                                         jogador.save()
-                                            .then(socket.emit('feedback', ['success', 'registro realizado com sucesso para ' + creden.login]))
+                                            .then(() => {socket.emit('feedback', ['success', 'registro realizado com sucesso para ' + creden.login])})
                                             .catch((wrr) => {console.log(wrr)})
                                 }
-                                else{socket.emit('feedback', ['danger', 'falha na tentativa de registro: ' + String(erro)])
+                                
+                                else{
+                                    socket.emit('feedback', ['danger', 'falha na tentativa de registro: ' + String(erro)])
                                 }
                             }
                         }) 
