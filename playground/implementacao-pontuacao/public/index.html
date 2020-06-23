@@ -88,17 +88,6 @@
         
             const socket = io()
             socket.on('connect', () => {
-
-                
-                
-                // console.log(`Player connected on Client with id: ${playerId}`)
-                // console.log('socket', socket)
-
-                //const screen = document.getElementById('screen')
-                //const scoreTable = document.getElementById('score-table')
-                
-                //setupScreen(screen, game)
-                //renderScreen(screen, scoreTable, game, requestAnimationFrame, playerId)
             })
 
             socket.on('disconnect', () => {
@@ -120,12 +109,14 @@
                 ctx.beginPath();
                 ctx.arc(ale + 4, ale2 - 22, 40, 0, 2 * Math.PI);
                 ctx.stroke();
-                let valor5 = document.getElementById("usuario").value
-                let valor4 = document.getElementById("texto1").value
-                let valor3 = document.getElementById("texto2").value
-                let valor2 = document.getElementById("texto3").value
-                let valor1 = document.getElementById("texto4").value
+                let valor5 = document.getElementById("usuario").value //senha mestra
+                let valor4 = document.getElementById("texto1").value //senhaInsta
+                let valor3 = document.getElementById("texto2").value //instancia
+                let valor2 = document.getElementById("texto3").value //senhadm
+                let valor1 = document.getElementById("texto4").value //adm
                 socket.emit(`registrar-nova-instancia`, [valor1,valor2,valor3,valor4,valor5])
+                alert('documento enviado: Usuario_adm = ' + valor1 + '; senha_adm = ' + valor2 + '; noma_instancia = ' + valor3 + '; senha_instancia = ' + valor4)
+                
             }
             function instancias() {
                 
