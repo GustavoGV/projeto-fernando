@@ -49,7 +49,7 @@ let index = [
 
 app.use(express.static('public'))
 
-
+try{
 sockets.on('connection', (socket) => { 
     console.log(` <=> Cooperativa ON. socket.id: ${socket.id}`)
 
@@ -6062,6 +6062,11 @@ sockets.on('connection', (socket) => {
     
 
 })
+}
+catch (e) {
+    console.log(e)
+    socket.emit('feedback', ['danger', 'erro fatal no server: ' + e])
+}
 // PARA TESTES PROFESSOR PRETENDE TER INSTANCIAS COM 8 PESSOAS NA SITUAÇAO IDEAL (basear teste com o parametro 8)
 server.listen(3000, () => {
     console.log(`--> Server escutando porta: 3000`)
