@@ -47,6 +47,7 @@ let index = [
 "368",
 "369"]
 
+
 app.use(express.static('public'))
 
 try{
@@ -335,7 +336,8 @@ sockets.on('connection', (socket) => {
                             encargos_financiamento: 0,
                             maquinas: 0,
                             distribuidores: 0
-                        }
+                        },
+                        somapropuni: {tipo1: '147', inv1: 0, tipo2: 0, inv2: 0}
                     });
                         jogador.save()
                             .then(Aluno.find({ cooperativa: creden[0], temporario: 1, instancia: creden[2]}))
@@ -440,7 +442,8 @@ sockets.on('connection', (socket) => {
                                         //fluxo_investimento: 0, // entra negativo tds as compras de VEICULOS e entra positivo todo o valor da venda de veiculos
                                         //fluxo: 0
                                     
-                                    }
+                                    },
+                                    somapropuni: {tipo1: '147', inv1: 0, tipo2: 0, inv2: 0}
                                     });
                                     jogadorR.save()
                                         .then(() => {
@@ -588,28 +591,37 @@ sockets.on('connection', (socket) => {
                                 //console.log(user[velho][0] + ' <=====user(recem pesquisado)')
                                 if(user.taokeys == userx.taokeys){
                                 socket.emit('feedback', ['success', qnt + ' insumos transferidos do serviço: '+ velho +' com sucesso para o serviço: ' + novo])
+                                function propuni(tipo) {
+                                    if(user.somapropuni.tipo1 == tipo){
+                                        return user.somapropuni.inv1
+                                    }
+                                    else if(user.somapropuni.tipo2 == tipo){
+                                        return user.somapropuni.inv2
+                                    }
+                                    else{return 0}
+                                }
                                 socket.emit('update', [
-                                [...user["147"],"147"],
-                                [...user["148"],"148"],
-                                [...user["149"],"149"],
-                                [...user["157"],"157"],
-                                [...user["158"],"158"],
-                                [...user["159"],"159"],
-                                [...user["257"],"257"],
-                                [...user["258"],"258"],
-                                [...user["259"],"259"],
-                                [...user["267"],"267"],
-                                [...user["268"],"268"],
-                                [...user["269"],"269"],
-                                [...user["347"],"347"],
-                                [...user["348"],"348"],
-                                [...user["349"],"349"],
-                                [...user["357"],"357"],
-                                [...user["358"],"358"],
-                                [...user["359"],"359"],
-                                [...user["367"],"367"],
-                                [...user["368"],"368"],
-                                [...user["369"],"369"],
+                                [...user["147"],propuni("147"),"147"],
+                                [...user["148"],propuni("148"),"148"],
+                                [...user["149"],propuni("149"),"149"],
+                                [...user["157"],propuni("157"),"157"],
+                                [...user["158"],propuni("158"),"158"],
+                                [...user["159"],propuni("159"),"159"],
+                                [...user["257"],propuni("257"),"257"],
+                                [...user["258"],propuni("258"),"258"],
+                                [...user["259"],propuni("259"),"259"],
+                                [...user["267"],propuni("267"),"267"],
+                                [...user["268"],propuni("268"),"268"],
+                                [...user["269"],propuni("269"),"269"],
+                                [...user["347"],propuni("347"),"347"],
+                                [...user["348"],propuni("348"),"348"],
+                                [...user["349"],propuni("349"),"349"],
+                                [...user["357"],propuni("357"),"357"],
+                                [...user["358"],propuni("358"),"358"],
+                                [...user["359"],propuni("359"),"359"],
+                                [...user["367"],propuni("367"),"367"],
+                                [...user["368"],propuni("368"),"368"],
+                                [...user["369"],propuni("369"),"369"],
                                 user["taokeys"],
                                 user["frota"],
                                 user["promotores"],
@@ -728,28 +740,37 @@ sockets.on('connection', (socket) => {
                                     //console.log(user[velho][0] + ' <=====user(recem pesquisado)')
                                     if(user.taokeys == userx.taokeys){
                                     socket.emit('feedback', ['success', qnt + ' insumos transferidos do serviço: '+ velho +' com sucesso para o serviço: ' + novo])
+                                    function propuni(tipo) {
+                                        if(user.somapropuni.tipo1 == tipo){
+                                            return user.somapropuni.inv1
+                                        }
+                                        else if(user.somapropuni.tipo2 == tipo){
+                                            return user.somapropuni.inv2
+                                        }
+                                        else{return 0}
+                                    }
                                     socket.emit('update', [
-                                    [...user["147"],"147"],
-                                    [...user["148"],"148"],
-                                    [...user["149"],"149"],
-                                    [...user["157"],"157"],
-                                    [...user["158"],"158"],
-                                    [...user["159"],"159"],
-                                    [...user["257"],"257"],
-                                    [...user["258"],"258"],
-                                    [...user["259"],"259"],
-                                    [...user["267"],"267"],
-                                    [...user["268"],"268"],
-                                    [...user["269"],"269"],
-                                    [...user["347"],"347"],
-                                    [...user["348"],"348"],
-                                    [...user["349"],"349"],
-                                    [...user["357"],"357"],
-                                    [...user["358"],"358"],
-                                    [...user["359"],"359"],
-                                    [...user["367"],"367"],
-                                    [...user["368"],"368"],
-                                    [...user["369"],"369"],
+                                    [...user["147"],propuni("147"),"147"],
+                                    [...user["148"],propuni("148"),"148"],
+                                    [...user["149"],propuni("149"),"149"],
+                                    [...user["157"],propuni("157"),"157"],
+                                    [...user["158"],propuni("158"),"158"],
+                                    [...user["159"],propuni("159"),"159"],
+                                    [...user["257"],propuni("257"),"257"],
+                                    [...user["258"],propuni("258"),"258"],
+                                    [...user["259"],propuni("259"),"259"],
+                                    [...user["267"],propuni("267"),"267"],
+                                    [...user["268"],propuni("268"),"268"],
+                                    [...user["269"],propuni("269"),"269"],
+                                    [...user["347"],propuni("347"),"347"],
+                                    [...user["348"],propuni("348"),"348"],
+                                    [...user["349"],propuni("349"),"349"],
+                                    [...user["357"],propuni("357"),"357"],
+                                    [...user["358"],propuni("358"),"358"],
+                                    [...user["359"],propuni("359"),"359"],
+                                    [...user["367"],propuni("367"),"367"],
+                                    [...user["368"],propuni("368"),"368"],
+                                    [...user["369"],propuni("369"),"369"],
                                     user["taokeys"],
                                     user["frota"],
                                     user["promotores"],
@@ -894,38 +915,47 @@ sockets.on('connection', (socket) => {
                                 //console.log(user[velho][0] + ' <=====user(recem pesquisado)')
                                 if(user.taokeys == userx.taokeys){
                                     socket.emit('feedback', ['success','voce substituiu o serviço '+ velho +' pelo: '+ novo +' com sucesso'])
+                                    function propuni(tipo) {
+                                        if(user.somapropuni.tipo1 == tipo){
+                                            return user.somapropuni.inv1
+                                        }
+                                        else if(user.somapropuni.tipo2 == tipo){
+                                            return user.somapropuni.inv2
+                                        }
+                                        else{return 0}
+                                    }
                                     socket.emit('update', [
-                                        [...user["147"],"147"],
-                                        [...user["148"],"148"],
-                                        [...user["149"],"149"],
-                                        [...user["157"],"157"],
-                                        [...user["158"],"158"],
-                                        [...user["159"],"159"],
-                                        [...user["257"],"257"],
-                                        [...user["258"],"258"],
-                                        [...user["259"],"259"],
-                                        [...user["267"],"267"],
-                                        [...user["268"],"268"],
-                                        [...user["269"],"269"],
-                                        [...user["347"],"347"],
-                                        [...user["348"],"348"],
-                                        [...user["349"],"349"],
-                                        [...user["357"],"357"],
-                                        [...user["358"],"358"],
-                                        [...user["359"],"359"],
-                                        [...user["367"],"367"],
-                                        [...user["368"],"368"],
-                                        [...user["369"],"369"],
-                                        user["taokeys"],
-                                        user["frota"],
-                                        user["promotores"],
-                                        user["comissao"],
-                                        user["distribuidores"],
-                                        user["pas"],
-                                        user["propaganda"],
-                                        user["propagandauni"],
-                                        (user["divida"][0]+user["divida"][1]+user["divida"][2]),
-                                        user["turno"]]);
+                                            [...user["147"],propuni("147"),"147"],
+                                            [...user["148"],propuni("148"),"148"],
+                                            [...user["149"],propuni("149"),"149"],
+                                            [...user["157"],propuni("157"),"157"],
+                                            [...user["158"],propuni("158"),"158"],
+                                            [...user["159"],propuni("159"),"159"],
+                                            [...user["257"],propuni("257"),"257"],
+                                            [...user["258"],propuni("258"),"258"],
+                                            [...user["259"],propuni("259"),"259"],
+                                            [...user["267"],propuni("267"),"267"],
+                                            [...user["268"],propuni("268"),"268"],
+                                            [...user["269"],propuni("269"),"269"],
+                                            [...user["347"],propuni("347"),"347"],
+                                            [...user["348"],propuni("348"),"348"],
+                                            [...user["349"],propuni("349"),"349"],
+                                            [...user["357"],propuni("357"),"357"],
+                                            [...user["358"],propuni("358"),"358"],
+                                            [...user["359"],propuni("359"),"359"],
+                                            [...user["367"],propuni("367"),"367"],
+                                            [...user["368"],propuni("368"),"368"],
+                                            [...user["369"],propuni("369"),"369"],
+                                            user["taokeys"],
+                                            user["frota"],
+                                            user["promotores"],
+                                            user["comissao"],
+                                            user["distribuidores"],
+                                            user["pas"],
+                                            user["propaganda"],
+                                            user["propagandauni"],
+                                            (user["divida"][0]+user["divida"][1]+user["divida"][2]),
+                                            user["turno"]]);
         
                                     }                  
                                 })
@@ -1030,38 +1060,47 @@ sockets.on('connection', (socket) => {
                                 //console.log(userx[velho][0] + ' <----userx(Schema trabalhado aqui)')
                                 //console.log(user[velho][0] + ' <=====user(recem pesquisado)')
                                 if(user.taokeys == userx.taokeys){
+                                    function propuni(tipo) {
+                                        if(user.somapropuni.tipo1 == tipo){
+                                            return user.somapropuni.inv1
+                                        }
+                                        else if(user.somapropuni.tipo2 == tipo){
+                                            return user.somapropuni.inv2
+                                        }
+                                        else{return 0}
+                                    }
                                     socket.emit('update', [
-                                        [...user["147"],"147"],
-                                        [...user["148"],"148"],
-                                        [...user["149"],"149"],
-                                        [...user["157"],"157"],
-                                        [...user["158"],"158"],
-                                        [...user["159"],"159"],
-                                        [...user["257"],"257"],
-                                        [...user["258"],"258"],
-                                        [...user["259"],"259"],
-                                        [...user["267"],"267"],
-                                        [...user["268"],"268"],
-                                        [...user["269"],"269"],
-                                        [...user["347"],"347"],
-                                        [...user["348"],"348"],
-                                        [...user["349"],"349"],
-                                        [...user["357"],"357"],
-                                        [...user["358"],"358"],
-                                        [...user["359"],"359"],
-                                        [...user["367"],"367"],
-                                        [...user["368"],"368"],
-                                        [...user["369"],"369"],
-                                        user["taokeys"],
-                                        user["frota"],
-                                        user["promotores"],
-                                        user["comissao"],
-                                        user["distribuidores"],
-                                        user["pas"],
-                                        user["propaganda"],
-                                        user["propagandauni"],
-                                        (user["divida"][0]+user["divida"][1]+user["divida"][2]),
-                                        user["turno"]]);
+                                            [...user["147"],propuni("147"),"147"],
+                                            [...user["148"],propuni("148"),"148"],
+                                            [...user["149"],propuni("149"),"149"],
+                                            [...user["157"],propuni("157"),"157"],
+                                            [...user["158"],propuni("158"),"158"],
+                                            [...user["159"],propuni("159"),"159"],
+                                            [...user["257"],propuni("257"),"257"],
+                                            [...user["258"],propuni("258"),"258"],
+                                            [...user["259"],propuni("259"),"259"],
+                                            [...user["267"],propuni("267"),"267"],
+                                            [...user["268"],propuni("268"),"268"],
+                                            [...user["269"],propuni("269"),"269"],
+                                            [...user["347"],propuni("347"),"347"],
+                                            [...user["348"],propuni("348"),"348"],
+                                            [...user["349"],propuni("349"),"349"],
+                                            [...user["357"],propuni("357"),"357"],
+                                            [...user["358"],propuni("358"),"358"],
+                                            [...user["359"],propuni("359"),"359"],
+                                            [...user["367"],propuni("367"),"367"],
+                                            [...user["368"],propuni("368"),"368"],
+                                            [...user["369"],propuni("369"),"369"],
+                                            user["taokeys"],
+                                            user["frota"],
+                                            user["promotores"],
+                                            user["comissao"],
+                                            user["distribuidores"],
+                                            user["pas"],
+                                            user["propaganda"],
+                                            user["propagandauni"],
+                                            (user["divida"][0]+user["divida"][1]+user["divida"][2]),
+                                            user["turno"]]);
         
                                     }                  
                                 })
@@ -1114,28 +1153,37 @@ sockets.on('connection', (socket) => {
                             .then((user) => {
                                     if(user.taokeys == userx.taokeys){
                                         socket.emit('feedback', ['success', tipo + ' encerrado com sucesso e ficara indisponivel durante o proximo turno'])
+                                        function propuni(tipo) {
+                                            if(user.somapropuni.tipo1 == tipo){
+                                                return user.somapropuni.inv1
+                                            }
+                                            else if(user.somapropuni.tipo2 == tipo){
+                                                return user.somapropuni.inv2
+                                            }
+                                            else{return 0}
+                                        }
                                         socket.emit('update', [
-                                            [...user["147"],"147"],
-                                            [...user["148"],"148"],
-                                            [...user["149"],"149"],
-                                            [...user["157"],"157"],
-                                            [...user["158"],"158"],
-                                            [...user["159"],"159"],
-                                            [...user["257"],"257"],
-                                            [...user["258"],"258"],
-                                            [...user["259"],"259"],
-                                            [...user["267"],"267"],
-                                            [...user["268"],"268"],
-                                            [...user["269"],"269"],
-                                            [...user["347"],"347"],
-                                            [...user["348"],"348"],
-                                            [...user["349"],"349"],
-                                            [...user["357"],"357"],
-                                            [...user["358"],"358"],
-                                            [...user["359"],"359"],
-                                            [...user["367"],"367"],
-                                            [...user["368"],"368"],
-                                            [...user["369"],"369"],
+                                            [...user["147"],propuni("147"),"147"],
+                                            [...user["148"],propuni("148"),"148"],
+                                            [...user["149"],propuni("149"),"149"],
+                                            [...user["157"],propuni("157"),"157"],
+                                            [...user["158"],propuni("158"),"158"],
+                                            [...user["159"],propuni("159"),"159"],
+                                            [...user["257"],propuni("257"),"257"],
+                                            [...user["258"],propuni("258"),"258"],
+                                            [...user["259"],propuni("259"),"259"],
+                                            [...user["267"],propuni("267"),"267"],
+                                            [...user["268"],propuni("268"),"268"],
+                                            [...user["269"],propuni("269"),"269"],
+                                            [...user["347"],propuni("347"),"347"],
+                                            [...user["348"],propuni("348"),"348"],
+                                            [...user["349"],propuni("349"),"349"],
+                                            [...user["357"],propuni("357"),"357"],
+                                            [...user["358"],propuni("358"),"358"],
+                                            [...user["359"],propuni("359"),"359"],
+                                            [...user["367"],propuni("367"),"367"],
+                                            [...user["368"],propuni("368"),"368"],
+                                            [...user["369"],propuni("369"),"369"],
                                             user["taokeys"],
                                             user["frota"],
                                             user["promotores"],
@@ -1188,28 +1236,37 @@ sockets.on('connection', (socket) => {
                                 .then((user) => {
                                     if(user.taokeys == userx.taokeys){
                                         socket.emit('feedback', ['success', 'volume de vendas planejado do serviço: ' + tipo + ' alterado para ' + volume + ' com sucesso'])
+                                        function propuni(tipo) {
+                                            if(user.somapropuni.tipo1 == tipo){
+                                                return user.somapropuni.inv1
+                                            }
+                                            else if(user.somapropuni.tipo2 == tipo){
+                                                return user.somapropuni.inv2
+                                            }
+                                            else{return 0}
+                                        }
                                         socket.emit('update', [
-                                            [...user["147"],"147"],
-                                            [...user["148"],"148"],
-                                            [...user["149"],"149"],
-                                            [...user["157"],"157"],
-                                            [...user["158"],"158"],
-                                            [...user["159"],"159"],
-                                            [...user["257"],"257"],
-                                            [...user["258"],"258"],
-                                            [...user["259"],"259"],
-                                            [...user["267"],"267"],
-                                            [...user["268"],"268"],
-                                            [...user["269"],"269"],
-                                            [...user["347"],"347"],
-                                            [...user["348"],"348"],
-                                            [...user["349"],"349"],
-                                            [...user["357"],"357"],
-                                            [...user["358"],"358"],
-                                            [...user["359"],"359"],
-                                            [...user["367"],"367"],
-                                            [...user["368"],"368"],
-                                            [...user["369"],"369"],
+                                            [...user["147"],propuni("147"),"147"],
+                                            [...user["148"],propuni("148"),"148"],
+                                            [...user["149"],propuni("149"),"149"],
+                                            [...user["157"],propuni("157"),"157"],
+                                            [...user["158"],propuni("158"),"158"],
+                                            [...user["159"],propuni("159"),"159"],
+                                            [...user["257"],propuni("257"),"257"],
+                                            [...user["258"],propuni("258"),"258"],
+                                            [...user["259"],propuni("259"),"259"],
+                                            [...user["267"],propuni("267"),"267"],
+                                            [...user["268"],propuni("268"),"268"],
+                                            [...user["269"],propuni("269"),"269"],
+                                            [...user["347"],propuni("347"),"347"],
+                                            [...user["348"],propuni("348"),"348"],
+                                            [...user["349"],propuni("349"),"349"],
+                                            [...user["357"],propuni("357"),"357"],
+                                            [...user["358"],propuni("358"),"358"],
+                                            [...user["359"],propuni("359"),"359"],
+                                            [...user["367"],propuni("367"),"367"],
+                                            [...user["368"],propuni("368"),"368"],
+                                            [...user["369"],propuni("369"),"369"],
                                             user["taokeys"],
                                             user["frota"],
                                             user["promotores"],
@@ -1479,6 +1536,7 @@ sockets.on('connection', (socket) => {
                             maquinas: usert.fluxo_de_caixa.maquinas,
                             distribuidores: usert.fluxo_de_caixa.distribuidores
                         }
+                        userdef.somapropuni = {tipo1: usert.somapropuni.tipo1, inv1: usert.somapropuni.inv1, tipo2: usert.somapropuni.tipo2, inv2: usert.somapropuni.inv2}
                         
                         for(let s = 0; s < index.length; s++){
                             //console.log(index[s])
@@ -1562,28 +1620,37 @@ sockets.on('connection', (socket) => {
                         
                         usert.save()
                             .then(() => {
+                                function propuni(tipo) {
+                                    if(usert.somapropuni.tipo1 == tipo){
+                                        return usert.somapropuni.inv1
+                                    }
+                                    else if(usert.somapropuni.tipo2 == tipo){
+                                        return usert.somapropuni.inv2
+                                    }
+                                    else{return 0}
+                                }
                                 socket.emit('update', [
-                                    [...usert["147"],"147"],
-                                    [...usert["148"],"148"],
-                                    [...usert["149"],"149"],
-                                    [...usert["157"],"157"],
-                                    [...usert["158"],"158"],
-                                    [...usert["159"],"159"],
-                                    [...usert["257"],"257"],
-                                    [...usert["258"],"258"],
-                                    [...usert["259"],"259"],
-                                    [...usert["267"],"267"],
-                                    [...usert["268"],"268"],
-                                    [...usert["269"],"269"],
-                                    [...usert["347"],"347"],
-                                    [...usert["348"],"348"],
-                                    [...usert["349"],"349"],
-                                    [...usert["357"],"357"],
-                                    [...usert["358"],"358"],
-                                    [...usert["359"],"359"],
-                                    [...usert["367"],"367"],
-                                    [...usert["368"],"368"],
-                                    [...usert["369"],"369"],
+                                    [...usert["147"],propuni("147"),"147"],
+                                    [...usert["148"],propuni("148"),"148"],
+                                    [...usert["149"],propuni("149"),"149"],
+                                    [...usert["157"],propuni("157"),"157"],
+                                    [...usert["158"],propuni("158"),"158"],
+                                    [...usert["159"],propuni("159"),"159"],
+                                    [...usert["257"],propuni("257"),"257"],
+                                    [...usert["258"],propuni("258"),"258"],
+                                    [...usert["259"],propuni("259"),"259"],
+                                    [...usert["267"],propuni("267"),"267"],
+                                    [...usert["268"],propuni("268"),"268"],
+                                    [...usert["269"],propuni("269"),"269"],
+                                    [...usert["347"],propuni("347"),"347"],
+                                    [...usert["348"],propuni("348"),"348"],
+                                    [...usert["349"],propuni("349"),"349"],
+                                    [...usert["357"],propuni("357"),"357"],
+                                    [...usert["358"],propuni("358"),"358"],
+                                    [...usert["359"],propuni("359"),"359"],
+                                    [...usert["367"],propuni("367"),"367"],
+                                    [...usert["368"],propuni("368"),"368"],
+                                    [...usert["369"],propuni("369"),"369"],
                                     usert["taokeys"],
                                     usert["frota"],
                                     usert["promotores"],
@@ -1662,28 +1729,37 @@ sockets.on('connection', (socket) => {
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
                                 .then((user) => {
                                     if(user.taokeys == userx.taokeys){
+                                        function propuni(tipo) {
+                                            if(user.somapropuni.tipo1 == tipo){
+                                                return user.somapropuni.inv1
+                                            }
+                                            else if(user.somapropuni.tipo2 == tipo){
+                                                return user.somapropuni.inv2
+                                            }
+                                            else{return 0}
+                                        }
                                         socket.emit('update', [
-                                            [...user["147"],"147"],
-                                            [...user["148"],"148"],
-                                            [...user["149"],"149"],
-                                            [...user["157"],"157"],
-                                            [...user["158"],"158"],
-                                            [...user["159"],"159"],
-                                            [...user["257"],"257"],
-                                            [...user["258"],"258"],
-                                            [...user["259"],"259"],
-                                            [...user["267"],"267"],
-                                            [...user["268"],"268"],
-                                            [...user["269"],"269"],
-                                            [...user["347"],"347"],
-                                            [...user["348"],"348"],
-                                            [...user["349"],"349"],
-                                            [...user["357"],"357"],
-                                            [...user["358"],"358"],
-                                            [...user["359"],"359"],
-                                            [...user["367"],"367"],
-                                            [...user["368"],"368"],
-                                            [...user["369"],"369"],
+                                            [...user["147"],propuni("147"),"147"],
+                                            [...user["148"],propuni("148"),"148"],
+                                            [...user["149"],propuni("149"),"149"],
+                                            [...user["157"],propuni("157"),"157"],
+                                            [...user["158"],propuni("158"),"158"],
+                                            [...user["159"],propuni("159"),"159"],
+                                            [...user["257"],propuni("257"),"257"],
+                                            [...user["258"],propuni("258"),"258"],
+                                            [...user["259"],propuni("259"),"259"],
+                                            [...user["267"],propuni("267"),"267"],
+                                            [...user["268"],propuni("268"),"268"],
+                                            [...user["269"],propuni("269"),"269"],
+                                            [...user["347"],propuni("347"),"347"],
+                                            [...user["348"],propuni("348"),"348"],
+                                            [...user["349"],propuni("349"),"349"],
+                                            [...user["357"],propuni("357"),"357"],
+                                            [...user["358"],propuni("358"),"358"],
+                                            [...user["359"],propuni("359"),"359"],
+                                            [...user["367"],propuni("367"),"367"],
+                                            [...user["368"],propuni("368"),"368"],
+                                            [...user["369"],propuni("369"),"369"],
                                             user["taokeys"],
                                             user["frota"],
                                             user["promotores"],
@@ -1840,28 +1916,37 @@ sockets.on('connection', (socket) => {
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
                                 .then((user) => {
                                     if(user.taokeys == userx.taokeys){
+                                        function propuni(tipo) {
+                                            if(user.somapropuni.tipo1 == tipo){
+                                                return user.somapropuni.inv1
+                                            }
+                                            else if(user.somapropuni.tipo2 == tipo){
+                                                return user.somapropuni.inv2
+                                            }
+                                            else{return 0}
+                                        }
                                         socket.emit('update', [
-                                            [...user["147"],"147"],
-                                            [...user["148"],"148"],
-                                            [...user["149"],"149"],
-                                            [...user["157"],"157"],
-                                            [...user["158"],"158"],
-                                            [...user["159"],"159"],
-                                            [...user["257"],"257"],
-                                            [...user["258"],"258"],
-                                            [...user["259"],"259"],
-                                            [...user["267"],"267"],
-                                            [...user["268"],"268"],
-                                            [...user["269"],"269"],
-                                            [...user["347"],"347"],
-                                            [...user["348"],"348"],
-                                            [...user["349"],"349"],
-                                            [...user["357"],"357"],
-                                            [...user["358"],"358"],
-                                            [...user["359"],"359"],
-                                            [...user["367"],"367"],
-                                            [...user["368"],"368"],
-                                            [...user["369"],"369"],
+                                            [...user["147"],propuni("147"),"147"],
+                                            [...user["148"],propuni("148"),"148"],
+                                            [...user["149"],propuni("149"),"149"],
+                                            [...user["157"],propuni("157"),"157"],
+                                            [...user["158"],propuni("158"),"158"],
+                                            [...user["159"],propuni("159"),"159"],
+                                            [...user["257"],propuni("257"),"257"],
+                                            [...user["258"],propuni("258"),"258"],
+                                            [...user["259"],propuni("259"),"259"],
+                                            [...user["267"],propuni("267"),"267"],
+                                            [...user["268"],propuni("268"),"268"],
+                                            [...user["269"],propuni("269"),"269"],
+                                            [...user["347"],propuni("347"),"347"],
+                                            [...user["348"],propuni("348"),"348"],
+                                            [...user["349"],propuni("349"),"349"],
+                                            [...user["357"],propuni("357"),"357"],
+                                            [...user["358"],propuni("358"),"358"],
+                                            [...user["359"],propuni("359"),"359"],
+                                            [...user["367"],propuni("367"),"367"],
+                                            [...user["368"],propuni("368"),"368"],
+                                            [...user["369"],propuni("369"),"369"],
                                             user["taokeys"],
                                             user["frota"],
                                             user["promotores"],
@@ -1907,28 +1992,37 @@ sockets.on('connection', (socket) => {
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => {
                 if(userx !== null){
+                    function propuni(tipo) {
+                        if(userx.somapropuni.tipo1 == tipo){
+                            return userx.somapropuni.inv1
+                        }
+                        else if(userx.somapropuni.tipo2 == tipo){
+                            return userx.somapropuni.inv2
+                        }
+                        else{return 0}
+                    }
                     socket.emit('update', [
-                        [...userx["147"],"147"],
-                        [...userx["148"],"148"],
-                        [...userx["149"],"149"],
-                        [...userx["157"],"157"],
-                        [...userx["158"],"158"],
-                        [...userx["159"],"159"],
-                        [...userx["257"],"257"],
-                        [...userx["258"],"258"],
-                        [...userx["259"],"259"],
-                        [...userx["267"],"267"],
-                        [...userx["268"],"268"],
-                        [...userx["269"],"269"],
-                        [...userx["347"],"347"],
-                        [...userx["348"],"348"],
-                        [...userx["349"],"349"],
-                        [...userx["357"],"357"],
-                        [...userx["358"],"358"],
-                        [...userx["359"],"359"],
-                        [...userx["367"],"367"],
-                        [...userx["368"],"368"],
-                        [...userx["369"],"369"],
+                        [...userx["147"],propuni("147"),"147"],
+                        [...userx["148"],propuni("148"),"148"],
+                        [...userx["149"],propuni("149"),"149"],
+                        [...userx["157"],propuni("157"),"157"],
+                        [...userx["158"],propuni("158"),"158"],
+                        [...userx["159"],propuni("159"),"159"],
+                        [...userx["257"],propuni("257"),"257"],
+                        [...userx["258"],propuni("258"),"258"],
+                        [...userx["259"],propuni("259"),"259"],
+                        [...userx["267"],propuni("267"),"267"],
+                        [...userx["268"],propuni("268"),"268"],
+                        [...userx["269"],propuni("269"),"269"],
+                        [...userx["347"],propuni("347"),"347"],
+                        [...userx["348"],propuni("348"),"348"],
+                        [...userx["349"],propuni("349"),"349"],
+                        [...userx["357"],propuni("357"),"357"],
+                        [...userx["358"],propuni("358"),"358"],
+                        [...userx["359"],propuni("359"),"359"],
+                        [...userx["367"],propuni("367"),"367"],
+                        [...userx["368"],propuni("368"),"368"],
+                        [...userx["369"],propuni("369"),"369"],
                         userx["taokeys"],
                         userx["frota"],
                         userx["promotores"],
@@ -1961,28 +2055,37 @@ sockets.on('connection', (socket) => {
                                 .then((user) => {
                                     if(user.taokeys == userx.taokeys){
                                         socket.emit('feedback', ['success', 'preço do serviço: ' + tipo + ' alterado para: ' + preco + ' com sucesso'])
+                                        function propuni(tipo) {
+                                            if(user.somapropuni.tipo1 == tipo){
+                                                return user.somapropuni.inv1
+                                            }
+                                            else if(user.somapropuni.tipo2 == tipo){
+                                                return user.somapropuni.inv2
+                                            }
+                                            else{return 0}
+                                        }
                                         socket.emit('update', [
-                                            [...user["147"],"147"],
-                                            [...user["148"],"148"],
-                                            [...user["149"],"149"],
-                                            [...user["157"],"157"],
-                                            [...user["158"],"158"],
-                                            [...user["159"],"159"],
-                                            [...user["257"],"257"],
-                                            [...user["258"],"258"],
-                                            [...user["259"],"259"],
-                                            [...user["267"],"267"],
-                                            [...user["268"],"268"],
-                                            [...user["269"],"269"],
-                                            [...user["347"],"347"],
-                                            [...user["348"],"348"],
-                                            [...user["349"],"349"],
-                                            [...user["357"],"357"],
-                                            [...user["358"],"358"],
-                                            [...user["359"],"359"],
-                                            [...user["367"],"367"],
-                                            [...user["368"],"368"],
-                                            [...user["369"],"369"],
+                                            [...user["147"],propuni("147"),"147"],
+                                            [...user["148"],propuni("148"),"148"],
+                                            [...user["149"],propuni("149"),"149"],
+                                            [...user["157"],propuni("157"),"157"],
+                                            [...user["158"],propuni("158"),"158"],
+                                            [...user["159"],propuni("159"),"159"],
+                                            [...user["257"],propuni("257"),"257"],
+                                            [...user["258"],propuni("258"),"258"],
+                                            [...user["259"],propuni("259"),"259"],
+                                            [...user["267"],propuni("267"),"267"],
+                                            [...user["268"],propuni("268"),"268"],
+                                            [...user["269"],propuni("269"),"269"],
+                                            [...user["347"],propuni("347"),"347"],
+                                            [...user["348"],propuni("348"),"348"],
+                                            [...user["349"],propuni("349"),"349"],
+                                            [...user["357"],propuni("357"),"357"],
+                                            [...user["358"],propuni("358"),"358"],
+                                            [...user["359"],propuni("359"),"359"],
+                                            [...user["367"],propuni("367"),"367"],
+                                            [...user["368"],propuni("368"),"368"],
+                                            [...user["369"],propuni("369"),"369"],
                                             user["taokeys"],
                                             user["frota"],
                                             user["promotores"],
@@ -2030,28 +2133,37 @@ sockets.on('connection', (socket) => {
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
                                 .then((user) => {
                                     if(user.taokeys == userx.taokeys){
+                                        function propuni(tipo) {
+                                            if(user.somapropuni.tipo1 == tipo){
+                                                return user.somapropuni.inv1
+                                            }
+                                            else if(user.somapropuni.tipo2 == tipo){
+                                                return user.somapropuni.inv2
+                                            }
+                                            else{return 0}
+                                        }
                                         socket.emit('update', [
-                                            [...user["147"],"147"],
-                                            [...user["148"],"148"],
-                                            [...user["149"],"149"],
-                                            [...user["157"],"157"],
-                                            [...user["158"],"158"],
-                                            [...user["159"],"159"],
-                                            [...user["257"],"257"],
-                                            [...user["258"],"258"],
-                                            [...user["259"],"259"],
-                                            [...user["267"],"267"],
-                                            [...user["268"],"268"],
-                                            [...user["269"],"269"],
-                                            [...user["347"],"347"],
-                                            [...user["348"],"348"],
-                                            [...user["349"],"349"],
-                                            [...user["357"],"357"],
-                                            [...user["358"],"358"],
-                                            [...user["359"],"359"],
-                                            [...user["367"],"367"],
-                                            [...user["368"],"368"],
-                                            [...user["369"],"369"],
+                                            [...user["147"],propuni("147"),"147"],
+                                            [...user["148"],propuni("148"),"148"],
+                                            [...user["149"],propuni("149"),"149"],
+                                            [...user["157"],propuni("157"),"157"],
+                                            [...user["158"],propuni("158"),"158"],
+                                            [...user["159"],propuni("159"),"159"],
+                                            [...user["257"],propuni("257"),"257"],
+                                            [...user["258"],propuni("258"),"258"],
+                                            [...user["259"],propuni("259"),"259"],
+                                            [...user["267"],propuni("267"),"267"],
+                                            [...user["268"],propuni("268"),"268"],
+                                            [...user["269"],propuni("269"),"269"],
+                                            [...user["347"],propuni("347"),"347"],
+                                            [...user["348"],propuni("348"),"348"],
+                                            [...user["349"],propuni("349"),"349"],
+                                            [...user["357"],propuni("357"),"357"],
+                                            [...user["358"],propuni("358"),"358"],
+                                            [...user["359"],propuni("359"),"359"],
+                                            [...user["367"],propuni("367"),"367"],
+                                            [...user["368"],propuni("368"),"368"],
+                                            [...user["369"],propuni("369"),"369"],
                                             user["taokeys"],
                                             user["frota"],
                                             user["promotores"],
@@ -2094,28 +2206,37 @@ sockets.on('connection', (socket) => {
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
                                 .then((user) => {
                                     if(user.taokeys == userx.taokeys){
+                                        function propuni(tipo) {
+                                            if(user.somapropuni.tipo1 == tipo){
+                                                return user.somapropuni.inv1
+                                            }
+                                            else if(user.somapropuni.tipo2 == tipo){
+                                                return user.somapropuni.inv2
+                                            }
+                                            else{return 0}
+                                        }
                                         socket.emit('update', [
-                                            [...user["147"],"147"],
-                                            [...user["148"],"148"],
-                                            [...user["149"],"149"],
-                                            [...user["157"],"157"],
-                                            [...user["158"],"158"],
-                                            [...user["159"],"159"],
-                                            [...user["257"],"257"],
-                                            [...user["258"],"258"],
-                                            [...user["259"],"259"],
-                                            [...user["267"],"267"],
-                                            [...user["268"],"268"],
-                                            [...user["269"],"269"],
-                                            [...user["347"],"347"],
-                                            [...user["348"],"348"],
-                                            [...user["349"],"349"],
-                                            [...user["357"],"357"],
-                                            [...user["358"],"358"],
-                                            [...user["359"],"359"],
-                                            [...user["367"],"367"],
-                                            [...user["368"],"368"],
-                                            [...user["369"],"369"],
+                                            [...user["147"],propuni("147"),"147"],
+                                            [...user["148"],propuni("148"),"148"],
+                                            [...user["149"],propuni("149"),"149"],
+                                            [...user["157"],propuni("157"),"157"],
+                                            [...user["158"],propuni("158"),"158"],
+                                            [...user["159"],propuni("159"),"159"],
+                                            [...user["257"],propuni("257"),"257"],
+                                            [...user["258"],propuni("258"),"258"],
+                                            [...user["259"],propuni("259"),"259"],
+                                            [...user["267"],propuni("267"),"267"],
+                                            [...user["268"],propuni("268"),"268"],
+                                            [...user["269"],propuni("269"),"269"],
+                                            [...user["347"],propuni("347"),"347"],
+                                            [...user["348"],propuni("348"),"348"],
+                                            [...user["349"],propuni("349"),"349"],
+                                            [...user["357"],propuni("357"),"357"],
+                                            [...user["358"],propuni("358"),"358"],
+                                            [...user["359"],propuni("359"),"359"],
+                                            [...user["367"],propuni("367"),"367"],
+                                            [...user["368"],propuni("368"),"368"],
+                                            [...user["369"],propuni("369"),"369"],
                                             user["taokeys"],
                                             user["frota"],
                                             user["promotores"],
@@ -2186,28 +2307,37 @@ sockets.on('connection', (socket) => {
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
                                 .then((user) => {
                                     if(user.taokeys == userx.taokeys){
+                                        function propuni(tipo) {
+                                            if(user.somapropuni.tipo1 == tipo){
+                                                return user.somapropuni.inv1
+                                            }
+                                            else if(user.somapropuni.tipo2 == tipo){
+                                                return user.somapropuni.inv2
+                                            }
+                                            else{return 0}
+                                        }
                                         socket.emit('update', [
-                                            [...user["147"],"147"],
-                                            [...user["148"],"148"],
-                                            [...user["149"],"149"],
-                                            [...user["157"],"157"],
-                                            [...user["158"],"158"],
-                                            [...user["159"],"159"],
-                                            [...user["257"],"257"],
-                                            [...user["258"],"258"],
-                                            [...user["259"],"259"],
-                                            [...user["267"],"267"],
-                                            [...user["268"],"268"],
-                                            [...user["269"],"269"],
-                                            [...user["347"],"347"],
-                                            [...user["348"],"348"],
-                                            [...user["349"],"349"],
-                                            [...user["357"],"357"],
-                                            [...user["358"],"358"],
-                                            [...user["359"],"359"],
-                                            [...user["367"],"367"],
-                                            [...user["368"],"368"],
-                                            [...user["369"],"369"],
+                                            [...user["147"],propuni("147"),"147"],
+                                            [...user["148"],propuni("148"),"148"],
+                                            [...user["149"],propuni("149"),"149"],
+                                            [...user["157"],propuni("157"),"157"],
+                                            [...user["158"],propuni("158"),"158"],
+                                            [...user["159"],propuni("159"),"159"],
+                                            [...user["257"],propuni("257"),"257"],
+                                            [...user["258"],propuni("258"),"258"],
+                                            [...user["259"],propuni("259"),"259"],
+                                            [...user["267"],propuni("267"),"267"],
+                                            [...user["268"],propuni("268"),"268"],
+                                            [...user["269"],propuni("269"),"269"],
+                                            [...user["347"],propuni("347"),"347"],
+                                            [...user["348"],propuni("348"),"348"],
+                                            [...user["349"],propuni("349"),"349"],
+                                            [...user["357"],propuni("357"),"357"],
+                                            [...user["358"],propuni("358"),"358"],
+                                            [...user["359"],propuni("359"),"359"],
+                                            [...user["367"],propuni("367"),"367"],
+                                            [...user["368"],propuni("368"),"368"],
+                                            [...user["369"],propuni("369"),"369"],
                                             user["taokeys"],
                                             user["frota"],
                                             user["promotores"],
@@ -2282,28 +2412,37 @@ sockets.on('connection', (socket) => {
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
                                 .then((user) => {
                                     if(user.taokeys == userx.taokeys){
+                                        function propuni(tipo) {
+                                            if(user.somapropuni.tipo1 == tipo){
+                                                return user.somapropuni.inv1
+                                            }
+                                            else if(user.somapropuni.tipo2 == tipo){
+                                                return user.somapropuni.inv2
+                                            }
+                                            else{return 0}
+                                        }
                                         socket.emit('update', [
-                                            [...user["147"],"147"],
-                                            [...user["148"],"148"],
-                                            [...user["149"],"149"],
-                                            [...user["157"],"157"],
-                                            [...user["158"],"158"],
-                                            [...user["159"],"159"],
-                                            [...user["257"],"257"],
-                                            [...user["258"],"258"],
-                                            [...user["259"],"259"],
-                                            [...user["267"],"267"],
-                                            [...user["268"],"268"],
-                                            [...user["269"],"269"],
-                                            [...user["347"],"347"],
-                                            [...user["348"],"348"],
-                                            [...user["349"],"349"],
-                                            [...user["357"],"357"],
-                                            [...user["358"],"358"],
-                                            [...user["359"],"359"],
-                                            [...user["367"],"367"],
-                                            [...user["368"],"368"],
-                                            [...user["369"],"369"],
+                                            [...user["147"],propuni("147"),"147"],
+                                            [...user["148"],propuni("148"),"148"],
+                                            [...user["149"],propuni("149"),"149"],
+                                            [...user["157"],propuni("157"),"157"],
+                                            [...user["158"],propuni("158"),"158"],
+                                            [...user["159"],propuni("159"),"159"],
+                                            [...user["257"],propuni("257"),"257"],
+                                            [...user["258"],propuni("258"),"258"],
+                                            [...user["259"],propuni("259"),"259"],
+                                            [...user["267"],propuni("267"),"267"],
+                                            [...user["268"],propuni("268"),"268"],
+                                            [...user["269"],propuni("269"),"269"],
+                                            [...user["347"],propuni("347"),"347"],
+                                            [...user["348"],propuni("348"),"348"],
+                                            [...user["349"],propuni("349"),"349"],
+                                            [...user["357"],propuni("357"),"357"],
+                                            [...user["358"],propuni("358"),"358"],
+                                            [...user["359"],propuni("359"),"359"],
+                                            [...user["367"],propuni("367"),"367"],
+                                            [...user["368"],propuni("368"),"368"],
+                                            [...user["369"],propuni("369"),"369"],
                                             user["taokeys"],
                                             user["frota"],
                                             user["promotores"],
@@ -2344,28 +2483,37 @@ sockets.on('connection', (socket) => {
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
                                 .then((user) => {
                                     if(user.taokeys == userx.taokeys){
+                                        function propuni(tipo) {
+                                            if(user.somapropuni.tipo1 == tipo){
+                                                return user.somapropuni.inv1
+                                            }
+                                            else if(user.somapropuni.tipo2 == tipo){
+                                                return user.somapropuni.inv2
+                                            }
+                                            else{return 0}
+                                        }
                                         socket.emit('update', [
-                                            [...user["147"],"147"],
-                                            [...user["148"],"148"],
-                                            [...user["149"],"149"],
-                                            [...user["157"],"157"],
-                                            [...user["158"],"158"],
-                                            [...user["159"],"159"],
-                                            [...user["257"],"257"],
-                                            [...user["258"],"258"],
-                                            [...user["259"],"259"],
-                                            [...user["267"],"267"],
-                                            [...user["268"],"268"],
-                                            [...user["269"],"269"],
-                                            [...user["347"],"347"],
-                                            [...user["348"],"348"],
-                                            [...user["349"],"349"],
-                                            [...user["357"],"357"],
-                                            [...user["358"],"358"],
-                                            [...user["359"],"359"],
-                                            [...user["367"],"367"],
-                                            [...user["368"],"368"],
-                                            [...user["369"],"369"],
+                                            [...user["147"],propuni("147"),"147"],
+                                            [...user["148"],propuni("148"),"148"],
+                                            [...user["149"],propuni("149"),"149"],
+                                            [...user["157"],propuni("157"),"157"],
+                                            [...user["158"],propuni("158"),"158"],
+                                            [...user["159"],propuni("159"),"159"],
+                                            [...user["257"],propuni("257"),"257"],
+                                            [...user["258"],propuni("258"),"258"],
+                                            [...user["259"],propuni("259"),"259"],
+                                            [...user["267"],propuni("267"),"267"],
+                                            [...user["268"],propuni("268"),"268"],
+                                            [...user["269"],propuni("269"),"269"],
+                                            [...user["347"],propuni("347"),"347"],
+                                            [...user["348"],propuni("348"),"348"],
+                                            [...user["349"],propuni("349"),"349"],
+                                            [...user["357"],propuni("357"),"357"],
+                                            [...user["358"],propuni("358"),"358"],
+                                            [...user["359"],propuni("359"),"359"],
+                                            [...user["367"],propuni("367"),"367"],
+                                            [...user["368"],propuni("368"),"368"],
+                                            [...user["369"],propuni("369"),"369"],
                                             user["taokeys"],
                                             user["frota"],
                                             user["promotores"],
@@ -2408,28 +2556,37 @@ sockets.on('connection', (socket) => {
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
                                 .then((user) => {
                                     if(user.taokeys == userx.taokeys){
+                                        function propuni(tipo) {
+                                            if(user.somapropuni.tipo1 == tipo){
+                                                return user.somapropuni.inv1
+                                            }
+                                            else if(user.somapropuni.tipo2 == tipo){
+                                                return user.somapropuni.inv2
+                                            }
+                                            else{return 0}
+                                        }
                                         socket.emit('update', [
-                                            [...user["147"],"147"],
-                                            [...user["148"],"148"],
-                                            [...user["149"],"149"],
-                                            [...user["157"],"157"],
-                                            [...user["158"],"158"],
-                                            [...user["159"],"159"],
-                                            [...user["257"],"257"],
-                                            [...user["258"],"258"],
-                                            [...user["259"],"259"],
-                                            [...user["267"],"267"],
-                                            [...user["268"],"268"],
-                                            [...user["269"],"269"],
-                                            [...user["347"],"347"],
-                                            [...user["348"],"348"],
-                                            [...user["349"],"349"],
-                                            [...user["357"],"357"],
-                                            [...user["358"],"358"],
-                                            [...user["359"],"359"],
-                                            [...user["367"],"367"],
-                                            [...user["368"],"368"],
-                                            [...user["369"],"369"],
+                                            [...user["147"],propuni("147"),"147"],
+                                            [...user["148"],propuni("148"),"148"],
+                                            [...user["149"],propuni("149"),"149"],
+                                            [...user["157"],propuni("157"),"157"],
+                                            [...user["158"],propuni("158"),"158"],
+                                            [...user["159"],propuni("159"),"159"],
+                                            [...user["257"],propuni("257"),"257"],
+                                            [...user["258"],propuni("258"),"258"],
+                                            [...user["259"],propuni("259"),"259"],
+                                            [...user["267"],propuni("267"),"267"],
+                                            [...user["268"],propuni("268"),"268"],
+                                            [...user["269"],propuni("269"),"269"],
+                                            [...user["347"],propuni("347"),"347"],
+                                            [...user["348"],propuni("348"),"348"],
+                                            [...user["349"],propuni("349"),"349"],
+                                            [...user["357"],propuni("357"),"357"],
+                                            [...user["358"],propuni("358"),"358"],
+                                            [...user["359"],propuni("359"),"359"],
+                                            [...user["367"],propuni("367"),"367"],
+                                            [...user["368"],propuni("368"),"368"],
+                                            [...user["369"],propuni("369"),"369"],
                                             user["taokeys"],
                                             user["frota"],
                                             user["promotores"],
@@ -2469,28 +2626,37 @@ sockets.on('connection', (socket) => {
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
                                 .then((user) => {
                                     if(user.taokeys == userx.taokeys){
+                                        function propuni(tipo) {
+                                            if(user.somapropuni.tipo1 == tipo){
+                                                return user.somapropuni.inv1
+                                            }
+                                            else if(user.somapropuni.tipo2 == tipo){
+                                                return user.somapropuni.inv2
+                                            }
+                                            else{return 0}
+                                        }
                                         socket.emit('update', [
-                                            [...user["147"],"147"],
-                                            [...user["148"],"148"],
-                                            [...user["149"],"149"],
-                                            [...user["157"],"157"],
-                                            [...user["158"],"158"],
-                                            [...user["159"],"159"],
-                                            [...user["257"],"257"],
-                                            [...user["258"],"258"],
-                                            [...user["259"],"259"],
-                                            [...user["267"],"267"],
-                                            [...user["268"],"268"],
-                                            [...user["269"],"269"],
-                                            [...user["347"],"347"],
-                                            [...user["348"],"348"],
-                                            [...user["349"],"349"],
-                                            [...user["357"],"357"],
-                                            [...user["358"],"358"],
-                                            [...user["359"],"359"],
-                                            [...user["367"],"367"],
-                                            [...user["368"],"368"],
-                                            [...user["369"],"369"],
+                                            [...user["147"],propuni("147"),"147"],
+                                            [...user["148"],propuni("148"),"148"],
+                                            [...user["149"],propuni("149"),"149"],
+                                            [...user["157"],propuni("157"),"157"],
+                                            [...user["158"],propuni("158"),"158"],
+                                            [...user["159"],propuni("159"),"159"],
+                                            [...user["257"],propuni("257"),"257"],
+                                            [...user["258"],propuni("258"),"258"],
+                                            [...user["259"],propuni("259"),"259"],
+                                            [...user["267"],propuni("267"),"267"],
+                                            [...user["268"],propuni("268"),"268"],
+                                            [...user["269"],propuni("269"),"269"],
+                                            [...user["347"],propuni("347"),"347"],
+                                            [...user["348"],propuni("348"),"348"],
+                                            [...user["349"],propuni("349"),"349"],
+                                            [...user["357"],propuni("357"),"357"],
+                                            [...user["358"],propuni("358"),"358"],
+                                            [...user["359"],propuni("359"),"359"],
+                                            [...user["367"],propuni("367"),"367"],
+                                            [...user["368"],propuni("368"),"368"],
+                                            [...user["369"],propuni("369"),"369"],
                                             user["taokeys"],
                                             user["frota"],
                                             user["promotores"],
@@ -2531,28 +2697,37 @@ sockets.on('connection', (socket) => {
                                 .then((user) => {
                                     if(user.taokeys == userx.taokeys){
                                         socket.emit('feedback', ['success', 'ordem de aquisição de PAS realizada para ' + qnt +' postos (entraram em atividade após 2 turnos)'])
+                                        function propuni(tipo) {
+                                            if(user.somapropuni.tipo1 == tipo){
+                                                return user.somapropuni.inv1
+                                            }
+                                            else if(user.somapropuni.tipo2 == tipo){
+                                                return user.somapropuni.inv2
+                                            }
+                                            else{return 0}
+                                        }
                                         socket.emit('update', [
-                                            [...user["147"],"147"],
-                                            [...user["148"],"148"],
-                                            [...user["149"],"149"],
-                                            [...user["157"],"157"],
-                                            [...user["158"],"158"],
-                                            [...user["159"],"159"],
-                                            [...user["257"],"257"],
-                                            [...user["258"],"258"],
-                                            [...user["259"],"259"],
-                                            [...user["267"],"267"],
-                                            [...user["268"],"268"],
-                                            [...user["269"],"269"],
-                                            [...user["347"],"347"],
-                                            [...user["348"],"348"],
-                                            [...user["349"],"349"],
-                                            [...user["357"],"357"],
-                                            [...user["358"],"358"],
-                                            [...user["359"],"359"],
-                                            [...user["367"],"367"],
-                                            [...user["368"],"368"],
-                                            [...user["369"],"369"],
+                                            [...user["147"],propuni("147"),"147"],
+                                            [...user["148"],propuni("148"),"148"],
+                                            [...user["149"],propuni("149"),"149"],
+                                            [...user["157"],propuni("157"),"157"],
+                                            [...user["158"],propuni("158"),"158"],
+                                            [...user["159"],propuni("159"),"159"],
+                                            [...user["257"],propuni("257"),"257"],
+                                            [...user["258"],propuni("258"),"258"],
+                                            [...user["259"],propuni("259"),"259"],
+                                            [...user["267"],propuni("267"),"267"],
+                                            [...user["268"],propuni("268"),"268"],
+                                            [...user["269"],propuni("269"),"269"],
+                                            [...user["347"],propuni("347"),"347"],
+                                            [...user["348"],propuni("348"),"348"],
+                                            [...user["349"],propuni("349"),"349"],
+                                            [...user["357"],propuni("357"),"357"],
+                                            [...user["358"],propuni("358"),"358"],
+                                            [...user["359"],propuni("359"),"359"],
+                                            [...user["367"],propuni("367"),"367"],
+                                            [...user["368"],propuni("368"),"368"],
+                                            [...user["369"],propuni("369"),"369"],
                                             user["taokeys"],
                                             user["frota"],
                                             user["promotores"],
@@ -2581,7 +2756,8 @@ sockets.on('connection', (socket) => {
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
     }) 
     socket.on('propaganda-unitaria', (dados) => {
-        let qnt = Number(dados)
+        let tipo = dados[0]
+        let qnt = Number(dados[1])
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => {
                 if(userx !== null){
@@ -2657,7 +2833,54 @@ sockets.on('connection', (socket) => {
                                 maquinas: userx.fluxo_de_caixa.maquinas,
                                 distribuidores: userx.fluxo_de_caixa.distribuidores
                             }
-                            
+                            if(Number(userx.somapropuni.inv1) > 0 && Number(userx.somapropuni.inv2 > 0)){
+                                if(tipo == userx.somapropuni.tipo1){
+                                    userx.set('somapropuni', {
+                                        tipo1: userx.somapropuni.tipo1, inv1: Number(userx.somapropuni.inv1) + qnt,
+                                        tipo2: userx.somapropuni.tipo2, inv2: userx.somapropuni.inv2
+                                    })
+                                }
+                                if(tipo == userx.somapropuni.tipo2){
+                                    userx.set('somapropuni', {
+                                        tipo1: userx.somapropuni.tipo1, inv1: userx.somapropuni.inv1,
+                                        tipo2: userx.somapropuni.tipo2, inv2: Number(userx.somapropuni.inv2) + qnt
+                                    })
+                                if(tipo !== userx.somapropuni.tipo1 && tipo !== userx.somapropuni.tipo2){
+                                    let ativos = []
+                                    for(let i = 0; i < index.length; i++){
+                                        if(userx[index[i]][1] == 1){
+                                            ativos.push(index[i])
+                                        }
+                                    }
+                                    let c1 = 0
+                                    let c2 = 0
+                                    for(let i = 0; i < ativos.length; i++){
+                                        if(userx.somapropuni.tipo1 !== ativos[i]){
+                                            c1 = c1 + 1
+                                            if(c1 == ativos.length){
+                                                userx.set('somapropuni', {
+                                                    tipo1: tipo, inv1: qnt,
+                                                    tipo2: userx.somapropuni.tipo2, inv2: userx.somapropuni.inv2
+                                                })
+                                            }
+                                        }
+                                        if(userx.somapropuni.tipo2 !== ativos[i]){
+                                            c2 = c2 + 1
+                                            if(c2 == ativos.length && c1 !== ativos.length){
+                                                userx.set('somapropuni', {
+                                                    tipo1: userx.somapropuni.tipo1, inv1: userx.somapropuni.inv1,
+                                                    tipo2: tipo, inv2: qnt
+                                                })
+                                            }
+                                        }
+                                    }
+                                }
+                                }
+                            }
+                            userx.set('somapropuni', {
+                                tipo1: userx.somapropuni.tipo1, inv1: userx.somapropuni.inv1,
+                                tipo2: userx.somapropuni.tipo2, inv2: userx.somapropuni.inv2
+                            })
                             let novaf = Number(userx['propagandauni']) + qnt
                             userx.taokeys = userx.taokeys - qnt
                             userx.set('propagandauni', novaf) 
@@ -2666,28 +2889,37 @@ sockets.on('connection', (socket) => {
                                 .then((user) => {
                                     if(user.taokeys == userx.taokeys){
                                         socket.emit('feedback', ['success', 'investimento em propaganda unitária, no valor de:  '+ qnt +', relizado com sucesso'])
+                                        function propuni(tipo) {
+                                            if(user.somapropuni.tipo1 == tipo){
+                                                return user.somapropuni.inv1
+                                            }
+                                            else if(user.somapropuni.tipo2 == tipo){
+                                                return user.somapropuni.inv2
+                                            }
+                                            else{return 0}
+                                        }
                                         socket.emit('update', [
-                                            [...user["147"],"147"],
-                                            [...user["148"],"148"],
-                                            [...user["149"],"149"],
-                                            [...user["157"],"157"],
-                                            [...user["158"],"158"],
-                                            [...user["159"],"159"],
-                                            [...user["257"],"257"],
-                                            [...user["258"],"258"],
-                                            [...user["259"],"259"],
-                                            [...user["267"],"267"],
-                                            [...user["268"],"268"],
-                                            [...user["269"],"269"],
-                                            [...user["347"],"347"],
-                                            [...user["348"],"348"],
-                                            [...user["349"],"349"],
-                                            [...user["357"],"357"],
-                                            [...user["358"],"358"],
-                                            [...user["359"],"359"],
-                                            [...user["367"],"367"],
-                                            [...user["368"],"368"],
-                                            [...user["369"],"369"],
+                                            [...user["147"],propuni("147"),"147"],
+                                            [...user["148"],propuni("148"),"148"],
+                                            [...user["149"],propuni("149"),"149"],
+                                            [...user["157"],propuni("157"),"157"],
+                                            [...user["158"],propuni("158"),"158"],
+                                            [...user["159"],propuni("159"),"159"],
+                                            [...user["257"],propuni("257"),"257"],
+                                            [...user["258"],propuni("258"),"258"],
+                                            [...user["259"],propuni("259"),"259"],
+                                            [...user["267"],propuni("267"),"267"],
+                                            [...user["268"],propuni("268"),"268"],
+                                            [...user["269"],propuni("269"),"269"],
+                                            [...user["347"],propuni("347"),"347"],
+                                            [...user["348"],propuni("348"),"348"],
+                                            [...user["349"],propuni("349"),"349"],
+                                            [...user["357"],propuni("357"),"357"],
+                                            [...user["358"],propuni("358"),"358"],
+                                            [...user["359"],propuni("359"),"359"],
+                                            [...user["367"],propuni("367"),"367"],
+                                            [...user["368"],propuni("368"),"368"],
+                                            [...user["369"],propuni("369"),"369"],
                                             user["taokeys"],
                                             user["frota"],
                                             user["promotores"],
@@ -2803,28 +3035,37 @@ sockets.on('connection', (socket) => {
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
                                 .then((user) => {
                                     if(user.taokeys == userx.taokeys){
+                                        function propuni(tipo) {
+                                            if(user.somapropuni.tipo1 == tipo){
+                                                return user.somapropuni.inv1
+                                            }
+                                            else if(user.somapropuni.tipo2 == tipo){
+                                                return user.somapropuni.inv2
+                                            }
+                                            else{return 0}
+                                        }
                                         socket.emit('update', [
-                                            [...user["147"],"147"],
-                                            [...user["148"],"148"],
-                                            [...user["149"],"149"],
-                                            [...user["157"],"157"],
-                                            [...user["158"],"158"],
-                                            [...user["159"],"159"],
-                                            [...user["257"],"257"],
-                                            [...user["258"],"258"],
-                                            [...user["259"],"259"],
-                                            [...user["267"],"267"],
-                                            [...user["268"],"268"],
-                                            [...user["269"],"269"],
-                                            [...user["347"],"347"],
-                                            [...user["348"],"348"],
-                                            [...user["349"],"349"],
-                                            [...user["357"],"357"],
-                                            [...user["358"],"358"],
-                                            [...user["359"],"359"],
-                                            [...user["367"],"367"],
-                                            [...user["368"],"368"],
-                                            [...user["369"],"369"],
+                                            [...user["147"],propuni("147"),"147"],
+                                            [...user["148"],propuni("148"),"148"],
+                                            [...user["149"],propuni("149"),"149"],
+                                            [...user["157"],propuni("157"),"157"],
+                                            [...user["158"],propuni("158"),"158"],
+                                            [...user["159"],propuni("159"),"159"],
+                                            [...user["257"],propuni("257"),"257"],
+                                            [...user["258"],propuni("258"),"258"],
+                                            [...user["259"],propuni("259"),"259"],
+                                            [...user["267"],propuni("267"),"267"],
+                                            [...user["268"],propuni("268"),"268"],
+                                            [...user["269"],propuni("269"),"269"],
+                                            [...user["347"],propuni("347"),"347"],
+                                            [...user["348"],propuni("348"),"348"],
+                                            [...user["349"],propuni("349"),"349"],
+                                            [...user["357"],propuni("357"),"357"],
+                                            [...user["358"],propuni("358"),"358"],
+                                            [...user["359"],propuni("359"),"359"],
+                                            [...user["367"],propuni("367"),"367"],
+                                            [...user["368"],propuni("368"),"368"],
+                                            [...user["369"],propuni("369"),"369"],
                                             user["taokeys"],
                                             user["frota"],
                                             user["promotores"],
@@ -2876,28 +3117,37 @@ sockets.on('connection', (socket) => {
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
                                 .then((user) => {
                                     if(user.taokeys == userx.taokeys){
+                                        function propuni(tipo) {
+                                            if(user.somapropuni.tipo1 == tipo){
+                                                return user.somapropuni.inv1
+                                            }
+                                            else if(user.somapropuni.tipo2 == tipo){
+                                                return user.somapropuni.inv2
+                                            }
+                                            else{return 0}
+                                        }
                                         socket.emit('update', [
-                                            [...user["147"],"147"],
-                                            [...user["148"],"148"],
-                                            [...user["149"],"149"],
-                                            [...user["157"],"157"],
-                                            [...user["158"],"158"],
-                                            [...user["159"],"159"],
-                                            [...user["257"],"257"],
-                                            [...user["258"],"258"],
-                                            [...user["259"],"259"],
-                                            [...user["267"],"267"],
-                                            [...user["268"],"268"],
-                                            [...user["269"],"269"],
-                                            [...user["347"],"347"],
-                                            [...user["348"],"348"],
-                                            [...user["349"],"349"],
-                                            [...user["357"],"357"],
-                                            [...user["358"],"358"],
-                                            [...user["359"],"359"],
-                                            [...user["367"],"367"],
-                                            [...user["368"],"368"],
-                                            [...user["369"],"369"],
+                                            [...user["147"],propuni("147"),"147"],
+                                            [...user["148"],propuni("148"),"148"],
+                                            [...user["149"],propuni("149"),"149"],
+                                            [...user["157"],propuni("157"),"157"],
+                                            [...user["158"],propuni("158"),"158"],
+                                            [...user["159"],propuni("159"),"159"],
+                                            [...user["257"],propuni("257"),"257"],
+                                            [...user["258"],propuni("258"),"258"],
+                                            [...user["259"],propuni("259"),"259"],
+                                            [...user["267"],propuni("267"),"267"],
+                                            [...user["268"],propuni("268"),"268"],
+                                            [...user["269"],propuni("269"),"269"],
+                                            [...user["347"],propuni("347"),"347"],
+                                            [...user["348"],propuni("348"),"348"],
+                                            [...user["349"],propuni("349"),"349"],
+                                            [...user["357"],propuni("357"),"357"],
+                                            [...user["358"],propuni("358"),"358"],
+                                            [...user["359"],propuni("359"),"359"],
+                                            [...user["367"],propuni("367"),"367"],
+                                            [...user["368"],propuni("368"),"368"],
+                                            [...user["369"],propuni("369"),"369"],
                                             user["taokeys"],
                                             user["frota"],
                                             user["promotores"],//23
@@ -2955,28 +3205,37 @@ sockets.on('connection', (socket) => {
                                // console.log(userx[tipo][1] + ' <----userx(Schema trabalhado aqui)')
                                // console.log(user[tipo][1] + ' <=====user(recem pesquisado)')
                                     if(user.taokeys == userx.taokeys){
+                                        function propuni(tipo) {
+                                            if(user.somapropuni.tipo1 == tipo){
+                                                return user.somapropuni.inv1
+                                            }
+                                            else if(user.somapropuni.tipo2 == tipo){
+                                                return user.somapropuni.inv2
+                                            }
+                                            else{return 0}
+                                        }
                                         socket.emit('update', [
-                                            [...user["147"],"147"],
-                                            [...user["148"],"148"],
-                                            [...user["149"],"149"],
-                                            [...user["157"],"157"],
-                                            [...user["158"],"158"],
-                                            [...user["159"],"159"],
-                                            [...user["257"],"257"],
-                                            [...user["258"],"258"],
-                                            [...user["259"],"259"],
-                                            [...user["267"],"267"],
-                                            [...user["268"],"268"],
-                                            [...user["269"],"269"],
-                                            [...user["347"],"347"],
-                                            [...user["348"],"348"],
-                                            [...user["349"],"349"],
-                                            [...user["357"],"357"],
-                                            [...user["358"],"358"],
-                                            [...user["359"],"359"],
-                                            [...user["367"],"367"],
-                                            [...user["368"],"368"],
-                                            [...user["369"],"369"],
+                                            [...user["147"],propuni("147"),"147"],
+                                            [...user["148"],propuni("148"),"148"],
+                                            [...user["149"],propuni("149"),"149"],
+                                            [...user["157"],propuni("157"),"157"],
+                                            [...user["158"],propuni("158"),"158"],
+                                            [...user["159"],propuni("159"),"159"],
+                                            [...user["257"],propuni("257"),"257"],
+                                            [...user["258"],propuni("258"),"258"],
+                                            [...user["259"],propuni("259"),"259"],
+                                            [...user["267"],propuni("267"),"267"],
+                                            [...user["268"],propuni("268"),"268"],
+                                            [...user["269"],propuni("269"),"269"],
+                                            [...user["347"],propuni("347"),"347"],
+                                            [...user["348"],propuni("348"),"348"],
+                                            [...user["349"],propuni("349"),"349"],
+                                            [...user["357"],propuni("357"),"357"],
+                                            [...user["358"],propuni("358"),"358"],
+                                            [...user["359"],propuni("359"),"359"],
+                                            [...user["367"],propuni("367"),"367"],
+                                            [...user["368"],propuni("368"),"368"],
+                                            [...user["369"],propuni("369"),"369"],
                                             user["taokeys"],
                                             user["frota"],
                                             user["promotores"],
@@ -3083,28 +3342,37 @@ sockets.on('connection', (socket) => {
                                  
                                     if(user.taokeys == userx.taokeys){
                                         socket.emit('feedback', ['success', qnti + ' insumos comprados com sucesso para o serviço: ' + tipo])
+                                        function propuni(tipo) {
+                                            if(user.somapropuni.tipo1 == tipo){
+                                                return user.somapropuni.inv1
+                                            }
+                                            else if(user.somapropuni.tipo2 == tipo){
+                                                return user.somapropuni.inv2
+                                            }
+                                            else{return 0}
+                                        }
                                         socket.emit('update', [
-                                            [...user["147"],"147"],
-                                            [...user["148"],"148"],
-                                            [...user["149"],"149"],
-                                            [...user["157"],"157"],
-                                            [...user["158"],"158"],
-                                            [...user["159"],"159"],
-                                            [...user["257"],"257"],
-                                            [...user["258"],"258"],
-                                            [...user["259"],"259"],
-                                            [...user["267"],"267"],
-                                            [...user["268"],"268"],
-                                            [...user["269"],"269"],
-                                            [...user["347"],"347"],
-                                            [...user["348"],"348"],
-                                            [...user["349"],"349"],
-                                            [...user["357"],"357"],
-                                            [...user["358"],"358"],
-                                            [...user["359"],"359"],
-                                            [...user["367"],"367"],
-                                            [...user["368"],"368"],
-                                            [...user["369"],"369"],
+                                            [...user["147"],propuni("147"),"147"],
+                                            [...user["148"],propuni("148"),"148"],
+                                            [...user["149"],propuni("149"),"149"],
+                                            [...user["157"],propuni("157"),"157"],
+                                            [...user["158"],propuni("158"),"158"],
+                                            [...user["159"],propuni("159"),"159"],
+                                            [...user["257"],propuni("257"),"257"],
+                                            [...user["258"],propuni("258"),"258"],
+                                            [...user["259"],propuni("259"),"259"],
+                                            [...user["267"],propuni("267"),"267"],
+                                            [...user["268"],propuni("268"),"268"],
+                                            [...user["269"],propuni("269"),"269"],
+                                            [...user["347"],propuni("347"),"347"],
+                                            [...user["348"],propuni("348"),"348"],
+                                            [...user["349"],propuni("349"),"349"],
+                                            [...user["357"],propuni("357"),"357"],
+                                            [...user["358"],propuni("358"),"358"],
+                                            [...user["359"],propuni("359"),"359"],
+                                            [...user["367"],propuni("367"),"367"],
+                                            [...user["368"],propuni("368"),"368"],
+                                            [...user["369"],propuni("369"),"369"],
                                             user["taokeys"],
                                             user["frota"],
                                             user["promotores"],
@@ -3232,28 +3500,37 @@ sockets.on('connection', (socket) => {
                                     .then((dados) => {
                                         if(dados !== null){
                                         socket.emit('resposta-pesquisa', dados['total_pas'])
+                                        function propuni(tipo) {
+                                            if(userx.somapropuni.tipo1 == tipo){
+                                                return userx.somapropuni.inv1
+                                            }
+                                            else if(userx.somapropuni.tipo2 == tipo){
+                                                return userx.somapropuni.inv2
+                                            }
+                                            else{return 0}
+                                        }
                                         socket.emit('update', [
-                                            [...userx["147"],"147"],
-                                            [...userx["148"],"148"],
-                                            [...userx["149"],"149"],
-                                            [...userx["157"],"157"],
-                                            [...userx["158"],"158"],
-                                            [...userx["159"],"159"],
-                                            [...userx["257"],"257"],
-                                            [...userx["258"],"258"],
-                                            [...userx["259"],"259"],
-                                            [...userx["267"],"267"],
-                                            [...userx["268"],"268"],
-                                            [...userx["269"],"269"],
-                                            [...userx["347"],"347"],
-                                            [...userx["348"],"348"],
-                                            [...userx["349"],"349"],
-                                            [...userx["357"],"357"],
-                                            [...userx["358"],"358"],
-                                            [...userx["359"],"359"],
-                                            [...userx["367"],"367"],
-                                            [...userx["368"],"368"],
-                                            [...userx["369"],"369"],
+                                            [...userx["147"],propuni("147"),"147"],
+                                            [...userx["148"],propuni("148"),"148"],
+                                            [...userx["149"],propuni("149"),"149"],
+                                            [...userx["157"],propuni("157"),"157"],
+                                            [...userx["158"],propuni("158"),"158"],
+                                            [...userx["159"],propuni("159"),"159"],
+                                            [...userx["257"],propuni("257"),"257"],
+                                            [...userx["258"],propuni("258"),"258"],
+                                            [...userx["259"],propuni("259"),"259"],
+                                            [...userx["267"],propuni("267"),"267"],
+                                            [...userx["268"],propuni("268"),"268"],
+                                            [...userx["269"],propuni("269"),"269"],
+                                            [...userx["347"],propuni("347"),"347"],
+                                            [...userx["348"],propuni("348"),"348"],
+                                            [...userx["349"],propuni("349"),"349"],
+                                            [...userx["357"],propuni("357"),"357"],
+                                            [...userx["358"],propuni("358"),"358"],
+                                            [...userx["359"],propuni("359"),"359"],
+                                            [...userx["367"],propuni("367"),"367"],
+                                            [...userx["368"],propuni("368"),"368"],
+                                            [...userx["369"],propuni("369"),"369"],
                                             userx["taokeys"],
                                             userx["frota"],
                                             userx["promotores"],
@@ -3262,8 +3539,8 @@ sockets.on('connection', (socket) => {
                                             userx["pas"],
                                             userx["propaganda"],
                                             userx["propagandauni"],
-                                            (userx["divida"][0]+userx["divida"][1]+userx["divida"][2]),
-                                            userx["turno"]]);
+                                            (userx["divida"][0]+userx["divida"][1]+user["divida"][2]),
+                                            user["turno"]]);
                                     }
                                     else{
                                         socket.emit('feedback', ['danger','voce nao pode realizar pesquisas ate que o administrador inicie o turno'])
@@ -3376,28 +3653,37 @@ sockets.on('connection', (socket) => {
                                     .then((dados) => {
                                         if(dados !== null){
                                         socket.emit('resposta-pesquisa', dados['total_distribuidores'])
+                                        function propuni(tipo) {
+                                            if(userx.somapropuni.tipo1 == tipo){
+                                                return userx.somapropuni.inv1
+                                            }
+                                            else if(userx.somapropuni.tipo2 == tipo){
+                                                return userx.somapropuni.inv2
+                                            }
+                                            else{return 0}
+                                        }
                                         socket.emit('update', [
-                                            [...userx["147"],"147"],
-                                            [...userx["148"],"148"],
-                                            [...userx["149"],"149"],
-                                            [...userx["157"],"157"],
-                                            [...userx["158"],"158"],
-                                            [...userx["159"],"159"],
-                                            [...userx["257"],"257"],
-                                            [...userx["258"],"258"],
-                                            [...userx["259"],"259"],
-                                            [...userx["267"],"267"],
-                                            [...userx["268"],"268"],
-                                            [...userx["269"],"269"],
-                                            [...userx["347"],"347"],
-                                            [...userx["348"],"348"],
-                                            [...userx["349"],"349"],
-                                            [...userx["357"],"357"],
-                                            [...userx["358"],"358"],
-                                            [...userx["359"],"359"],
-                                            [...userx["367"],"367"],
-                                            [...userx["368"],"368"],
-                                            [...userx["369"],"369"],
+                                            [...userx["147"],propuni("147"),"147"],
+                                            [...userx["148"],propuni("148"),"148"],
+                                            [...userx["149"],propuni("149"),"149"],
+                                            [...userx["157"],propuni("157"),"157"],
+                                            [...userx["158"],propuni("158"),"158"],
+                                            [...userx["159"],propuni("159"),"159"],
+                                            [...userx["257"],propuni("257"),"257"],
+                                            [...userx["258"],propuni("258"),"258"],
+                                            [...userx["259"],propuni("259"),"259"],
+                                            [...userx["267"],propuni("267"),"267"],
+                                            [...userx["268"],propuni("268"),"268"],
+                                            [...userx["269"],propuni("269"),"269"],
+                                            [...userx["347"],propuni("347"),"347"],
+                                            [...userx["348"],propuni("348"),"348"],
+                                            [...userx["349"],propuni("349"),"349"],
+                                            [...userx["357"],propuni("357"),"357"],
+                                            [...userx["358"],propuni("358"),"358"],
+                                            [...userx["359"],propuni("359"),"359"],
+                                            [...userx["367"],propuni("367"),"367"],
+                                            [...userx["368"],propuni("368"),"368"],
+                                            [...userx["369"],propuni("369"),"369"],
                                             userx["taokeys"],
                                             userx["frota"],
                                             userx["promotores"],
@@ -3406,8 +3692,8 @@ sockets.on('connection', (socket) => {
                                             userx["pas"],
                                             userx["propaganda"],
                                             userx["propagandauni"],
-                                            (userx["divida"][0]+userx["divida"][1]+userx["divida"][2]),
-                                            userx["turno"]]);
+                                            (userx["divida"][0]+userx["divida"][1]+user["divida"][2]),
+                                            user["turno"]]);
                                         }
                 else{
                     socket.emit('feedback', ['danger', 'voce nao pode realizar pesquisas ate que o administrador inicie o turno'])
@@ -3525,28 +3811,37 @@ sockets.on('connection', (socket) => {
                                                 }
                                             }
                                         socket.emit('resposta-pesquisa', respostaP)
+                                        function propuni(tipo) {
+                                            if(userx.somapropuni.tipo1 == tipo){
+                                                return userx.somapropuni.inv1
+                                            }
+                                            else if(userx.somapropuni.tipo2 == tipo){
+                                                return userx.somapropuni.inv2
+                                            }
+                                            else{return 0}
+                                        }
                                         socket.emit('update', [
-                                            [...userx["147"],"147"],
-                                            [...userx["148"],"148"],
-                                            [...userx["149"],"149"],
-                                            [...userx["157"],"157"],
-                                            [...userx["158"],"158"],
-                                            [...userx["159"],"159"],
-                                            [...userx["257"],"257"],
-                                            [...userx["258"],"258"],
-                                            [...userx["259"],"259"],
-                                            [...userx["267"],"267"],
-                                            [...userx["268"],"268"],
-                                            [...userx["269"],"269"],
-                                            [...userx["347"],"347"],
-                                            [...userx["348"],"348"],
-                                            [...userx["349"],"349"],
-                                            [...userx["357"],"357"],
-                                            [...userx["358"],"358"],
-                                            [...userx["359"],"359"],
-                                            [...userx["367"],"367"],
-                                            [...userx["368"],"368"],
-                                            [...userx["369"],"369"],
+                                            [...userx["147"],propuni("147"),"147"],
+                                            [...userx["148"],propuni("148"),"148"],
+                                            [...userx["149"],propuni("149"),"149"],
+                                            [...userx["157"],propuni("157"),"157"],
+                                            [...userx["158"],propuni("158"),"158"],
+                                            [...userx["159"],propuni("159"),"159"],
+                                            [...userx["257"],propuni("257"),"257"],
+                                            [...userx["258"],propuni("258"),"258"],
+                                            [...userx["259"],propuni("259"),"259"],
+                                            [...userx["267"],propuni("267"),"267"],
+                                            [...userx["268"],propuni("268"),"268"],
+                                            [...userx["269"],propuni("269"),"269"],
+                                            [...userx["347"],propuni("347"),"347"],
+                                            [...userx["348"],propuni("348"),"348"],
+                                            [...userx["349"],propuni("349"),"349"],
+                                            [...userx["357"],propuni("357"),"357"],
+                                            [...userx["358"],propuni("358"),"358"],
+                                            [...userx["359"],propuni("359"),"359"],
+                                            [...userx["367"],propuni("367"),"367"],
+                                            [...userx["368"],propuni("368"),"368"],
+                                            [...userx["369"],propuni("369"),"369"],
                                             userx["taokeys"],
                                             userx["frota"],
                                             userx["promotores"],
@@ -3555,8 +3850,8 @@ sockets.on('connection', (socket) => {
                                             userx["pas"],
                                             userx["propaganda"],
                                             userx["propagandauni"],
-                                            (userx["divida"][0]+userx["divida"][1]+userx["divida"][2]),
-                                            userx["turno"]]);
+                                            (userx["divida"][0]+userx["divida"][1]+user["divida"][2]),
+                                            user["turno"]]);
             }
             else{
                 socket.emit('feedback', ['danger','voce nao pode realizar pesquisas ate que o administrador inicie o turno'])
@@ -3656,28 +3951,37 @@ sockets.on('connection', (socket) => {
                                                 }
                                             } 
                                              socket.emit('resposta-pesquisa', String(respostaP))
+                                             function propuni(tipo) {
+                                                if(userx.somapropuni.tipo1 == tipo){
+                                                    return userx.somapropuni.inv1
+                                                }
+                                                else if(userx.somapropuni.tipo2 == tipo){
+                                                    return userx.somapropuni.inv2
+                                                }
+                                                else{return 0}
+                                            }
                                              socket.emit('update', [
-                                                [...userx["147"],"147"],
-                                                [...userx["148"],"148"],
-                                                [...userx["149"],"149"],
-                                                [...userx["157"],"157"],
-                                                [...userx["158"],"158"],
-                                                [...userx["159"],"159"],
-                                                [...userx["257"],"257"],
-                                                [...userx["258"],"258"],
-                                                [...userx["259"],"259"],
-                                                [...userx["267"],"267"],
-                                                [...userx["268"],"268"],
-                                                [...userx["269"],"269"],
-                                                [...userx["347"],"347"],
-                                                [...userx["348"],"348"],
-                                                [...userx["349"],"349"],
-                                                [...userx["357"],"357"],
-                                                [...userx["358"],"358"],
-                                                [...userx["359"],"359"],
-                                                [...userx["367"],"367"],
-                                                [...userx["368"],"368"],
-                                                [...userx["369"],"369"],
+                                                [...userx["147"],propuni("147"),"147"],
+                                                [...userx["148"],propuni("148"),"148"],
+                                                [...userx["149"],propuni("149"),"149"],
+                                                [...userx["157"],propuni("157"),"157"],
+                                                [...userx["158"],propuni("158"),"158"],
+                                                [...userx["159"],propuni("159"),"159"],
+                                                [...userx["257"],propuni("257"),"257"],
+                                                [...userx["258"],propuni("258"),"258"],
+                                                [...userx["259"],propuni("259"),"259"],
+                                                [...userx["267"],propuni("267"),"267"],
+                                                [...userx["268"],propuni("268"),"268"],
+                                                [...userx["269"],propuni("269"),"269"],
+                                                [...userx["347"],propuni("347"),"347"],
+                                                [...userx["348"],propuni("348"),"348"],
+                                                [...userx["349"],propuni("349"),"349"],
+                                                [...userx["357"],propuni("357"),"357"],
+                                                [...userx["358"],propuni("358"),"358"],
+                                                [...userx["359"],propuni("359"),"359"],
+                                                [...userx["367"],propuni("367"),"367"],
+                                                [...userx["368"],propuni("368"),"368"],
+                                                [...userx["369"],propuni("369"),"369"],
                                                 userx["taokeys"],
                                                 userx["frota"],
                                                 userx["promotores"],
@@ -3808,28 +4112,37 @@ sockets.on('connection', (socket) => {
                                     .then((dados) => {
                                         if(dados !== null){
                                         socket.emit('resposta-pesquisa', String(dados['modelos_oferecidos']))
+                                        function propuni(tipo) {
+                                            if(userx.somapropuni.tipo1 == tipo){
+                                                return userx.somapropuni.inv1
+                                            }
+                                            else if(userx.somapropuni.tipo2 == tipo){
+                                                return userx.somapropuni.inv2
+                                            }
+                                            else{return 0}
+                                        }
                                         socket.emit('update', [
-                                            [...userx["147"],"147"],
-                                            [...userx["148"],"148"],
-                                            [...userx["149"],"149"],
-                                            [...userx["157"],"157"],
-                                            [...userx["158"],"158"],
-                                            [...userx["159"],"159"],
-                                            [...userx["257"],"257"],
-                                            [...userx["258"],"258"],
-                                            [...userx["259"],"259"],
-                                            [...userx["267"],"267"],
-                                            [...userx["268"],"268"],
-                                            [...userx["269"],"269"],
-                                            [...userx["347"],"347"],
-                                            [...userx["348"],"348"],
-                                            [...userx["349"],"349"],
-                                            [...userx["357"],"357"],
-                                            [...userx["358"],"358"],
-                                            [...userx["359"],"359"],
-                                            [...userx["367"],"367"],
-                                            [...userx["368"],"368"],
-                                            [...userx["369"],"369"],
+                                            [...userx["147"],propuni("147"),"147"],
+                                            [...userx["148"],propuni("148"),"148"],
+                                            [...userx["149"],propuni("149"),"149"],
+                                            [...userx["157"],propuni("157"),"157"],
+                                            [...userx["158"],propuni("158"),"158"],
+                                            [...userx["159"],propuni("159"),"159"],
+                                            [...userx["257"],propuni("257"),"257"],
+                                            [...userx["258"],propuni("258"),"258"],
+                                            [...userx["259"],propuni("259"),"259"],
+                                            [...userx["267"],propuni("267"),"267"],
+                                            [...userx["268"],propuni("268"),"268"],
+                                            [...userx["269"],propuni("269"),"269"],
+                                            [...userx["347"],propuni("347"),"347"],
+                                            [...userx["348"],propuni("348"),"348"],
+                                            [...userx["349"],propuni("349"),"349"],
+                                            [...userx["357"],propuni("357"),"357"],
+                                            [...userx["358"],propuni("358"),"358"],
+                                            [...userx["359"],propuni("359"),"359"],
+                                            [...userx["367"],propuni("367"),"367"],
+                                            [...userx["368"],propuni("368"),"368"],
+                                            [...userx["369"],propuni("369"),"369"],
                                             userx["taokeys"],
                                             userx["frota"],
                                             userx["promotores"],
@@ -3838,8 +4151,8 @@ sockets.on('connection', (socket) => {
                                             userx["pas"],
                                             userx["propaganda"],
                                             userx["propagandauni"],
-                                            (userx["divida"][0]+userx["divida"][1]+userx["divida"][2]),
-                                            userx["turno"]]);
+                                            (userx["divida"][0]+userx["divida"][1]+user["divida"][2]),
+                                            user["turno"]]);
             }
             else{
                 socket.emit('feedback', ['danger','voce nao pode realizar pesquisas ate que o administrador inicie o turno'])

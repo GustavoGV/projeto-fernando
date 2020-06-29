@@ -25,6 +25,7 @@ const UserSchema = new Schema({
     scoremod: Number, //auxilio para calculo de faturamento por diferencaod e tipo de serviço (top, med, low)
     scorepreco: Array, //auxilia calculo de faturamento referente ao preco de venda
     scorepro: Number,
+    somapropuni: Object,
     modificador: String,
     temporario: Number, // 0 ou 1 fala se é o Schema temporario ou o oficial
         147:Array, //nessa array (com 6 de length) sendo que   
