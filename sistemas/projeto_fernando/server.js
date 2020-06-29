@@ -306,7 +306,7 @@ sockets.on('connection', (socket) => {
                             pas: 0,
                             pesquisas: 0,
                             tributos: 0,
-                            servicos: [['147',288],[0,0]],
+                            servicos: ['147',288,0,0],
                             preco_medio: 0,
                             atendimentos: 0,
                             insumos_em_estoque: 985,
@@ -406,7 +406,7 @@ sockets.on('connection', (socket) => {
                                         pas: 0,
                                         pesquisas: 0,
                                         tributos: 0,
-                                        servicos: [['147',288],[0,0]],
+                                        servicos: ['147',288,0,0],
                                         preco_medio: 0,
                                         atendimentos: 0,
                                         insumos_em_estoque: 985,
@@ -533,7 +533,7 @@ sockets.on('connection', (socket) => {
                                 pas: userx.dre.pas,
                                 pesquisas: userx.dre.pesquisas,
                                 tributos: userx.dre.tributos,
-                                servicos: [[userx.dre.servicos[0][0], userx.dre.servicos[0][1]], [userx.dre.servicos[1][0], userx.dre.servicos[1][1]]],
+                                servicos: [userx.dre.servicos[0], userx.dre.servicos[1], userx.dre.servicos[2], userx.dre.servicos[3]],
                                 preco_medio: userx.dre.preco_medio,
                                 atendimentos: userx.dre.atendimentos,
                                 insumos_em_estoque: userx.dre.insumos_em_estoque,
@@ -681,7 +681,7 @@ sockets.on('connection', (socket) => {
                                     pas: userx.dre.pas,
                                     pesquisas: userx.dre.pesquisas,
                                     tributos: userx.dre.tributos,
-                                    servicos: [[userx.dre.servicos[0][0], userx.dre.servicos[0][1]], [userx.dre.servicos[1][0], userx.dre.servicos[1][1]]],
+                                    servicos: [userx.dre.servicos[0], userx.dre.servicos[1], userx.dre.servicos[2], userx.dre.servicos[3]],
                                     preco_medio: userx.dre.preco_medio,
                                     atendimentos: userx.dre.atendimentos,
                                     insumos_em_estoque: userx.dre.insumos_em_estoque,
@@ -858,7 +858,7 @@ sockets.on('connection', (socket) => {
                             pas: userx.dre.pas,
                             pesquisas: userx.dre.pesquisas,
                             tributos: userx.dre.tributos,
-                            servicos: [[userx.dre.servicos[0][0], userx.dre.servicos[0][1]], [userx.dre.servicos[1][0], userx.dre.servicos[1][1]]],
+                            servicos: [userx.dre.servicos[0], userx.dre.servicos[1], userx.dre.servicos[2], userx.dre.servicos[3]],
                             preco_medio: userx.dre.preco_medio,
                             atendimentos: userx.dre.atendimentos,
                             insumos_em_estoque: userx.dre.insumos_em_estoque,
@@ -1003,7 +1003,7 @@ sockets.on('connection', (socket) => {
                             pas: userx.dre.pas,
                             pesquisas: userx.dre.pesquisas,
                             tributos: userx.dre.tributos,
-                            servicos: [[userx.dre.servicos[0][0], userx.dre.servicos[0][1]], [userx.dre.servicos[1][0], userx.dre.servicos[1][1]]],
+                            servicos: [userx.dre.servicos[0], userx.dre.servicos[1], userx.dre.servicos[2], userx.dre.servicos[3]],
                             preco_medio: userx.dre.preco_medio,
                             atendimentos: userx.dre.atendimentos,
                             insumos_em_estoque: userx.dre.insumos_em_estoque,
@@ -1361,7 +1361,7 @@ sockets.on('connection', (socket) => {
                             pas: userdef.dre.pas,
                             pesquisas: userdef.dre.pesquisas,
                             tributos: userdef.dre.tributos,
-                            servicos: [[userdef.dre.servicos[0][0], userdef.dre.servicos[0][1]], [userdef.dre.servicos[1][0], userdef.dre.servicos[1][1]]],
+                            servicos: [userdef.dre.servicos[0], userdef.dre.servicos[1], userdef.dre.servicos[2], userdef.dre.servicos[3]],
                             preco_medio: userdef.dre.preco_medio,
                             atendimentos: userdef.dre.atendimentos,
                             insumos_em_estoque: userdef.dre.insumos_em_estoque,
@@ -1393,7 +1393,7 @@ sockets.on('connection', (socket) => {
                             pas: usert.dre.pas,
                             pesquisas: usert.dre.pesquisas,
                             tributos: usert.dre.tributos,
-                            servicos: [[usert.dre.servicos[0][0], usert.dre.servicos[0][1]], [usert.dre.servicos[1][0], usert.dre.servicos[1][1]]],
+                            servicos: [usert.dre.servicos[0], usert.dre.servicos[1], usert.dre.servicos[2], usert.dre.servicos[3]],
                             preco_medio: usert.dre.preco_medio,
                             atendimentos: usert.dre.atendimentos,
                             insumos_em_estoque: usert.dre.insumos_em_estoque,
@@ -1505,7 +1505,7 @@ sockets.on('connection', (socket) => {
                             pas: usert.dre.pas,
                             pesquisas: usert.dre.pesquisas,
                             tributos: usert.dre.tributos,
-                            servicos: [[usert.dre.servicos[0][0], usert.dre.servicos[0][1]], [usert.dre.servicos[1][0], usert.dre.servicos[1][1]]],
+                            servicos: [usert.dre.servicos[0], usert.dre.servicos[1], usert.dre.servicos[2], usert.dre.servicos[3]],
                             preco_medio: usert.dre.preco_medio,
                             atendimentos: usert.dre.atendimentos,
                             insumos_em_estoque: usert.dre.insumos_em_estoque,
@@ -2803,7 +2803,7 @@ sockets.on('connection', (socket) => {
                                 pas: userx.dre.pas,
                                 pesquisas: userx.dre.pesquisas,
                                 tributos: userx.dre.tributos,
-                                servicos: [[userx.dre.servicos[0][0], userx.dre.servicos[0][1]], [userx.dre.servicos[1][0], userx.dre.servicos[1][1]]],
+                                servicos: [userx.dre.servicos[0], userx.dre.servicos[1], userx.dre.servicos[2], userx.dre.servicos[3]],
                                 preco_medio: userx.dre.preco_medio,
                                 atendimentos: userx.dre.atendimentos,
                                 insumos_em_estoque: userx.dre.insumos_em_estoque,
@@ -2994,7 +2994,7 @@ sockets.on('connection', (socket) => {
                                 pas: userx.dre.pas,
                                 pesquisas: userx.dre.pesquisas,
                                 tributos: userx.dre.tributos,
-                                servicos: [[userx.dre.servicos[0][0], userx.dre.servicos[0][1]], [userx.dre.servicos[1][0], userx.dre.servicos[1][1]]],
+                                servicos: [userx.dre.servicos[0], userx.dre.servicos[1], userx.dre.servicos[2], userx.dre.servicos[3]],
                                 preco_medio: userx.dre.preco_medio,
                                 atendimentos: userx.dre.atendimentos,
                                 insumos_em_estoque: userx.dre.insumos_em_estoque,
@@ -3457,7 +3457,7 @@ sockets.on('connection', (socket) => {
                             pas: userx.dre.pas,
                             pesquisas: userx.dre.pesquisas + 2160,
                             tributos: userx.dre.tributos,
-                            servicos: [[userx.dre.servicos[0][0], userx.dre.servicos[0][1]], [userx.dre.servicos[1][0], userx.dre.servicos[1][1]]],
+                            servicos: [userx.dre.servicos[0], userx.dre.servicos[1], userx.dre.servicos[2], userx.dre.servicos[3]],
                             preco_medio: userx.dre.preco_medio,
                             atendimentos: userx.dre.atendimentos,
                             insumos_em_estoque: userx.dre.insumos_em_estoque,
@@ -3610,7 +3610,7 @@ sockets.on('connection', (socket) => {
                                 pas: userx.dre.pas,
                                 pesquisas: userx.dre.pesquisas + 2160,
                                 tributos: userx.dre.tributos,
-                                servicos: [[userx.dre.servicos[0][0], userx.dre.servicos[0][1]], [userx.dre.servicos[1][0], userx.dre.servicos[1][1]]],
+                                servicos: [userx.dre.servicos[0], userx.dre.servicos[1], userx.dre.servicos[2], userx.dre.servicos[3]],
                                 preco_medio: userx.dre.preco_medio,
                                 atendimentos: userx.dre.atendimentos,
                                 insumos_em_estoque: userx.dre.insumos_em_estoque,
@@ -3761,7 +3761,7 @@ sockets.on('connection', (socket) => {
                                 pas: userx.dre.pas,
                                 pesquisas: userx.dre.pesquisas + 10800,
                                 tributos: userx.dre.tributos,
-                                servicos: [[userx.dre.servicos[0][0], userx.dre.servicos[0][1]], [userx.dre.servicos[1][0], userx.dre.servicos[1][1]]],
+                                servicos: [userx.dre.servicos[0], userx.dre.servicos[1], userx.dre.servicos[2], userx.dre.servicos[3]],
                                 preco_medio: userx.dre.preco_medio,
                                 atendimentos: userx.dre.atendimentos,
                                 insumos_em_estoque: userx.dre.insumos_em_estoque,
@@ -3900,7 +3900,7 @@ sockets.on('connection', (socket) => {
                                     pas: userx.dre.pas,
                                     pesquisas: userx.dre.pesquisas + 14400,
                                     tributos: userx.dre.tributos,
-                                    servicos: [[userx.dre.servicos[0][0], userx.dre.servicos[0][1]], [userx.dre.servicos[1][0], userx.dre.servicos[1][1]]],
+                                    servicos: [userx.dre.servicos[0], userx.dre.servicos[1], userx.dre.servicos[2], userx.dre.servicos[3]],
                                     preco_medio: userx.dre.preco_medio,
                                     atendimentos: userx.dre.atendimentos,
                                     insumos_em_estoque: userx.dre.insumos_em_estoque,
@@ -4058,7 +4058,7 @@ sockets.on('connection', (socket) => {
                                 pas: userx.dre.pas,
                                 pesquisas: userx.dre.pesquisas + 2160,
                                 tributos: userx.dre.tributos,
-                                servicos: [[userx.dre.servicos[0][0], userx.dre.servicos[0][1]], [userx.dre.servicos[1][0], userx.dre.servicos[1][1]]],
+                                servicos: [userx.dre.servicos[0], userx.dre.servicos[1], userx.dre.servicos[2], userx.dre.servicos[3]],
                                 preco_medio: userx.dre.preco_medio,
                                 atendimentos: userx.dre.atendimentos,
                                 insumos_em_estoque: userx.dre.insumos_em_estoque,
@@ -4340,6 +4340,7 @@ sockets.on('connection', (socket) => {
 
                         if(users[i][index[r]][1] == 1){
                             if(cc == 0){
+                                cc = cc + 1
                                 users[i].dre = {
                                     receita: users[i].dre.receita,
                                     csp: users[i].dre.csp,
@@ -4365,7 +4366,7 @@ sockets.on('connection', (socket) => {
                                     pas: users[i].dre.pas,
                                     pesquisas: users[i].dre.pesquisas,
                                     tributos: users[i].dre.tributos,
-                                    servicos: [[index[r], users[i][index[r]][2]], [0, 0]],
+                                    servicos: [index[r], users[i][index[r]][2], users[i].dre.servicos[2], users[i].dre.servicos[3]],
                                     preco_medio: users[i].dre.preco_medio,
                                     atendimentos: users[i].dre.atendimentos,
                                     insumos_em_estoque: users[i].dre.insumos_em_estoque,
@@ -4399,7 +4400,7 @@ sockets.on('connection', (socket) => {
                                     pas: users[i].dre.pas,
                                     pesquisas: users[i].dre.pesquisas,
                                     tributos: users[i].dre.tributos,
-                                    servicos: [[users[i].dre.servicos[0][0], users[i].dre.servicos[0][1]],[index[r], users[i][index[r]][2]]],
+                                    servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], index[r], users[i][index[r]][2]],
                                     preco_medio: users[i].dre.preco_medio,
                                     atendimentos: users[i].dre.atendimentos,
                                     insumos_em_estoque: users[i].dre.insumos_em_estoque,
@@ -4408,7 +4409,7 @@ sockets.on('connection', (socket) => {
                                 }
 
                             }
-                            cc = cc + 1
+                            
 
                             if(index[r][0] == '1' || index[r][0] == 1){
                                 users[i]['scoremod'] = users[i]['scoremod'] + 4
@@ -4481,7 +4482,7 @@ sockets.on('connection', (socket) => {
                                 pas: users[i].dre.pas,
                                 pesquisas: users[i].dre.pesquisas,
                                 tributos: users[i].dre.tributos,
-                                servicos: [[users[i].dre.servicos[0][0], users[i].dre.servicos[0][1]], [users[i].dre.servicos[1][0], users[i].dre.servicos[1][1]]],
+                                servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],
                                 preco_medio: users[i].dre.preco_medio,
                                 atendimentos: users[i].dre.atendimentos,
                                 insumos_em_estoque: users[i].dre.insumos_em_estoque,
@@ -4627,7 +4628,7 @@ sockets.on('connection', (socket) => {
                         pas: users[i].dre.pas + users[i]['pas']*2160,
                         pesquisas: users[i].dre.pesquisas,
                         tributos: users[i].dre.tributos,
-                        servicos: [[users[i].dre.servicos[0][0], users[i].dre.servicos[0][1]], [users[i].dre.servicos[1][0], users[i].dre.servicos[1][1]]],
+                        servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],
                         preco_medio: users[i].dre.preco_medio,
                         atendimentos: users[i].dre.atendimentos,
                         insumos_em_estoque: users[i].dre.insumos_em_estoque,
@@ -4665,6 +4666,7 @@ sockets.on('connection', (socket) => {
                     let uso_frota = 0;
 
                     for(let o = 0; o < index.length; o++){
+                        
                         users[i].set(index[o],[users[i][index[o]][0], users[i][index[o]][1], users[i][index[o]][2], users[i][index[o]][3], users[i][index[o]][4], users[i][index[o]][5], 0, users[i][index[o]][7]])
                         if(users[i][index[o]][4] > 0){
                             
@@ -4708,7 +4710,7 @@ sockets.on('connection', (socket) => {
                                 pas: users[i].dre.pas,
                                 pesquisas: users[i].dre.pesquisas,
                                 tributos: users[i].dre.tributos,
-                                servicos: [[users[i].dre.servicos[0],users[i].dre.servicos[1]]],
+                                servicos: [users[i].dre.servicos[0],users[i].dre.servicos[1],users[i].dre.servicos[2],users[i].dre.servicos[3]],
                                 preco_medio: users[i].dre.preco_medio,
                                 atendimentos: users[i].dre.atendimentos,
                                 insumos_em_estoque: users[i].dre.insumos_em_estoque + (users[i][index[o]][0]*users[i][index[o]][2] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][2]))
@@ -4744,6 +4746,7 @@ sockets.on('connection', (socket) => {
 
                             let array_insu = [(users[i][index[o]][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]), users[i][index[o]][1], users[i][index[o]][2], users[i][index[o]][3], users[i][index[o]][4],(users[i][index[o]][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*users[i][index[o]][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][3])]
                             //(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['147'][4]*users[i]['147'][3] => igual ao faturamento obtido pelo jogador nesse serviço especifico
+                            
                             users[i].set(index[o], array_insu)
                             //users[i].balanco_patrimonial.contas_a_receber = users[i]['147'][7]
                             
@@ -4793,7 +4796,7 @@ sockets.on('connection', (socket) => {
                                     pas: users[i].dre.pas,
                                     pesquisas: users[i].dre.pesquisas,
                                     tributos: users[i].dre.tributos,
-                                    servicos: [[users[i].dre.servicos[0],users[i].dre.servicos[1]]],
+                                    servicos: [users[i].dre.servicos[0],users[i].dre.servicos[1],users[i].dre.servicos[2],users[i].dre.servicos[3]],
                                     preco_medio: users[i].dre.preco_medio,
                                     atendimentos: users[i].dre.atendimentos,
                                     insumos_em_estoque: users[i].dre.insumos_em_estoque
@@ -4866,7 +4869,7 @@ sockets.on('connection', (socket) => {
                                     pas: users[i].dre.pas,
                                     pesquisas: users[i].dre.pesquisas,
                                     tributos: users[i].dre.tributos,
-                                    servicos: [[users[i].dre.servicos[0],users[i].dre.servicos[1]]],
+                                    servicos: [users[i].dre.servicos[0],users[i].dre.servicos[1],users[i].dre.servicos[2],users[i].dre.servicos[3]],
                                     preco_medio: users[i].dre.preco_medio,
                                     atendimentos: users[i].dre.atendimentos,
                                     insumos_em_estoque: users[i].dre.insumos_em_estoque + (-1)*users[i][index[o]][0]*users[i][index[o]][2]
@@ -4916,7 +4919,7 @@ sockets.on('connection', (socket) => {
                     users[i]['propaganda'] = 1
                     users[i]['propagandauni'] = 1
                     users[i]['npesquisas'] = 1
-
+                    console.log('ss')
                     for(let o = 0; o < index.length; o++){ //ATUALIZA o estado de cada serviço (se esta em processo de cancelamento sera cancelado e etc)
                         let ser = index[o]
                         if(users[i][ser][1] == 3){
@@ -4978,7 +4981,7 @@ sockets.on('connection', (socket) => {
                             pas: users[i].dre.pas,
                             pesquisas: users[i].dre.pesquisas,
                             tributos: users[i].dre.tributos,
-                            servicos: [[users[i].dre.servicos[0][0], users[i].dre.servicos[0][1]], [users[i].dre.servicos[1][0], users[i].dre.servicos[1][1]]],
+                            servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],
                             preco_medio: users[i].dre.preco_medio,
                             atendimentos: users[i].dre.atendimentos,
                             insumos_em_estoque: users[i].dre.insumos_em_estoque
@@ -5022,7 +5025,7 @@ sockets.on('connection', (socket) => {
                     users[i].pas = users[i].pas + users[i].pas1;
                     users[i].pas1 = users[i].pas2;
                     users[i].pas2 = 0;
-
+                    console.log('llll')
                     if(uso_frota/2000 > frota_soma){
                         let j = (uso_frota%2000)
                         if(j > 0){
@@ -5067,7 +5070,7 @@ sockets.on('connection', (socket) => {
                                 pas: users[i].dre.pas,
                                 pesquisas: users[i].dre.pesquisas,
                                 tributos: users[i].dre.tributos,
-                                servicos: [[users[i].dre.servicos[0][0], users[i].dre.servicos[0][1]], [users[i].dre.servicos[1][0], users[i].dre.servicos[1][1]]],
+                                servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],
                                 preco_medio: users[i].dre.preco_medio,
                                 atendimentos: users[i].dre.atendimentos,
                                 insumos_em_estoque: users[i].dre.insumos_em_estoque
@@ -5140,7 +5143,7 @@ sockets.on('connection', (socket) => {
                                 pas: users[i].dre.pas,
                                 pesquisas: users[i].dre.pesquisas,
                                 tributos: users[i].dre.tributos,
-                                servicos: [[users[i].dre.servicos[0][0], users[i].dre.servicos[0][1]], [users[i].dre.servicos[1][0], users[i].dre.servicos[1][1]]],
+                                servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],
                                 preco_medio: users[i].dre.preco_medio,
                                 atendimentos: users[i].dre.atendimentos,
                                 insumos_em_estoque: users[i].dre.insumos_em_estoque
@@ -5221,7 +5224,7 @@ sockets.on('connection', (socket) => {
                             pas: users[i].dre.pas,
                             pesquisas: users[i].dre.pesquisas,
                             tributos: users[i].dre.tributos,
-                            servicos: [[users[i].dre.servicos[0][0], users[i].dre.servicos[0][1]], [users[i].dre.servicos[1][0], users[i].dre.servicos[1][1]]],
+                            servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],
                             preco_medio: users[i].dre.preco_medio,
                             atendimentos: users[i].dre.atendimentos,
                             insumos_em_estoque: users[i].dre.insumos_em_estoque
@@ -5296,7 +5299,7 @@ sockets.on('connection', (socket) => {
                             pas: users[i].dre.pas,
                             pesquisas: users[i].dre.pesquisas,
                             tributos: users[i].dre.tributos,
-                            servicos: [[users[i].dre.servicos[0][0], users[i].dre.servicos[0][1]], [users[i].dre.servicos[1][0], users[i].dre.servicos[1][1]]],
+                            servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],
                             preco_medio: users[i].dre.preco_medio,
                             atendimentos: users[i].dre.atendimentos,
                             insumos_em_estoque: users[i].dre.insumos_em_estoque
@@ -5368,7 +5371,7 @@ sockets.on('connection', (socket) => {
                             pas: users[i].dre.pas,
                             pesquisas: users[i].dre.pesquisas,
                             tributos: users[i].dre.tributos,
-                            servicos: [[users[i].dre.servicos[0][0], users[i].dre.servicos[0][1]], [users[i].dre.servicos[1][0], users[i].dre.servicos[1][1]]],
+                            servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],
                             preco_medio: users[i].dre.preco_medio,
                             atendimentos: users[i].dre.atendimentos,
                             insumos_em_estoque: users[i].dre.insumos_em_estoque
@@ -5444,7 +5447,7 @@ sockets.on('connection', (socket) => {
                             pas: users[i].dre.pas,
                             pesquisas: users[i].dre.pesquisas,
                             tributos: users[i].dre.tributos,
-                            servicos: [[users[i].dre.servicos[0][0], users[i].dre.servicos[0][1]], [users[i].dre.servicos[1][0], users[i].dre.servicos[1][1]]],
+                            servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],
                             preco_medio: users[i].dre.preco_medio,
                             atendimentos: users[i].dre.atendimentos,
                             insumos_em_estoque: users[i].dre.insumos_em_estoque
@@ -5519,7 +5522,7 @@ sockets.on('connection', (socket) => {
                             pas: users[i].dre.pas,
                             pesquisas: users[i].dre.pesquisas,
                             tributos: users[i].dre.tributos,
-                            servicos: [[users[i].dre.servicos[0][0], users[i].dre.servicos[0][1]], [users[i].dre.servicos[1][0], users[i].dre.servicos[1][1]]],
+                            servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],
                             preco_medio: users[i].dre.preco_medio,
                             atendimentos: users[i].dre.atendimentos,
                             insumos_em_estoque: users[i].dre.insumos_em_estoque
@@ -5593,7 +5596,7 @@ sockets.on('connection', (socket) => {
                             pas: users[i].dre.pas,
                             pesquisas: users[i].dre.pesquisas,
                             tributos: users[i].dre.tributos,
-                            servicos: [[users[i].dre.servicos[0][0], users[i].dre.servicos[0][1]], [users[i].dre.servicos[1][0], users[i].dre.servicos[1][1]]],
+                            servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],
                             preco_medio: users[i].dre.preco_medio,
                             atendimentos: users[i].dre.atendimentos,
                             insumos_em_estoque: users[i].dre.insumos_em_estoque
@@ -5670,7 +5673,7 @@ sockets.on('connection', (socket) => {
                             pas: users[i].dre.pas,
                             pesquisas: users[i].dre.pesquisas,
                             tributos: users[i].dre.tributos,
-                            servicos: [[users[i].dre.servicos[0][0], users[i].dre.servicos[0][1]], [users[i].dre.servicos[1][0], users[i].dre.servicos[1][1]]],
+                            servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],
                             preco_medio: users[i].dre.preco_medio,
                             atendimentos: users[i].dre.atendimentos,
                             insumos_em_estoque: users[i].dre.insumos_em_estoque
@@ -5745,7 +5748,7 @@ sockets.on('connection', (socket) => {
                             pas: users[i].dre.pas,
                             pesquisas: users[i].dre.pesquisas,
                             tributos: users[i].dre.tributos,
-                            servicos: [[users[i].dre.servicos[0][0], users[i].dre.servicos[0][1]], [users[i].dre.servicos[1][0], users[i].dre.servicos[1][1]]],
+                            servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],
                             preco_medio: users[i].dre.preco_medio,
                             atendimentos: users[i].dre.atendimentos,
                             insumos_em_estoque: users[i].dre.insumos_em_estoque
@@ -5821,7 +5824,7 @@ sockets.on('connection', (socket) => {
                             pas: users[i].dre.pas,
                             pesquisas: users[i].dre.pesquisas,
                             tributos: users[i].dre.tributos,
-                            servicos: [[users[i].dre.servicos[0][0], users[i].dre.servicos[0][1]], [users[i].dre.servicos[1][0], users[i].dre.servicos[1][1]]],
+                            servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],
                             preco_medio: users[i].dre.preco_medio,
                             atendimentos: users[i].dre.atendimentos,
                             insumos_em_estoque: users[i].dre.insumos_em_estoque
@@ -5984,7 +5987,7 @@ sockets.on('connection', (socket) => {
                                                     pas: users[i].dre.pas,
                                                     pesquisas: users[i].dre.pesquisas,
                                                     tributos: users[i].dre.tributos,
-                                                    servicos: [[users[i].dre.servicos[0][0], users[i].dre.servicos[0][1]], [users[i].dre.servicos[1][0], users[i].dre.servicos[1][1]]],
+                                                    servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],
                                                     preco_medio: users[i].dre.preco_medio,
                                                     atendimentos: users[i].dre.atendimentos,
                                                     insumos_em_estoque: users[i].dre.insumos_em_estoque
@@ -6091,7 +6094,7 @@ sockets.on('connection', (socket) => {
                         pesquisas.save()
                             .then(() => {
                                         for(let i = 0; i < users.length; i++){
-
+                                        console.log(users[i].dre.servicos)
                                         let backup = new Aluno({backup: 1, instancia: users[i].instancia, npesquisas: users[i].npesquisas, turno: users[i].turno, propaganda: users[i].propaganda, propagandauni: users[i].propagandauni, faturamento: users[i].faturamento, ativo: 1, taokeys: users[i].taokeys, divida: [users[i]['divida'][0],users[i]['divida'][1],users[i]['divida'][2]], comissao: users[i].comissao, frota: [users[i].frota[0],users[i].frota[1],users[i].frota[2],users[i].frota[3],users[i].frota[4],users[i].frota[5],users[i].frota[6],users[i].frota[7],users[i].frota[8],users[i].frota[9],users[i].frota[10],users[i].frota[11]], cooperativa: users[i].cooperativa, pas: users[i].pas, pas1: users[i].pas1, pas2: users[i].pas2, distribuidores: users[i].distribuidores, promotores: users[i].promotores, 
                                             147:[users[i]['147'][0],users[i]['147'][1],users[i]['147'][2],users[i]['147'][3],users[i]['147'][4],users[i]['147'][5],users[i]['147'][6],users[i]['147'][7]],
                                             159:[users[i]['159'][0],users[i]['159'][1],users[i]['159'][2],users[i]['159'][3],users[i]['159'][4],users[i]['159'][5],users[i]['159'][6],users[i]['159'][7]],
@@ -6154,7 +6157,7 @@ sockets.on('connection', (socket) => {
                                                 pas: users[i].dre.pas,
                                                 pesquisas: users[i].dre.pesquisas,
                                                 tributos: users[i].dre.tributos,
-                                                servicos: [[users[i].servicos[0][0],users[i].servicos[0][1]],[users[i].servicos[1][0],users[i].servicos[1][1]]],
+                                                servicos:[users[i].dre.servicos[0],users[i].dre.servicos[1],users[i].dre.servicos[2],users[i].dre.servicos[3]],
                                                 preco_medio: users[i].dre.preco_medio,
                                                 atendimentos: users[i].dre.atendimentos,
                                                 insumos_em_estoque: users[i].insumos_em_estoque
