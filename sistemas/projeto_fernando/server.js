@@ -542,7 +542,7 @@ sockets.on('connection', (socket) => {
                                 faturamento: userx.fluxo_de_caixa.faturamento,
                                 contas_a_receber: userx.fluxo_de_caixa.contas_a_receber,
                                 contas_a_receber_recebidas: userx.fluxo_de_caixa.contas_a_receber_recebidas, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
-                                custo_de_servico_prestado: userx.fluxo_de_caixa.custo_de_servico_prestado + qnt*30  (userx[novo][2] - userx[velho][2])*qnt,
+                                custo_de_servico_prestado: userx.fluxo_de_caixa.custo_de_servico_prestado + qnt*30 + (userx[novo][2] - userx[velho][2])*qnt,
                                 emprestimos_contratados: userx.fluxo_de_caixa.emprestimos_contratados,
                                 emprestimos_pagos: userx.fluxo_de_caixa.emprestimos_pagos,
                                 veiculos_vendidos: userx.fluxo_de_caixa.veiculos_vendidos,
