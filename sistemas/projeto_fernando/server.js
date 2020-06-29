@@ -473,6 +473,7 @@ sockets.on('connection', (socket) => {
             .catch((err) => {console.log(err+'. id:' + socket.id)})
     }) //falta realizar um registro de PESSOA FISICA e linkar a conta da cooperativa
     socket.on('trocar-servico', (dados) => {
+        console.log(dados)
         let velho = dados[0];
         let novo = dados[1];
         let qnt = Number(dados[2]);
@@ -480,22 +481,9 @@ sockets.on('connection', (socket) => {
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => {
                 if(userx !== null){
-                    function check_1_servico_ativo() {
-                        let count = 0
-                        for(let s = 0; s < index.length; s++){
-                            if(userx[index[s]][1] == 1){
-                                count = count + 1
-                            }
-                        }
-                        if(count == 1){
-                            return true
-                        }
-                        else{
-                            return false
-                        }
-                    }
+                    
                     if(novo !== velho){
-                    if(userx[novo][1] == 1 || check_1_servico_ativo()){ 
+                    
                     if(userx['taokeys'] >= qnt*30 && userx[velho][0] >= qnt){
                         if(userx[novo][1] == 1){
 
@@ -782,10 +770,8 @@ sockets.on('connection', (socket) => {
                     }
                     else{socket.emit('feedback', ['warning','voce nao pode transferir insumos para um servico que nao esta ativo'])}
                     }
-                }
-                else{
-                    socket.emit('feedback', ['warning','voce nao pode ter mais de dois serviços ativos simultaneamente'])
-                }
+                
+                
                 }
                 else{socket.emit('feedback', ['warning','voce nao pode trocar insumos de um serviço para ele mesmo'])}
                 }
