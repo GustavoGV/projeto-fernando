@@ -2360,7 +2360,8 @@ sockets.on('connection', (socket) => {
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
     }) 
-    socket.on('quitar-divida', () => {
+    socket.on('quitar-divida', (ee) => {
+        console.log(ee)
         //let qnt = Number(dados)
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => {
@@ -4242,7 +4243,7 @@ sockets.on('connection', (socket) => {
             .then((ll) => {
                 if(ll !== null){socket.emit('feedback', ['danger','voce ja esta conectado'])}
                 else{
-                    Data.findOne({login_adm: creden[0], senha_adm: creden[1]})
+                    Data.findOne({login_adm: creden.login, senha_adm: creden.senha})
                         .then((adm) => {
                             if(adm !== null){
                                 adm.sockid = socket.id
