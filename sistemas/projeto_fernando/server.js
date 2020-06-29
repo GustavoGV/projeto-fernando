@@ -4239,6 +4239,7 @@ sockets.on('connection', (socket) => {
                     socket.emit('feedback', ['danger','senha mestra incorreta'])}  
     })
     socket.on('login-adm', (creden) => {
+        console.log(creden)
         Data.findOne({sockid: socket.id})
             .then((ll) => {
                 if(ll !== null){socket.emit('feedback', ['danger','voce ja esta conectado'])}
