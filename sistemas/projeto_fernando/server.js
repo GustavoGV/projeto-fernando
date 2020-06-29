@@ -475,7 +475,8 @@ sockets.on('connection', (socket) => {
     socket.on('trocar-servico', (dados) => {
         let velho = dados[0];
         let novo = dados[1];
-        let qnt = dados[2];
+        let qnt = Number(dados[2]);
+        if(qnt > 0){
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => {
                 if(userx !== null){
@@ -793,6 +794,10 @@ sockets.on('connection', (socket) => {
                 }
             
             })
+        }
+        else{
+            socket.emit('feedback', ['danger', 'apenas numeros positivos sao aceitos nesse campo'])
+        }
     }) 
     socket.on('substituir-servico', (dados) => {
         let velho = dados[0];
@@ -3021,11 +3026,11 @@ sockets.on('connection', (socket) => {
     }) 
     socket.on('comprar-servico', (dados) => {
         let tipo = dados[0];
-        let qnti = dados[1];
+        let qnti = Number(dados[1]);
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => { 
                     if(userx !== null){
-                        if(typeof qnti == Number){ 
+                        if(qnti > 0){ 
                        
                         if(userx['taokeys'] >= qnti*userx[tipo][2] && userx[tipo][1] !== 2){
                             if(userx[tipo][1] !== 3 && userx[tipo][1] !== 0){
