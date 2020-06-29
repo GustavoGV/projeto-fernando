@@ -102,6 +102,7 @@
             socket.on('feedback', (f) => {
                 alert('TIPO: ' + f[0] + ' => ' + f[1])
             })
+            socket.on('update', (d)=>{console.log(d)})
             function criar() {
                 let canvas = document.getElementById("myCanvas");
                 let ctx = canvas.getContext("2d");

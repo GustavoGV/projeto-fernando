@@ -2833,7 +2833,7 @@ sockets.on('connection', (socket) => {
                                 maquinas: userx.fluxo_de_caixa.maquinas,
                                 distribuidores: userx.fluxo_de_caixa.distribuidores
                             }
-                            if(Number(userx.somapropuni.inv1) > 0 && Number(userx.somapropuni.inv2 > 0)){
+                            //if(Number(userx.somapropuni.inv1) > 0 && Number(userx.somapropuni.inv2 > 0)){
                                 if(tipo == userx.somapropuni.tipo1){
                                     userx.set('somapropuni', {
                                         tipo1: userx.somapropuni.tipo1, inv1: Number(userx.somapropuni.inv1) + qnt,
@@ -2845,6 +2845,8 @@ sockets.on('connection', (socket) => {
                                         tipo1: userx.somapropuni.tipo1, inv1: userx.somapropuni.inv1,
                                         tipo2: userx.somapropuni.tipo2, inv2: Number(userx.somapropuni.inv2) + qnt
                                     })
+                                
+                                }
                                 if(tipo !== userx.somapropuni.tipo1 && tipo !== userx.somapropuni.tipo2){
                                     let ativos = []
                                     for(let i = 0; i < index.length; i++){
@@ -2875,12 +2877,7 @@ sockets.on('connection', (socket) => {
                                         }
                                     }
                                 }
-                                }
-                            }
-                            userx.set('somapropuni', {
-                                tipo1: userx.somapropuni.tipo1, inv1: userx.somapropuni.inv1,
-                                tipo2: userx.somapropuni.tipo2, inv2: userx.somapropuni.inv2
-                            })
+                            
                             let novaf = Number(userx['propagandauni']) + qnt
                             userx.taokeys = userx.taokeys - qnt
                             userx.set('propagandauni', novaf) 
