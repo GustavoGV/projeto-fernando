@@ -103,7 +103,79 @@ sockets.on('connection', (socket) => {
                                                                     usert.set('distribuidores', userdef.distribuidores)
                                                                     usert.set('promotores', userdef.promotores)
                                                                     usert.set('divida', [userdef["divida"][0],userdef["divida"][1],userdef["divida"][2]])
-                                                                    
+
+                                                                    usert.balanco_patrimonial = {
+                                                                        caixa: userdef.balanco_patrimonial.caixa,
+                                                                        estoque: userdef.balanco_patrimonial.estoque,
+                                                                        contas_a_receber60: userdef.balanco_patrimonial.contas_a_receber60,
+                                                                        contas_a_receber120: userdef.balanco_patrimonial.contas_a_receber120,
+                                                                        maquinas: userdef.balanco_patrimonial.maquinas,
+                                                                        depreciacao_maquinas: userdef.balanco_patrimonial.depreciacao_de_maquinas,
+                                                                        veiculos: userdef.balanco_patrimonial.veiculos,
+                                                                        depreciacao_veiculos: userdef.balanco_patrimonial.depreciacao_veiculos,
+                                                                        tributos_a_pagar_anterior: userdef.balanco_patrimonial.tributos_a_pagar_anterior,
+                                                                        tributos_a_pagar_atual: userdef.balanco_patrimonial.tributos_a_pagar_atual,
+                                                                        emprestimos: userdef.balanco_patrimonial.emprestimos,
+                                                                        capial: userdef.balanco_patrimonial.capial,
+                                                                        lucros_acumulados: userdef.balanco_patrimonial.lucros_acumulados
+                                                                    }
+                                                                    usert.dre = {
+                                                                        receita: userdef.dre.receita,
+                                                                        csp: userdef.dre.csp,
+                                                                        estoque_inicial: userdef.dre.estoque_inicial,
+                                                                        custo_prestacao_servico: userdef.dre.custo_prestacao_servico,
+                                                                        custo_estocagem: userdef.dre.custo_estocagem,
+                                                                        custo_troca_insumos: userdef.dre.custo_troca_insumos,
+                                                                        hora_extra: userdef.dre.hora_extra,
+                                                                        capacidade_n_utilizada: userdef.dre.capacidade_n_utilizada,
+                                                                        margem_bruta: userdef.dre.margem_bruta,
+                                                                        despesas_administrativas: userdef.dre.despesas_administrativas,
+                                                                        salario_promotores: userdef.dre.salario_promotores,
+                                                                        comissao: userdef.dre.comissao,
+                                                                        propaganda_institucional: userdef.dre.propaganda_institucional,
+                                                                        propaganda_unitaria: userdef.dre.propaganda_unitaria,
+                                                                        depreciacao_de_maquinas: userdef.dre.depreciacao_de_maquinas,
+                                                                        encargos_financiamento: userdef.dre.encargos_financiamento,
+                                                                        salario_frota: userdef.dre.salario_frota,
+                                                                        manutencao_frota: userdef.dre.manutencao_frota,
+                                                                        depreciacao_de_veiculos: userdef.dre.depreciacao_de_veiculos,
+                                                                        frota_terceirizada: userdef.dre.frota_terceirizada,
+                                                                        despesas_operacionais_n_planejadas: userdef.dre.despesas_operacionais_n_planejadas,
+                                                                        pas: userdef.dre.pas,
+                                                                        pesquisas: userdef.dre.pesquisas,
+                                                                        tributos: userdef.dre.tributos,
+                                                                        servicos: [userdef.dre.servicos[0],userdef.dre.servicos[1],userdef.dre.servicos[2],userdef.dre.servicos[3]],
+                                                                        preco_medio: userdef.dre.preco_medio,
+                                                                        atendimentos: userdef.dre.atendimentos,
+                                                                        insumos_em_estoque: userdef.dre.insumos_em_estoque,
+                                                                        distribuidores: userdef.dre.distribuidores
+                                            
+                                                                    }
+                                                                    usert.fluxo_de_caixa = {
+                                                                        saldo_anterior: userdef.fluxo_de_caixa.saldo_anterior,
+                                                                        faturamento: userdef.fluxo_de_caixa.faturamento,
+                                                                        contas_a_receber: userdef.fluxo_de_caixa.contas_a_receber,
+                                                                        contas_a_receber_recebidas: userdef.fluxo_de_caixa.contas_a_receber_recebidas, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
+                                                                        custo_de_servico_prestado: userdef.fluxo_de_caixa.custo_de_servico_prestado,
+                                                                        emprestimos_contratados: userdef.fluxo_de_caixa.emprestimos_contratados,
+                                                                        emprestimos_pagos: userdef.fluxo_de_caixa.emprestimos_pagos,
+                                                                        veiculos_vendidos: userdef.fluxo_de_caixa.veiculos_vendidos,
+                                                                        depreciacao_de_veiculos: userdef.fluxo_de_caixa.depreciacao_de_veiculos,
+                                                                        depreciacao_de_maquinas: userdef.fluxo_de_caixa.depreciacao_de_maquinas,
+                                                                        veiculos_comprados: userdef.fluxo_de_caixa.veiculos_comprados,
+                                                                        tributos: userdef.fluxo_de_caixa.tributos,
+                                                                        promotores: userdef.fluxo_de_caixa.promotores,
+                                                                        propaganda: userdef.fluxo_de_caixa.propaganda,
+                                                                        pesquisas: userdef.fluxo_de_caixa.pesquisas,
+                                                                        pas: userdef.fluxo_de_caixa.pas,
+                                                                        uso_frota: userdef.fluxo_de_caixa.uso_frota,
+                                                                        despesas_operacionais_n_planejadas: userdef.fluxo_de_caixa.despesas_operacionais_n_planejadas,
+                                                                        despesas_administrativas: userdef.fluxo_de_caixa.despesas_administrativas,
+                                                                        encargos_financiamento: userdef.fluxo_de_caixa.encargos_financiamento,
+                                                                        maquinas: userdef.fluxo_de_caixa.maquinas,
+                                                                        distribuidores: userdef.fluxo_de_caixa.distribuidores
+                                                                    }
+
                                                                     for(let s = 0; s < index.length; s++){
                                                                         let serv = index[s]
                                                                         usert.set(serv, [userdef[serv][0], userdef[serv][1], userdef[serv][2], userdef[serv][3], userdef[serv][4], userdef[serv][5], userdef[serv][6], userdef[serv][7]])
@@ -567,6 +639,12 @@ sockets.on('connection', (socket) => {
                         let insu_velho = Number(userx[velho][0]) - Number(qnt)
                         let array_dados_velho = [insu_velho,1,userx[velho][2], userx[velho][3], userx[velho][4], userx[velho][5], userx[velho][6], userx[velho][7]];
                         let insu_novo = Number(userx[novo][0]) + Number(qnt)
+                        if(insu_novo < 1){
+                            insu_novo = 0
+                        }
+                        if(insu_velho < 1){
+                            insu_velho = 0
+                        }
                         let array_dados_novo
                             if(userx[novo][4] == 0 && userx[novo][3] !== 0){
                                 array_dados_novo = [insu_novo,1,userx[novo][2], userx[novo][3], 1, userx[novo][5], userx[novo][6], userx[novo][7]]
@@ -890,7 +968,7 @@ sockets.on('connection', (socket) => {
                             distribuidores: userx.fluxo_de_caixa.distribuidores
                         }
                         let array_dados_velho = [0,2,userx[velho][2], userx[velho][3], userx[velho][4], userx[velho][5], userx[velho][6], userx[velho][7]];
-                        let insu_novo = Number(userx[novo][0]) + Number(userx[velho][0])
+                        let insu_novo = Math.floor(Number(userx[novo][0]) + Number(userx[velho][0]))
                         let array_dados_novo
                             if(userx[novo][4] == 0 && userx[novo][3] !== 0){
                                 array_dados_novo = [insu_novo,1,userx[novo][2], userx[novo][3], 1, userx[novo][5], userx[novo][6], userx[novo][7]]
@@ -1585,6 +1663,7 @@ sockets.on('connection', (socket) => {
                         usert.set('distribuidores', userdef.distribuidores)
                         usert.set('promotores', userdef.promotores)
                         usert.set('divida', [userdef["divida"][0],userdef["divida"][1],userdef["divida"][2]])
+                        usert.set('somapropuni', {tipo1: userdef.somapropuni.tipo1, inv1: userdef.somapropuni.inv1, tipo2: userdef.somapropuni.tipo2, inv2: userdef.somapropuni.inv2})
                         //console.log(index)
                         usert.balanco_patrimonial = {
                             caixa: userdef.balanco_patrimonial.caixa,
@@ -1601,17 +1680,63 @@ sockets.on('connection', (socket) => {
                             capial: userdef.balanco_patrimonial.capial,
                             lucros_acumulados: userdef.balanco_patrimonial.lucros_acumulados
                         }
-                        /*
                         usert.dre = {
                             receita: userdef.dre.receita,
-                            cmv: userdef.dre.cmv,
+                            csp: userdef.dre.csp,
+                            estoque_inicial: userdef.dre.estoque_inicial,
+                            custo_prestacao_servico: userdef.dre.custo_prestacao_servico,
+                            custo_estocagem: userdef.dre.custo_estocagem,
+                            custo_troca_insumos: userdef.dre.custo_troca_insumos,
+                            hora_extra: userdef.dre.hora_extra,
+                            capacidade_n_utilizada: userdef.dre.capacidade_n_utilizada,
+                            margem_bruta: userdef.dre.margem_bruta,
                             despesas_administrativas: userdef.dre.despesas_administrativas,
-                            despesas_vendas: userdef.dre.despesas_vendas,
-                            despesas_financeiras: userdef.dre.despesas_financeiras,
-                            depreciacao_e_amortizacao: userdef.dre.depreciacao_e_amortizacao,
-                            ir: userdef.dre.ir
+                            salario_promotores: userdef.dre.salario_promotores,
+                            comissao: userdef.dre.comissao,
+                            propaganda_institucional: userdef.dre.propaganda_institucional,
+                            propaganda_unitaria: userdef.dre.propaganda_unitaria,
+                            depreciacao_de_maquinas: userdef.dre.depreciacao_de_maquinas,
+                            encargos_financiamento: userdef.dre.encargos_financiamento,
+                            salario_frota: userdef.dre.salario_frota,
+                            manutencao_frota: userdef.dre.manutencao_frota,
+                            depreciacao_de_veiculos: userdef.dre.depreciacao_de_veiculos,
+                            frota_terceirizada: userdef.dre.frota_terceirizada,
+                            despesas_operacionais_n_planejadas: userdef.dre.despesas_operacionais_n_planejadas,
+                            pas: userdef.dre.pas,
+                            pesquisas: userdef.dre.pesquisas,
+                            tributos: userdef.dre.tributos,
+                            servicos: [userdef.dre.servicos[0],userdef.dre.servicos[1],userdef.dre.servicos[2],userdef.dre.servicos[3]],
+                            preco_medio: userdef.dre.preco_medio,
+                            atendimentos: userdef.dre.atendimentos,
+                            insumos_em_estoque: userdef.dre.insumos_em_estoque,
+                            distribuidores: userdef.dre.distribuidores
+
                         }
-                        */
+                        usert.fluxo_de_caixa = {
+                            saldo_anterior: userdef.fluxo_de_caixa.saldo_anterior,
+                            faturamento: userdef.fluxo_de_caixa.faturamento,
+                            contas_a_receber: userdef.fluxo_de_caixa.contas_a_receber,
+                            contas_a_receber_recebidas: userdef.fluxo_de_caixa.contas_a_receber_recebidas, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
+                            custo_de_servico_prestado: userdef.fluxo_de_caixa.custo_de_servico_prestado,
+                            emprestimos_contratados: userdef.fluxo_de_caixa.emprestimos_contratados,
+                            emprestimos_pagos: userdef.fluxo_de_caixa.emprestimos_pagos,
+                            veiculos_vendidos: userdef.fluxo_de_caixa.veiculos_vendidos,
+                            depreciacao_de_veiculos: userdef.fluxo_de_caixa.depreciacao_de_veiculos,
+                            depreciacao_de_maquinas: userdef.fluxo_de_caixa.depreciacao_de_maquinas,
+                            veiculos_comprados: userdef.fluxo_de_caixa.veiculos_comprados,
+                            tributos: userdef.fluxo_de_caixa.tributos,
+                            promotores: userdef.fluxo_de_caixa.promotores,
+                            propaganda: userdef.fluxo_de_caixa.propaganda,
+                            pesquisas: userdef.fluxo_de_caixa.pesquisas,
+                            pas: userdef.fluxo_de_caixa.pas,
+                            uso_frota: userdef.fluxo_de_caixa.uso_frota,
+                            despesas_operacionais_n_planejadas: userdef.fluxo_de_caixa.despesas_operacionais_n_planejadas,
+                            despesas_administrativas: userdef.fluxo_de_caixa.despesas_administrativas,
+                            encargos_financiamento: userdef.fluxo_de_caixa.encargos_financiamento,
+                            maquinas: userdef.fluxo_de_caixa.maquinas,
+                            distribuidores: userdef.fluxo_de_caixa.distribuidores
+                        }
+                        
                         for(let s = 0; s < index.length; s++){
                             //console.log(index[s])
                             let serv = index[s]
