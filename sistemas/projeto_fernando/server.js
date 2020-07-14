@@ -7,6 +7,7 @@ const Data = estrutura[1]
 const Usuario = estrutura[2] //login individual
 const Deci = estrutura[3]
 import mongoose from 'mongoose'
+import { readFile } from 'fs'
 
 mongoose.connect('mongodb://localhost/aluno_teste')
 mongoose.connection
@@ -110,7 +111,7 @@ sockets.on('connection', (socket) => {
                                                                         contas_a_receber60: userdef.balanco_patrimonial.contas_a_receber60,
                                                                         contas_a_receber120: userdef.balanco_patrimonial.contas_a_receber120,
                                                                         maquinas: userdef.balanco_patrimonial.maquinas,
-                                                                        depreciacao_maquinas: userdef.balanco_patrimonial.depreciacao_de_maquinas,
+                                                                        depreciacao_maquinas: userdef.balanco_patrimonial.depreciacao_maquinas,
                                                                         veiculos: userdef.balanco_patrimonial.veiculos,
                                                                         depreciacao_veiculos: userdef.balanco_patrimonial.depreciacao_veiculos,
                                                                         tributos_a_pagar_anterior: userdef.balanco_patrimonial.tributos_a_pagar_anterior,
@@ -175,6 +176,14 @@ sockets.on('connection', (socket) => {
                                                                         maquinas: userdef.fluxo_de_caixa.maquinas,
                                                                         distribuidores: userdef.fluxo_de_caixa.distribuidores
                                                                     }
+                                                                    usert.somapropuni = {tipo1: userdef.somapropuni.tipo1, inv1: userdef.somapropuni.inv1, tipo2: userdef.somapropuni.tipo2, inv2: userdef.somapropuni.inv2}
+                                                                    usert.pes_p = {
+                                                                        modelos_oferecidos: userdef.pes_p.modelos_oferecidos,
+                                                                        total_pas: userdef.pes_p.total_pas,
+                                                                        total_participacao_modelos: userdef.pes_p.total_participacao_modelos,
+                                                                        total_distribuidores: userdef.pes_p.total_distribuidores
+                                                                    }
+                                                                    usert.participacao_modelos = userdef.participacao_modelos
 
                                                                     for(let s = 0; s < index.length; s++){
                                                                         let serv = index[s]
@@ -311,12 +320,12 @@ sockets.on('connection', (socket) => {
 
                             
         Aluno.findOne({cooperativa: creden[0], instancia: creden[2]})
-            .then((userx) => { 
+            .then((userx) => {
                 if(userx !== null){
                     console.log('>>registro negado: já existe cooperativa com este nome');
                     socket.emit('feedback', ['danger', 'ja existe uma cooperativa com esse nome na instancia selecionada'])}
                 else{
-                    let jogador = new Aluno({ sockid: socket.id, backup: 0, temporario: 1, instancia: creden[2], npesquisas: 1, turno: 0, scoremod: 0, scorepreco: [0,0], propaganda: 1, propagandauni: 1, faturamento: 0, ativo: 1, taokeys: 1872000, divida: [0,0,0], comissao: 0.05, frota: [10,0,0,0,0,0,0,0,0,0,0,0], cooperativa: creden[0], pas: 15, pas1: 0, pas2: 0, distribuidores: 25, promotores: 20, senha: creden[1], 
+                    let jogador = new Aluno({ sockid: socket.id, backup: 0, temporario: 1, instancia: creden[2], npesquisas: 1, turno: 1, scoremod: 0, scorepreco: [0,0], propaganda: 0.42, propagandauni: 1, faturamento: 0, ativo: 1, taokeys: 1872000, divida: [0,0,0], comissao: 0.05, frota: [10,0,0,0,0,0,0,0,0,0,0,0], cooperativa: creden[0], pas: 15, pas1: 0, pas2: 0, distribuidores: 25, promotores: 20, senha: creden[1], 
                         147:[985,1,288,600,300,0,0,0],
                         159:[0,0,396,0,0,0,0,0],
                         149:[0,0,360,0,0,0,0,0],
@@ -351,7 +360,7 @@ sockets.on('connection', (socket) => {
                             tributos_a_pagar_atual: 0,
                             emprestimos: 288000,
                             capial: 18720000,
-                            lucros_acumulados: 2130849
+                            lucros_acumulados: 0
                         },
                         dre: {
                             receita: 0,
@@ -386,7 +395,7 @@ sockets.on('connection', (socket) => {
 
                         },
                         fluxo_de_caixa: {
-                            saldo_anterior: 0,
+                            saldo_anterior: 1119081,
                             faturamento: 0,
                             contas_a_receber: 0,
                             contas_a_receber_recebidas: 0, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
@@ -409,14 +418,21 @@ sockets.on('connection', (socket) => {
                             maquinas: 0,
                             distribuidores: 0
                         },
-                        somapropuni: {tipo1: '147', inv1: 0, tipo2: 0, inv2: 0}
+                        somapropuni: {tipo1: '147', inv1: 0, tipo2: 0, inv2: 0},
+                        pes_p: {
+                        modelos_oferecidos: 0,
+                        total_pas: 0,
+                        total_participacao_modelos: 0,
+                        total_distribuidores: 0
+                        },
+                        participacao_modelos: []
                     });
                         jogador.save()
                             .then(Aluno.find({ cooperativa: creden[0], temporario: 1, instancia: creden[2]}))
                             .then((user) => { 
                                 if(user !== null){
-
-                                    let jogadorR = new Aluno({ sockid: "11994729653", backup: 0, temporario: 0, instancia: creden[2], npesquisas: 1, turno: 0, scoremod: 0, scorepreco: [0,0], propaganda: 1, propagandauni: 1, faturamento: 0, ativo: 1, taokeys: 1872000, divida: [0,0,0], comissao: 0.05, frota: [10,0,0,0,0,0,0,0,0,0,0,0], cooperativa: creden[0], pas: 15, pas1: 0, pas2: 0, distribuidores: 25, promotores: 20, senha: creden[1], 
+                                    console.log('caralho')
+                                    let jogadorR = new Aluno({ sockid: "11994729653", backup: 0, temporario: 0, instancia: creden[2], npesquisas: 1, turno: 1, scoremod: 0, scorepreco: [0,0], propaganda: 0.42, propagandauni: 1, faturamento: 0, ativo: 1, taokeys: 1872000, divida: [0,0,0], comissao: 0.05, frota: [10,0,0,0,0,0,0,0,0,0,0,0], cooperativa: creden[0], pas: 15, pas1: 0, pas2: 0, distribuidores: 25, promotores: 20, senha: creden[1], 
                                     147:[985,1,288,600,300,0,0,0],
                                     159:[0,0,396,0,0,0,0,0],
                                     149:[0,0,360,0,0,0,0,0],
@@ -451,7 +467,7 @@ sockets.on('connection', (socket) => {
                                         tributos_a_pagar_atual: 0,
                                         emprestimos: 288000,
                                         capial: 18720000,
-                                        lucros_acumulados: 2130849
+                                        lucros_acumulados: 0
                                     },
                                     dre: {
                                         receita: 0,
@@ -487,7 +503,7 @@ sockets.on('connection', (socket) => {
             
                                     },
                                     fluxo_de_caixa: {
-                                        saldo_anterior: 0,
+                                        saldo_anterior: 1119081,
                                         faturamento: 0,
                                         contas_a_receber: 0,
                                         contas_a_receber_recebidas: 0, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
@@ -509,26 +525,30 @@ sockets.on('connection', (socket) => {
                                         encargos_financiamento: 0,
                                         maquinas: 0,
                                         distribuidores: 0
-            
-                                        //fluxo_financeiro: 0, // entra + emprestimos tomados e entra - empréstimos pagos 
-                                        //fluxo_investimento: 0, // entra negativo tds as compras de VEICULOS e entra positivo todo o valor da venda de veiculos
-                                        //fluxo: 0
                                     
                                     },
-                                    somapropuni: {tipo1: '147', inv1: 0, tipo2: 0, inv2: 0}
+                                    somapropuni: {tipo1: '147', inv1: 0, tipo2: 0, inv2: 0},
+                                    pes_p: {
+                                        modelos_oferecidos: 0,
+                                        total_pas: 0,
+                                        total_participacao_modelos: 0,
+                                        total_distribuidores: 0
+                                        },
+                                    participacao_modelos: []
+                                    
                                     });
                                     jogadorR.save()
                                         .then(() => {
                                             console.log('>>login aprovado')
-                                            socket.emit('feedback', ['success','login aprovado para: ' + creden[0]]) 
-                                            socket.emit('register-client-aprovado')
+                                            socket.emit('feedback', ['success','>> Login aprovado para: ' + creden[0]+'.']) 
+                                            //socket.emit('register-client-aprovado')
                                         })
                                         .catch((err) => {console.log(err)})
 
                                 }
                                 else{
-                                    console.log('>>falha ao registrar')
-                                    socket.emit('feedback', ['danger','ocorreu uma falha no processo de registro']) 
+                                    console.log('>>falha ao registrar: ' + creden[0]+'.')
+                                    socket.emit('feedback', ['danger','>> Ocorreu uma falha no processo de registro da cooperativa: ' +creden[0]+'.']) 
                                     }
                             })
 
@@ -571,7 +591,7 @@ sockets.on('connection', (socket) => {
                                 contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
                                 contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
                                 maquinas: userx.balanco_patrimonial.maquinas,
-                                depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_de_maquinas,
+                                depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_maquinas,
                                 veiculos: userx.balanco_patrimonial.veiculos,
                                 depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos,
                                 tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
@@ -725,7 +745,7 @@ sockets.on('connection', (socket) => {
                                     contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
                                     contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
                                     maquinas: userx.balanco_patrimonial.maquinas,
-                                    depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_de_maquinas,
+                                    depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_maquinas,
                                     veiculos: userx.balanco_patrimonial.veiculos,
                                     depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos,
                                     tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
@@ -902,7 +922,7 @@ sockets.on('connection', (socket) => {
                             contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
                             contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
                             maquinas: userx.balanco_patrimonial.maquinas,
-                            depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_de_maquinas,
+                            depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_maquinas,
                             veiculos: userx.balanco_patrimonial.veiculos,
                             depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos,
                             tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
@@ -1047,7 +1067,7 @@ sockets.on('connection', (socket) => {
                             contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
                             contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
                             maquinas: userx.balanco_patrimonial.maquinas,
-                            depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_de_maquinas,
+                            depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_maquinas,
                             veiculos: userx.balanco_patrimonial.veiculos,
                             depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos,
                             tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
@@ -1390,7 +1410,7 @@ sockets.on('connection', (socket) => {
                             contas_a_receber60: userdef.balanco_patrimonial.contas_a_receber60,
                             contas_a_receber120: userdef.balanco_patrimonial.contas_a_receber120,
                             maquinas: userdef.balanco_patrimonial.maquinas,
-                            depreciacao_maquinas: userdef.balanco_patrimonial.depreciacao_de_maquinas,
+                            depreciacao_maquinas: userdef.balanco_patrimonial.depreciacao_maquinas,
                             veiculos: userdef.balanco_patrimonial.veiculos,
                             depreciacao_veiculos: userdef.balanco_patrimonial.depreciacao_veiculos,
                             tributos_a_pagar_anterior: userdef.balanco_patrimonial.tributos_a_pagar_anterior,
@@ -1405,7 +1425,7 @@ sockets.on('connection', (socket) => {
                             contas_a_receber60: usert.balanco_patrimonial.contas_a_receber60,
                             contas_a_receber120: usert.balanco_patrimonial.contas_a_receber120,
                             maquinas: usert.balanco_patrimonial.maquinas,
-                            depreciacao_maquinas: usert.balanco_patrimonial.depreciacao_de_maquinas,
+                            depreciacao_maquinas: usert.balanco_patrimonial.depreciacao_maquinas,
                             veiculos: usert.balanco_patrimonial.veiculos,
                             depreciacao_veiculos: usert.balanco_patrimonial.depreciacao_veiculos,
                             tributos_a_pagar_anterior: usert.balanco_patrimonial.tributos_a_pagar_anterior,
@@ -1549,7 +1569,7 @@ sockets.on('connection', (socket) => {
                             contas_a_receber60: usert.balanco_patrimonial.contas_a_receber60,
                             contas_a_receber120: usert.balanco_patrimonial.contas_a_receber120,
                             maquinas: usert.balanco_patrimonial.maquinas,
-                            depreciacao_maquinas: usert.balanco_patrimonial.depreciacao_de_maquinas,
+                            depreciacao_maquinas: usert.balanco_patrimonial.depreciacao_maquinas,
                             veiculos: usert.balanco_patrimonial.veiculos,
                             depreciacao_veiculos: usert.balanco_patrimonial.depreciacao_veiculos,
                             tributos_a_pagar_anterior: usert.balanco_patrimonial.tributos_a_pagar_anterior,
@@ -1615,7 +1635,14 @@ sockets.on('connection', (socket) => {
                             distribuidores: usert.fluxo_de_caixa.distribuidores
                         }
                         userdef.somapropuni = {tipo1: usert.somapropuni.tipo1, inv1: usert.somapropuni.inv1, tipo2: usert.somapropuni.tipo2, inv2: usert.somapropuni.inv2}
-                        
+                        userdef.pes_p = {
+                                modelos_oferecidos: usert.pes_p.modelos_oferecidos,
+                                total_pas: usert.pes_p.total_pas,
+                                total_participacao_modelos: usert.pes_p.total_participacao_modelos,
+                                total_distribuidores: usert.pes_p.total_distribuidores
+                                
+                        }
+                        userdef.participacao_modelos = usert.participacao_modelos
                         for(let s = 0; s < index.length; s++){
                             //console.log(index[s])
                             let serv = index[s]
@@ -1671,7 +1698,7 @@ sockets.on('connection', (socket) => {
                             contas_a_receber60: userdef.balanco_patrimonial.contas_a_receber60,
                             contas_a_receber120: userdef.balanco_patrimonial.contas_a_receber120,
                             maquinas: userdef.balanco_patrimonial.maquinas,
-                            depreciacao_maquinas: userdef.balanco_patrimonial.depreciacao_de_maquinas,
+                            depreciacao_maquinas: userdef.balanco_patrimonial.depreciacao_maquinas,
                             veiculos: userdef.balanco_patrimonial.veiculos,
                             depreciacao_veiculos: userdef.balanco_patrimonial.depreciacao_veiculos,
                             tributos_a_pagar_anterior: userdef.balanco_patrimonial.tributos_a_pagar_anterior,
@@ -1736,6 +1763,16 @@ sockets.on('connection', (socket) => {
                             maquinas: userdef.fluxo_de_caixa.maquinas,
                             distribuidores: userdef.fluxo_de_caixa.distribuidores
                         }
+                        usert.somapropuni = {tipo1: userdef.somapropuni.tipo1, inv1: userdef.somapropuni.inv1, tipo2: userdef.somapropuni.tipo2, inv2: userdef.somapropuni.inv2}
+                        usert.pes_p = {
+                                modelos_oferecidos: userdef.pes_p.modelos_oferecidos,
+                                total_pas: userdef.pes_p.total_pas,
+                                total_participacao_modelos: userdef.pes_p.total_participacao_modelos,
+                                total_distribuidores: userdef.pes_p.total_distribuidores
+                                
+                        }
+                        usert.participacao_modelos = userdef.participacao_modelos
+
                         
                         for(let s = 0; s < index.length; s++){
                             //console.log(index[s])
@@ -1813,7 +1850,7 @@ sockets.on('connection', (socket) => {
                                 contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
                                 contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
                                 maquinas: userx.balanco_patrimonial.maquinas,
-                                depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_de_maquinas,
+                                depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_maquinas,
                                 veiculos: userx.balanco_patrimonial.veiculos + qnt*57600,
                                 depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos,
                                 tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
@@ -1942,7 +1979,7 @@ sockets.on('connection', (socket) => {
                                                 contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
                                                 contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
                                                 maquinas: userx.balanco_patrimonial.maquinas,
-                                                depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_de_maquinas,
+                                                depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_maquinas,
                                                 veiculos: userx.balanco_patrimonial.veiculos - qnt*57600,
                                                 depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos + userx.frota[k]*(57600/12)*(k),
                                                 tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
@@ -1996,7 +2033,7 @@ sockets.on('connection', (socket) => {
                                             contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
                                             contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
                                             maquinas: userx.balanco_patrimonial.maquinas,
-                                            depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_de_maquinas,
+                                            depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_maquinas,
                                             veiculos: userx.balanco_patrimonial.veiculos - qnt*57600,
                                             depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos + userx.frota[k]*(57600/12)*(k),
                                             tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
@@ -2403,7 +2440,7 @@ sockets.on('connection', (socket) => {
                                 contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
                                 contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
                                 maquinas: userx.balanco_patrimonial.maquinas,
-                                depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_de_maquinas,
+                                depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_maquinas,
                                 veiculos: userx.balanco_patrimonial.veiculos,
                                 depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos,
                                 tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
@@ -2498,7 +2535,7 @@ sockets.on('connection', (socket) => {
                             contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
                             contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
                             maquinas: userx.balanco_patrimonial.maquinas,
-                            depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_de_maquinas,
+                            depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_maquinas,
                             veiculos: userx.balanco_patrimonial.veiculos,
                             depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos,
                             tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
@@ -2894,7 +2931,7 @@ sockets.on('connection', (socket) => {
                                 contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
                                 contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
                                 maquinas: userx.balanco_patrimonial.maquinas,
-                                depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_de_maquinas,
+                                depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_maquinas,
                                 veiculos: userx.balanco_patrimonial.veiculos,
                                 depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos,
                                 tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
@@ -3085,7 +3122,7 @@ sockets.on('connection', (socket) => {
                                 contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
                                 contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
                                 maquinas: userx.balanco_patrimonial.maquinas,
-                                depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_de_maquinas,
+                                depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_maquinas,
                                 veiculos: userx.balanco_patrimonial.veiculos,
                                 depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos,
                                 tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
@@ -3408,7 +3445,7 @@ sockets.on('connection', (socket) => {
                                 contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
                                 contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
                                 maquinas: userx.balanco_patrimonial.maquinas,
-                                depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_de_maquinas,
+                                depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_maquinas,
                                 veiculos: userx.balanco_patrimonial.veiculos,
                                 depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos,
                                 tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
@@ -3540,7 +3577,7 @@ sockets.on('connection', (socket) => {
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => { 
                     if(userx !== null){
-
+                        if(userx.pes_p.total_pas == 0){
                         if(userx['taokeys'] >= 2160){
                         userx.balanco_patrimonial = {
                             caixa: userx.balanco_patrimonial.caixa - 2160,
@@ -3548,7 +3585,7 @@ sockets.on('connection', (socket) => {
                             contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
                             contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
                             maquinas: userx.balanco_patrimonial.maquinas,
-                            depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_de_maquinas,
+                            depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_maquinas,
                             veiculos: userx.balanco_patrimonial.veiculos,
                             depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos,
                             tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
@@ -3615,14 +3652,21 @@ sockets.on('connection', (socket) => {
                         }
                     
                            userx.taokeys = userx.taokeys - 2160
-                           userx['npesquisas'] = userx['npesquisas'] + 1 
+                           userx['npesquisas'] = userx['npesquisas'] + 1
+                           userx.pes_p = {
+                                modelos_oferecidos: userx.pes_p.modelos_oferecidos,
+                                total_pas: 1,
+                                total_participacao_modelos: userx.pes_p.total_participacao_modelos,
+                                total_distribuidores: userx.pes_p.total_distribuidores
+                           } 
                            //console.log(user.taokeys)
                            userx.save()
                             .then(() => {
                                 Data.findOne({ativo: 1, instancia: userx.instancia})
                                     .then((dados) => {
                                         if(dados !== null){
-                                        socket.emit('resposta-pesquisa', dados['total_pas'])
+                                        socket.emit('feedback', ['success', '>> Encomenda de pesquisa de PAS realizada com sucesso.'])
+                                        //socket.emit('resposta-pesquisa', dados['total_pas'])
                                         function propuni(tipo) {
                                             if(userx.somapropuni.tipo1 == tipo){
                                                 return userx.somapropuni.inv1
@@ -3666,7 +3710,7 @@ sockets.on('connection', (socket) => {
                                     userx["turno"]]);
                                     }
                                     else{
-                                        socket.emit('feedback', ['danger','voce nao pode realizar pesquisas ate que o administrador inicie o turno'])
+                                        socket.emit('feedback', ['danger','>> Voce nao pode realizar pesquisas ate que o administrador inicie o turno.'])
                                     }
                                     })
                                     .catch((err) => {console.log(err)})
@@ -3682,6 +3726,10 @@ sockets.on('connection', (socket) => {
                     //console.log(user.taokeys)
                     }
                     else{
+                        socket.emit('feedback', ['warning', '>> Sua cooperativa ja encomendou essa pesquisa.'])
+                    }
+                    }
+                    else{
                         socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
                     }
             }) 
@@ -3692,6 +3740,7 @@ sockets.on('connection', (socket) => {
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => { 
                     if(userx !== null){
+                        if(userx.pes_p.total_distribuidores == 0){
                         
                         
                         if(userx['taokeys'] >= 2160){
@@ -3701,7 +3750,7 @@ sockets.on('connection', (socket) => {
                                 contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
                                 contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
                                 maquinas: userx.balanco_patrimonial.maquinas,
-                                depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_de_maquinas,
+                                depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_maquinas,
                                 veiculos: userx.balanco_patrimonial.veiculos,
                                 depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos,
                                 tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
@@ -3768,13 +3817,20 @@ sockets.on('connection', (socket) => {
                             }
                            //console.log(user.taokeys + " <====")
                            userx.taokeys = userx.taokeys - 2160
-                           userx['npesquisas'] = userx['npesquisas'] + 1 
+                           userx['npesquisas'] = userx['npesquisas'] + 1
+                           userx.pes_p = {
+                            modelos_oferecidos: userx.pes_p.modelos_oferecidos,
+                            total_pas: userx.pes_p.total_pas,
+                            total_participacao_modelos: userx.pes_p.total_participacao_modelos,
+                            total_distribuidores: 1
+                            }  
                            //console.log(user.taokeys)
                            userx.save()
                             .then(() => {
                                 Data.findOne({ativo: 1, instancia: userx.instancia})
                                     .then((dados) => {
                                         if(dados !== null){
+                                        socket.emit('feedback', ['success', '>> Encomenda de pesquisa de DISTRIBUIDORES realizada com sucesso.'])
                                         socket.emit('resposta-pesquisa', dados['total_distribuidores'])
                                         function propuni(tipo) {
                                             if(userx.somapropuni.tipo1 == tipo){
@@ -3834,6 +3890,10 @@ sockets.on('connection', (socket) => {
                     //console.log(user.taokeys)
                     }
                     else{
+                        socket.emit('feedback', ['warning', '>> Sua cooperativa ja encomendou essa pesquisa.'])
+                    }
+                    }
+                    else{
                         socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
                     }
             }) 
@@ -3844,15 +3904,29 @@ sockets.on('connection', (socket) => {
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => { 
                     if(userx !== null && input.length < 3){
+                        let redun
                         //console.log(user.taokeys + ' ccccccccccccccc');
                         if(userx['taokeys'] >= 10800 && input.length == 1){
+                            function sem_redundancia() {
+                                for(let ff = 0; ff < userx.participacao_modelos.length; ff++){
+                                    if(userx.participacao_modelos[ff] == input[0]){
+                                        redun = input[0]
+                                        return false
+                                    }
+        
+                            }
+                            return true
+                            }
+                            if(sem_redundancia()){
+                                        
+                            
                             userx.balanco_patrimonial = {
                                 caixa: userx.balanco_patrimonial.caixa - 10800,
                                 estoque: userx.balanco_patrimonial.estoque,
                                 contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
                                 contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
                                 maquinas: userx.balanco_patrimonial.maquinas,
-                                depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_de_maquinas,
+                                depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_maquinas,
                                 veiculos: userx.balanco_patrimonial.veiculos,
                                 depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos,
                                 tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
@@ -3920,20 +3994,20 @@ sockets.on('connection', (socket) => {
                            
                         
                            userx.taokeys = userx.taokeys - 10800
-                           userx['npesquisas'] = userx['npesquisas'] + 1     
+                           userx['npesquisas'] = userx['npesquisas'] + 1
+                           
+                           for(let ss = 0; ss < index.length; ss++){
+                            if(index[ss] == input[0]){
+                                userx.participacao_modelos.push(index[ss])
+                                userx.pes_p.total_participacao_modelos = 1
+                                
+                                
+                            }
+                        }     
                            //console.log(user.taokeys)
                            userx.save()
                             .then(() => {
-                                Data.findOne({ativo: 1, instancia: userx.instancia})
-                                    .then((dados) => {
-                                        if(dados !== null){
-                                            let respostaP = 0
-                                            for(let ss = 0; ss < index.length; ss++){
-                                                if(index[ss] == input){
-                                                    respostaP = dados['participacao_modelos'][ss]
-                                                }
-                                            }
-                                        socket.emit('resposta-pesquisa', respostaP)
+                                socket.emit('feedback', ['success', '>> Encomenda de pesquisa de PARTICIPAÇÃO DE SERVIÇOS realizada com sucesso.'])
                                         function propuni(tipo) {
                                             if(userx.somapropuni.tipo1 == tipo){
                                                 return userx.somapropuni.inv1
@@ -3975,23 +4049,44 @@ sockets.on('connection', (socket) => {
                                     userx["propagandauni"],
                                     (userx["divida"][0]+userx["divida"][1]+userx["divida"][2]),
                                     userx["turno"]]);
-            }
-            else{
-                socket.emit('feedback', ['danger','voce nao pode realizar pesquisas ate que o administrador inicie o turno'])
-            }
-                                    })
+            
+                                    
 
                             })
                             .catch((err) => {console.log('falha em salvar transacao por pesquisa n 307' + err)})
+                            
+                            
+                            
                             }
+                            else{  
+                                socket.emit('feedback', ['warning', '>> Sua cooperativa ja encomendou a pesquisa do serviço ' + redun + '. (operação negada)'])
+
+                            }
+                        }
                             else if(userx['taokeys'] >= 14400 && input.length == 2){
+                                function sem_redundancia() {
+                                    for(let ff = 0; ff < userx.participacao_modelos.length; ff++){
+                                        if(userx.participacao_modelos[ff] == input[0]){
+                                            redun = input[0]
+                                            return false
+                                        }
+                                        if(userx.participacao_modelos[ff] == input[1]){
+                                            redun = input[1]
+                                            return false
+                                        }
+            
+                                }
+                                return true
+                                }
+                                if(sem_redundancia()){
+                                
                                 userx.balanco_patrimonial = {
                                     caixa: userx.balanco_patrimonial.caixa - 14400,
                                     estoque: userx.balanco_patrimonial.estoque,
                                     contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
                                     contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
                                     maquinas: userx.balanco_patrimonial.maquinas,
-                                    depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_de_maquinas,
+                                    depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_maquinas,
                                     veiculos: userx.balanco_patrimonial.veiculos,
                                     depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos,
                                     tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
@@ -4057,23 +4152,28 @@ sockets.on('connection', (socket) => {
                                     distribuidores: userx.fluxo_de_caixa.distribuidores
                                 }
                                 userx.taokeys = userx.taokeys - 14400
-                                userx['npesquisas'] = userx['npesquisas'] + 1 
+                                userx['npesquisas'] = userx['npesquisas'] + 1
+                                for(let kk = 0; kk < 2; kk++){
+                                    for(let ss = 0; ss < index.length; ss++){
+                                        if(index[ss] == input[kk]){
+
+                                            userx.participacao_modelos.push(index[ss])
+                                            userx.pes_p.total_participacao_modelos = 1
+                                            
+                                        }
+                                    }
+                                    
+                                }
+                                 
+                                 
                                 
                                 //console.log(user.taokeys)
                                 userx.save()
-                                 .then(() => {
-                                     Data.findOne({ativo: 1, instancia: userx.instancia})
-                                         .then((dados) => {
-                                             if(dados !== null){
-                                                let respostaP = []
-                                                for(let kk = 0; kk < 2; kk++){
-                                                for(let ss = 0; ss < index.length; ss++){
-                                                    if(index[ss] == input[kk]){
-                                                        respostaP.push(dados['participacao_modelos'][ss])
-                                                    }
-                                                }
-                                            } 
-                                             socket.emit('resposta-pesquisa', String(respostaP))
+                                 .then((userxx) => {
+                                     
+                                    socket.emit('feedback', ['success', '>> Encomenda de pesquisa de PARTICIPAÇÃO DE SERVIÇOS realizada com sucesso.'])
+                                                
+                                            
                                              function propuni(tipo) {
                                                 if(userx.somapropuni.tipo1 == tipo){
                                                     return userx.somapropuni.inv1
@@ -4084,46 +4184,49 @@ sockets.on('connection', (socket) => {
                                                 else{return 0}
                                             }
                                              socket.emit('update', [
-                                                [...userx["147"],"147",propuni("147")],
-                                                [...userx["148"],"148",propuni("148")],
-                                                [...userx["149"],"149",propuni("149")],
-                                                [...userx["157"],"157",propuni("157")],
-                                                [...userx["158"],"158",propuni("158")],
-                                                [...userx["159"],"159",propuni("159")],
-                                                [...userx["257"],"257",propuni("257")],
-                                                [...userx["258"],"258",propuni("258")],
-                                                [...userx["259"],"259",propuni("259")],
-                                                [...userx["267"],"267",propuni("267")],
-                                                [...userx["268"],"268",propuni("268")],
-                                                [...userx["269"],"269",propuni("269")],
-                                                [...userx["347"],"347",propuni("347")],
-                                                [...userx["348"],"348",propuni("348")],
-                                                [...userx["349"],"349",propuni("349")],
-                                                [...userx["357"],"357",propuni("357")],
-                                                [...userx["358"],"358",propuni("358")],
-                                                [...userx["359"],"359",propuni("359")],
-                                                [...userx["367"],"367",propuni("367")],
-                                                [...userx["368"],"368",propuni("368")],
-                                                [...userx["369"],"369",propuni("369")],
-                                                userx["taokeys"],
-                                                userx["frota"],
-                                                userx["promotores"],
-                                                userx["comissao"],
-                                                userx["distribuidores"],
-                                                userx["pas"],
-                                                userx["propaganda"],
-                                                userx["propagandauni"],
-                                                (userx["divida"][0]+userx["divida"][1]+userx["divida"][2]),
-                                                userx["turno"]]);
-                 }
-                 else{
-                     socket.emit('feedback', ['danger', 'voce nao pode realizar pesquisas ate que o administrador inicie o turno'])
-                 }
-                                         })
+                                                [...userxx["147"],"147",propuni("147")],
+                                                [...userxx["148"],"148",propuni("148")],
+                                                [...userxx["149"],"149",propuni("149")],
+                                                [...userxx["157"],"157",propuni("157")],
+                                                [...userxx["158"],"158",propuni("158")],
+                                                [...userxx["159"],"159",propuni("159")],
+                                                [...userxx["257"],"257",propuni("257")],
+                                                [...userxx["258"],"258",propuni("258")],
+                                                [...userxx["259"],"259",propuni("259")],
+                                                [...userxx["267"],"267",propuni("267")],
+                                                [...userxx["268"],"268",propuni("268")],
+                                                [...userxx["269"],"269",propuni("269")],
+                                                [...userxx["347"],"347",propuni("347")],
+                                                [...userxx["348"],"348",propuni("348")],
+                                                [...userxx["349"],"349",propuni("349")],
+                                                [...userxx["357"],"357",propuni("357")],
+                                                [...userxx["358"],"358",propuni("358")],
+                                                [...userxx["359"],"359",propuni("359")],
+                                                [...userxx["367"],"367",propuni("367")],
+                                                [...userxx["368"],"368",propuni("368")],
+                                                [...userxx["369"],"369",propuni("369")],
+                                                userxx["taokeys"],
+                                                userxx["frota"],
+                                                userxx["promotores"],
+                                                userxx["comissao"],
+                                                userxx["distribuidores"],
+                                                userxx["pas"],
+                                                userxx["propaganda"],
+                                                userxx["propagandauni"],
+                                                (userxx["divida"][0]+userxx["divida"][1]+userxx["divida"][2]),
+                                                userxx["turno"]]);
+                 
+                 
+                                         
      
                                  })
                                  .catch((err) => {console.log('falha em salvar transacao por pesquisa n 307' + err)})
+                                 
+                                }
+                                 else{
+                                     socket.emit('feedback', ['warning','>> Sua cooperativa ja encomendou a pesquisa do serviço ' + redun + '. (operação negada)'])
                                  }
+                                  }
                         else{
                             socket.emit('feedback', ['warning','falta caixa']);
                             //console.log('hlu')
@@ -4134,13 +4237,14 @@ sockets.on('connection', (socket) => {
                         socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
                     }
             }) 
-            .catch(() => { console.log('falha na comunicacao com o banco de dados para o ' +socket.id)
+            .catch((err) => { console.log('falha na comunicacao com o banco de dados para o ' +socket.id + ' ps: ' + err)
     })
     }) 
     socket.on('pesquisar-servicos-oferecidos-concorrencia', () => {
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => { 
                     if(userx !== null){
+                        if(userx.pes_p.modelos_oferecidos == 0){
                         //console.log(user.taokeys + ' ccccccccccccccc');
                         if(userx['taokeys'] >= 2160){
                             userx.balanco_patrimonial = {
@@ -4149,7 +4253,7 @@ sockets.on('connection', (socket) => {
                                 contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
                                 contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
                                 maquinas: userx.balanco_patrimonial.maquinas,
-                                depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_de_maquinas,
+                                depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_maquinas,
                                 veiculos: userx.balanco_patrimonial.veiculos,
                                 depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos,
                                 tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
@@ -4214,27 +4318,20 @@ sockets.on('connection', (socket) => {
                                 maquinas: userx.fluxo_de_caixa.maquinas,
                                 distribuidores: userx.fluxo_de_caixa.distribuidores
                             }
-                            /*
-                            userx.dre = {
-                                receita: userx.dre.receita,
-                                cmv: userx.dre.cmv,
-                                despesas_administrativas: userx.dre.despesas_administrativas + 2160,
-                                despesas_vendas: userx.dre.despesas_vendas,
-                                despesas_financeiras: userx.dre.despesas_financeiras,
-                                depreciacao_e_amortizacao: userx.dre.depreciacao_e_amortizacao,
-                                ir: userx.dre.ir
-                            }
-                            */
                            //console.log(user.taokeys + " <====")
                            userx.taokeys = userx.taokeys - 2160
-                           userx['npesquisas'] = userx['npesquisas'] + 1 
+                           userx['npesquisas'] = userx['npesquisas'] + 1
+                           userx.pes_p = {
+                            modelos_oferecidos: 1,
+                            total_pas: userx.pes_p.total_pas,
+                            total_participacao_modelos: userx.pes_p.total_participacao_modelos,
+                            total_distribuidores: userx.pes_p.total_distribuidores
+                       }  
                            //console.log(user.taokeys)
                            userx.save()
                             .then(() => {
-                                Data.findOne({ativo: 1, instancia: userx.instancia})
-                                    .then((dados) => {
-                                        if(dados !== null){
-                                        socket.emit('resposta-pesquisa', String(dados['modelos_oferecidos']))
+                                socket.emit('feedback', ['success', '>> Encomenda de pesquisa de SERVIÇOS OFERECIDOS NO MERCADO realizada com sucesso.'])
+                                        //socket.emit('resposta-pesquisa', String(dados['modelos_oferecidos']))
                                         function propuni(tipo) {
                                             if(userx.somapropuni.tipo1 == tipo){
                                                 return userx.somapropuni.inv1
@@ -4276,13 +4373,11 @@ sockets.on('connection', (socket) => {
                                     userx["propagandauni"],
                                     (userx["divida"][0]+userx["divida"][1]+userx["divida"][2]),
                                     userx["turno"]]);
-            }
-            else{
-                socket.emit('feedback', ['danger','voce nao pode realizar pesquisas ate que o administrador inicie o turno'])
-            }
+            
+            
                                     })
 
-                            })
+                            
                             .catch((err) => {console.log('falha em salvar transacao por pesquisa n 307' + err)})
                             }
 
@@ -4293,10 +4388,14 @@ sockets.on('connection', (socket) => {
                     //console.log(user.taokeys)
                     }
                     else{
+                        socket.emit('feedback', ['warning', '>> Sua cooperativa ja encomendou essa pesquisa.'])
+                    }
+                    }
+                    else{
                         socket.emit('feedback',['danger','voce precisa estar logado para puxar o state atual da simulação'])
                     }
             }) 
-            .catch(() => { console.log('falha na comunicacao com o banco de dados para o ' + socket.id)
+            .catch((err) => { console.log('falha na comunicacao com o banco de dados para o ' + socket.id + ' ps: ' + err)
     })
     }) 
     socket.on('puxar-balancos',  (turno) => {
@@ -4304,30 +4403,87 @@ sockets.on('connection', (socket) => {
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => {
                 if(userx !== null){
-                            //if(userx.turno == turno){} seria melhor ao registrar as instancias colocar como turno 1 na geração do JSON, mas fazer com cautela
-                            Aluno.findOne({ cooperativa: userx.cooperativa, backup: 1, instancia: userx.instancia, turno: turno })                 
-                                .then((balancos) => {
-                                    
+                        
+                        console.log(userx.turno)
+                        console.log(Number(turno))
+                            if(userx.turno !== Number(turno)){ //seria melhor ao registrar as instancias colocar como turno 1 na geração do JSON, mas fazer com cautela OKK
+                                Aluno.findOne({ cooperativa: userx.cooperativa, backup: 1, instancia: userx.instancia, turno: turno })                 
+                                    .then((balancos) => {
+                                        if(balancos !== null){ 
+                                            console.log('puxando-balancos << BACKUP')
+                                        socket.emit('balancos', { 
+                                            balanco_patrimonial: balancos.balanco_patrimonial,
+                                            dre: balancos.dre,
+                                            fluxo: balancos.fluxo_de_caixa
+                                         });  
+                                        } 
+                                        else{
+                                            console.log('puts')
+                                        }         
+                                    })
+                                    .catch((err) => {console.log(err)})
+                            }
+                            else{
+                                Aluno.findOne({ cooperativa: userx.cooperativa, backup: 0, instancia: userx.instancia, temporario: 1 })
+                                    .then((balancos) => {
+                                        console.log(balancos)
+                                        if(balancos !== null){
+                                            console.log('puxando-balancos <<ATUAL')
                                         socket.emit('balancos', { 
                                             balanco_patrimonial: balancos.balanco_patrimonial,
                                             dre: balancos.dre,
                                             fluxo: balancos.fluxo_de_caixa
                                          });
-        
-                                                      
-                                })
-                                .catch((err) => {console.log(err)})
+                                        }
+                                        else{
+                                            console.log('puts atual')
+                                        }            
+                                    })
+                                    .catch((err) => {console.log(err)})
+                                
+                            }
+
                           
 
             }
                 else{
-                    socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
+                    socket.emit('feedback', ['danger','É preciso estar logado para puxar o state atual da simulação.'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
 
     }) //FALTA PUXAR TB OS BALANCOS DO TURNO ATUAL 
-    
+    socket.on('puxar-pesquisas',  () => {
+
+        Aluno.findOne({sockid: socket.id, temporario: 1})
+            .then((userx) => {
+                if(userx !== null){
+                             //seria melhor ao registrar as instancias colocar como turno 1 na geração do JSON, mas fazer com cautela OKK
+                                Aluno.findOne({ cooperativa: userx.cooperativa, backup: 1, instancia: userx.instancia, turno: userx.turno-1 })                 
+                                    .then((pes) => {
+                                        socket.emit('pesquisas', { 
+                                            pesquisas: pes.pes_p,
+                                            participacao_modelos: pes.participacao_modelos
+                                         });        
+                                         socket.emit('feedback', ['warning', pes.participacao_modelos + pes.pes_p.total_distribuidores])    
+                                    })
+                                    .catch((err) => {console.log(err)})
+                            
+                            
+                                //socket.emit('feedback', ['danger', '>> Não é possível consultar pesquisas que ainda não foram efetuadas.'])
+                            
+                            
+
+                          
+
+            }
+                else{
+                    socket.emit('feedback', ['danger','>> É preciso estar logado para puxar o state atual da simulação.'])
+                }
+            })
+            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
+
+    })
     // SOCKETS AMD \/
     socket.on('registrar-nova-instancia', (creden) => {
                 if(creden[4] == "senha-mestra"){
@@ -4341,7 +4497,7 @@ sockets.on('connection', (socket) => {
                                 Data.findOne({login_adm: creden[0]})
                                     .then((userL) => {
                                         if(userL == null){
-                                            let jogo = new Data({login_adm: creden[0], iniciado: 1, senha_adm: creden[1], instancia: creden[2], senha_instancia: creden[3], turno: 0, oferta_mercado: 12000000, ativo: 1})
+                                            let jogo = new Data({login_adm: creden[0], iniciado: 1, senha_adm: creden[1], instancia: creden[2], senha_instancia: creden[3], turno: 0, oferta_mercado: 140000000, ativo: 1})
                                             jogo.save()
                                                 .then(() => {
                                                     console.log('>>> Instancia: ' + creden[2] + ' registrada com sucesso')    
@@ -4491,7 +4647,7 @@ sockets.on('connection', (socket) => {
                                     pas: users[i].dre.pas,
                                     pesquisas: users[i].dre.pesquisas,
                                     tributos: users[i].dre.tributos,
-                                    servicos: [index[r], users[i][index[r]][2], users[i].dre.servicos[2], users[i].dre.servicos[3]],
+                                    servicos: [index[r], users[i][index[r]][2], users[i].dre.servicos[2], users[i].dre.servicos[3]],//aqui!
                                     preco_medio: users[i].dre.preco_medio,
                                     atendimentos: users[i].dre.atendimentos,
                                     insumos_em_estoque: users[i].dre.insumos_em_estoque,
@@ -4519,7 +4675,7 @@ sockets.on('connection', (socket) => {
                                     encargos_financiamento: users[i].dre.encargos_financiamento,
                                     salario_frota: users[i].dre.salario_frota,
                                     manutencao_frota: users[i].dre.manutencao_frota,
-                                    depreciacao_de_veiculos: users[i].dre.depreciacao_de_veiculos + 2400*users[i]['frota'][f],
+                                    depreciacao_de_veiculos: users[i].dre.depreciacao_de_veiculos,
                                     frota_terceirizada: users[i].dre.frota_terceirizada,
                                     despesas_operacionais_n_planejadas: users[i].dre.despesas_operacionais_n_planejadas,
                                     pas: users[i].dre.pas,
@@ -4567,20 +4723,21 @@ sockets.on('connection', (socket) => {
                     for(let f = 0; f < 12; f++){
                         somaF = somaF + users[i]['frota'][f]
                         if(users[i]['frota'][f] > 0){
+                            users[i].taokeys = users[i].taokeys - users[i]['frota'][f]*10800
                             users[i].balanco_patrimonial = {
-                                caixa: users[i].balanco_patrimonial.caixa - 2400*users[i]['frota'][f],
+                                caixa: users[i].balanco_patrimonial.caixa  - users[i]['frota'][f]*10800,
                                 estoque: users[i].balanco_patrimonial.estoque,
                                 contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
                                 contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
                                 maquinas: users[i].balanco_patrimonial.maquinas,
-                                depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
+                                depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_maquinas,
                                 veiculos: users[i].balanco_patrimonial.veiculos,
-                                depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
+                                depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos + 2400*users[i]['frota'][f],//eh uma conta negativa no ativo
                                 tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
                                 tributos_a_pagar_atual: users[i].balanco_patrimonial.tributos_a_pagar_atual,
                                 emprestimos: users[i].balanco_patrimonial.emprestimos,
                                 capial: users[i].balanco_patrimonial.capial,
-                                lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - 2400*users[i]['frota'][f]
+                                lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - 2400*users[i]['frota'][f] - users[i]['frota'][f]*10800
                             }
                             users[i].dre = {
                                 receita: users[i].dre.receita,
@@ -4599,8 +4756,8 @@ sockets.on('connection', (socket) => {
                                 propaganda_unitaria: users[i].dre.propaganda_unitaria,
                                 depreciacao_de_maquinas: users[i].dre.depreciacao_de_maquinas,
                                 encargos_financiamento: users[i].dre.encargos_financiamento,
-                                salario_frota: users[i].dre.salario_frota,
-                                manutencao_frota: users[i].dre.manutencao_frota,
+                                salario_frota: users[i].dre.salario_frota + users[i]['frota'][f]*4800,
+                                manutencao_frota: users[i].dre.manutencao_frota + users[i]['frota'][f]*6000,
                                 depreciacao_de_veiculos: users[i].dre.depreciacao_de_veiculos + 2400*users[i]['frota'][f],
                                 frota_terceirizada: users[i].dre.frota_terceirizada,
                                 despesas_operacionais_n_planejadas: users[i].dre.despesas_operacionais_n_planejadas,
@@ -4619,7 +4776,7 @@ sockets.on('connection', (socket) => {
                                 faturamento: users[i].fluxo_de_caixa.faturamento,
                                 contas_a_receber: users[i].fluxo_de_caixa.contas_a_receber,
                                 contas_a_receber_recebidas: users[i].fluxo_de_caixa.contas_a_receber_recebidas, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
-                                custo_de_servico_prestado: users[i].fluxo_de_caixa.custo_de_servico_prestado,
+                                custo_de_servico_prestado: users[i].fluxo_de_caixa.custo_de_servico_prestado + 10800*users[i]['frota'][f],
                                 emprestimos_contratados: users[i].fluxo_de_caixa.emprestimos_contratados,
                                 emprestimos_pagos: users[i].fluxo_de_caixa.emprestimos_pagos,
                                 veiculos_vendidos: users[i].fluxo_de_caixa.veiculos_vendidos,
@@ -4646,7 +4803,7 @@ sockets.on('connection', (socket) => {
                                 contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
                                 contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
                                 maquinas: users[i].balanco_patrimonial.maquinas,
-                                depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
+                                depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_maquinas,
                                 veiculos: users[i].balanco_patrimonial.veiculos - 57600*users[i]['frota'][f],
                                 depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos - 57600*users[i]['frota'][f],
                                 tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
@@ -4700,7 +4857,7 @@ sockets.on('connection', (socket) => {
                 let demanda = sazonalidade(adm['oferta_mercado'])
 
                 for(let i = 0; i < users.length; i++){ 
-
+                
                     let media_user = users[i]['scorepreco'][1]/users[i]['scorepreco'][0]
                     let scorepp = Math.pow((preco_medio/media_user),2)
                     users[i]['faturamento'] = (0.09*users[i]['distribuidores']/soma + 0.09*users[i]['pas']/soma1 + 0.07*users[i]['promotores']/soma2 + 0.06*users[i]['comissao']/soma3 + 0.1*users[i]['propaganda']/soma5 + 0.12*users[i]['scoremod']/scorex + 0.3*(scorepp/dist) + 0.12*users[i]['propagandauni']/soma6 + 0.05*users[i]['npesquisas']/soma7)*demanda
@@ -4708,25 +4865,175 @@ sockets.on('connection', (socket) => {
                     console.log((0.09*users[i]['distribuidores']/soma + 0.09*users[i]['pas']/soma1 + 0.07*users[i]['promotores']/soma2 + 0.06*users[i]['comissao']/soma3 + 0.1*users[i]['propaganda']/soma5 + 0.12*users[i]['scoremod']/scorex + 0.3*(scorepp/dist) + 0.12*users[i]['propagandauni']/soma6 + 0.05*users[i]['npesquisas']/soma7)*demanda)
                     //users[i]['faturamento'] = users[i]['faturamento']*0.95
                     //users[i]['faturamento']/users[i]['scorepreco'][1]  <-- qnts % vendeu do que foi planejado
-                    
+                    let base_trib = users[i]['faturamento'] - users[i]['promotores']*2160  - users[i]['pas']*2160 - users[i]['faturamento']*users[i]['comissao'] -720000 -50400
                     
                     //  -_-_-_-
                     //Apos a computacao do faturamento do player no codigo abaixo altera-se no Schema o lucro resultante desse faturamento levando em conta o faturamento planejado do player, como o professor instruiu \/
-                    users[i].taokeys = users[i].taokeys + users[i].balanco_patrimonial.contas_a_receber60 - users[i]['promotores']*2160 - users[i]['distribuidores']*360 - users[i]['pas']*2160 - users[i]['faturamento']*users[i]['comissao']
+                    if(users[i].turno == 2){ 
+                        users[i].taokeys = users[i].taokeys - users[i].balanco_patrimonial.tributos_a_pagar_anterior/2
+                        users[i].balanco_patrimonial = {
+                            caixa: users[i].balanco_patrimonial.caixa - users[i].balanco_patrimonial.tributos_a_pagar_anterior/2,
+                            estoque: users[i].balanco_patrimonial.estoque,
+                            contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
+                            contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
+                            maquinas: users[i].balanco_patrimonial.maquinas,
+                            depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_maquinas,
+                            veiculos: users[i].balanco_patrimonial.veiculos,
+                            depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
+                            tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior - users[i].balanco_patrimonial.tributos_a_pagar_anterior/2,
+                            tributos_a_pagar_atual: users[i].balanco_patrimonial.tributos_a_pagar_atual,
+                            emprestimos: users[i].balanco_patrimonial.emprestimos,
+                            capial: users[i].balanco_patrimonial.capial,
+                            lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados
+                        }
+                        users[i].dre = {
+                            receita: users[i].dre.receita,
+                            csp: users[i].dre.csp,
+                            estoque_inicial: users[i].dre.estoque_inicial,
+                            custo_prestacao_servico: users[i].dre.custo_prestacao_servico,
+                            custo_estocagem: users[i].dre.custo_estocagem,
+                            custo_troca_insumos: users[i].dre.custo_troca_insumos,
+                            hora_extra: users[i].dre.hora_extra,
+                            capacidade_n_utilizada: users[i].dre.capacidade_n_utilizada,
+                            margem_bruta: users[i].dre.margem_bruta,
+                            despesas_administrativas: users[i].dre.despesas_administrativas,
+                            salario_promotores: users[i].dre.salario_promotores, //gambiarra
+                            comissao: users[i].dre.comissao,
+                            propaganda_institucional: users[i].dre.propaganda_institucional,
+                            propaganda_unitaria: users[i].dre.propaganda_unitaria,
+                            depreciacao_de_maquinas: users[i].dre.depreciacao_de_maquinas,
+                            encargos_financiamento: users[i].dre.encargos_financiamento,
+                            salario_frota: users[i].dre.salario_frota,
+                            manutencao_frota: users[i].dre.manutencao_frota,
+                            depreciacao_de_veiculos: users[i].dre.depreciacao_de_veiculos,
+                            frota_terceirizada: users[i].dre.frota_terceirizada,
+                            despesas_operacionais_n_planejadas: users[i].dre.despesas_operacionais_n_planejadas,
+                            pas: users[i].dre.pas,
+                            pesquisas: users[i].dre.pesquisas,
+                            tributos: users[i].dre.tributos + users[i].balanco_patrimonial.tributos_a_pagar_anterior/2,
+                            servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],
+                            preco_medio: users[i].dre.preco_medio,
+                            atendimentos: users[i].dre.atendimentos,
+                            insumos_em_estoque: users[i].dre.insumos_em_estoque,
+                            distribuidores: users[i].dre.distribuidores //+ users[i]['distribuidores']*360
+    
+    
+                        }
+                        users[i].fluxo_de_caixa = {
+                            saldo_anterior: users[i].fluxo_de_caixa.saldo_anterior,
+                            faturamento: users[i].fluxo_de_caixa.faturamento,
+                            contas_a_receber: users[i].fluxo_de_caixa.contas_a_receber,
+                            contas_a_receber_recebidas: users[i].fluxo_de_caixa.contas_a_receber_recebidas, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
+                            custo_de_servico_prestado: users[i].fluxo_de_caixa.custo_de_servico_prestado,
+                            emprestimos_contratados: users[i].fluxo_de_caixa.emprestimos_contratados,
+                            emprestimos_pagos: users[i].fluxo_de_caixa.emprestimos_pagos,
+                            veiculos_vendidos: users[i].fluxo_de_caixa.veiculos_vendidos,
+                            depreciacao_de_veiculos: users[i].fluxo_de_caixa.depreciacao_de_veiculos,
+                            depreciacao_de_maquinas: users[i].fluxo_de_caixa.depreciacao_de_maquinas,
+                            veiculos_comprados: users[i].fluxo_de_caixa.veiculos_comprados,
+                            tributos: users[i].fluxo_de_caixa.tributos + users[i].balanco_patrimonial.tributos_a_pagar_anterior/2,
+                            promotores: users[i].fluxo_de_caixa.promotores,
+                            propaganda: users[i].fluxo_de_caixa.propaganda,
+                            pesquisas: users[i].fluxo_de_caixa.pesquisas,
+                            pas: users[i].fluxo_de_caixa.pas,
+                            uso_frota: users[i].fluxo_de_caixa.uso_frota,
+                            despesas_operacionais_n_planejadas: users[i].fluxo_de_caixa.despesas_operacionais_n_planejadas,
+                            despesas_administrativas: users[i].fluxo_de_caixa.despesas_administrativas,
+                            encargos_financiamento: users[i].fluxo_de_caixa.encargos_financiamento,
+                            maquinas: users[i].fluxo_de_caixa.maquinas,
+                            distribuidores: users[i].fluxo_de_caixa.distribuidores //+ users[i]['distribuidores']*360
+                        }
+                    }//PAGAMENTO DOS tributos e encargos do ano anterior
+                    if(users[i].turno == 3){
+                        users[i].taokeys = users[i].taokeys - users[i].balanco_patrimonial.tributos_a_pagar_anterior
+                        users[i].balanco_patrimonial = {
+                            caixa: users[i].balanco_patrimonial.caixa - users[i].balanco_patrimonial.tributos_a_pagar_anterior,
+                            estoque: users[i].balanco_patrimonial.estoque,
+                            contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
+                            contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
+                            maquinas: users[i].balanco_patrimonial.maquinas,
+                            depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_maquinas,
+                            veiculos: users[i].balanco_patrimonial.veiculos,
+                            depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
+                            tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior - users[i].balanco_patrimonial.tributos_a_pagar_anterior,
+                            tributos_a_pagar_atual: users[i].balanco_patrimonial.tributos_a_pagar_atual,
+                            emprestimos: users[i].balanco_patrimonial.emprestimos,
+                            capial: users[i].balanco_patrimonial.capial,
+                            lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados
+                        }
+                        users[i].dre = {
+                            receita: users[i].dre.receita,
+                            csp: users[i].dre.csp,
+                            estoque_inicial: users[i].dre.estoque_inicial,
+                            custo_prestacao_servico: users[i].dre.custo_prestacao_servico,
+                            custo_estocagem: users[i].dre.custo_estocagem,
+                            custo_troca_insumos: users[i].dre.custo_troca_insumos,
+                            hora_extra: users[i].dre.hora_extra,
+                            capacidade_n_utilizada: users[i].dre.capacidade_n_utilizada,
+                            margem_bruta: users[i].dre.margem_bruta,
+                            despesas_administrativas: users[i].dre.despesas_administrativas,
+                            salario_promotores: users[i].dre.salario_promotores, //gambiarra
+                            comissao: users[i].dre.comissao,
+                            propaganda_institucional: users[i].dre.propaganda_institucional,
+                            propaganda_unitaria: users[i].dre.propaganda_unitaria,
+                            depreciacao_de_maquinas: users[i].dre.depreciacao_de_maquinas,
+                            encargos_financiamento: users[i].dre.encargos_financiamento,
+                            salario_frota: users[i].dre.salario_frota,
+                            manutencao_frota: users[i].dre.manutencao_frota,
+                            depreciacao_de_veiculos: users[i].dre.depreciacao_de_veiculos,
+                            frota_terceirizada: users[i].dre.frota_terceirizada,
+                            despesas_operacionais_n_planejadas: users[i].dre.despesas_operacionais_n_planejadas,
+                            pas: users[i].dre.pas,
+                            pesquisas: users[i].dre.pesquisas,
+                            tributos: users[i].dre.tributos + users[i].balanco_patrimonial.tributos_a_pagar_anterior,
+                            servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],
+                            preco_medio: users[i].dre.preco_medio,
+                            atendimentos: users[i].dre.atendimentos,
+                            insumos_em_estoque: users[i].dre.insumos_em_estoque,
+                            distribuidores: users[i].dre.distribuidores //+ users[i]['distribuidores']*360
+    
+    
+                        }
+                        users[i].fluxo_de_caixa = {
+                            saldo_anterior: users[i].fluxo_de_caixa.saldo_anterior,
+                            faturamento: users[i].fluxo_de_caixa.faturamento,
+                            contas_a_receber: users[i].fluxo_de_caixa.contas_a_receber,
+                            contas_a_receber_recebidas: users[i].fluxo_de_caixa.contas_a_receber_recebidas, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
+                            custo_de_servico_prestado: users[i].fluxo_de_caixa.custo_de_servico_prestado,
+                            emprestimos_contratados: users[i].fluxo_de_caixa.emprestimos_contratados,
+                            emprestimos_pagos: users[i].fluxo_de_caixa.emprestimos_pagos,
+                            veiculos_vendidos: users[i].fluxo_de_caixa.veiculos_vendidos,
+                            depreciacao_de_veiculos: users[i].fluxo_de_caixa.depreciacao_de_veiculos,
+                            depreciacao_de_maquinas: users[i].fluxo_de_caixa.depreciacao_de_maquinas,
+                            veiculos_comprados: users[i].fluxo_de_caixa.veiculos_comprados,
+                            tributos: users[i].fluxo_de_caixa.tributos + users[i].balanco_patrimonial.tributos_a_pagar_anterior,
+                            promotores: users[i].fluxo_de_caixa.promotores,
+                            propaganda: users[i].fluxo_de_caixa.propaganda,
+                            pesquisas: users[i].fluxo_de_caixa.pesquisas,
+                            pas: users[i].fluxo_de_caixa.pas,
+                            uso_frota: users[i].fluxo_de_caixa.uso_frota,
+                            despesas_operacionais_n_planejadas: users[i].fluxo_de_caixa.despesas_operacionais_n_planejadas,
+                            despesas_administrativas: users[i].fluxo_de_caixa.despesas_administrativas,
+                            encargos_financiamento: users[i].fluxo_de_caixa.encargos_financiamento,
+                            maquinas: users[i].fluxo_de_caixa.maquinas,
+                            distribuidores: users[i].fluxo_de_caixa.distribuidores //+ users[i]['distribuidores']*360
+                        }
+                    }//segunda parcela /\
+                    users[i].taokeys = users[i].taokeys + users[i].balanco_patrimonial.contas_a_receber60 - users[i]['faturamento']*0.08 - users[i]['promotores']*2160  - users[i]['pas']*2160 - users[i]['faturamento']*users[i]['comissao'] -720000 -50400// apenas no CBG>> - users[i]['distribuidores']*360
                     users[i].balanco_patrimonial = {
-                        caixa: users[i].balanco_patrimonial.caixa + users[i].balanco_patrimonial.contas_a_receber60 - users[i]['promotores']*2160 - users[i]['distribuidores']*360 - users[i]['pas']*2160 - users[i]['faturamento']*users[i]['comissao'],
+                        caixa: users[i].balanco_patrimonial.caixa + users[i].balanco_patrimonial.contas_a_receber60 - users[i]['faturamento']*0.08 - users[i]['promotores']*2160  - users[i]['pas']*2160 - users[i]['faturamento']*users[i]['comissao'] - 720000 -50400, //- users[i]['distribuidores']*360
                         estoque: users[i].balanco_patrimonial.estoque,
-                        contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60 - users[i].balanco_patrimonial.contas_a_receber60 + users[i].balanco_patrimonial.contas_a_receber120,
+                        contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber120,
                         contas_a_receber120: 0,
                         maquinas: users[i].balanco_patrimonial.maquinas,
-                        depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
+                        depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_maquinas,
                         veiculos: users[i].balanco_patrimonial.veiculos,
                         depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
                         tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
                         tributos_a_pagar_atual: users[i].balanco_patrimonial.tributos_a_pagar_atual,
                         emprestimos: users[i].balanco_patrimonial.emprestimos,
                         capial: users[i].balanco_patrimonial.capial,
-                        lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - users[i]['promotores']*2160 - users[i]['distribuidores']*360 - users[i]['pas']*2160 - users[i]['faturamento']*users[i]['comissao']
+                        lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - users[i]['faturamento']*0.08 - users[i]['promotores']*2160 - users[i]['pas']*2160 - users[i]['faturamento']*users[i]['comissao'] - 720000 - 50400//>> - users[i]['distribuidores']*360
                     }
                     users[i].dre = {
                         receita: users[i].dre.receita,
@@ -4738,7 +5045,7 @@ sockets.on('connection', (socket) => {
                         hora_extra: users[i].dre.hora_extra,
                         capacidade_n_utilizada: users[i].dre.capacidade_n_utilizada,
                         margem_bruta: users[i].dre.margem_bruta,
-                        despesas_administrativas: users[i].dre.despesas_administrativas,
+                        despesas_administrativas: users[i].dre.despesas_administrativas + 720000,
                         salario_promotores: users[i].dre.salario_promotores + users[i]['promotores']*2160, //gambiarra
                         comissao: users[i].dre.comissao + users[i]['faturamento']*users[i]['comissao'],
                         propaganda_institucional: users[i].dre.propaganda_institucional,
@@ -4750,21 +5057,21 @@ sockets.on('connection', (socket) => {
                         depreciacao_de_veiculos: users[i].dre.depreciacao_de_veiculos,
                         frota_terceirizada: users[i].dre.frota_terceirizada,
                         despesas_operacionais_n_planejadas: users[i].dre.despesas_operacionais_n_planejadas,
-                        pas: users[i].dre.pas + users[i]['pas']*2160,
+                        pas: users[i].dre.pas + users[i]['pas']*2160 + 50400,
                         pesquisas: users[i].dre.pesquisas,
-                        tributos: users[i].dre.tributos,
+                        tributos: users[i].dre.tributos + users[i]['faturamento']*0.08,
                         servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],
                         preco_medio: users[i].dre.preco_medio,
                         atendimentos: users[i].dre.atendimentos,
                         insumos_em_estoque: users[i].dre.insumos_em_estoque,
-                        distribuidores: users[i].dre.distribuidores + users[i]['distribuidores']*360
+                        distribuidores: users[i].dre.distribuidores //+ users[i]['distribuidores']*360
 
 
                     }
                     users[i].fluxo_de_caixa = {
                         saldo_anterior: users[i].fluxo_de_caixa.saldo_anterior,
                         faturamento: users[i].fluxo_de_caixa.faturamento,
-                        contas_a_receber: users[i].contas_a_receber,
+                        contas_a_receber: users[i].fluxo_de_caixa.contas_a_receber,
                         contas_a_receber_recebidas: users[i].fluxo_de_caixa.contas_a_receber_recebidas + users[i].balanco_patrimonial.contas_a_receber60, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
                         custo_de_servico_prestado: users[i].fluxo_de_caixa.custo_de_servico_prestado,
                         emprestimos_contratados: users[i].fluxo_de_caixa.emprestimos_contratados,
@@ -4777,13 +5084,13 @@ sockets.on('connection', (socket) => {
                         promotores: users[i].fluxo_de_caixa.promotores + users[i]['promotores']*2160 + users[i]['faturamento']*users[i]['comissao'],
                         propaganda: users[i].fluxo_de_caixa.propaganda,
                         pesquisas: users[i].fluxo_de_caixa.pesquisas,
-                        pas: users[i].fluxo_de_caixa.pas + users[i]['pas']*2160,
-                        uso_frota: users[i].uso_frota,
+                        pas: users[i].fluxo_de_caixa.pas + users[i]['pas']*2160 + 50400,
+                        uso_frota: users[i].fluxo_de_caixa.uso_frota,
                         despesas_operacionais_n_planejadas: users[i].fluxo_de_caixa.despesas_operacionais_n_planejadas,
                         despesas_administrativas: users[i].fluxo_de_caixa.despesas_administrativas,
                         encargos_financiamento: users[i].fluxo_de_caixa.encargos_financiamento,
                         maquinas: users[i].fluxo_de_caixa.maquinas,
-                        distribuidores: users[i].fluxo_de_caixa.distribuidores + users[i]['distribuidores']*360
+                        distribuidores: users[i].fluxo_de_caixa.distribuidores //+ users[i]['distribuidores']*360
                     }
 
                     
@@ -4801,7 +5108,7 @@ sockets.on('connection', (socket) => {
                                 contas_a_receber60: (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][3])*0.5 + users[i].balanco_patrimonial.contas_a_receber60,
                                 contas_a_receber120: (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][3])*0.5 + users[i].balanco_patrimonial.contas_a_receber120,
                                 maquinas: users[i].balanco_patrimonial.maquinas,
-                                depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
+                                depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_maquinas,
                                 veiculos: users[i].balanco_patrimonial.veiculos,
                                 depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
                                 tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
@@ -4813,7 +5120,7 @@ sockets.on('connection', (socket) => {
                             users[i].dre = {
                                 receita: users[i].dre.receita + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][3]), 
                                 csp: users[i].dre.csp + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][2]), 
-                                estoque_inicial: users[i].dre.estoque_inicial + users[i][index[o]][0]*users[i][index[o]][2],
+                                estoque_inicial: users[i].dre.estoque_inicial,
                                 custo_prestacao_servico: users[i].dre.custo_prestacao_servico + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][2]),
                                 custo_estocagem: users[i].dre.custo_estocagem,
                                 custo_troca_insumos: users[i].dre.custo_troca_insumos,
@@ -4846,7 +5153,7 @@ sockets.on('connection', (socket) => {
                             users[i].fluxo_de_caixa = {
                                 saldo_anterior: users[i].fluxo_de_caixa.saldo_anterior,
                                 faturamento: users[i].fluxo_de_caixa.faturamento,
-                                contas_a_receber: users[i].contas_a_receber + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][3]),
+                                contas_a_receber: users[i].fluxo_de_caixa.contas_a_receber + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][3]),
                                 contas_a_receber_recebidas: users[i].fluxo_de_caixa.contas_a_receber_recebidas, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
                                 custo_de_servico_prestado: users[i].fluxo_de_caixa.custo_de_servico_prestado,
                                 emprestimos_contratados: users[i].fluxo_de_caixa.emprestimos_contratados,
@@ -4860,7 +5167,7 @@ sockets.on('connection', (socket) => {
                                 propaganda: users[i].fluxo_de_caixa.propaganda,
                                 pesquisas: users[i].fluxo_de_caixa.pesquisas,
                                 pas: users[i].fluxo_de_caixa.pas,
-                                uso_frota: users[i].uso_frota,
+                                uso_frota: users[i].fluxo_de_caixa.uso_frota,
                                 despesas_operacionais_n_planejadas: users[i].fluxo_de_caixa.despesas_operacionais_n_planejadas,
                                 despesas_administrativas: users[i].fluxo_de_caixa.despesas_administrativas,
                                 encargos_financiamento: users[i].fluxo_de_caixa.encargos_financiamento,
@@ -4886,7 +5193,7 @@ sockets.on('connection', (socket) => {
                                 contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
                                 contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
                                 maquinas: users[i].balanco_patrimonial.maquinas,
-                                depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
+                                depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_maquinas,
                                 veiculos: users[i].balanco_patrimonial.veiculos,
                                 depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
                                 tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
@@ -4960,7 +5267,7 @@ sockets.on('connection', (socket) => {
                                     contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
                                     contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
                                     maquinas: users[i].balanco_patrimonial.maquinas,
-                                    depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
+                                    depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_maquinas,
                                     veiculos: users[i].balanco_patrimonial.veiculos,
                                     depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
                                     tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
@@ -5064,89 +5371,6 @@ sockets.on('connection', (socket) => {
 
                         frota_soma = frota_soma + users[i]['frota'][h]
                     }
-                    if(frota_soma > 0){
-                        users[i].taokeys = users[i].taokeys - frota_soma*10800
-                        users[i].balanco_patrimonial = {
-                            caixa: users[i].balanco_patrimonial.caixa - frota_soma*10800,
-                            estoque: users[i].balanco_patrimonial.estoque,
-                            contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
-                            contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
-                            maquinas: users[i].balanco_patrimonial.maquinas,
-                            depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
-                            veiculos: users[i].balanco_patrimonial.veiculos,
-                            depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
-                            tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
-                            tributos_a_pagar_atual: users[i].balanco_patrimonial.tributos_a_pagar_atual,
-                            emprestimos: users[i].balanco_patrimonial.emprestimos,
-                            capial: users[i].balanco_patrimonial.capial,
-                            lucros_acumulados: users[i].balanco_patrimonial.lucros_acumuladossao - frota_soma*10800
-                        }
-                        users[i].dre = {
-                            receita: users[i].dre.receita,
-                            csp: users[i].dre.csp,
-                            estoque_inicial: users[i].dre.estoque_inicial,
-                            custo_prestacao_servico: users[i].dre.custo_prestacao_servico,
-                            custo_estocagem: users[i].dre.custo_estocagem,
-                            custo_troca_insumos: users[i].dre.custo_troca_insumos,
-                            hora_extra: users[i].dre.hora_extra,
-                            capacidade_n_utilizada: users[i].dre.capacidade_n_utilizada,
-                            margem_bruta: users[i].dre.margem_bruta,
-                            despesas_administrativas: users[i].dre.despesas_administrativas,
-                            salario_promotores: users[i].dre.salario_promotores,
-                            comissao: users[i].dre.comissao,
-                            propaganda_institucional: users[i].dre.propaganda_institucional,
-                            propaganda_unitaria: users[i].dre.propaganda_unitaria,
-                            depreciacao_de_maquinas: users[i].dre.depreciacao_de_maquinas,
-                            encargos_financiamento: users[i].dre.encargos_financiamento,
-                            salario_frota: users[i].dre.salario_frota + frota_soma*10800,
-                            manutencao_frota: users[i].dre.manutencao_frota,
-                            depreciacao_de_veiculos: users[i].dre.depreciacao_de_veiculos,
-                            frota_terceirizada: users[i].dre.frota_terceirizada,
-                            despesas_operacionais_n_planejadas: users[i].dre.despesas_operacionais_n_planejadas,
-                            pas: users[i].dre.pas,
-                            pesquisas: users[i].dre.pesquisas,
-                            tributos: users[i].dre.tributos,
-                            servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],
-                            preco_medio: users[i].dre.preco_medio,
-                            atendimentos: users[i].dre.atendimentos,
-                            insumos_em_estoque: users[i].dre.insumos_em_estoque
-
-                        }
-                        users[i].fluxo_de_caixa = {
-                            saldo_anterior: users[i].fluxo_de_caixa.saldo_anterior,
-                            faturamento: users[i].fluxo_de_caixa.faturamento,
-                            contas_a_receber: users[i].fluxo_de_caixa.contas_a_receber,
-                            contas_a_receber_recebidas: users[i].fluxo_de_caixa.contas_a_receber_recebidas, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
-                            custo_de_servico_prestado: users[i].fluxo_de_caixa.custo_de_servico_prestado,
-                            emprestimos_contratados: users[i].fluxo_de_caixa.emprestimos_contratados,
-                            emprestimos_pagos: users[i].fluxo_de_caixa.emprestimos_pagos,
-                            veiculos_vendidos: users[i].fluxo_de_caixa.veiculos_vendidos,
-                            depreciacao_de_veiculos: users[i].fluxo_de_caixa.depreciacao_de_veiculos,
-                            depreciacao_de_maquinas: users[i].fluxo_de_caixa.depreciacao_de_maquinas,
-                            veiculos_comprados: users[i].fluxo_de_caixa.veiculos_comprados,
-                            tributos: users[i].fluxo_de_caixa.tributos,
-                            promotores: users[i].fluxo_de_caixa.promotores,
-                            propaganda: users[i].fluxo_de_caixa.propaganda,
-                            pesquisas: users[i].fluxo_de_caixa.pesquisas,
-                            pas: users[i].fluxo_de_caixa.pas,
-                            uso_frota: users[i].fluxo_de_caixa.uso_frota + frota_soma*10800,
-                            despesas_operacionais_n_planejadas: users[i].fluxo_de_caixa.despesas_operacionais_n_planejadas,
-                            despesas_administrativas: users[i].fluxo_de_caixa.despesas_administrativas,
-                            encargos_financiamento: users[i].fluxo_de_caixa.encargos_financiamento,
-                            maquinas: users[i].fluxo_de_caixa.maquinas
-                        }
-                        /*
-                        users[i].dre = {
-                            receita: users[i].dre.receita,
-                            cmv: users[i].dre.cmv,
-                            despesas_administrativas: users[i].dre.despesas_administrativas,
-                            despesas_vendas: users[i].dre.despesas_vendas + frota_soma*10800,
-                            despesas_financeiras: users[i].dre.despesas_financeiras,
-                            depreciacao_e_amortizacao: users[i].dre.depreciacao_e_amortizacao,
-                            ir: users[i].dre.ir
-                        }
-                        */
-                    }
                     users[i].pas = users[i].pas + users[i].pas1;
                     users[i].pas1 = users[i].pas2;
                     users[i].pas2 = 0;
@@ -5161,7 +5385,7 @@ sockets.on('connection', (socket) => {
                                 contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
                                 contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
                                 maquinas: users[i].balanco_patrimonial.maquinas,
-                                depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
+                                depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_maquinas,
                                 veiculos: users[i].balanco_patrimonial.veiculos,
                                 depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
                                 tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
@@ -5234,7 +5458,7 @@ sockets.on('connection', (socket) => {
                                 contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
                                 contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
                                 maquinas: users[i].balanco_patrimonial.maquinas,
-                                depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
+                                depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_maquinas,
                                 veiculos: users[i].balanco_patrimonial.veiculos,
                                 depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
                                 tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
@@ -5315,7 +5539,7 @@ sockets.on('connection', (socket) => {
                             contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
                             contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
                             maquinas: users[i].balanco_patrimonial.maquinas,
-                            depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
+                            depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_maquinas,
                             veiculos: users[i].balanco_patrimonial.veiculos,
                             depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
                             tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
@@ -5390,7 +5614,7 @@ sockets.on('connection', (socket) => {
                             contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
                             contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
                             maquinas: users[i].balanco_patrimonial.maquinas,
-                            depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
+                            depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_maquinas,
                             veiculos: users[i].balanco_patrimonial.veiculos,
                             depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
                             tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
@@ -5462,7 +5686,7 @@ sockets.on('connection', (socket) => {
                             contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
                             contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
                             maquinas: users[i].balanco_patrimonial.maquinas,
-                            depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
+                            depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_maquinas,
                             veiculos: users[i].balanco_patrimonial.veiculos,
                             depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
                             tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
@@ -5538,7 +5762,7 @@ sockets.on('connection', (socket) => {
                             contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
                             contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
                             maquinas: users[i].balanco_patrimonial.maquinas,
-                            depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
+                            depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_maquinas,
                             veiculos: users[i].balanco_patrimonial.veiculos,
                             depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
                             tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
@@ -5613,7 +5837,7 @@ sockets.on('connection', (socket) => {
                             contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
                             contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
                             maquinas: users[i].balanco_patrimonial.maquinas,
-                            depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
+                            depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_maquinas,
                             veiculos: users[i].balanco_patrimonial.veiculos,
                             depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
                             tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
@@ -5687,7 +5911,7 @@ sockets.on('connection', (socket) => {
                             contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
                             contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
                             maquinas: users[i].balanco_patrimonial.maquinas,
-                            depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
+                            depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_maquinas,
                             veiculos: users[i].balanco_patrimonial.veiculos,
                             depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
                             tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
@@ -5764,7 +5988,7 @@ sockets.on('connection', (socket) => {
                             contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
                             contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
                             maquinas: users[i].balanco_patrimonial.maquinas,
-                            depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
+                            depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_maquinas,
                             veiculos: users[i].balanco_patrimonial.veiculos,
                             depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
                             tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
@@ -5839,7 +6063,7 @@ sockets.on('connection', (socket) => {
                             contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
                             contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
                             maquinas: users[i].balanco_patrimonial.maquinas,
-                            depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
+                            depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_maquinas,
                             veiculos: users[i].balanco_patrimonial.veiculos,
                             depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
                             tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
@@ -5915,7 +6139,7 @@ sockets.on('connection', (socket) => {
                             contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
                             contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
                             maquinas: users[i].balanco_patrimonial.maquinas,
-                            depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
+                            depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_maquinas,
                             veiculos: users[i].balanco_patrimonial.veiculos,
                             depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
                             tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
@@ -5990,7 +6214,7 @@ sockets.on('connection', (socket) => {
                             contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
                             contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
                             maquinas: users[i].balanco_patrimonial.maquinas,
-                            depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_de_maquinas,
+                            depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_maquinas,
                             veiculos: users[i].balanco_patrimonial.veiculos,
                             depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
                             tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
@@ -6073,19 +6297,19 @@ sockets.on('connection', (socket) => {
                                                 usert.set('faturamento', users[i].faturamento)
                                                 usert.set('divida', [users[i]["divida"][0],users[i]["divida"][1],users[i]["divida"][2]])
                                                 usert.balanco_patrimonial = {
-                                                    caixa: users[i].caixa,
-                                                    estoque: users[i].estoque,
-                                                    contas_a_receber60: users[i].contas_a_receber60,
-                                                    contas_a_receber120: users[i].contas_a_receber120,
-                                                    maquinas: users[i].maquinas,
-                                                    depreciacao_maquinas: users[i].depreciacao_de_maquinas,
-                                                    veiculos: users[i].veiculos,
-                                                    depreciacao_veiculos: users[i].depreciacao_de_veiculos,
-                                                    tributos_a_pagar_anterior: users[i].tributos_a_pagar_anterior,
-                                                    tributos_a_pagar_atual: users[i].tributos_a_pagar_atual,
-                                                    emprestimos: users[i].emprestimos,
-                                                    capial: users[i].capital,
-                                                    lucros_acumulados: users[i].lucros_acumulados
+                                                    caixa: users[i].balanco_patrimonial.caixa,
+                                                    estoque: users[i].balanco_patrimonial.estoque,
+                                                    contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
+                                                    contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
+                                                    maquinas: users[i].balanco_patrimonial.maquinas,
+                                                    depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_maquinas,
+                                                    veiculos: users[i].balanco_patrimonial.veiculos,
+                                                    depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
+                                                    tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
+                                                    tributos_a_pagar_atual: users[i].balanco_patrimonial.tributos_a_pagar_atual,
+                                                    emprestimos: users[i].balanco_patrimonial.emprestimos,
+                                                    capial: users[i].balanco_patrimonial.capial,
+                                                    lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados
                                                 }
                                                 usert.dre = {
                                                     receita: users[i].dre.receita,
@@ -6141,8 +6365,14 @@ sockets.on('connection', (socket) => {
                                                     encargos_financiamento: users[i].fluxo_de_caixa.encargos_financiamento,
                                                     maquinas: users[i].fluxo_de_caixa.maquinas
                                                 }
-                                                
-                                                
+                                                usert.somapropuni = {tipo1: 0, inv1: 0, tipo2: 0, inv2: 0}
+                                                usert.pes_p = {
+                                                    modelos_oferecidos: 0,
+                                                    total_pas: 0,
+                                                    total_participacao_modelos: 0,
+                                                    total_distribuidores: 0
+                                                }
+                                                usert.participacao_modelos = []
                                                 for(let s = 0; s < index.length; s++){
                                                     //console.log(index[s])
                                                     let serv = index[s]
@@ -6176,14 +6406,13 @@ sockets.on('connection', (socket) => {
             .catch((err) => { console.log(err) }) 
     }) //falta contabilizar a depreciação das maquinas e TRIBUTOS
     socket.on('iniciar-turno', () => {
-        Data.findOne({sockid: socket.id})
+        Data.findOne({sockid: socket.id})    
             .then((pesquisas) => {
                 if(pesquisas !== null){
-                if(pesquisas.finalizado == 1){
-                    pesquisas.finalizado = 0
-                Aluno.find({ativo: 1, instancia: pesquisas.instancia, temporario: 0})
-                    .then((users) => {
-
+                    if(pesquisas.finalizado == 1){
+                        pesquisas.finalizado = 0
+                        Aluno.find({ativo: 1, instancia: pesquisas.instancia, temporario: 0})
+                            .then((users) => {
                         let tpas = 0
                         let tdis = 0
                         let serv = []
@@ -6219,8 +6448,31 @@ sockets.on('connection', (socket) => {
                         pesquisas.save()
                             .then(() => {
                                         for(let i = 0; i < users.length; i++){
-                                        console.log(users[i].dre.servicos)
-                                        let backup = new Aluno({backup: 1, instancia: users[i].instancia, npesquisas: users[i].npesquisas, turno: users[i].turno, propaganda: users[i].propaganda, propagandauni: users[i].propagandauni, faturamento: users[i].faturamento, ativo: 1, taokeys: users[i].taokeys, divida: [users[i]['divida'][0],users[i]['divida'][1],users[i]['divida'][2]], comissao: users[i].comissao, frota: [users[i].frota[0],users[i].frota[1],users[i].frota[2],users[i].frota[3],users[i].frota[4],users[i].frota[5],users[i].frota[6],users[i].frota[7],users[i].frota[8],users[i].frota[9],users[i].frota[10],users[i].frota[11]], cooperativa: users[i].cooperativa, pas: users[i].pas, pas1: users[i].pas1, pas2: users[i].pas2, distribuidores: users[i].distribuidores, promotores: users[i].promotores, 
+                                        let amem = []
+                                        let tserv2 = serv2
+                                        let ttpas = tpas
+                                        let ttotal_part = total_part
+                                        let ttdis = tdis
+                                        //console.log(users[i].dre.servicos)
+                                        for(let df = 0; df < part.length; df++){
+                                            for(let dd = 0; dd < users[i].participacao_modelos.length; dd++){
+                                                if(users[i].participacao_modelos[dd] == index[df]){
+                                                    amem.push([index[df],part[df]])
+                                                }
+                                            }
+                                        }
+                                        if(users[i].pes_p.modelos_oferecidos !== 1){
+                                            console.log('mod-ofere-zero')
+                                            tserv2 = 'vazio'}
+                                        if(users[i].pes_p.total_pas !== 1){
+                                            ttpas = 'vazio'}
+                                        if(users[i].pes_p.total_participacao_modelos !== 1){
+                                            ttotal_part = 'vazio'}
+                                        if(users[i].pes_p.total_distribuidores !== 1){
+                                            console.log('dist-zero')
+                                            ttdis = 'vazio'}
+                                            
+                                        let backup = new Aluno({backup: 1, instancia: users[i].instancia, npesquisas: users[i].npesquisas, turno: Number(users[i].turno) - 1, propaganda: users[i].propaganda, propagandauni: users[i].propagandauni, faturamento: users[i].faturamento, ativo: 1, taokeys: users[i].taokeys, divida: [users[i]['divida'][0],users[i]['divida'][1],users[i]['divida'][2]], comissao: users[i].comissao, frota: [users[i].frota[0],users[i].frota[1],users[i].frota[2],users[i].frota[3],users[i].frota[4],users[i].frota[5],users[i].frota[6],users[i].frota[7],users[i].frota[8],users[i].frota[9],users[i].frota[10],users[i].frota[11]], cooperativa: users[i].cooperativa, pas: users[i].pas, pas1: users[i].pas1, pas2: users[i].pas2, distribuidores: users[i].distribuidores, promotores: users[i].promotores, 
                                             147:[users[i]['147'][0],users[i]['147'][1],users[i]['147'][2],users[i]['147'][3],users[i]['147'][4],users[i]['147'][5],users[i]['147'][6],users[i]['147'][7]],
                                             159:[users[i]['159'][0],users[i]['159'][1],users[i]['159'][2],users[i]['159'][3],users[i]['159'][4],users[i]['159'][5],users[i]['159'][6],users[i]['159'][7]],
                                             149:[users[i]['149'][0],users[i]['149'][1],users[i]['149'][2],users[i]['149'][3],users[i]['149'][4],users[i]['149'][5],users[i]['149'][6],users[i]['149'][7]],
@@ -6310,13 +6562,193 @@ sockets.on('connection', (socket) => {
                                                 despesas_administrativas: users[i].fluxo_de_caixa.despesas_administrativas,
                                                 encargos_financiamento: users[i].fluxo_de_caixa.encargos_financiamento,
                                                 maquinas: users[i].fluxo_de_caixa.maquinas,
-                                            }
+                                            },
+                                            pes_p: {
+                                                modelos_oferecidos: tserv2,
+                                                total_pas: ttpas,
+                                                total_participacao_modelos: ttotal_part,
+                                                total_distribuidores: ttdis
+                                            },
+                                            participacao_modelos: amem
                                             
                                         });
                                         backup.save() 
                                             .then(() => {
+                                                users[i].fluxo_de_caixa = {
+                                                    saldo_anterior: (users[i].fluxo_de_caixa.faturamento + users[i].fluxo_de_caixa.depreciacao_de_veiculos + users[i].fluxo_de_caixa.depreciacao_de_maquinas + users[i].fluxo_de_caixa.veiculos_vendidos) - (users[i].fluxo_de_caixa.promotores + users[i].fluxo_de_caixa.depreciacao_de_maquinas + users[i].fluxo_de_caixa.propaganda + users[i].fluxo_de_caixa.pesquisas + users[i].fluxo_de_caixa.pas + users[i].fluxo_de_caixa.uso_frota + users[i].fluxo_de_caixa.despesas_operacionais_n_planejadas + users[i].fluxo_de_caixa.despesas_administrativas + users[i].fluxo_de_caixa.encargos_de_financiamento + (-1)*users[i].fluxo_de_caixa.custo_de_servico_prestado + users[i].fluxo_de_caixa.veiculos_comprados + users[i].fluxo_de_caixa.maquinas + users[i].fluxo_de_caixa.tributos),
+                                                    faturamento: 0,
+                                                    contas_a_receber: 0,
+                                                    contas_a_receber_recebidas: 0, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
+                                                    custo_de_servico_prestado: 0,
+                                                    emprestimos_contratados: 0,
+                                                    emprestimos_pagos: 0,
+                                                    veiculos_vendidos: 0,
+                                                    depreciacao_de_veiculos: 0,
+                                                    depreciacao_de_maquinas: 0,
+                                                    veiculos_comprados: 0,
+                                                    tributos: 0,
+                                                    promotores: 0,
+                                                    propaganda: 0,
+                                                    pesquisas: 0,
+                                                    pas: 0,
+                                                    uso_frota: 0,
+                                                    despesas_operacionais_n_planejadas: 0,
+                                                    despesas_administrativas: 0,
+                                                    encargos_financiamento: 0,
+                                                    maquinas: 0,
+                                                    distribuidores: 0
+                                                }
+                                                users[i].dre = {
+                                                    receita: 0,
+                                                    csp: 0,
+                                                    estoque_inicial: users[i].balanco_patrimonial.estoque,
+                                                    custo_prestacao_servico: 0,
+                                                    custo_estocagem: 0,
+                                                    custo_troca_insumos: 0,
+                                                    hora_extra: 0,
+                                                    capacidade_n_utilizada: users[i].balanco_patrimonial.estoque,
+                                                    margem_bruta: 0,
+                                                    despesas_administrativas: 0,
+                                                    salario_promotores: 0,
+                                                    comissao: 0,
+                                                    propaganda_institucional: 0,
+                                                    propaganda_unitaria: 0,
+                                                    depreciacao_de_maquinas: 0,
+                                                    encargos_financiamento: 0,
+                                                    salario_frota: 0,
+                                                    manutencao_frota: 0,
+                                                    depreciacao_de_veiculos: 0,
+                                                    frota_terceirizada: 0,
+                                                    despesas_operacionais_n_planejadas: 0,
+                                                    pas: 0,
+                                                    pesquisas: 0,
+                                                    tributos: 0,
+                                                    servicos: [0, 0, 0, 0],
+                                                    preco_medio: 0,
+                                                    atendimentos: 0,
+                                                    insumos_em_estoque: 0,
+                                                    distribuidores: 0
+                        
+                                                }
+                                                users[i].participacao_modelos = []
+                                                users[i].pes_p = {
+                                                    modelos_oferecidos: 0,
+                                                    total_pas: 0,
+                                                    total_participacao_modelos: 0,
+                                                    total_distribuidores: 0
+                                                }
                                                 users[i].save()
-                                                console.log('Save da cooperativa: ' + backup.cooperativa + '. realizado com sucesso para o turno: ' + backup.turno)
+                                                .then(() => {
+                                                    console.log(users[i]['cooperativa'] + ' Teve seu faturamento processado com sucesso.')
+                                                    Aluno.findOne({cooperativa: users[i].cooperativa, instancia: users[i].instancia, temporario: 1, ativo: 1})
+                                                                    .then((usert) => {
+                                                                        usert.set('npesquisas', users[i].npesquisas)
+                                                                        usert.set('turno', users[i].turno)
+                                                                        usert.set('propaganda', users[i].propaganda)
+                                                                        usert.set('propagandauni', users[i].propagandauni)
+                                                                        usert.set('taokeys', users[i].taokeys)
+                                                                        usert.set('comissao', users[i].comissao)
+                                                                        usert.set('pas', users[i].pas)
+                                                                        usert.set('pas1', users[i].pas1)
+                                                                        usert.set('pas2', users[i].pas2)
+                                                                        usert.set('distribuidores', users[i].distribuidores)
+                                                                        usert.set('promotores', users[i].promotores)
+                                                                        usert.set('faturamento', users[i].faturamento)
+                                                                        usert.set('divida', [users[i]["divida"][0],users[i]["divida"][1],users[i]["divida"][2]])
+                                                                        usert.balanco_patrimonial = {
+                                                                            caixa: users[i].balanco_patrimonial.caixa,
+                                                                            estoque: users[i].balanco_patrimonial.estoque,
+                                                                            contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
+                                                                            contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
+                                                                            maquinas: users[i].balanco_patrimonial.maquinas,
+                                                                            depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_maquinas,
+                                                                            veiculos: users[i].balanco_patrimonial.veiculos,
+                                                                            depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
+                                                                            tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
+                                                                            tributos_a_pagar_atual: users[i].balanco_patrimonial.tributos_a_pagar_atual,
+                                                                            emprestimos: users[i].balanco_patrimonial.emprestimos,
+                                                                            capial: users[i].balanco_patrimonial.capial,
+                                                                            lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados
+                                                                        }
+                                                                        usert.dre = {
+                                                                            receita: users[i].dre.receita,
+                                                                            csp: users[i].dre.csp,
+                                                                            estoque_inicial: users[i].dre.estoque_inicial,
+                                                                            custo_prestacao_servico: users[i].dre.custo_prestacao_servico,
+                                                                            custo_estocagem: users[i].dre.custo_estocagem,
+                                                                            custo_troca_insumos: users[i].dre.custo_troca_insumos,
+                                                                            hora_extra: users[i].dre.hora_extra,
+                                                                            capacidade_n_utilizada: users[i].dre.capacidade_n_utilizada,
+                                                                            margem_bruta: users[i].dre.margem_bruta,
+                                                                            despesas_administrativas: users[i].dre.despesas_administrativas,
+                                                                            salario_promotores: users[i].dre.salario_promotores,
+                                                                            comissao: users[i].dre.comissao,
+                                                                            propaganda_institucional: users[i].dre.propaganda_institucional,
+                                                                            propaganda_unitaria: users[i].dre.propaganda_unitaria,
+                                                                            depreciacao_de_maquinas: users[i].dre.depreciacao_de_maquinas,
+                                                                            encargos_financiamento: users[i].dre.encargos_financiamento,
+                                                                            salario_frota: users[i].dre.salario_frota,
+                                                                            manutencao_frota: users[i].dre.manutencao_frota,
+                                                                            depreciacao_de_veiculos: users[i].dre.depreciacao_de_veiculos,
+                                                                            frota_terceirizada: users[i].dre.frota_terceirizada,
+                                                                            despesas_operacionais_n_planejadas: users[i].dre.despesas_operacionais_n_planejadas,
+                                                                            pas: users[i].dre.pas,
+                                                                            pesquisas: users[i].dre.pesquisas,
+                                                                            tributos: users[i].dre.tributos,
+                                                                            servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],
+                                                                            preco_medio: users[i].dre.preco_medio,
+                                                                            atendimentos: users[i].dre.atendimentos,
+                                                                            insumos_em_estoque: users[i].dre.insumos_em_estoque
+                                                
+                                                                        }
+                                                                        usert.fluxo_de_caixa = {
+                                                                            saldo_anterior: users[i].fluxo_de_caixa.saldo_anterior,
+                                                                            faturamento: users[i].fluxo_de_caixa.faturamento,
+                                                                            contas_a_receber: users[i].fluxo_de_caixa.contas_a_receber,
+                                                                            contas_a_receber_recebidas: users[i].fluxo_de_caixa.contas_a_receber_recebidas, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
+                                                                            custo_de_servico_prestado: users[i].fluxo_de_caixa.custo_de_servico_prestado,
+                                                                            emprestimos_contratados: users[i].fluxo_de_caixa.emprestimos_contratados,
+                                                                            emprestimos_pagos: users[i].fluxo_de_caixa.emprestimos_pagos,
+                                                                            veiculos_vendidos: users[i].fluxo_de_caixa.veiculos_vendidos,
+                                                                            depreciacao_de_veiculos: users[i].fluxo_de_caixa.depreciacao_de_veiculos,
+                                                                            depreciacao_de_maquinas: users[i].fluxo_de_caixa.depreciacao_de_maquinas,
+                                                                            veiculos_comprados: users[i].fluxo_de_caixa.veiculos_comprados,
+                                                                            tributos: users[i].fluxo_de_caixa.tributos,
+                                                                            promotores: users[i].fluxo_de_caixa.promotores,
+                                                                            propaganda: users[i].fluxo_de_caixa.propaganda,
+                                                                            pesquisas: users[i].fluxo_de_caixa.pesquisas,
+                                                                            pas: users[i].fluxo_de_caixa.pas,
+                                                                            uso_frota: users[i].fluxo_de_caixa.uso_frota,
+                                                                            despesas_operacionais_n_planejadas: users[i].fluxo_de_caixa.despesas_operacionais_n_planejadas,
+                                                                            despesas_administrativas: users[i].fluxo_de_caixa.despesas_administrativas,
+                                                                            encargos_financiamento: users[i].fluxo_de_caixa.encargos_financiamento,
+                                                                            maquinas: users[i].fluxo_de_caixa.maquinas
+                                                                        }
+                                                                        usert.somapropuni = {tipo1: 0, inv1: 0, tipo2: 0, inv2: 0}
+                                                                        usert.pes_p = {
+                                                                            modelos_oferecidos: 0,
+                                                                            total_pas: 0,
+                                                                            total_participacao_modelos: 0,
+                                                                            total_distribuidores: 0
+                                                                        }
+                                                                        usert.participacao_modelos = []
+                                                                        for(let s = 0; s < index.length; s++){
+                                                                            //console.log(index[s])
+                                                                            let serv = index[s]
+                                                                            usert.set(serv, [users[i][serv][0], users[i][serv][1], users[i][serv][2], users[i][serv][3], users[i][serv][4], users[i][serv][5], users[i][serv][6], users[i][serv][7]])
+                                                                        }
+                                                                        usert.save()
+                                                                            .then(() => {
+                                                                                socket.emit('feedback', ['success', 'turno foi finalizado'])
+                                                                                if(i == users.length - 1){
+                                                                                    sockets.emit('final-turno') //manda a info pra tds os sockets conectados de que acabou o turno e para eles requisitarem (!!socket.emit('receber-faturamento')!!) o novo state pós FATURAMENTO e se o jogador n esriver conectado qnd acontecer o processo de faturamento essa puxada de dados tb smp acontece qnd ele se loga
+                                                                                }
+                                                                            })
+                                                                            .catch((err) => {socket.emit('feedback', ['danger', 'falha ao salvar os dados no servidor (' + err + ')'])})
+                                                             
+                                                                    })
+                                                })
+                                                console.log('Save da cooperativa: ' + backup.cooperativa + '. realizado com sucesso para o turno: ' + backup.turno+'.')
                                             
                                             })
                                             .catch((err) => {console.log(err)})
@@ -6326,17 +6758,17 @@ sockets.on('connection', (socket) => {
                             })
                             .catch((err) => {console.log(err)})
 
-                    })
-                        
-                        //
-                }
-                else{socket.emit('feedback', ['warning', 'para iniciar um novo turno voce precisa antes finalizar o atual'])}
+                        })
+                    }
+                else{
+                    socket.emit('feedback', ['warning', 'Para iniciar um novo turno voce precisa antes finalizar o atual.'])}
                 }
                 else{
-                    socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
+                    socket.emit('feedback', ['danger','É preciso estar logado para puxar o state atual da simulação'])
                 }   
 
-    })
+            })
+            
 
     }) 
     socket.on('puxar-tds-states', () => {
@@ -6496,7 +6928,7 @@ sockets.on('connection', (socket) => {
 }
 catch (e) {
     console.log(e)
-    socket.emit('feedback', ['danger', 'erro fatal no server: ' + e])
+    //socket.emit('feedback', ['danger', 'erro fatal no server: ' + e])
 }
 // PARA TESTES PROFESSOR PRETENDE TER INSTANCIAS COM 8 PESSOAS NA SITUAÇAO IDEAL (basear teste com o parametro 8)
 server.listen(3000, () => {

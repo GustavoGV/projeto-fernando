@@ -53,7 +53,9 @@ const UserSchema = new Schema({
     dre: Object,
     fluxo_de_caixa: Object,
     cronograma: Object,
-    pesquisas_realizadas: Object
+    pesquisas_realizadas: Object,
+    pes_p: Object,
+    participacao_modelos: Array
 });
 
 const DataSchema = new Schema({
