@@ -5263,38 +5263,7 @@ sockets.on('connection', (socket) => {
                             
                             //users[i][index[o]][0] = users[i]['147'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['147'][4]
                             if(users[i][index[o]][0] >= 0){
-                                users[i].dre = {
-                                    receita: users[i].dre.receita, 
-                                    csp: users[i].dre.csp, 
-                                    estoque_inicial: users[i].dre.estoque_inicial,
-                                    custo_prestacao_servico: users[i].dre.custo_prestacao_servico,
-                                    custo_estocagem: users[i].dre.custo_estocagem,
-                                    custo_troca_insumos: users[i].dre.custo_troca_insumos,
-                                    hora_extra: users[i].dre.hora_extra,
-                                    capacidade_n_utilizada: users[i].dre.capacidade_n_utilizada + users[i][index[o]][0],
-                                    margem_bruta: users[i].dre.margem_bruta,
-                                    despesas_administrativas: users[i].dre.despesas_administrativas,
-                                    salario_promotores: users[i].dre.salario_promotores,
-                                    comissao: users[i].dre.comissao,
-                                    propaganda_institucional: users[i].dre.propaganda_institucional,
-                                    propaganda_unitaria: users[i].dre.propaganda_unitaria,
-                                    depreciacao_de_maquinas: users[i].dre.depreciacao_de_maquinas,
-                                    encargos_financiamento: users[i].dre.encargos_financiamento,
-                                    salario_frota: users[i].dre.salario_frota,
-                                    manutencao_frota: users[i].dre.manutencao_frota,
-                                    depreciacao_de_veiculos: users[i].dre.depreciacao_de_veiculos,
-                                    frota_terceirizada: users[i].dre.frota_terceirizada,
-                                    despesas_operacionais_n_planejadas: users[i].dre.despesas_operacionais_n_planejadas,
-                                    pas: users[i].dre.pas,
-                                    pesquisas: users[i].dre.pesquisas,
-                                    tributos: users[i].dre.tributos,
-                                    servicos: [users[i].dre.servicos[0],users[i].dre.servicos[1],users[i].dre.servicos[2],users[i].dre.servicos[3]],
-                                    preco_medio: users[i].dre.preco_medio,
-                                    atendimentos: users[i].dre.atendimentos,
-                                    insumos_em_estoque: users[i].dre.insumos_em_estoque
-            
-            
-                                } //contabiliza os estoques nao utilizados na DRE
+                                 
                                 users[i].taokeys = users[i].taokeys - users[i][index[o]][0]*36
     
 
@@ -5313,7 +5282,7 @@ sockets.on('connection', (socket) => {
                                 capial: users[i].balanco_patrimonial.capial,
                                 lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - users[i][index[o]][0]*36
                             }
-                                
+                                //tbb contabiliza os estoques nao utilizados na DRE \/
                                 users[i].dre = {
                                     receita: users[i].dre.receita, 
                                     csp: users[i].dre.csp + users[i][index[o]][0]*36,
@@ -5322,7 +5291,7 @@ sockets.on('connection', (socket) => {
                                     custo_estocagem: users[i].dre.custo_estocagem + users[i][index[o]][0]*36,
                                     custo_troca_insumos: users[i].dre.custo_troca_insumos,
                                     hora_extra: users[i].dre.hora_extra,
-                                    capacidade_n_utilizada: users[i].dre.capacidade_n_utilizada,
+                                    capacidade_n_utilizada: users[i].dre.capacidade_n_utilizada + users[i][index[o]][0],
                                     margem_bruta: users[i].dre.margem_bruta,
                                     despesas_administrativas: users[i].dre.despesas_administrativas,
                                     salario_promotores: users[i].dre.salario_promotores,
