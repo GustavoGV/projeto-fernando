@@ -1435,6 +1435,7 @@ sockets.on('connection', (socket) => {
                         userdef.set('distribuidores', usert.distribuidores)
                         userdef.set('promotores', usert.promotores)
                         userdef.set('divida', [usert["divida"][0],usert["divida"][1],usert["divida"][2]])
+                        userdef.set('frota', [usert.frota[0],usert.frota[1],usert.frota[2],usert.frota[3],usert.frota[4],usert.frota[5],usert.frota[6],usert.frota[7],usert.frota[8],usert.frota[9],usert.frota[10],usert.frota[11]])
                         //console.log(index)
                         userdef.balanco_patrimonial = {
                             caixa: usert.balanco_patrimonial.caixa,
@@ -1649,6 +1650,7 @@ sockets.on('connection', (socket) => {
                             let serv = index[s]
                             usert.set(serv, [userdef[serv][0], userdef[serv][1], userdef[serv][2], userdef[serv][3], userdef[serv][4], userdef[serv][5], userdef[serv][6], userdef[serv][7]])
                         }
+                        usert.set('frota', [userdef.frota[0],userdef.frota[1],userdef.frota[2],userdef.frota[3],userdef.frota[4],userdef.frota[5],userdef.frota[6],userdef.frota[7],userdef.frota[8],userdef.frota[9],userdef.frota[10],userdef.frota[11]])
                         
                         usert.save()
                             .then(() => {
@@ -4328,8 +4330,8 @@ sockets.on('connection', (socket) => {
             .then((userx) => {
                 if(userx !== null){
                         
-                        console.log(userx.turno)
-                        console.log(Number(turno))
+                        //console.log(userx.turno)
+                        //console.log(Number(turno))
                             if(userx.turno !== Number(turno)){ //seria melhor ao registrar as instancias colocar como turno 1 na geração do JSON, mas fazer com cautela OKK
                                 Aluno.findOne({ cooperativa: userx.cooperativa, backup: 1, instancia: userx.instancia, turno: turno })                 
                                     .then((balancos) => {
@@ -4343,7 +4345,7 @@ sockets.on('connection', (socket) => {
                                             }
                                             return w
                                         }
-                                        console.log('puxando-balancos << BACKUP')
+                                        //console.log('puxando-balancos << BACKUP')
                                         socket.emit('balancos', { 
                                             balanco_patrimonial: balancos.balanco_patrimonial,
                                             dre: balancos.dre,
@@ -4373,7 +4375,7 @@ sockets.on('connection', (socket) => {
                                                 return w
                                             }
                                             
-                                        console.log('puxando-balancos <<ATUAL (RESP: ' + resp(balancos))
+                                        //console.log('puxando-balancos <<ATUAL (RESP: ' + resp(balancos))
                                         socket.emit('balancos', { 
                                             balanco_patrimonial: balancos.balanco_patrimonial,
                                             dre: balancos.dre,
@@ -4432,7 +4434,7 @@ sockets.on('connection', (socket) => {
                                             
                                         }
                                         socket.emit('pesquisas', arr);
-                                         console.log(arr)        
+                                         //console.log(arr)        
                                          //socket.emit('feedback', ['warning', pes.participacao_modelos + pes.pes_p.total_distribuidores])    
                                     })
                                     .catch((err) => {console.log(err)})
@@ -4453,7 +4455,7 @@ sockets.on('connection', (socket) => {
 
     })
     socket.on('puxar-deci',  () => {
-        console.log("FOOII")
+        //console.log("FOOII")
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => {
                 if(userx !== null){
@@ -4472,7 +4474,7 @@ sockets.on('connection', (socket) => {
                                             arr.push(atual.deci[k])
                                         }
                                         socket.emit('deci', arr);
-                                         console.log(arr)        
+                                         //console.log(arr)        
                                          //socket.emit('feedback', ['warning', pes.participacao_modelos + pes.pes_p.total_distribuidores])    
                                     })
                                     .catch((err) => {console.log(err)})
@@ -4720,6 +4722,38 @@ sockets.on('connection', (socket) => {
                     scorex = scorex + users[i]['scoremod']
                     scorey1 = scorey1 + users[i]['scorepreco'][0]
                     scorey2 = scorey2 + users[i]['scorepreco'][1]
+                    users[i].dre = {
+                        receita: users[i].dre.receita,
+                        csp: users[i].dre.csp,
+                        estoque_inicial: users[i].dre.estoque_inicial,
+                        custo_prestacao_servico: users[i].dre.custo_prestacao_servico,
+                        custo_estocagem: users[i].dre.custo_estocagem,
+                        custo_troca_insumos: users[i].dre.custo_troca_insumos,
+                        hora_extra: users[i].dre.hora_extra,
+                        capacidade_n_utilizada: users[i].dre.capacidade_n_utilizada,
+                        margem_bruta: users[i].dre.margem_bruta,
+                        despesas_administrativas: users[i].dre.despesas_administrativas,
+                        salario_promotores: users[i].dre.salario_promotores,
+                        comissao: users[i].dre.comissao,
+                        propaganda_institucional: users[i].dre.propaganda_institucional,
+                        propaganda_unitaria: users[i].dre.propaganda_unitaria,
+                        depreciacao_de_maquinas: users[i].dre.depreciacao_de_maquinas,
+                        encargos_financiamento: users[i].dre.encargos_financiamento,
+                        salario_frota: users[i].dre.salario_frota,
+                        manutencao_frota: users[i].dre.manutencao_frota,
+                        depreciacao_de_veiculos: users[i].dre.depreciacao_de_veiculos,
+                        frota_terceirizada: users[i].dre.frota_terceirizada,
+                        despesas_operacionais_n_planejadas: users[i].dre.despesas_operacionais_n_planejadas,
+                        pas: users[i].dre.pas,
+                        pesquisas: users[i].dre.pesquisas,
+                        tributos: users[i].dre.tributos,
+                        servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],//aqui!
+                        preco_medio: (users[i]['scorepreco'][1]/users[i]['scorepreco'][0]),
+                        atendimentos: users[i].dre.atendimentos,
+                        insumos_em_estoque: users[i].dre.insumos_em_estoque,
+                        distribuidores: users[i].dre.distribuidores
+
+                    }
                 }
                 //console.log(scorey1 + ' <-- scorey1 - ' + scorey2 + ' <-- scorey2')
                 let preco_medio = scorey2/scorey1; //continuar daqui o rateio do faturamento pelo preco unitario usando esse preco medio global
@@ -4727,6 +4761,7 @@ sockets.on('connection', (socket) => {
                 //console.log('|| ' + preco_medio + ' <-- PRECO MEDIO ||')
 
                 for(let i = 0; i < users.length; i++){
+
                     let media_user = users[i]['scorepreco'][1]/users[i]['scorepreco'][0]
                     dist = dist + Math.pow((preco_medio/media_user),2)
                     let somaF = 0
@@ -5187,6 +5222,38 @@ sockets.on('connection', (socket) => {
 
 
                             let array_insu = [(users[i][index[o]][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]), users[i][index[o]][1], users[i][index[o]][2], users[i][index[o]][3], users[i][index[o]][4],(users[i][index[o]][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*users[i][index[o]][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][3])]
+                            users[i].dre = {
+                                receita: users[i].dre.receita, 
+                                csp: users[i].dre.csp, 
+                                estoque_inicial: users[i].dre.estoque_inicial,
+                                custo_prestacao_servico: users[i].dre.custo_prestacao_servico,
+                                custo_estocagem: users[i].dre.custo_estocagem,
+                                custo_troca_insumos: users[i].dre.custo_troca_insumos,
+                                hora_extra: users[i].dre.hora_extra,
+                                capacidade_n_utilizada: users[i].dre.capacidade_n_utilizada,
+                                margem_bruta: users[i].dre.margem_bruta,
+                                despesas_administrativas: users[i].dre.despesas_administrativas,
+                                salario_promotores: users[i].dre.salario_promotores,
+                                comissao: users[i].dre.comissao,
+                                propaganda_institucional: users[i].dre.propaganda_institucional,
+                                propaganda_unitaria: users[i].dre.propaganda_unitaria,
+                                depreciacao_de_maquinas: users[i].dre.depreciacao_de_maquinas,
+                                encargos_financiamento: users[i].dre.encargos_financiamento,
+                                salario_frota: users[i].dre.salario_frota,
+                                manutencao_frota: users[i].dre.manutencao_frota,
+                                depreciacao_de_veiculos: users[i].dre.depreciacao_de_veiculos,
+                                frota_terceirizada: users[i].dre.frota_terceirizada,
+                                despesas_operacionais_n_planejadas: users[i].dre.despesas_operacionais_n_planejadas,
+                                pas: users[i].dre.pas,
+                                pesquisas: users[i].dre.pesquisas,
+                                tributos: users[i].dre.tributos,
+                                servicos: [users[i].dre.servicos[0],users[i].dre.servicos[1],users[i].dre.servicos[2],users[i].dre.servicos[3]],
+                                preco_medio: users[i].dre.preco_medio,
+                                atendimentos: users[i].dre.atendimentos + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4],
+                                insumos_em_estoque: users[i].dre.insumos_em_estoque
+        
+        
+                            }
                             //(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['147'][4]*users[i]['147'][3] => igual ao faturamento obtido pelo jogador nesse serviço especifico
                             
                             users[i].set(index[o], array_insu)
