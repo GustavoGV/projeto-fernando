@@ -66,9 +66,6 @@ sockets.on('connection', (socket) => {
     socket.on('limpar-usuario', () => {
         mongoose.connection.collections.usuarios.drop()
     })
-    socket.on('limpar-deci', () => {
-        mongoose.connection.collections.decis.drop()
-    })
     socket.on('teste', (t) => {console.log('teste OK: (' + t +') id:'+ socket.id)
     })
     socket.on('login-client', (creden) => {
