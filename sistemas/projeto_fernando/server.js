@@ -5,7 +5,6 @@ import estrutura from './src/aluno.js'
 const Aluno = estrutura[0]
 const Data = estrutura[1]
 const Usuario = estrutura[2] //login individual
-const Deci = estrutura[3]
 import mongoose from 'mongoose'
 import { readFile } from 'fs'
 
@@ -70,7 +69,7 @@ sockets.on('connection', (socket) => {
     socket.on('limpar-deci', () => {
         mongoose.connection.collections.decis.drop()
     })
-    socket.on('teste', () => {console.log('teste OK: ' + socket.id)
+    socket.on('teste', (t) => {console.log('teste OK: (' + t +') id:'+ socket.id)
     })
     socket.on('login-client', (creden) => {
             Aluno.findOne({sockid: socket.id, temporario: 1}) // se n achar retorna Null e se vc tentar fazer essa pesquisa com um String sendo q no Schema ta como Number vai ir pro Catch ou vai pro Catch tb se n conseguir se conectar com o MongoDB
@@ -316,7 +315,7 @@ sockets.on('connection', (socket) => {
                 else{
                     Data.findOne({instancia: creden[2], senha_instancia: creden[3]})
                         .then((inst) => {
-                            if(inst !== null && inst.turno == 0){
+                            if(inst !== null && inst.turno == 1){
 
                             
         Aluno.findOne({cooperativa: creden[0], instancia: creden[2]})
@@ -425,7 +424,8 @@ sockets.on('connection', (socket) => {
                         total_participacao_modelos: 0,
                         total_distribuidores: 0
                         },
-                        participacao_modelos: []
+                        participacao_modelos: [],
+                        deci: []
                     });
                         jogador.save()
                             .then(Aluno.find({ cooperativa: creden[0], temporario: 1, instancia: creden[2]}))
@@ -534,7 +534,8 @@ sockets.on('connection', (socket) => {
                                         total_participacao_modelos: 0,
                                         total_distribuidores: 0
                                         },
-                                    participacao_modelos: []
+                                    participacao_modelos: [],
+                                    deci: []
                                     
                                     });
                                     jogadorR.save()
@@ -584,6 +585,8 @@ sockets.on('connection', (socket) => {
 
                         if(userx[novo][2] - userx[velho][2] > 0){
                             if(userx['taokeys'] >= qnt*30 + qnt*(userx[novo][2] - userx[velho][2])){
+                            let datetime = new Date();
+                            userx.deci.push({data: datetime, acao: 'Troca de '+qnt+' insumos de ' + velho + ' para ' + novo, autor: userx.modificador})
                         
                             userx.balanco_patrimonial = {
                                 caixa: userx.balanco_patrimonial.caixa - qnt*30 - (userx[novo][2] - userx[velho][2])*qnt,
@@ -889,6 +892,14 @@ sockets.on('connection', (socket) => {
                     }
                     else{socket.emit('feedback', ['warning','voce nao pode transferir insumos para um servico que nao esta ativo'])}
                     }
+                    else{
+                        if(userx['taokeys'] < qnt*30){
+                            socket.emit('feedback', ['warning','Falta caixa']) 
+                        }
+                        else{
+                            socket.emit('feedback', ['warning', 'Sua cooperativa não possue essa quantidade de insumos em estoque desse serviço.'])
+                        }
+                    }
                 
                 
                 }
@@ -915,7 +926,9 @@ sockets.on('connection', (socket) => {
                     if(userx['taokeys'] >= userx[velho][0]*30){
                         if(userx[novo][2] - userx[velho][2] > 0 && userx['taokeys'] >= userx[velho][0]*30 + userx[velho][0]*(userx[novo][2] - userx[velho][2])){
 
-                        
+                            let datetime = new Date();
+                            userx.deci.push({data: datetime, acao: 'Substituição do serviço ' + velho + ' pelo ' + novo, autor: userx.modificador})
+                            
                         userx.balanco_patrimonial = {
                             caixa: userx.balanco_patrimonial.caixa - userx[velho][0]*30 - (userx[novo][2] - userx[velho][2])*userx[velho][0],
                             estoque: userx.balanco_patrimonial.estoque + (userx[novo][2] - userx[velho][2])*userx[velho][0],
@@ -1060,6 +1073,8 @@ sockets.on('connection', (socket) => {
                             .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
                     }
                     else{
+                        let datetime = new Date();
+                        userx.deci.push({data: datetime, acao: 'Substituição do serviço ' + velho + ' pelo ' + novo, autor: userx.modificador})
                         
                         userx.balanco_patrimonial = {
                             caixa: userx.balanco_patrimonial.caixa - userx[velho][0]*30,
@@ -1244,6 +1259,9 @@ sockets.on('connection', (socket) => {
                             socket.emit('feedback', ['warning','voce precisa sempre ter pelo menos um servico ativo durante o turno (ative outro para desativar esse)'])
                         }
                         else{
+                            let datetime = new Date();
+                            userx.deci.push({data: datetime, acao: 'Encerrou o serviço ' + tipo, autor: userx.modificador})
+                            
                         let array_dados = [0, 2, userx[tipo][2], userx[tipo][3], userx[tipo][4], userx[tipo][5], userx[tipo][6], userx[tipo][7]]
                         userx.set(tipo, array_dados) 
                         userx.save()
@@ -1327,6 +1345,9 @@ sockets.on('connection', (socket) => {
                 if(userx !== null){
                     if(userx[tipo][1] == 1){
                         if(volume > 0){
+                            let datetime = new Date();
+                            userx.deci.push({data: datetime, acao: 'Alteração do volume planejado do serviço '+ tipo +' para ' +volume, autor: userx.modificador})
+                        
                             let array_dados = [userx[tipo][0], userx[tipo][1], userx[tipo][2], userx[tipo][3], volume, userx[tipo][5], userx[tipo][6], userx[tipo][7]]
                             userx.set(tipo, array_dados) 
                             userx.save()
@@ -1403,152 +1424,7 @@ sockets.on('connection', (socket) => {
                         if(check.ativo == 1){
                 Aluno.findOne({cooperativa: usert.cooperativa, instancia: usert.instancia, temporario: 0})
                     .then((userdef) => {
-                        let dec = new Deci({
-                        balanco_patrimonial_antigo: {
-                            caixa: userdef.balanco_patrimonial.caixa,
-                            estoque: userdef.balanco_patrimonial.estoque,
-                            contas_a_receber60: userdef.balanco_patrimonial.contas_a_receber60,
-                            contas_a_receber120: userdef.balanco_patrimonial.contas_a_receber120,
-                            maquinas: userdef.balanco_patrimonial.maquinas,
-                            depreciacao_maquinas: userdef.balanco_patrimonial.depreciacao_maquinas,
-                            veiculos: userdef.balanco_patrimonial.veiculos,
-                            depreciacao_veiculos: userdef.balanco_patrimonial.depreciacao_veiculos,
-                            tributos_a_pagar_anterior: userdef.balanco_patrimonial.tributos_a_pagar_anterior,
-                            tributos_a_pagar_atual: userdef.balanco_patrimonial.tributos_a_pagar_atual,
-                            emprestimos: userdef.balanco_patrimonial.emprestimos,
-                            capial: userdef.balanco_patrimonial.capial,
-                            lucros_acumulados: userdef.balanco_patrimonial.lucros_acumulados
-                        },
-                        balanco_patrimonial_novo: {
-                            caixa: usert.balanco_patrimonial.caixa,
-                            estoque: usert.balanco_patrimonial.estoque,
-                            contas_a_receber60: usert.balanco_patrimonial.contas_a_receber60,
-                            contas_a_receber120: usert.balanco_patrimonial.contas_a_receber120,
-                            maquinas: usert.balanco_patrimonial.maquinas,
-                            depreciacao_maquinas: usert.balanco_patrimonial.depreciacao_maquinas,
-                            veiculos: usert.balanco_patrimonial.veiculos,
-                            depreciacao_veiculos: usert.balanco_patrimonial.depreciacao_veiculos,
-                            tributos_a_pagar_anterior: usert.balanco_patrimonial.tributos_a_pagar_anterior,
-                            tributos_a_pagar_atual: usert.balanco_patrimonial.tributos_a_pagar_atual,
-                            emprestimos: usert.balanco_patrimonial.emprestimos,
-                            capial: usert.balanco_patrimonial.capial,
-                            lucros_acumulados: usert.balanco_patrimonial.lucros_acumulados
-                        },
-                        dre_antiga: {
-                            receita: userdef.dre.receita,
-                            csp: userdef.dre.csp,
-                            estoque_inicial: userdef.dre.estoque_inicial,
-                            custo_prestacao_servico: userdef.dre.custo_prestacao_servico,
-                            custo_estocagem: userdef.dre.custo_estocagem,
-                            custo_troca_insumos: userdef.dre.custo_troca_insumos,
-                            hora_extra: userdef.dre.hora_extra,
-                            capacidade_n_utilizada: userdef.dre.capacidade_n_utilizada,
-                            margem_bruta: userdef.dre.margem_bruta,
-                            despesas_administrativas: userdef.dre.despesas_administrativas,
-                            salario_promotores: userdef.dre.salario_promotores,
-                            comissao: userdef.dre.comissao,
-                            propaganda_institucional: userdef.dre.propaganda_institucional,
-                            propaganda_unitaria: userdef.dre.propaganda_unitaria,
-                            depreciacao_de_maquinas: userdef.dre.depreciacao_de_maquinas,
-                            encargos_financiamento: userdef.dre.encargos_financiamento,
-                            salario_frota: userdef.dre.salario_frota,
-                            manutencao_frota: userdef.dre.manutencao_frota,
-                            depreciacao_de_veiculos: userdef.dre.depreciacao_de_veiculos,
-                            frota_terceirizada: userdef.dre.frota_terceirizada,
-                            despesas_operacionais_n_planejadas: userdef.dre.despesas_operacionais_n_planejadas,
-                            pas: userdef.dre.pas,
-                            pesquisas: userdef.dre.pesquisas,
-                            tributos: userdef.dre.tributos,
-                            servicos: [userdef.dre.servicos[0], userdef.dre.servicos[1], userdef.dre.servicos[2], userdef.dre.servicos[3]],
-                            preco_medio: userdef.dre.preco_medio,
-                            atendimentos: userdef.dre.atendimentos,
-                            insumos_em_estoque: userdef.dre.insumos_em_estoque,
-                            distribuidores: userdef.dre.distribuidores
-
-                        },
-                        dre_nova: {
-                            receita: usert.dre.receita,
-                            csp: usert.dre.csp,
-                            estoque_inicial: usert.dre.estoque_inicial,
-                            custo_prestacao_servico: usert.dre.custo_prestacao_servico,
-                            custo_estocagem: usert.dre.custo_estocagem,
-                            custo_troca_insumos: usert.dre.custo_troca_insumos,
-                            hora_extra: usert.dre.hora_extra,
-                            capacidade_n_utilizada: usert.dre.capacidade_n_utilizada,
-                            margem_bruta: usert.dre.margem_bruta,
-                            despesas_administrativas: usert.dre.despesas_administrativas,
-                            salario_promotores: usert.dre.salario_promotores,
-                            comissao: usert.dre.comissao,
-                            propaganda_institucional: usert.dre.propaganda_institucional,
-                            propaganda_unitaria: usert.dre.propaganda_unitaria,
-                            depreciacao_de_maquinas: usert.dre.depreciacao_de_maquinas,
-                            encargos_financiamento: usert.dre.encargos_financiamento,
-                            salario_frota: usert.dre.salario_frota,
-                            manutencao_frota: usert.dre.manutencao_frota,
-                            depreciacao_de_veiculos: usert.dre.depreciacao_de_veiculos,
-                            frota_terceirizada: usert.dre.frota_terceirizada,
-                            despesas_operacionais_n_planejadas: usert.dre.despesas_operacionais_n_planejadas,
-                            pas: usert.dre.pas,
-                            pesquisas: usert.dre.pesquisas,
-                            tributos: usert.dre.tributos,
-                            servicos: [usert.dre.servicos[0], usert.dre.servicos[1], usert.dre.servicos[2], usert.dre.servicos[3]],
-                            preco_medio: usert.dre.preco_medio,
-                            atendimentos: usert.dre.atendimentos,
-                            insumos_em_estoque: usert.dre.insumos_em_estoque,
-                            distribuidores: usert.dre.distribuidores
-
-                        },
-                        fluxo_de_caixa_antigo: {
-                            saldo_anterior: userdef.fluxo_de_caixa.saldo_anterior,
-                            faturamento: userdef.fluxo_de_caixa.faturamento,
-                            contas_a_receber: userdef.fluxo_de_caixa.contas_a_receber,
-                            contas_a_receber_recebidas: userdef.fluxo_de_caixa.contas_a_receber_recebidas, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
-                            custo_de_servico_prestado: userdef.fluxo_de_caixa.custo_de_servico_prestado,
-                            emprestimos_contratados: userdef.fluxo_de_caixa.emprestimos_contratados,
-                            emprestimos_pagos: userdef.fluxo_de_caixa.emprestimos_pagos,
-                            veiculos_vendidos: userdef.fluxo_de_caixa.veiculos_vendidos,
-                            depreciacao_de_veiculos: userdef.fluxo_de_caixa.depreciacao_de_veiculos,
-                            depreciacao_de_maquinas: userdef.fluxo_de_caixa.depreciacao_de_maquinas,
-                            veiculos_comprados: userdef.fluxo_de_caixa.veiculos_comprados,
-                            tributos: userdef.fluxo_de_caixa.tributos,
-                            promotores: userdef.fluxo_de_caixa.promotores,
-                            propaganda: userdef.fluxo_de_caixa.propaganda,
-                            pesquisas: userdef.fluxo_de_caixa.pesquisas,
-                            pas: userdef.fluxo_de_caixa.pas,
-                            uso_frota: userdef.fluxo_de_caixa.uso_frota,
-                            despesas_operacionais_n_planejadas: userdef.fluxo_de_caixa.despesas_operacionais_n_planejadas,
-                            despesas_administrativas: userdef.fluxo_de_caixa.despesas_administrativas,
-                            encargos_financiamento: userdef.fluxo_de_caixa.encargos_financiamento,
-                            maquinas: userdef.fluxo_de_caixa.maquinas,
-                            distribuidores: userdef.fluxo_de_caixa.distribuidores
-                        },
-                        fluxo_de_caixa_novo: {
-                            saldo_anterior: usert.fluxo_de_caixa.saldo_anterior,
-                            faturamento: usert.fluxo_de_caixa.faturamento,
-                            contas_a_receber: usert.fluxo_de_caixa.contas_a_receber,
-                            contas_a_receber_recebidas: usert.fluxo_de_caixa.contas_a_receber_recebidas, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
-                            custo_de_servico_prestado: usert.fluxo_de_caixa.custo_de_servico_prestado,
-                            emprestimos_contratados: usert.fluxo_de_caixa.emprestimos_contratados,
-                            emprestimos_pagos: usert.fluxo_de_caixa.emprestimos_pagos,
-                            veiculos_vendidos: usert.fluxo_de_caixa.veiculos_vendidos,
-                            depreciacao_de_veiculos: usert.fluxo_de_caixa.depreciacao_de_veiculos,
-                            depreciacao_de_maquinas: usert.fluxo_de_caixa.depreciacao_de_maquinas,
-                            veiculos_comprados: usert.fluxo_de_caixa.veiculos_comprados,
-                            tributos: usert.fluxo_de_caixa.tributos,
-                            promotores: usert.fluxo_de_caixa.promotores,
-                            propaganda: usert.fluxo_de_caixa.propaganda,
-                            pesquisas: usert.fluxo_de_caixa.pesquisas,
-                            pas: usert.fluxo_de_caixa.pas,
-                            uso_frota: usert.fluxo_de_caixa.uso_frota,
-                            despesas_operacionais_n_planejadas: usert.fluxo_de_caixa.despesas_operacionais_n_planejadas,
-                            despesas_administrativas: usert.fluxo_de_caixa.despesas_administrativas,
-                            encargos_financiamento: usert.fluxo_de_caixa.encargos_financiamento,
-                            maquinas: usert.fluxo_de_caixa.maquinas,
-                            distribuidores: usert.fluxo_de_caixa.distribuidores
-                        },
-                        modificador: usert.modificador,
-                        turno: usert.turno
-                    })
+                        userdef.deci = usert.deci
                         userdef.set('npesquisas', usert.npesquisas)
                         userdef.set('turno', usert.turno)
                         userdef.set('propaganda', usert.propaganda)
@@ -1651,11 +1527,7 @@ sockets.on('connection', (socket) => {
                         userdef.modificador = usert.modificador
                         userdef.save()
                             .then(() => {
-                                dec.save()
-                                    .then(() => {
-                                        socket.emit('feedback', ['success','os dados foram salvos com sucesso'])
-                                    })
-
+                                socket.emit('feedback', ['success','os dados foram salvos com sucesso'])
                             })
                             .catch((err) => {socket.emit('feedback', ['danger','falha ao salvar os dados no servidor'])})
                         
@@ -1677,6 +1549,7 @@ sockets.on('connection', (socket) => {
                 if(usert !== null){
                 Aluno.findOne({cooperativa: usert.cooperativa, instancia: usert.instancia, temporario: 0})
                     .then((userdef) => {
+                        usert.deci = userdef.deci
                         usert.set('npesquisas', userdef.npesquisas)
                         usert.set('turno', userdef.turno)
                         usert.set('propaganda', userdef.propaganda)
@@ -1844,6 +1717,9 @@ sockets.on('connection', (socket) => {
             .then((userx) => {
                 if(userx !== null){
                         if(qnt > 0 && userx.taokeys > qnt*57600){
+                            let datetime = new Date();
+                            userx.deci.push({data: datetime, acao: 'Compra de ' +qnt + ' veículos', autor: userx.modificador})
+                        
                             userx.balanco_patrimonial = {
                                 caixa: userx.balanco_patrimonial.caixa - qnt*57600,
                                 estoque: userx.balanco_patrimonial.estoque,
@@ -1972,7 +1848,9 @@ sockets.on('connection', (socket) => {
                                         if(userx.frota[k] > falta){
                                             retirada = falta
                                             userx.taokeys = userx.taokeys + retirada*(57600/12)*(12-k)
-                                            
+                                            let datetime = new Date();
+                                            userx.deci.push({data: datetime, acao: 'Venda de '+qnt +' veículos', autor: userx.modificador})
+                        
                                             userx.balanco_patrimonial = {
                                                 caixa: userx.balanco_patrimonial.caixa + userx.frota[k]*(57600/12)*(12-k),
                                                 estoque: userx.balanco_patrimonial.estoque,
@@ -2026,7 +1904,9 @@ sockets.on('connection', (socket) => {
                                             array[k] = 0
                                             userx.set('frota', array)
                                             userx.taokeys = userx.taokeys + retirada*(57600/12)*(12-k)
-                                        
+                                            let datetime = new Date();
+                                            userx.deci.push({data: datetime, acao: 'Venda de '+qnt +' veículos', autor: userx.modificador})
+                        
                                             userx.balanco_patrimonial = {
                                             caixa: userx.balanco_patrimonial.caixa + userx.frota[k]*(57600/12)*(12-k),
                                             estoque: userx.balanco_patrimonial.estoque,
@@ -2210,6 +2090,9 @@ sockets.on('connection', (socket) => {
                 if(userx !== null){
                     if(userx[tipo][1] == 1){
                         if(preco > 0 && preco <= 9999){
+                            let datetime = new Date();
+                            userx.deci.push({data: datetime, acao: 'Alteração de preço de venda do serviço '+ tipo+' para ' + preco, autor: userx.modificador})
+                        
                             let array_dados = [userx[tipo][0], userx[tipo][1], userx[tipo][2], preco, userx[tipo][4], userx[tipo][5], userx[tipo][6], userx[tipo][7]]
                             userx.set(tipo, array_dados) 
                             userx.save()
@@ -2290,6 +2173,9 @@ sockets.on('connection', (socket) => {
                 if(userx !== null){
                         if(qnt > 0){
                             let novaf = userx['promotores'] + qnt
+                            let datetime = new Date();
+                            userx.deci.push({data: datetime, acao: 'Contratação de ' +qnt+' promotores', autor: userx.modificador})
+                        
                             userx.set('promotores', novaf) 
                             userx.save()
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
@@ -2363,6 +2249,9 @@ sockets.on('connection', (socket) => {
                 if(userx !== null){
                         if(qnt > 0 && userx['promotores'] >= qnt){
                             let novaf = userx['promotores'] - qnt
+                            let datetime = new Date();
+                            userx.deci.push({data: datetime, acao: 'Demissão de '+qnt +' promotores', autor: userx.modificador})
+                        
                             userx.set('promotores', novaf) 
                             userx.save()
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
@@ -2641,6 +2530,9 @@ sockets.on('connection', (socket) => {
                 if(userx !== null){
                         if(qnt > 0){
                             let novaf = userx['distribuidores'] + qnt
+                            let datetime = new Date();
+                            userx.deci.push({data: datetime, acao: 'Contratação de '+qnt +' distribuidores', autor: userx.modificador})
+                        
                             userx.set('distribuidores', novaf) 
                             userx.save()
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
@@ -2714,6 +2606,9 @@ sockets.on('connection', (socket) => {
                 if(userx !== null){
                         if(qnt > 0 && userx['distribuidores'] >= qnt){
                             let novaf = userx['distribuidores'] - qnt
+                            let datetime = new Date();
+                            userx.deci.push({data: datetime, acao: 'Demissão de '+qnt +' distribuidores', autor: userx.modificador})
+                        
                             userx.set('distribuidores', novaf) 
                             userx.save()
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
@@ -2784,6 +2679,9 @@ sockets.on('connection', (socket) => {
                 if(userx !== null){
                         if(qnt > 0 && userx['pas'] >= qnt){
                             let novaf = userx['pas'] - qnt
+                            let datetime = new Date();
+                            userx.deci.push({data: datetime, acao: 'Diminuição de '+qnt +' unidades de P.A.S.', autor: userx.modificador})
+                        
                             userx.set('pas', novaf) 
                             userx.save()
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
@@ -2854,6 +2752,9 @@ sockets.on('connection', (socket) => {
                 if(userx !== null){
                         if(qnt > 0){
                             let novaf = userx['pas2'] + qnt
+                            let datetime = new Date();
+                            userx.deci.push({data: datetime, acao: 'Aumento de '+qnt +' unidades de P.A.S.', autor: userx.modificador})
+                        
                             userx.set('pas2', novaf) 
                             userx.save()
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
@@ -2925,6 +2826,9 @@ sockets.on('connection', (socket) => {
             .then((userx) => {
                 if(userx !== null){
                         if(qnt > 0 && userx.taokeys >= qnt){
+                            let datetime = new Date();
+                            userx.deci.push({data: datetime, acao: 'Investimento em propaganda no serviço '+tipo +' no valor de ' + qnt, autor: userx.modificador})
+                        
                             userx.balanco_patrimonial = {
                                 caixa: userx.balanco_patrimonial.caixa - qnt,
                                 estoque: userx.balanco_patrimonial.estoque,
@@ -3116,6 +3020,9 @@ sockets.on('connection', (socket) => {
             .then((userx) => {
                 if(userx !== null){
                         if(qnt > 0 && userx.taokeys >= qnt){
+                            let datetime = new Date();
+                            userx.deci.push({data: datetime, acao: 'Investimento me propaganda institucional em ' + qnt, autor: userx.modificador})
+                        
                             userx.balanco_patrimonial = {
                                 caixa: userx.balanco_patrimonial.caixa - qnt,
                                 estoque: userx.balanco_patrimonial.estoque,
@@ -3272,6 +3179,9 @@ sockets.on('connection', (socket) => {
             .then((userx) => {
                 if(userx !== null){
                         if(qnt > 0 && qnt <= 1){
+                            let datetime = new Date();
+                            userx.deci.push({data: datetime, acao: 'Alteração na comissão dos vendedores para ' + qnt, autor: userx.modificador})
+                        
                             userx.set('comissao', qnt) 
                             userx.save()
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
@@ -3439,6 +3349,9 @@ sockets.on('connection', (socket) => {
                        
                         if(userx['taokeys'] >= qnti*userx[tipo][2] && userx[tipo][1] !== 2){
                             if(userx[tipo][1] !== 3 && userx[tipo][1] !== 0){
+                                let datetime = new Date();
+                                userx.deci.push({data: datetime, acao: 'Ativação do serviço '+tipo, autor: userx.modificador})
+                            
                             userx.balanco_patrimonial = {
                                 caixa: userx.balanco_patrimonial.caixa - qnti*userx[tipo][2],
                                 estoque: userx.balanco_patrimonial.estoque + qnti*userx[tipo][2],
@@ -3579,6 +3492,9 @@ sockets.on('connection', (socket) => {
                     if(userx !== null){
                         if(userx.pes_p.total_pas == 0){
                         if(userx['taokeys'] >= 2160){
+                            let datetime = new Date();
+                            userx.deci.push({data: datetime, acao: 'Contratou pesquisa de P.A.S. para o turno ' +userx.turno, autor: userx.modificador})
+                        
                         userx.balanco_patrimonial = {
                             caixa: userx.balanco_patrimonial.caixa - 2160,
                             estoque: userx.balanco_patrimonial.estoque,
@@ -3666,7 +3582,7 @@ sockets.on('connection', (socket) => {
                                     .then((dados) => {
                                         if(dados !== null){
                                         socket.emit('feedback', ['success', '>> Encomenda de pesquisa de PAS realizada com sucesso.'])
-                                        //socket.emit('resposta-pesquisa', dados['total_pas'])
+                                        //socket.emit('resposta-pesquisa', 'Ultima encomenda: Total P.A.S.')
                                         function propuni(tipo) {
                                             if(userx.somapropuni.tipo1 == tipo){
                                                 return userx.somapropuni.inv1
@@ -3744,6 +3660,9 @@ sockets.on('connection', (socket) => {
                         
                         
                         if(userx['taokeys'] >= 2160){
+                            let datetime = new Date();
+                            userx.deci.push({data: datetime, acao: 'Contratou pesquisa de total de distribuidores para o turno ' +userx.turno, autor: userx.modificador})
+                        
                             userx.balanco_patrimonial = {
                                 caixa: userx.balanco_patrimonial.caixa - 2160,
                                 estoque: userx.balanco_patrimonial.estoque,
@@ -3831,7 +3750,7 @@ sockets.on('connection', (socket) => {
                                     .then((dados) => {
                                         if(dados !== null){
                                         socket.emit('feedback', ['success', '>> Encomenda de pesquisa de DISTRIBUIDORES realizada com sucesso.'])
-                                        socket.emit('resposta-pesquisa', dados['total_distribuidores'])
+                                        //socket.emit('resposta-pesquisa', 'Ultima encomenda: Distribuidores')
                                         function propuni(tipo) {
                                             if(userx.somapropuni.tipo1 == tipo){
                                                 return userx.somapropuni.inv1
@@ -3907,6 +3826,9 @@ sockets.on('connection', (socket) => {
                         let redun
                         //console.log(user.taokeys + ' ccccccccccccccc');
                         if(userx['taokeys'] >= 10800 && input.length == 1){
+                            let datetime = new Date();
+                            userx.deci.push({data: datetime, acao: 'Contratou pesquisa de participação do serviço ' +input[0] +' para o turno '+ userx.turno, autor: userx.modificador})
+                        
                             function sem_redundancia() {
                                 for(let ff = 0; ff < userx.participacao_modelos.length; ff++){
                                     if(userx.participacao_modelos[ff] == input[0]){
@@ -4079,6 +4001,8 @@ sockets.on('connection', (socket) => {
                                 return true
                                 }
                                 if(sem_redundancia()){
+                                    let datetime = new Date();
+                                    userx.deci.push({data: datetime, acao: 'Contratou pesquisa de participação dos serviços ' +input[0] + ' e ' + input[1]+ ' para o turno '+userx.turno, autor: userx.modificador})
                                 
                                 userx.balanco_patrimonial = {
                                     caixa: userx.balanco_patrimonial.caixa - 14400,
@@ -4247,6 +4171,9 @@ sockets.on('connection', (socket) => {
                         if(userx.pes_p.modelos_oferecidos == 0){
                         //console.log(user.taokeys + ' ccccccccccccccc');
                         if(userx['taokeys'] >= 2160){
+                            let datetime = new Date();
+                            userx.deci.push({data: datetime, acao: 'Contratou pesquisa dos serviços oferecidos pelo mercado para o turno ' +userx.turno, autor: userx.modificador})
+                        
                             userx.balanco_patrimonial = {
                                 caixa: userx.balanco_patrimonial.caixa - 2160,
                                 estoque: userx.balanco_patrimonial.estoque,
@@ -4331,7 +4258,7 @@ sockets.on('connection', (socket) => {
                            userx.save()
                             .then(() => {
                                 socket.emit('feedback', ['success', '>> Encomenda de pesquisa de SERVIÇOS OFERECIDOS NO MERCADO realizada com sucesso.'])
-                                        //socket.emit('resposta-pesquisa', String(dados['modelos_oferecidos']))
+                                //socket.emit('resposta-pesquisa', 'Ultima encomenda: Modelos no Mercado')
                                         function propuni(tipo) {
                                             if(userx.somapropuni.tipo1 == tipo){
                                                 return userx.somapropuni.inv1
@@ -4410,11 +4337,22 @@ sockets.on('connection', (socket) => {
                                 Aluno.findOne({ cooperativa: userx.cooperativa, backup: 1, instancia: userx.instancia, turno: turno })                 
                                     .then((balancos) => {
                                         if(balancos !== null){ 
-                                            console.log('puxando-balancos << BACKUP')
+                                            function resp(b) {
+                                            let w = 0
+                                            for(let i = 0; i < index.length; i++){
+                                                if(b[index[i]][1] == 1){
+                                                    w = w + Math.round(Number(b[index[i]][0]))
+                                                }
+                                            }
+                                            return w
+                                        }
+                                        console.log('puxando-balancos << BACKUP')
                                         socket.emit('balancos', { 
                                             balanco_patrimonial: balancos.balanco_patrimonial,
                                             dre: balancos.dre,
-                                            fluxo: balancos.fluxo_de_caixa
+                                            fluxo: balancos.fluxo_de_caixa,
+                                            total_n_utilizado: resp(balancos)
+                                            
                                          });  
                                         } 
                                         else{
@@ -4426,13 +4364,24 @@ sockets.on('connection', (socket) => {
                             else{
                                 Aluno.findOne({ cooperativa: userx.cooperativa, backup: 0, instancia: userx.instancia, temporario: 1 })
                                     .then((balancos) => {
-                                        console.log(balancos)
+                                        //console.log(balancos)
                                         if(balancos !== null){
-                                            console.log('puxando-balancos <<ATUAL')
+                                            function resp(b) {
+                                                let w = 0
+                                                for(let i = 0; i < index.length; i++){
+                                                    if(b[index[i]][1] == 1){
+                                                        w = w + Math.round(Number(b[index[i]][0]))
+                                                    }
+                                                }
+                                                return w
+                                            }
+                                            
+                                        console.log('puxando-balancos <<ATUAL (RESP: ' + resp(balancos))
                                         socket.emit('balancos', { 
                                             balanco_patrimonial: balancos.balanco_patrimonial,
                                             dre: balancos.dre,
-                                            fluxo: balancos.fluxo_de_caixa
+                                            fluxo: balancos.fluxo_de_caixa,
+                                            total_n_utilizado: resp(balancos) 
                                          });
                                         }
                                         else{
@@ -4454,18 +4403,76 @@ sockets.on('connection', (socket) => {
 
     }) //FALTA PUXAR TB OS BALANCOS DO TURNO ATUAL 
     socket.on('puxar-pesquisas',  () => {
-
+        console.log("FOOII")
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => {
                 if(userx !== null){
                              //seria melhor ao registrar as instancias colocar como turno 1 na geração do JSON, mas fazer com cautela OKK
-                                Aluno.findOne({ cooperativa: userx.cooperativa, backup: 1, instancia: userx.instancia, turno: userx.turno-1 })                 
-                                    .then((pes) => {
-                                        socket.emit('pesquisas', { 
-                                            pesquisas: pes.pes_p,
-                                            participacao_modelos: pes.participacao_modelos
-                                         });        
-                                         socket.emit('feedback', ['warning', pes.participacao_modelos + pes.pes_p.total_distribuidores])    
+                                Aluno.find({ cooperativa: userx.cooperativa, backup: 1, instancia: userx.instancia})                 
+                                    .then((peps) => {
+                                        let arr = []
+                                        for(let i = 0; i < peps.length; i++){
+                                            if(peps[i].pes_p.modelos_oferecidos !== 'vazio'){
+                                                let resposta = 'Serviços:'
+                                                peps[i].pes_p.modelos_oferecidos.map((serv,ind) => {
+                                                    resposta = resposta + ' ' + serv + ' -'
+                                                })
+                                                arr.push({tipo: 'Modelos Oferecidos', resultado: resposta, bimestre: peps[i].turno})
+                                            }
+                                            if(peps[i].pes_p.total_pas !== 'vazio'){
+                                                arr.push({tipo: 'Total de P.A.S.', resultado: peps[i].pes_p.total_pas, bimestre: peps[i].turno})
+                                            }
+                                            /*
+                                            if(peps[i].pes_p.distribuidores !== 'vazio'){
+                                                
+                                            }
+                                            */
+                                            if(peps[i].participacao_modelos.length > 0){
+                                                for(let ii = 0; ii < peps[i].participacao_modelos.length; ii++){//ex-> [index, resul]
+                                                    arr.push({tipo: 'Pesquisa de particição de modelo', resultado: 'Serviço: ' + peps[i].participacao_modelos[ii][0] + '. -Parcela do mercado alocada: ' + Math.round(100*(peps[i].participacao_modelos[ii][1]/peps[i].pes_p.total_participacao_modelos)) + '%', bimestre: peps[i].turno})
+                                                }   
+                                            }
+                                            
+                                        }
+                                        socket.emit('pesquisas', arr);
+                                         console.log(arr)        
+                                         //socket.emit('feedback', ['warning', pes.participacao_modelos + pes.pes_p.total_distribuidores])    
+                                    })
+                                    .catch((err) => {console.log(err)})
+                            
+                            
+                                //socket.emit('feedback', ['danger', '>> Não é possível consultar pesquisas que ainda não foram efetuadas.'])
+                            
+                            
+
+                          
+
+            }
+                else{
+                    socket.emit('feedback', ['danger','>> É preciso estar logado para puxar o state atual da simulação.'])
+                }
+            })
+            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
+
+    })
+    socket.on('puxar-deci',  () => {
+        console.log("FOOII")
+        Aluno.findOne({sockid: socket.id, temporario: 1})
+            .then((userx) => {
+                if(userx !== null){
+                             //seria melhor ao registrar as instancias colocar como turno 1 na geração do JSON, mas fazer com cautela OKK
+                                Aluno.find({ cooperativa: userx.cooperativa, backup: 1, instancia: userx.instancia})                 
+                                    .then((peps) => {
+                                        let arr = []
+                                        for(let i = 0; i < peps.length; i++){
+                                            for(let ii = 0; ii < peps[i].deci.length;ii++){
+                                                arr.push(peps[i].deci[ii])
+                                            }
+                                           
+                                        }
+                                        socket.emit('deci', arr);
+                                         console.log(arr)        
+                                         //socket.emit('feedback', ['warning', pes.participacao_modelos + pes.pes_p.total_distribuidores])    
                                     })
                                     .catch((err) => {console.log(err)})
                             
@@ -4497,7 +4504,7 @@ sockets.on('connection', (socket) => {
                                 Data.findOne({login_adm: creden[0]})
                                     .then((userL) => {
                                         if(userL == null){
-                                            let jogo = new Data({login_adm: creden[0], iniciado: 1, senha_adm: creden[1], instancia: creden[2], senha_instancia: creden[3], turno: 0, oferta_mercado: 140000000, ativo: 1})
+                                            let jogo = new Data({login_adm: creden[0], iniciado: 1, senha_adm: creden[1], instancia: creden[2], senha_instancia: creden[3], turno: 1, oferta_mercado: 140000000, ativo: 1})
                                             jogo.save()
                                                 .then(() => {
                                                     console.log('>>> Instancia: ' + creden[2] + ' registrada com sucesso')    
@@ -6466,8 +6473,10 @@ sockets.on('connection', (socket) => {
                                             tserv2 = 'vazio'}
                                         if(users[i].pes_p.total_pas !== 1){
                                             ttpas = 'vazio'}
+                                            /*
                                         if(users[i].pes_p.total_participacao_modelos !== 1){
                                             ttotal_part = 'vazio'}
+                                            */
                                         if(users[i].pes_p.total_distribuidores !== 1){
                                             console.log('dist-zero')
                                             ttdis = 'vazio'}
@@ -6569,7 +6578,8 @@ sockets.on('connection', (socket) => {
                                                 total_participacao_modelos: ttotal_part,
                                                 total_distribuidores: ttdis
                                             },
-                                            participacao_modelos: amem
+                                            participacao_modelos: amem,
+                                            deci: users[i].deci
                                             
                                         });
                                         backup.save() 

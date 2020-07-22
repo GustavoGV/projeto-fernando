@@ -55,7 +55,8 @@ const UserSchema = new Schema({
     cronograma: Object,
     pesquisas_realizadas: Object,
     pes_p: Object,
-    participacao_modelos: Array
+    participacao_modelos: Array,
+    deci: Array
 });
 
 const DataSchema = new Schema({
@@ -92,21 +93,10 @@ const UsuarioSchema = new Schema({
 
 })
 
-const DeciSchema = new Schema({
-    modificador: String,
-    turno: String,
-    balanco_patrimonial_antigo: Object,
-    balanco_patrimonial_novo: Object,
-    dre_antiga: Object,
-    dre_nova: Object,
-    fluxo_de_caixa_antigo: Object,
-    fluxo_de_caixa_novo: Object
-})
 
-const Deci = mongoose.model('decisoes', DeciSchema) //decisoes da pessoa fisica
 const Usuario = mongoose.model('usuario', UsuarioSchema) //pessoa fisica
 const Aluno = mongoose.model('aluno', UserSchema) //pessoa JURIDICA
 const Data = mongoose.model('data', DataSchema) //INSTANCIA
-let estrutura  = [Aluno, Data, Usuario, Deci]
+let estrutura  = [Aluno, Data, Usuario]
 export default estrutura
 
