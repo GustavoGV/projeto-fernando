@@ -4461,19 +4461,25 @@ sockets.on('connection', (socket) => {
             .then((userx) => {
                 if(userx !== null){
                              //seria melhor ao registrar as instancias colocar como turno 1 na geração do JSON, mas fazer com cautela OKK
-                                Aluno.find({ cooperativa: userx.cooperativa, backup: 1, instancia: userx.instancia})                 
-                                    .then((peps) => {
+                                Aluno.find({ cooperativa: userx.cooperativa, backup: 1, instancia: userx.instancia})
+                                    .then((peps) => {    
+                                    Aluno.findOne({ cooperativa: userx.cooperativa, temporario: 1, instancia: userx.instancia})           
+                                    .then((atual) => {
                                         let arr = []
                                         for(let i = 0; i < peps.length; i++){
                                             for(let ii = 0; ii < peps[i].deci.length;ii++){
                                                 arr.push(peps[i].deci[ii])
                                             }
-                                           
+                                        }
+                                        for(let k = 0; k < atual.deci.length;k++){
+                                            arr.push(atual.deci[k])
                                         }
                                         socket.emit('deci', arr);
                                          console.log(arr)        
                                          //socket.emit('feedback', ['warning', pes.participacao_modelos + pes.pes_p.total_distribuidores])    
                                     })
+                                    .catch((err) => {console.log(err)})
+                                    }) 
                                     .catch((err) => {console.log(err)})
                             
                             
