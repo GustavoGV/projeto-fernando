@@ -5190,8 +5190,9 @@ sockets.on('connection', (socket) => {
                                 servicos: [users[i].dre.servicos[0],users[i].dre.servicos[1],users[i].dre.servicos[2],users[i].dre.servicos[3]],
                                 preco_medio: users[i].dre.preco_medio,
                                 atendimentos: users[i].dre.atendimentos,
-                                insumos_em_estoque: users[i].dre.insumos_em_estoque + (users[i][index[o]][0]*users[i][index[o]][2] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][2]))
+                                insumos_em_estoque: users[i].dre.insumos_em_estoque// + (users[i][index[o]][0]*users[i][index[o]][2] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][2]))
         
+
         
                             }
                             
@@ -5414,7 +5415,7 @@ sockets.on('connection', (socket) => {
                                     servicos: [users[i].dre.servicos[0],users[i].dre.servicos[1],users[i].dre.servicos[2],users[i].dre.servicos[3]],
                                     preco_medio: users[i].dre.preco_medio,
                                     atendimentos: users[i].dre.atendimentos,
-                                    insumos_em_estoque: users[i].dre.insumos_em_estoque + (-1)*users[i][index[o]][0]*users[i][index[o]][2]
+                                    insumos_em_estoque: users[i].dre.insumos_em_estoque// + (-1)*users[i][index[o]][0]*users[i][index[o]][2]
             
             
                                 }
