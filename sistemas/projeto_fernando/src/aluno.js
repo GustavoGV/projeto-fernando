@@ -13,7 +13,7 @@ const UserSchema = new Schema({
     frota: Array,
     promotores: Number,
     distribuidores: Number,
-    comissao: Number,
+    comissao: String,
     pas: Number,
     pas1: Number, //PAS em construção (faltando 1 turno para serem finalizados)
     pas2: Number, //PAS em construção (faltando 2 turno para serem finalizados)
@@ -56,7 +56,8 @@ const UserSchema = new Schema({
     pesquisas_realizadas: Object,
     pes_p: Object,
     participacao_modelos: Array,
-    deci: Array
+    deci: Array,
+    last_change: Object
 });
 
 const DataSchema = new Schema({
