@@ -323,7 +323,7 @@ sockets.on('connection', (socket) => {
                     console.log('>>registro negado: já existe cooperativa com este nome');
                     socket.emit('feedback', ['danger', 'ja existe uma cooperativa com esse nome na instancia selecionada'])}
                 else{
-                    let jogador = new Aluno({ sockid: socket.id, backup: 0, temporario: 1, instancia: creden[2], last_change: {serv1: '147', serv2: 0, prop1: 0, prop2: 0, insu1: 0, insu2: 0, insu1i: 985, insu2i: 0, prop1: 0, prop2: 0}, npesquisas: 1, turno: 1, scoremod: 0, scorepreco: [0,0], propaganda: 0.42, propagandauni: 1, faturamento: 0, ativo: 1, taokeys: 1872000, divida: [0,0,0], comissao: '5%', frota: [10,0,0,0,0,0,0,0,0,0,0,0], cooperativa: creden[0], pas: 15, pas1: 0, pas2: 0, distribuidores: 25, promotores: 20, senha: creden[1], 
+                    let jogador = new Aluno({ sockid: socket.id, backup: 0, temporario: 1, instancia: creden[2], last_change: {serv1: '147', serv2: 0, prop1: 0, prop2: 0, insu1: 0, insu2: 0, insu1i: 985, insu2i: 0, prop1: 0, prop2: 0}, npesquisas: 1, turno: 1, scoremod: 0, scorepreco: [0,0], propaganda: 0, propagandauni: 1, faturamento: 0, ativo: 1, taokeys: 1872000, divida: [0,0,0], comissao: '5%', frota: [10,0,0,0,0,0,0,0,0,0,0,0], cooperativa: creden[0], pas: 15, pas1: 0, pas2: 0, distribuidores: 25, promotores: 20, senha: creden[1], 
                         147:[985,1,288,600,300,0,0,0],
                         159:[0,0,396,0,0,0,0,0],
                         149:[0,0,360,0,0,0,0,0],
@@ -431,7 +431,7 @@ sockets.on('connection', (socket) => {
                             .then((user) => { 
                                 if(user !== null){
                                     console.log('caralho')
-                                    let jogadorR = new Aluno({ sockid: "11994729653", backup: 0, temporario: 0, last_change: {serv1: '147', serv2: 0, prop1: 0, prop2: 0, insu1: 0, insu2: 0, insu1i: 985, insu2i: 0, prop1: 0, prop2: 0}, instancia: creden[2], npesquisas: 1, turno: 1, scoremod: 0, scorepreco: [0,0], propaganda: 0.42, propagandauni: 1, faturamento: 0, ativo: 1, taokeys: 1872000, divida: [0,0,0], comissao: '5%', frota: [10,0,0,0,0,0,0,0,0,0,0,0], cooperativa: creden[0], pas: 15, pas1: 0, pas2: 0, distribuidores: 25, promotores: 20, senha: creden[1], 
+                                    let jogadorR = new Aluno({ sockid: "11994729653", backup: 0, temporario: 0, last_change: {serv1: '147', serv2: 0, prop1: 0, prop2: 0, insu1: 0, insu2: 0, insu1i: 985, insu2i: 0, prop1: 0, prop2: 0}, instancia: creden[2], npesquisas: 1, turno: 1, scoremod: 0, scorepreco: [0,0], propaganda: 0, propagandauni: 1, faturamento: 0, ativo: 1, taokeys: 1872000, divida: [0,0,0], comissao: '5%', frota: [10,0,0,0,0,0,0,0,0,0,0,0], cooperativa: creden[0], pas: 15, pas1: 0, pas2: 0, distribuidores: 25, promotores: 20, senha: creden[1], 
                                     147:[985,1,288,600,300,0,0,0],
                                     159:[0,0,396,0,0,0,0,0],
                                     149:[0,0,360,0,0,0,0,0],
@@ -2953,7 +2953,7 @@ sockets.on('connection', (socket) => {
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
     })
     socket.on('diminuir-pas', (dados) => {
-        let qnt = Number(dados)
+        let qnt = Math.round(Number(dados))
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => {
                 if(userx !== null){
@@ -3323,7 +3323,7 @@ sockets.on('connection', (socket) => {
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
     })
     socket.on('aumentar-propaganda', (dados) => {
-        let qnt = Number(dados)
+        let qnt = Math.round(Number(dados))
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => {
                 if(userx !== null){
@@ -3332,7 +3332,7 @@ sockets.on('connection', (socket) => {
                             userx.deci.push({data: datetime, acao: 'Investimento em propaganda institucional no valor de ' + qnt, autor: userx.modificador})
                         
                             userx.balanco_patrimonial = {
-                                caixa: userx.balanco_patrimonial.caixa - qnt,
+                                caixa: userx.balanco_patrimonial.caixa - qnt + userx['propaganda'],
                                 estoque: userx.balanco_patrimonial.estoque,
                                 contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
                                 contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
@@ -3344,7 +3344,7 @@ sockets.on('connection', (socket) => {
                                 tributos_a_pagar_atual: userx.balanco_patrimonial.tributos_a_pagar_atual,
                                 emprestimos: userx.balanco_patrimonial.emprestimos,
                                 capial: userx.balanco_patrimonial.capial,
-                                lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados - qnt
+                                lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados - qnt + userx['propaganda']
                             }
                             userx.dre = {
                                 receita: userx.dre.receita,
@@ -3359,7 +3359,7 @@ sockets.on('connection', (socket) => {
                                 despesas_administrativas: userx.dre.despesas_administrativas,
                                 salario_promotores: userx.dre.salario_promotores,
                                 comissao: userx.dre.comissao,
-                                propaganda_institucional: userx.dre.propaganda_institucional + qnt,
+                                propaganda_institucional: userx.dre.propaganda_institucional + qnt - userx['propaganda'],
                                 propaganda_unitaria: userx.dre.propaganda_unitaria,
                                 depreciacao_de_maquinas: userx.dre.depreciacao_de_maquinas,
                                 encargos_financiamento: userx.dre.encargos_financiamento,
@@ -3392,7 +3392,7 @@ sockets.on('connection', (socket) => {
                                 veiculos_comprados: userx.fluxo_de_caixa.veiculos_comprados,
                                 tributos: userx.fluxo_de_caixa.tributos,
                                 promotores: userx.fluxo_de_caixa.promotores,
-                                propaganda: userx.fluxo_de_caixa.propaganda + qnt,
+                                propaganda: userx.fluxo_de_caixa.propaganda + qnt - userx['propaganda'],
                                 pesquisas: userx.fluxo_de_caixa.pesquisas,
                                 pas: userx.fluxo_de_caixa.pas,
                                 uso_frota: userx.fluxo_de_caixa.uso_frota,
@@ -3403,8 +3403,8 @@ sockets.on('connection', (socket) => {
                                 distribuidores: userx.fluxo_de_caixa.distribuidores
                             }
                             
-                            let novaf = userx['propaganda'] + qnt
-                            userx.taokeys = userx.taokeys - qnt
+                            let novaf = qnt
+                            userx.taokeys = userx.taokeys - qnt + userx['propaganda']
                             userx.set('propaganda', novaf) 
                             userx.save()
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
@@ -3457,7 +3457,10 @@ sockets.on('connection', (socket) => {
                         .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
                           
                     }
-                    else{socket.emit('feedback', ['warning','apenas valores positivos'])}
+                    if(userx.taokeys < qnt){
+                        socket.emit('feedback', ['warning','Falta caixa'])
+                    }
+                    else{socket.emit('feedback', ['warning','Apenas valores positivos'])}
                     
                 
              
@@ -4324,29 +4327,17 @@ sockets.on('connection', (socket) => {
             .catch(() => { console.log('falha na comunicacao com o banco de dados para o ' +socket.id)
     })
     }) 
-    socket.on('pesquisar-participacao-servicos', (input) => {
+    socket.on('pesquisar-participacao-servicos', () => {
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => { 
-                    if(userx !== null && input.length < 3){
-                        let redun
-                        //console.log(user.taokeys + ' ccccccccccccccc');
-                        if(userx['taokeys'] >= 10800 && input.length == 1){
-                            let datetime = new Date();
-                            userx.deci.push({data: datetime, acao: 'Contratou pesquisa de participação do serviço ' +input[0] +' para o turno '+ userx.turno, autor: userx.modificador})
+                    if(userx !== null){
                         
-                            function sem_redundancia() {
-                                for(let ff = 0; ff < userx.participacao_modelos.length; ff++){
-                                    if(userx.participacao_modelos[ff] == input[0]){
-                                        redun = input[0]
-                                        return false
-                                    }
-        
-                            }
-                            return true
-                            }
-                            if(sem_redundancia()){
-                                        
-                            
+                        //console.log(user.taokeys + ' ccccccccccccccc');
+                        if(userx['taokeys'] >= 10800 && userx.pes_p.total_participacao_modelos !== 1){
+                            let datetime = new Date();
+                            userx.deci.push({data: datetime, acao: 'Contratou pesquisa de participação da concorrência para o turno '+ userx.turno, autor: userx.modificador})
+                        
+                 
                             userx.balanco_patrimonial = {
                                 caixa: userx.balanco_patrimonial.caixa - 10800,
                                 estoque: userx.balanco_patrimonial.estoque,
@@ -4422,15 +4413,9 @@ sockets.on('connection', (socket) => {
                         
                            userx.taokeys = userx.taokeys - 10800
                            userx['npesquisas'] = userx['npesquisas'] + 1
+                           userx.pes_p.total_participacao_modelos = 1
                            
-                           for(let ss = 0; ss < index.length; ss++){
-                            if(index[ss] == input[0]){
-                                userx.participacao_modelos.push(index[ss])
-                                userx.pes_p.total_participacao_modelos = 1
-                                
-                                
-                            }
-                        }     
+                           
                            //console.log(user.taokeys)
                            userx.save()
                             .then(() => {
@@ -4484,180 +4469,17 @@ sockets.on('connection', (socket) => {
                             
                             
                             
-                            }
-                            else{  
-                                socket.emit('feedback', ['warning', '>> Sua cooperativa ja encomendou a pesquisa do serviço ' + redun + '. (operação negada)'])
-
-                            }
+                           
+                            
                         }
-                            else if(userx['taokeys'] >= 14400 && input.length == 2){
-                                function sem_redundancia() {
-                                    for(let ff = 0; ff < userx.participacao_modelos.length; ff++){
-                                        if(userx.participacao_modelos[ff] == input[0]){
-                                            redun = input[0]
-                                            return false
-                                        }
-                                        if(userx.participacao_modelos[ff] == input[1]){
-                                            redun = input[1]
-                                            return false
-                                        }
-            
-                                }
-                                return true
-                                }
-                                if(sem_redundancia()){
-                                    let datetime = new Date();
-                                    userx.deci.push({data: datetime, acao: 'Contratou pesquisa de participação dos serviços ' +input[0] + ' e ' + input[1]+ ' para o turno '+userx.turno, autor: userx.modificador})
-                                
-                                userx.balanco_patrimonial = {
-                                    caixa: userx.balanco_patrimonial.caixa - 14400,
-                                    estoque: userx.balanco_patrimonial.estoque,
-                                    contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
-                                    contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
-                                    maquinas: userx.balanco_patrimonial.maquinas,
-                                    depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_maquinas,
-                                    veiculos: userx.balanco_patrimonial.veiculos,
-                                    depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos,
-                                    tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
-                                    tributos_a_pagar_atual: userx.balanco_patrimonial.tributos_a_pagar_atual,
-                                    emprestimos: userx.balanco_patrimonial.emprestimos,
-                                    capial: userx.balanco_patrimonial.capial,
-                                    lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados - 14400
-                                }
-                                userx.dre = {
-                                    receita: userx.dre.receita,
-                                    csp: userx.dre.csp,
-                                    estoque_inicial: userx.dre.estoque_inicial,
-                                    custo_prestacao_servico: userx.dre.custo_prestacao_servico,
-                                    custo_estocagem: userx.dre.custo_estocagem,
-                                    custo_troca_insumos: userx.dre.custo_troca_insumos,
-                                    hora_extra: userx.dre.hora_extra,
-                                    capacidade_n_utilizada: userx.dre.capacidade_n_utilizada,
-                                    margem_bruta: userx.dre.margem_bruta,
-                                    despesas_administrativas: userx.dre.despesas_administrativas,
-                                    salario_promotores: userx.dre.salario_promotores,
-                                    comissao: userx.dre.comissao,
-                                    propaganda_institucional: userx.dre.propaganda_institucional,
-                                    propaganda_unitaria: userx.dre.propaganda_unitaria,
-                                    depreciacao_de_maquinas: userx.dre.depreciacao_de_maquinas,
-                                    encargos_financiamento: userx.dre.encargos_financiamento,
-                                    salario_frota: userx.dre.salario_frota,
-                                    manutencao_frota: userx.dre.manutencao_frota,
-                                    depreciacao_de_veiculos: userx.dre.depreciacao_de_veiculos,
-                                    frota_terceirizada: userx.dre.frota_terceirizada,
-                                    despesas_operacionais_n_planejadas: userx.dre.despesas_operacionais_n_planejadas,
-                                    pas: userx.dre.pas,
-                                    pesquisas: userx.dre.pesquisas + 14400,
-                                    tributos: userx.dre.tributos,
-                                    servicos: [userx.dre.servicos[0], userx.dre.servicos[1], userx.dre.servicos[2], userx.dre.servicos[3]],
-                                    preco_medio: userx.dre.preco_medio,
-                                    atendimentos: userx.dre.atendimentos,
-                                    insumos_em_estoque: userx.dre.insumos_em_estoque,
-                                    distribuidores: userx.dre.distribuidores
-        
-                                }
-                                userx.fluxo_de_caixa = {
-                                    saldo_anterior: userx.fluxo_de_caixa.saldo_anterior,
-                                    faturamento: userx.fluxo_de_caixa.faturamento,
-                                    contas_a_receber: userx.fluxo_de_caixa.contas_a_receber,
-                                    contas_a_receber_recebidas: userx.fluxo_de_caixa.contas_a_receber_recebidas, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
-                                    custo_de_servico_prestado: userx.fluxo_de_caixa.custo_de_servico_prestado,
-                                    emprestimos_contratados: userx.fluxo_de_caixa.emprestimos_contratados,
-                                    emprestimos_pagos: userx.fluxo_de_caixa.emprestimos_pagos,
-                                    veiculos_vendidos: userx.fluxo_de_caixa.veiculos_vendidos,
-                                    depreciacao_de_veiculos: userx.fluxo_de_caixa.depreciacao_de_veiculos,
-                                    depreciacao_de_maquinas: userx.fluxo_de_caixa.depreciacao_de_maquinas,
-                                    veiculos_comprados: userx.fluxo_de_caixa.veiculos_comprados,
-                                    tributos: userx.fluxo_de_caixa.tributos,
-                                    promotores: userx.fluxo_de_caixa.promotores,
-                                    propaganda: userx.fluxo_de_caixa.propaganda,
-                                    pesquisas: userx.fluxo_de_caixa.pesquisas + 14400,
-                                    pas: userx.fluxo_de_caixa.pas,
-                                    uso_frota: userx.fluxo_de_caixa.uso_frota,
-                                    despesas_operacionais_n_planejadas: userx.fluxo_de_caixa.despesas_operacionais_n_planejadas,
-                                    despesas_administrativas: userx.fluxo_de_caixa.despesas_administrativas,
-                                    encargos_financiamento: userx.fluxo_de_caixa.encargos_financiamento,
-                                    maquinas: userx.fluxo_de_caixa.maquinas,
-                                    distribuidores: userx.fluxo_de_caixa.distribuidores
-                                }
-                                userx.taokeys = userx.taokeys - 14400
-                                userx['npesquisas'] = userx['npesquisas'] + 1
-                                for(let kk = 0; kk < 2; kk++){
-                                    for(let ss = 0; ss < index.length; ss++){
-                                        if(index[ss] == input[kk]){
-
-                                            userx.participacao_modelos.push(index[ss])
-                                            userx.pes_p.total_participacao_modelos = 1
-                                            
-                                        }
-                                    }
-                                    
-                                }
-                                 
-                                 
-                                
-                                //console.log(user.taokeys)
-                                userx.save()
-                                 .then((userxx) => {
-                                     
-                                    socket.emit('feedback', ['success', '>> Encomenda de pesquisa de PARTICIPAÇÃO DE SERVIÇOS realizada com sucesso.'])
-                                                
-                                            
-                                             function propuni(tipo) {
-                                                if(userx.somapropuni.tipo1 == tipo){
-                                                    return userx.somapropuni.inv1
-                                                }
-                                                else if(userx.somapropuni.tipo2 == tipo){
-                                                    return userx.somapropuni.inv2
-                                                }
-                                                else{return 0}
-                                            }
-                                             socket.emit('update', [
-                                                [...userxx["147"],"147",propuni("147")],
-                                                [...userxx["148"],"148",propuni("148")],
-                                                [...userxx["149"],"149",propuni("149")],
-                                                [...userxx["157"],"157",propuni("157")],
-                                                [...userxx["158"],"158",propuni("158")],
-                                                [...userxx["159"],"159",propuni("159")],
-                                                [...userxx["257"],"257",propuni("257")],
-                                                [...userxx["258"],"258",propuni("258")],
-                                                [...userxx["259"],"259",propuni("259")],
-                                                [...userxx["267"],"267",propuni("267")],
-                                                [...userxx["268"],"268",propuni("268")],
-                                                [...userxx["269"],"269",propuni("269")],
-                                                [...userxx["347"],"347",propuni("347")],
-                                                [...userxx["348"],"348",propuni("348")],
-                                                [...userxx["349"],"349",propuni("349")],
-                                                [...userxx["357"],"357",propuni("357")],
-                                                [...userxx["358"],"358",propuni("358")],
-                                                [...userxx["359"],"359",propuni("359")],
-                                                [...userxx["367"],"367",propuni("367")],
-                                                [...userxx["368"],"368",propuni("368")],
-                                                [...userxx["369"],"369",propuni("369")],
-                                                userxx["taokeys"],
-                                                userxx["frota"],
-                                                userxx["promotores"],
-                                                userxx["comissao"],
-                                                userxx["distribuidores"],
-                                                userxx["pas"],
-                                                userxx["propaganda"],
-                                                userxx["propagandauni"],
-                                                (userxx["divida"][0]+userxx["divida"][1]+userxx["divida"][2]),
-                                                userxx["turno"]]);
-                 
-                 
-                                         
-     
-                                 })
-                                 .catch((err) => {console.log('falha em salvar transacao por pesquisa n 307' + err)})
-                                 
-                                }
-                                 else{
-                                     socket.emit('feedback', ['warning','>> Sua cooperativa ja encomendou a pesquisa do serviço ' + redun + '. (operação negada)'])
-                                 }
-                                  }
+                            
                         else{
-                            socket.emit('feedback', ['warning','falta caixa']);
+                            if(userx.pes_p.participacao_modelos !== 1){
+                                socket.emit('feedback', ['warning','falta caixa']);
+                            }
+                            else{
+                                socket.emit('feedback', ['warning','Essa pesquisa ja foi contratada.']);
+                            }
                             //console.log('hlu')
                     }
                     //console.log(user.taokeys)
@@ -4830,6 +4652,185 @@ sockets.on('connection', (socket) => {
             .catch((err) => { console.log('falha na comunicacao com o banco de dados para o ' + socket.id + ' ps: ' + err)
     })
     }) 
+    socket.on('pesquisar-teste-entre-2', (input) => {
+        Aluno.findOne({sockid: socket.id, temporario: 1})
+            .then((userx) => { 
+                    if(userx !== null && input.length == 2){
+                        let redun
+                        //console.log(user.taokeys + ' ccccccccccccccc');
+                        if(userx['taokeys'] >= 14400 && input.length == 2){
+                            let datetime = new Date();
+                            userx.deci.push({data: datetime, acao: 'Contratou pesquisa de teste entre tipos de serviço para ' +input[0] +' e ' + input[1] +' referente ao turno '+ userx.turno, autor: userx.modificador})
+                        
+                            function sem_redundancia() {
+                                for(let ff = 0; ff < userx.participacao_modelos.length; ff++){
+                                    if(userx.participacao_modelos[ff][0] == input[0] && userx.participacao_modelos[ff][1] == input[1]){
+                                        redun = input[0]+'; '+input[1]
+                                        return false
+                                    }
+                                    if(userx.participacao_modelos[ff][0] == input[1] && userx.participacao_modelos[ff][1] == input[0]){
+                                        redun = input[0]+'; '+input[1]
+                                        return false
+                                    }
+        
+                            }
+                            return true
+                            }
+                            if(sem_redundancia()){
+                            userx.balanco_patrimonial = {
+                                caixa: userx.balanco_patrimonial.caixa - 14400,
+                                estoque: userx.balanco_patrimonial.estoque,
+                                contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
+                                contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
+                                maquinas: userx.balanco_patrimonial.maquinas,
+                                depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_maquinas,
+                                veiculos: userx.balanco_patrimonial.veiculos,
+                                depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos,
+                                tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
+                                tributos_a_pagar_atual: userx.balanco_patrimonial.tributos_a_pagar_atual,
+                                emprestimos: userx.balanco_patrimonial.emprestimos,
+                                capial: userx.balanco_patrimonial.capial,
+                                lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados - 14400
+                            }
+                            userx.dre = {
+                                receita: userx.dre.receita,
+                                csp: userx.dre.csp,
+                                estoque_inicial: userx.dre.estoque_inicial,
+                                custo_prestacao_servico: userx.dre.custo_prestacao_servico,
+                                custo_estocagem: userx.dre.custo_estocagem,
+                                custo_troca_insumos: userx.dre.custo_troca_insumos,
+                                hora_extra: userx.dre.hora_extra,
+                                capacidade_n_utilizada: userx.dre.capacidade_n_utilizada,
+                                margem_bruta: userx.dre.margem_bruta,
+                                despesas_administrativas: userx.dre.despesas_administrativas,
+                                salario_promotores: userx.dre.salario_promotores,
+                                comissao: userx.dre.comissao,
+                                propaganda_institucional: userx.dre.propaganda_institucional,
+                                propaganda_unitaria: userx.dre.propaganda_unitaria,
+                                depreciacao_de_maquinas: userx.dre.depreciacao_de_maquinas,
+                                encargos_financiamento: userx.dre.encargos_financiamento,
+                                salario_frota: userx.dre.salario_frota,
+                                manutencao_frota: userx.dre.manutencao_frota,
+                                depreciacao_de_veiculos: userx.dre.depreciacao_de_veiculos,
+                                frota_terceirizada: userx.dre.frota_terceirizada,
+                                despesas_operacionais_n_planejadas: userx.dre.despesas_operacionais_n_planejadas,
+                                pas: userx.dre.pas,
+                                pesquisas: userx.dre.pesquisas + 14400,
+                                tributos: userx.dre.tributos,
+                                servicos: [userx.dre.servicos[0], userx.dre.servicos[1], userx.dre.servicos[2], userx.dre.servicos[3]],
+                                preco_medio: userx.dre.preco_medio,
+                                atendimentos: userx.dre.atendimentos,
+                                insumos_em_estoque: userx.dre.insumos_em_estoque,
+                                distribuidores: userx.dre.distribuidores
+    
+                            }
+                            userx.fluxo_de_caixa = {
+                                saldo_anterior: userx.fluxo_de_caixa.saldo_anterior,
+                                faturamento: userx.fluxo_de_caixa.faturamento,
+                                contas_a_receber: userx.fluxo_de_caixa.contas_a_receber,
+                                contas_a_receber_recebidas: userx.fluxo_de_caixa.contas_a_receber_recebidas, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
+                                custo_de_servico_prestado: userx.fluxo_de_caixa.custo_de_servico_prestado,
+                                emprestimos_contratados: userx.fluxo_de_caixa.emprestimos_contratados,
+                                emprestimos_pagos: userx.fluxo_de_caixa.emprestimos_pagos,
+                                veiculos_vendidos: userx.fluxo_de_caixa.veiculos_vendidos,
+                                depreciacao_de_veiculos: userx.fluxo_de_caixa.depreciacao_de_veiculos,
+                                depreciacao_de_maquinas: userx.fluxo_de_caixa.depreciacao_de_maquinas,
+                                veiculos_comprados: userx.fluxo_de_caixa.veiculos_comprados,
+                                tributos: userx.fluxo_de_caixa.tributos,
+                                promotores: userx.fluxo_de_caixa.promotores,
+                                propaganda: userx.fluxo_de_caixa.propaganda,
+                                pesquisas: userx.fluxo_de_caixa.pesquisas + 14400,
+                                pas: userx.fluxo_de_caixa.pas,
+                                uso_frota: userx.fluxo_de_caixa.uso_frota,
+                                despesas_operacionais_n_planejadas: userx.fluxo_de_caixa.despesas_operacionais_n_planejadas,
+                                despesas_administrativas: userx.fluxo_de_caixa.despesas_administrativas,
+                                encargos_financiamento: userx.fluxo_de_caixa.encargos_financiamento,
+                                maquinas: userx.fluxo_de_caixa.maquinas,
+                                distribuidores: userx.fluxo_de_caixa.distribuidores
+                            }
+                           
+                        
+                           userx.taokeys = userx.taokeys - 14400
+                           userx['npesquisas'] = userx['npesquisas'] + 1
+                           
+                           
+                            userx.participacao_modelos.push([index[0],input[1]])
+                            //userx.pes_p.total_participacao_modelos = 1
+                                
+                                
+                           
+                           //console.log(user.taokeys)
+                           userx.save()
+                            .then(() => {
+                                socket.emit('feedback', ['success', '>> Encomenda de pesquisa de PARTICIPAÇÃO DE SERVIÇOS realizada com sucesso.'])
+                                        function propuni(tipo) {
+                                            if(userx.somapropuni.tipo1 == tipo){
+                                                return userx.somapropuni.inv1
+                                            }
+                                            else if(userx.somapropuni.tipo2 == tipo){
+                                                return userx.somapropuni.inv2
+                                            }
+                                            else{return 0}
+                                        }
+                                        socket.emit('update', [
+                                    [...userx["147"],"147",propuni("147")],
+                                    [...userx["148"],"148",propuni("148")],
+                                    [...userx["149"],"149",propuni("149")],
+                                    [...userx["157"],"157",propuni("157")],
+                                    [...userx["158"],"158",propuni("158")],
+                                    [...userx["159"],"159",propuni("159")],
+                                    [...userx["257"],"257",propuni("257")],
+                                    [...userx["258"],"258",propuni("258")],
+                                    [...userx["259"],"259",propuni("259")],
+                                    [...userx["267"],"267",propuni("267")],
+                                    [...userx["268"],"268",propuni("268")],
+                                    [...userx["269"],"269",propuni("269")],
+                                    [...userx["347"],"347",propuni("347")],
+                                    [...userx["348"],"348",propuni("348")],
+                                    [...userx["349"],"349",propuni("349")],
+                                    [...userx["357"],"357",propuni("357")],
+                                    [...userx["358"],"358",propuni("358")],
+                                    [...userx["359"],"359",propuni("359")],
+                                    [...userx["367"],"367",propuni("367")],
+                                    [...userx["368"],"368",propuni("368")],
+                                    [...userx["369"],"369",propuni("369")],
+                                    userx["taokeys"],
+                                    userx["frota"],
+                                    userx["promotores"],
+                                    userx["comissao"],
+                                    userx["distribuidores"],
+                                    userx["pas"],
+                                    userx["propaganda"],
+                                    userx["propagandauni"],
+                                    (userx["divida"][0]+userx["divida"][1]+userx["divida"][2]),
+                                    userx["turno"]]);
+            
+                                    
+
+                            })
+                            .catch((err) => {console.log('falha em salvar transacao por pesquisa n 307' + err)})
+                            
+                            
+                            
+                            }
+                            else{  
+                                socket.emit('feedback', ['warning', '>> Sua cooperativa ja encomendou a pesquisa do serviço ' + redun + '. (operação negada)'])
+
+                            }
+                        }
+                        else{
+                            socket.emit('feedback', ['warning','falta caixa']);
+                            //console.log('hlu')
+                    }
+                    //console.log(user.taokeys)
+                    }
+                    else{
+                        socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
+                    }
+            }) 
+            .catch((err) => { console.log('falha na comunicacao com o banco de dados para o ' +socket.id + ' ps: ' + err)
+    })
+    })
     socket.on('puxar-balancos',  (turno) => {
 
         Aluno.findOne({sockid: socket.id, temporario: 1})
@@ -5073,7 +5074,7 @@ sockets.on('connection', (socket) => {
                                 Data.findOne({login_adm: creden[0]})
                                     .then((userL) => {
                                         if(userL == null){
-                                            let jogo = new Data({login_adm: creden[0], iniciado: 1, senha_adm: creden[1], instancia: creden[2], senha_instancia: creden[3], turno: 1, oferta_mercado: 140000000, ativo: 1})
+                                            let jogo = new Data({login_adm: creden[0], iniciado: 1, senha_adm: creden[1], instancia: creden[2], senha_instancia: creden[3], turno: 1, oferta_mercado: 1400000000, ativo: 1})
                                             jogo.save()
                                                 .then(() => {
                                                     console.log('>>> Instancia: ' + creden[2] + ' registrada com sucesso')    
@@ -5177,6 +5178,10 @@ sockets.on('connection', (socket) => {
                 let soma6 = 0
                 let soma7 = 0
                 for(let i = 0; i < users.length; i++){
+                    if(users[i].propaganda == 0){
+                        users[i].propaganda = 1
+                    }
+
                     let g = Number(users[i]['comissao'].slice(0,users[i]['comissao'].length-1))
                     soma = soma + users[i]['distribuidores']
                     soma1 = soma1 + users[i]['pas']
@@ -5704,9 +5709,9 @@ sockets.on('connection', (socket) => {
                             distribuidores: users[i].fluxo_de_caixa.distribuidores //+ users[i]['distribuidores']*360
                         }
                     }//segunda parcela /\
-                    users[i].taokeys = users[i].taokeys + users[i].balanco_patrimonial.contas_a_receber60 - users[i]['faturamento']*0.08 - users[i]['promotores']*2160  - users[i]['pas']*2160 - users[i]['faturamento']*(Number(users[i]['comissao'].slice(0,users[i]['comissao'].length-1))) -720000 -50400// apenas no CBG>> - users[i]['distribuidores']*360
+                    users[i].taokeys = users[i].taokeys + users[i].balanco_patrimonial.contas_a_receber60 - users[i]['faturamento']*0.08 - users[i]['promotores']*2160  - users[i]['pas']*2160 - users[i]['faturamento']*(Number(users[i]['comissao'].slice(0,users[i]['comissao'].length-1)*0.01)) -720000 -50400// apenas no CBG>> - users[i]['distribuidores']*360
                     users[i].balanco_patrimonial = {
-                        caixa: users[i].balanco_patrimonial.caixa + users[i].balanco_patrimonial.contas_a_receber60 - users[i]['faturamento']*0.08 - users[i]['promotores']*2160  - users[i]['pas']*2160 - users[i]['faturamento']*(Number(users[i]['comissao'].slice(0,users[i]['comissao'].length-1))) - 720000 -50400, //- users[i]['distribuidores']*360
+                        caixa: users[i].balanco_patrimonial.caixa + users[i].balanco_patrimonial.contas_a_receber60 - users[i]['faturamento']*0.08 - users[i]['promotores']*2160  - users[i]['pas']*2160 - users[i]['faturamento']*(Number(users[i]['comissao'].slice(0,users[i]['comissao'].length-1)*0.01)) - 720000 -50400, //- users[i]['distribuidores']*360
                         estoque: users[i].balanco_patrimonial.estoque,
                         contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber120,
                         contas_a_receber120: 0,
@@ -5718,7 +5723,7 @@ sockets.on('connection', (socket) => {
                         tributos_a_pagar_atual: users[i].balanco_patrimonial.tributos_a_pagar_atual,
                         emprestimos: users[i].balanco_patrimonial.emprestimos,
                         capial: users[i].balanco_patrimonial.capial,
-                        lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - users[i]['faturamento']*0.08 - users[i]['promotores']*2160 - users[i]['pas']*2160 - users[i]['faturamento']*(Number(users[i]['comissao'].slice(0,users[i]['comissao'].length-1))) - 720000 - 50400//>> - users[i]['distribuidores']*360
+                        lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - users[i]['faturamento']*0.08 - users[i]['promotores']*2160 - users[i]['pas']*2160 - users[i]['faturamento']*(Number(users[i]['comissao'].slice(0,users[i]['comissao'].length-1)*0.01)) - 720000 - 50400//>> - users[i]['distribuidores']*360
                     }
                     users[i].dre = {
                         receita: users[i].dre.receita,
@@ -5732,7 +5737,7 @@ sockets.on('connection', (socket) => {
                         margem_bruta: users[i].dre.margem_bruta,
                         despesas_administrativas: users[i].dre.despesas_administrativas + 720000,
                         salario_promotores: users[i].dre.salario_promotores + users[i]['promotores']*2160, //gambiarra
-                        comissao: users[i].dre.comissao + users[i]['faturamento']*(Number(users[i]['comissao'].slice(0,users[i]['comissao'].length-1))),
+                        comissao: users[i].dre.comissao + users[i]['faturamento']*(Number(users[i]['comissao'].slice(0,users[i]['comissao'].length-1)*0.01)*0.01),
                         propaganda_institucional: users[i].dre.propaganda_institucional,
                         propaganda_unitaria: users[i].dre.propaganda_unitaria,
                         depreciacao_de_maquinas: users[i].dre.depreciacao_de_maquinas,
@@ -5766,7 +5771,7 @@ sockets.on('connection', (socket) => {
                         depreciacao_de_maquinas: users[i].fluxo_de_caixa.depreciacao_de_maquinas,
                         veiculos_comprados: users[i].fluxo_de_caixa.veiculos_comprados,
                         tributos: users[i].fluxo_de_caixa.tributos,
-                        promotores: users[i].fluxo_de_caixa.promotores + users[i]['promotores']*2160 + users[i]['faturamento']*(Number(users[i]['comissao'].slice(0,users[i]['comissao'].length-1))),
+                        promotores: users[i].fluxo_de_caixa.promotores + users[i]['promotores']*2160 + users[i]['faturamento']*(Number(users[i]['comissao'].slice(0,users[i]['comissao'].length-1)*0.01)),
                         propaganda: users[i].fluxo_de_caixa.propaganda,
                         pesquisas: users[i].fluxo_de_caixa.pesquisas,
                         pas: users[i].fluxo_de_caixa.pas + users[i]['pas']*2160 + 50400,
@@ -7168,7 +7173,7 @@ sockets.on('connection', (socket) => {
                         for(let i = 0; i < users.length; i++){
                             for(let h = 0; h < index.length; h++){
                                 if(users[i][index[h]][1] == 1){
-                                    serv.push(index[h])
+                                    serv.push(users[i].cooperativa+': '+index[h])
                                 }
                                 if(users[i][index[h]][6] > 0){
                                     part[h] = part[h] + users[i][index[h]][6]
@@ -7201,13 +7206,15 @@ sockets.on('connection', (socket) => {
                                         let ttotal_part = total_part
                                         let ttdis = tdis
                                         //console.log(users[i].dre.servicos)
-                                        for(let df = 0; df < part.length; df++){
+                                        
                                             for(let dd = 0; dd < users[i].participacao_modelos.length; dd++){
-                                                if(users[i].participacao_modelos[dd] == index[df]){
-                                                    amem.push([index[df],part[df]])
+                                                if(users[i].participacao_modelos[dd][0][2] > users[i].participacao_modelos[dd][1][2]){
+                                                    let sorte = Math.round(Math.random()*10) + 50
+                                                    let azar = 1 - sorte
+                                                    amem.push([users[i].participacao_modelos[dd][0]+' prefenrência de '+sorte+'%.',users[i].participacao_modelos[dd][1]+' prefenrência de '+azar+'%.'])
                                                 }
                                             }
-                                        }
+                                        
                                         if(users[i].pes_p.modelos_oferecidos !== 1){
                                             console.log('mod-ofere-zero')
                                             tserv2 = 'vazio'}
