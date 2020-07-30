@@ -3773,7 +3773,7 @@ sockets.on('connection', (socket) => {
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => {
                 if(userx !== null){
-                        if(qnt >= 5 && qnt < 100 ){
+                        
                             if(qnt%0.5 == 0){
                             let datetime = new Date();
                             userx.deci.push({data: datetime, acao: 'Comissão alterada para ' + qnt+'%', autor: userx.modificador})
@@ -3841,8 +3841,8 @@ sockets.on('connection', (socket) => {
                           
                     }
                     else{socket.emit('feedback', ['warning','Apenas valores inteiros ou terminados com ".5"'])}
-                    }
-                    else{socket.emit('feedback', ['warning','Apenas valores entre 5 e 100'])}
+                    
+                    
                     
                 
              
