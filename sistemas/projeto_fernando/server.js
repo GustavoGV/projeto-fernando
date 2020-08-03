@@ -5374,7 +5374,46 @@ sockets.on('connection', (socket) => {
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
 
-    }) //FALTA PUXAR TB OS BALANCOS DO TURNO ATUAL 
+    })
+    socket.on('puxar-bp-geral', () => {
+        Aluno.findOne({sockid: socket.id, temporario: 1})
+            .then((userx) => {
+                if(userx !== null){
+                        
+                        //console.log(userx.turno)
+                        //console.log(Number(turno))
+                            if(userx.turno == 2 || userx.turno == 4){
+                                Aluno.find({ backup: 1, instancia: userx.instancia, turno: userx.turno - 1 })                 
+                                    .then((bps) => {
+                                        if(bps.length !== 0){ 
+                                            let resp = []
+                                            for(let i = 0; i < bps.length; i++){
+                                                resp.push({cooperativa: bps[i].cooperativa, balanco_patrimonial: bps[i].balanco_patrimonial, turno: bps[i].turno})
+                                            }
+                                            socket.emit('bp-geral', resp)
+                                       
+                                        
+                                        } 
+                                        else{
+                                            console.log('puts deu 0 qnd foi puxar os bps do turno 2 ou 4...')
+                                            socket.emit('bp-geral', ['vazio'])
+                                        }         
+                                    })
+                                    .catch((err) => {console.log(err)})
+                            }
+                            
+
+                          
+
+            }
+                else{
+                    socket.emit('feedback', ['danger','É preciso estar logado para puxar o state atual da simulação.'])
+                }
+            })
+            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
+
+    })
+
     socket.on('puxar-pesquisas',  () => {
         console.log("FOOII")
         Aluno.findOne({sockid: socket.id, temporario: 1})
@@ -7506,6 +7545,16 @@ sockets.on('connection', (socket) => {
                 
                 let resp = []
                 for(let i = 0; i < users.length; i++){
+                    users[i].last_change = {
+                        serv1: users[i].last_change.serv1,
+                        serv2: users[i].last_change.serv2,
+                        insu1: 0,
+                        insu2: 0,
+                        insu1i: users[i].last_change.insu1i,
+                        insu2i: users[i].last_change.insu2i,
+                        prop1: users[i].last_change.prop1,
+                        prop2: users[i].last_change.prop2
+                        }
                     if(users[i].last_change.serv2 !== 0){
                         //users[i].last_change.insu2i = users[i][users[i].last_change.serv2][0]
                         users[i].last_change = {
@@ -7863,7 +7912,7 @@ sockets.on('connection', (socket) => {
                                                 servicos:[users[i].dre.servicos[0],users[i].dre.servicos[1],users[i].dre.servicos[2],users[i].dre.servicos[3]],
                                                 preco_medio: users[i].dre.preco_medio,
                                                 atendimentos: users[i].dre.atendimentos,
-                                                insumos_em_estoque: users[i].insumos_em_estoque
+                                                insumos_em_estoque: users[i].dre.insumos_em_estoque
                     
                                             },
                                             fluxo_de_caixa: {
@@ -7902,8 +7951,8 @@ sockets.on('connection', (socket) => {
                                                 prop2: users[i].last_change.prop2,
                                                 serv1: users[i].last_change.serv1,
                                                 serv2: users[i].last_change.serv2,
-                                                insu1: users[i].last_change.insu1,
-                                                insu2: users[i].last_change.insu2,
+                                                insu1: 0,
+                                                insu2: 0,
                                                 insu2i: users[i].last_change.insu2i,
                                                 insu1i: users[i].last_change.insu1i
                                             }
