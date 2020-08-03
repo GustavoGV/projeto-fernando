@@ -3180,11 +3180,11 @@ sockets.on('connection', (socket) => {
             .then((userx) => {
                 if(userx !== null){
                         if(qnt > 0 && userx['pas'] >= qnt){
-                            let novaf = userx['pas'] - qnt
+                            let novaf = Math.round((-1)*qnt)
                             let datetime = new Date();
                             userx.deci.push({data: datetime, acao: 'Diminuição de '+qnt +' unidades de P.A.S.', autor: userx.modificador})
                         
-                            userx.set('pas', novaf) 
+                            userx.set('pas2', novaf) 
                             userx.save()
                                 .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
                                 .then((user) => {
@@ -3263,7 +3263,7 @@ sockets.on('connection', (socket) => {
             .then((userx) => {
                 if(userx !== null){
                         if(qnt > 0){
-                            let novaf = userx['pas2'] + qnt
+                            let novaf = Math.round(qnt)
                             let datetime = new Date();
                             userx.deci.push({data: datetime, acao: 'Aumento de '+qnt +' unidades de P.A.S.', autor: userx.modificador})
                         
@@ -5852,7 +5852,7 @@ sockets.on('connection', (socket) => {
                 //console.log('|| ' + preco_medio + ' <-- PRECO MEDIO ||')
 
                 for(let i = 0; i < users.length; i++){
-                    console.log("1: " + users[i].taokeys)
+                    console.log("1 (sem alteracoes): " + users[i].taokeys)
                     users[i].balanco_patrimonial = {
                         caixa: users[i].balanco_patrimonial.caixa,
                         estoque: users[i].balanco_patrimonial.estoque,
@@ -5933,7 +5933,7 @@ sockets.on('connection', (socket) => {
                         somaF = somaF + users[i]['frota'][f]
                         if(users[i]['frota'][f] > 0){
                             users[i].taokeys = users[i].taokeys - users[i]['frota'][f]*10800
-                            console.log("2: " + users[i].taokeys)
+                            console.log("2 (- users[i]['frota'][f]*10800): " + users[i].taokeys)
                             users[i].balanco_patrimonial = {
                                 caixa: users[i].balanco_patrimonial.caixa  - users[i]['frota'][f]*10800,
                                 estoque: users[i].balanco_patrimonial.estoque,
@@ -6083,7 +6083,7 @@ sockets.on('connection', (socket) => {
                     //Apos a computacao do faturamento do player no codigo abaixo altera-se no Schema o lucro resultante desse faturamento levando em conta o faturamento planejado do player, como o professor instruiu \/
                     if(users[i].turno == 2){ 
                         users[i].taokeys = users[i].taokeys - users[i].balanco_patrimonial.tributos_a_pagar_anterior/2
-                        console.log("3: " + users[i].taokeys)
+                        console.log("3 (- users[i].balanco_patrimonial.tributos_a_pagar_anterior/2): " + users[i].taokeys)
                         users[i].balanco_patrimonial = {
                             caixa: users[i].balanco_patrimonial.caixa - users[i].balanco_patrimonial.tributos_a_pagar_anterior/2,
                             estoque: users[i].balanco_patrimonial.estoque,
@@ -6159,7 +6159,7 @@ sockets.on('connection', (socket) => {
                     }//PAGAMENTO DOS tributos e encargos do ano anterior
                     if(users[i].turno == 3){
                         users[i].taokeys = users[i].taokeys - users[i].balanco_patrimonial.tributos_a_pagar_anterior
-                        console.log("4: " + users[i].taokeys)
+                        console.log("4 (- users[i].balanco_patrimonial.tributos_a_pagar_anterior): " + users[i].taokeys)
                         users[i].balanco_patrimonial = {
                             caixa: users[i].balanco_patrimonial.caixa - users[i].balanco_patrimonial.tributos_a_pagar_anterior,
                             estoque: users[i].balanco_patrimonial.estoque,
@@ -6234,7 +6234,7 @@ sockets.on('connection', (socket) => {
                         }
                     }//segunda parcela /\
                     users[i].taokeys = users[i].taokeys + users[i].balanco_patrimonial.contas_a_receber60 - users[i]['faturamento']*0.08 - users[i]['promotores']*2160  - users[i]['pas']*2160 - users[i]['faturamento']*(Number(users[i]['comissao'].slice(0,users[i]['comissao'].length-1)*0.01)) -720000 -50400// apenas no CBG>> - users[i]['distribuidores']*360
-                    console.log("5: " + users[i].taokeys)
+                    console.log("5 (+ users[i].balanco_patrimonial.contas_a_receber60 - users[i]['faturamento']*0.08 - users[i]['promotores']*2160  - users[i]['pas']*2160 - users[i]['faturamento']*(Number(users[i]['comissao'].slice(0,users[i]['comissao'].length-1)*0.01)) -720000 -50400): " + users[i].taokeys)
                     users[i].balanco_patrimonial = {
                         caixa: users[i].balanco_patrimonial.caixa + users[i].balanco_patrimonial.contas_a_receber60 - users[i]['faturamento']*0.08 - users[i]['promotores']*2160  - users[i]['pas']*2160 - users[i]['faturamento']*(Number(users[i]['comissao'].slice(0,users[i]['comissao'].length-1)*0.01)) - 720000 -50400, //- users[i]['distribuidores']*360
                         estoque: users[i].balanco_patrimonial.estoque,
@@ -6490,7 +6490,7 @@ sockets.on('connection', (socket) => {
                             if(users[i][index[o]][0] >= 0){
                                  
                                 users[i].taokeys = users[i].taokeys - users[i][index[o]][0]*36
-                                console.log("6: " + users[i].taokeys)
+                                console.log("6 (- users[i][index[o]][0]*36): " + users[i].taokeys)
     
 
                                 users[i].balanco_patrimonial = {
@@ -6567,7 +6567,7 @@ sockets.on('connection', (socket) => {
                             else{
                                 console.log("antes 7: " + users[i].taokeys)
                                 users[i].taokeys = users[i].taokeys + users[i][index[o]][0]*users[i][index[o]][2]*1.2
-                                console.log("7: " + users[i].taokeys)
+                                console.log("7 (+ users[i][index[o]][0]*users[i][index[o]][2]*1.2): " + users[i].taokeys)
                                 users[i].balanco_patrimonial = {
                                     caixa: users[i].balanco_patrimonial.caixa + users[i][index[o]][0]*users[i][index[o]][2]*1.2,
                                     estoque: users[i].balanco_patrimonial.estoque + (-1)*(users[i][index[o]][0]*users[i][index[o]][2]),
@@ -6686,7 +6686,7 @@ sockets.on('connection', (socket) => {
                         let j = (uso_frota%2000)
                         if(j > 0){
                             users[i].taokeys = users[i].taokeys - (((uso_frota-j)/2000)-frota_soma+1)*60 //desconta o valor gasto com frota terceirizada
-                            console.log("8: " + users[i].taokeys)
+                            console.log("8 (- (((uso_frota-j)/2000)-frota_soma+1)*60): " + users[i].taokeys)
                             users[i].balanco_patrimonial = {
                                 caixa: users[i].balanco_patrimonial.caixa - (((uso_frota-j)/2000)-frota_soma+1)*60,
                                 estoque: users[i].balanco_patrimonial.estoque,
@@ -6760,7 +6760,7 @@ sockets.on('connection', (socket) => {
                         else{
 
                             users[i].taokeys = users[i].taokeys - (((uso_frota)/2000)-frota_soma)*60 //desconta o valor gasto com frota terceirizada
-                            console.log("9: " + users[i].taokeys)
+                            console.log("9 - (((uso_frota)/2000)-frota_soma)*60: " + users[i].taokeys)
                             users[i].balanco_patrimonial = {
                                 caixa: users[i].balanco_patrimonial.caixa - (((uso_frota-j)/2000)-frota_soma)*60,
                                 estoque: users[i].balanco_patrimonial.estoque,
@@ -6842,7 +6842,7 @@ sockets.on('connection', (socket) => {
                     
                     if(users[i].taokeys >= users[i]['divida'][0]/3 + users[i]['divida'][0]*0.08){
                         users[i].taokeys = users[i].taokeys - (users[i]['divida'][0]/3 + users[i]['divida'][0]*0.08)
-                        console.log("9: " + users[i].taokeys)
+                        console.log("9 (- (users[i]['divida'][0]/3 + users[i]['divida'][0]*0.08)): " + users[i].taokeys)
                         users[i].balanco_patrimonial = {
                             caixa: users[i].balanco_patrimonial.caixa - users[i]['divida'][0]/3 - users[i]['divida'][0]*0.08,
                             estoque: users[i].balanco_patrimonial.estoque,
@@ -6918,7 +6918,7 @@ sockets.on('connection', (socket) => {
                     else if(users[i].taokeys > users[i]['divida'][0]*0.08){
                         let gamb = (users[i]['divida'][0]/3 + users[i]['divida'][0]*0.08) - users[i].taokeys
                         users[i].taokeys = 0
-                        console.log("10: " + users[i].taokeys)
+                        console.log("10 (users[i].taokeys = 0): " + users[i].taokeys)
                         users[i].balanco_patrimonial = {
                             caixa: 0,
                             estoque: users[i].balanco_patrimonial.estoque,
@@ -7067,7 +7067,7 @@ sockets.on('connection', (socket) => {
 
                     if(users[i].taokeys >= users[i]['divida'][1]/2 + users[i]['divida'][1]*0.08){
                         users[i].taokeys = users[i].taokeys - (users[i]['divida'][1]/2 + users[i]['divida'][1]*0.08)
-                        console.log("11: " + users[i].taokeys)
+                        console.log("11 (- (users[i]['divida'][1]/2 + users[i]['divida'][1]*0.08)): " + users[i].taokeys)
                         users[i].balanco_patrimonial = {
                             caixa: users[i].balanco_patrimonial.caixa - users[i]['divida'][1]/2 - users[i]['divida'][1]*0.08,
                             estoque: users[i].balanco_patrimonial.estoque,
@@ -7294,7 +7294,7 @@ sockets.on('connection', (socket) => {
         
                     if(users[i].taokeys >= users[i]['divida'][2]*1.08){
                         users[i].taokeys = users[i].taokeys - users[i]['divida'][2]*1.08
-                        console.log("12: " + users[i].taokeys)
+                        console.log("12 (- users[i]['divida'][2]*1.08): " + users[i].taokeys)
                         users[i].balanco_patrimonial = {
                             caixa: users[i].balanco_patrimonial.caixa - users[i]['divida'][2]*0.08 - users[i]['divida'][2],
                             estoque: users[i].balanco_patrimonial.estoque,
