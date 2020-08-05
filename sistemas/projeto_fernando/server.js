@@ -346,7 +346,7 @@ sockets.on('connection', (socket) => {
                         368:[0,0,540,0,0,0,0,0],
                         369:[0,0,576,0,0,0,0,0],
                         balanco_patrimonial: {
-                            caixa: 1119081,
+                            caixa: 1872000,
                             estoque: 283680,
                             contas_a_receber60: 2683845,
                             contas_a_receber120: 1405464,
@@ -393,7 +393,7 @@ sockets.on('connection', (socket) => {
 
                         },
                         fluxo_de_caixa: {
-                            saldo_anterior: 1119081,
+                            saldo_anterior: 1872000,
                             faturamento: 0,
                             contas_a_receber: 0,
                             contas_a_receber_recebidas: 0, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
@@ -454,7 +454,7 @@ sockets.on('connection', (socket) => {
                                     368:[0,0,540,0,0,0,0,0],
                                     369:[0,0,576,0,0,0,0,0],
                                     balanco_patrimonial: {
-                                        caixa: 1119081,
+                                        caixa: 1872000,
                                         estoque: 283680,
                                         contas_a_receber60: 2683845,
                                         contas_a_receber120: 1405464,
@@ -502,7 +502,7 @@ sockets.on('connection', (socket) => {
             
                                     },
                                     fluxo_de_caixa: {
-                                        saldo_anterior: 1119081,
+                                        saldo_anterior: 1872000,
                                         faturamento: 0,
                                         contas_a_receber: 0,
                                         contas_a_receber_recebidas: 0, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
@@ -1775,7 +1775,7 @@ sockets.on('connection', (socket) => {
                         userdef.modificador = usert.modificador
                         userdef.save()
                             .then(() => {
-                                socket.emit('feedback', ['success','os dados foram salvos com sucesso'])
+                                socket.emit('feedback', ['success','Os dados foram salvos com sucesso'])
                             })
                             .catch((err) => {socket.emit('feedback', ['danger','falha ao salvar os dados no servidor: ' + err]);console.log(err)})
                         
@@ -1905,6 +1905,7 @@ sockets.on('connection', (socket) => {
                         
                         usert.save()
                             .then(() => {
+                                socket.emit('feedback', ['success','A jogada foi resetada com sucesso'])
                                 Aluno.find({ cooperativa: userdef.cooperativa, backup: 1, instancia: userdef.instancia})
                                     .then((peps) => {    
                                     Aluno.findOne({ cooperativa: userdef.cooperativa, temporario: 1, instancia: userdef.instancia})           
@@ -3181,6 +3182,7 @@ sockets.on('connection', (socket) => {
                 if(userx !== null){
                         if(qnt > 0 && userx['pas'] >= qnt){
                             let novaf = Math.round((-1)*qnt)
+                            socket.emit('feedback', ['success', 'Ordem de desativação de PAS realizada para ' + qnt +' postos (serão desativados após 2 turnos)'])
                             let datetime = new Date();
                             userx.deci.push({data: datetime, acao: 'Diminuição de '+qnt +' unidades de P.A.S.', autor: userx.modificador})
                         
@@ -3294,7 +3296,7 @@ sockets.on('connection', (socket) => {
                                             }
                                         }
                                         socket.emit('update', [
-                                                                        [...user["147"],"147",propuni("147"),insumosi("147")],
+                                    [...user["147"],"147",propuni("147"),insumosi("147")],
                                     [...user["148"],"148",propuni("148"),insumosi("148")],
                                     [...user["149"],"149",propuni("149"),insumosi("149")],
                                     [...user["157"],"157",propuni("157"),insumosi("157")],
@@ -5594,7 +5596,7 @@ sockets.on('connection', (socket) => {
                                 Data.findOne({login_adm: creden[0]})
                                     .then((userL) => {
                                         if(userL == null){
-                                            let jogo = new Data({login_adm: creden[0], iniciado: 1, senha_adm: creden[1], instancia: creden[2], senha_instancia: creden[3], turno: 1, oferta_mercado: 168000000, ativo: 1})
+                                            let jogo = new Data({login_adm: creden[0], iniciado: 1, senha_adm: creden[1], instancia: creden[2], senha_instancia: creden[3], turno: 1, oferta_mercado: 18000000, ativo: 1})
                                             jogo.save()
                                                 .then(() => {
                                                     console.log('>>> Instancia: ' + creden[2] + ' registrada com sucesso')    
@@ -5853,6 +5855,7 @@ sockets.on('connection', (socket) => {
 
                 for(let i = 0; i < users.length; i++){
                     console.log("1 (sem alteracoes): " + users[i].taokeys)
+                    console.log("1 balan_caixa : " + users[i].balanco_patrimonial.caixa)
                     users[i].balanco_patrimonial = {
                         caixa: users[i].balanco_patrimonial.caixa,
                         estoque: users[i].balanco_patrimonial.estoque,
@@ -6005,6 +6008,7 @@ sockets.on('connection', (socket) => {
                                 maquinas: users[i].fluxo_de_caixa.maquinas,
                                 distribuidores: users[i].fluxo_de_caixa.distribuidores
                             }
+                            console.log("2 balan_caixa : " + users[i].balanco_patrimonial.caixa)
                         }
                         if(users[i]['frota'][f] > 0 && f == 11){
                             users[i].balanco_patrimonial = {
@@ -6156,6 +6160,7 @@ sockets.on('connection', (socket) => {
                             maquinas: users[i].fluxo_de_caixa.maquinas,
                             distribuidores: users[i].fluxo_de_caixa.distribuidores //+ users[i]['distribuidores']*360
                         }
+                        console.log("3 balan_caixa : " + users[i].balanco_patrimonial.caixa)
                     }//PAGAMENTO DOS tributos e encargos do ano anterior
                     if(users[i].turno == 3){
                         users[i].taokeys = users[i].taokeys - users[i].balanco_patrimonial.tributos_a_pagar_anterior
@@ -6232,6 +6237,7 @@ sockets.on('connection', (socket) => {
                             maquinas: users[i].fluxo_de_caixa.maquinas,
                             distribuidores: users[i].fluxo_de_caixa.distribuidores //+ users[i]['distribuidores']*360
                         }
+                        console.log("4 balan_caixa : " + users[i].balanco_patrimonial.caixa)
                     }//segunda parcela /\
                     users[i].taokeys = users[i].taokeys + users[i].balanco_patrimonial.contas_a_receber60 - users[i]['faturamento']*0.08 - users[i]['promotores']*2160  - users[i]['pas']*2160 - users[i]['faturamento']*(Number(users[i]['comissao'].slice(0,users[i]['comissao'].length-1)*0.01)) -720000 -50400// apenas no CBG>> - users[i]['distribuidores']*360
                     console.log("5 (+ users[i].balanco_patrimonial.contas_a_receber60 - users[i]['faturamento']*0.08 - users[i]['promotores']*2160  - users[i]['pas']*2160 - users[i]['faturamento']*(Number(users[i]['comissao'].slice(0,users[i]['comissao'].length-1)*0.01)) -720000 -50400): " + users[i].taokeys)
@@ -6307,6 +6313,7 @@ sockets.on('connection', (socket) => {
                         maquinas: users[i].fluxo_de_caixa.maquinas,
                         distribuidores: users[i].fluxo_de_caixa.distribuidores //+ users[i]['distribuidores']*360
                     }
+                    console.log("5 balan_caixa : " + users[i].balanco_patrimonial.caixa)
 
                     
 
@@ -6561,7 +6568,8 @@ sockets.on('connection', (socket) => {
                                     despesas_administrativas: users[i].fluxo_de_caixa.despesas_administrativas,
                                     encargos_financiamento: users[i].fluxo_de_caixa.encargos_financiamento,
                                     maquinas: users[i].fluxo_de_caixa.maquinas
-                                }                      
+                                }    
+                                console.log("6 balan_caixa : " + users[i].balanco_patrimonial.caixa)                  
 
                             }
                             else{
@@ -6637,7 +6645,8 @@ sockets.on('connection', (socket) => {
                                     despesas_administrativas: users[i].fluxo_de_caixa.despesas_administrativas,
                                     encargos_financiamento: users[i].fluxo_de_caixa.encargos_financiamento,
                                     maquinas: users[i].fluxo_de_caixa.maquinas
-                                }  
+                                }
+                                console.log("7 balan_caixa : " + users[i].balanco_patrimonial.caixa)  
 
                                 
                                 users[i].set(index[o], [0, users[i][index[o]][1], users[i][index[o]][2], users[i][index[o]][3], users[i][index[o]][4], users[i][index[o]][5], users[i][index[o]][6], users[i][index[o]][7]])
@@ -6756,6 +6765,7 @@ sockets.on('connection', (socket) => {
                                 encargos_financiamento: users[i].fluxo_de_caixa.encargos_financiamento,
                                 maquinas: users[i].fluxo_de_caixa.maquinas
                             }
+                            console.log("8 balan_caixa : " + users[i].balanco_patrimonial.caixa)
                         }
                         else{
 
@@ -6830,6 +6840,7 @@ sockets.on('connection', (socket) => {
                                 encargos_financiamento: users[i].fluxo_de_caixa.encargos_financiamento,
                                 maquinas: users[i].fluxo_de_caixa.maquinas
                             }
+                            console.log("9 balan_caixa : " + users[i].balanco_patrimonial.caixa)
                         }
                     }
                       
@@ -6842,7 +6853,7 @@ sockets.on('connection', (socket) => {
                     
                     if(users[i].taokeys >= users[i]['divida'][0]/3 + users[i]['divida'][0]*0.08){
                         users[i].taokeys = users[i].taokeys - (users[i]['divida'][0]/3 + users[i]['divida'][0]*0.08)
-                        console.log("9 (- (users[i]['divida'][0]/3 + users[i]['divida'][0]*0.08)): " + users[i].taokeys)
+                        console.log("9B (- (users[i]['divida'][0]/3 + users[i]['divida'][0]*0.08)): " + users[i].taokeys)
                         users[i].balanco_patrimonial = {
                             caixa: users[i].balanco_patrimonial.caixa - users[i]['divida'][0]/3 - users[i]['divida'][0]*0.08,
                             estoque: users[i].balanco_patrimonial.estoque,
@@ -6912,6 +6923,7 @@ sockets.on('connection', (socket) => {
                             encargos_financiamento: users[i].fluxo_de_caixa.encargos_financiamento + users[i]['divida'][0]*0.08,
                             maquinas: users[i].fluxo_de_caixa.maquinas
                         }
+                        console.log("9B balan_caixa : " + users[i].balanco_patrimonial.caixa)
                         
                         users[i].set('divida', [users[i]['divida'][0]*(2/3), users[i]['divida'][1], users[i]['divida'][2]]) //contabilizando a passagem de tempo
                     }
@@ -6988,6 +7000,7 @@ sockets.on('connection', (socket) => {
                             encargos_financiamento: users[i].fluxo_de_caixa.encargos_financiamento + users[i]['divida'][0]*0.08,
                             maquinas: users[i].fluxo_de_caixa.maquinas
                         }
+                        console.log("10 balan_caixa : " + users[i].balanco_patrimonial.caixa)
                         users[i].set('divida', [users[i]['divida'][0]*(2/3) + gamb, users[i]['divida'][1], users[i]['divida'][2]])
                     }
                     else{
@@ -7137,6 +7150,7 @@ sockets.on('connection', (socket) => {
                             encargos_financiamento: users[i].fluxo_de_caixa.encargos_financiamento + users[i]['divida'][0]*0.08,
                             maquinas: users[i].fluxo_de_caixa.maquinas
                         }
+                        console.log("11 balan_caixa : " + users[i].balanco_patrimonial.caixa)
                         
                         users[i].set('divida', [users[i]['divida'][0], users[i]['divida'][1]/2, users[i]['divida'][2]]) //contabilizando a passagem de tempo
                     }
@@ -7364,6 +7378,7 @@ sockets.on('connection', (socket) => {
                             encargos_financiamento: users[i].fluxo_de_caixa.encargos_financiamento + users[i]['divida'][0]*0.08,
                             maquinas: users[i].fluxo_de_caixa.maquinas
                         }
+                        console.log("12 balan_caixa : " + users[i].balanco_patrimonial.caixa)
                         
                        
                         users[i].set('divida', [0, users[i]['divida'][0], users[i]['divida'][1]]) //contabilizando a passagem de tempo
@@ -7439,6 +7454,7 @@ sockets.on('connection', (socket) => {
                             encargos_financiamento: users[i].fluxo_de_caixa.encargos_financiamento + users[i]['divida'][0]*0.08,
                             maquinas: users[i].fluxo_de_caixa.maquinas
                         }
+                        
                         
                         //users[i]['divida'].pop();
                         //users[i]['divida'].unshift(gamb*1.08); //cobrar multa aqui
@@ -7961,7 +7977,7 @@ sockets.on('connection', (socket) => {
                                         backup.save() 
                                             .then(() => {
                                                 users[i].fluxo_de_caixa = {
-                                                    saldo_anterior: (users[i].fluxo_de_caixa.faturamento + users[i].fluxo_de_caixa.depreciacao_de_veiculos + users[i].fluxo_de_caixa.depreciacao_de_maquinas + users[i].fluxo_de_caixa.veiculos_vendidos) - (users[i].fluxo_de_caixa.promotores + users[i].fluxo_de_caixa.depreciacao_de_maquinas + users[i].fluxo_de_caixa.propaganda + users[i].fluxo_de_caixa.pesquisas + users[i].fluxo_de_caixa.pas + users[i].fluxo_de_caixa.uso_frota + users[i].fluxo_de_caixa.despesas_operacionais_n_planejadas + users[i].fluxo_de_caixa.despesas_administrativas + users[i].fluxo_de_caixa.encargos_de_financiamento + (-1)*users[i].fluxo_de_caixa.custo_de_servico_prestado + users[i].fluxo_de_caixa.veiculos_comprados + users[i].fluxo_de_caixa.maquinas + users[i].fluxo_de_caixa.tributos),
+                                                    saldo_anterior: (users[i].balanco_patrimonial.contas_a_receber60 + users[i].fluxo_de_caixa.depreciacao_de_veiculos + users[i].fluxo_de_caixa.depreciacao_de_maquinas + users[i].fluxo_de_caixa.veiculos_vendidos) - (users[i].fluxo_de_caixa.promotores + users[i].fluxo_de_caixa.propaganda + users[i].fluxo_de_caixa.pesquisas + users[i].fluxo_de_caixa.pas + users[i].fluxo_de_caixa.uso_frota + users[i].fluxo_de_caixa.despesas_operacionais_n_planejadas + users[i].fluxo_de_caixa.despesas_administrativas + users[i].fluxo_de_caixa.encargos_de_financiamento + users[i].fluxo_de_caixa.custo_de_servico_prestado + users[i].fluxo_de_caixa.veiculos_comprados + users[i].fluxo_de_caixa.maquinas + users[i].fluxo_de_caixa.tributos),
                                                     faturamento: 0,
                                                     contas_a_receber: 0,
                                                     contas_a_receber_recebidas: 0, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
@@ -8327,13 +8343,7 @@ server.listen(3000, () => {
 
             /*
 CHECK LIST:
-            - COLETAR DADOS PARA DEMONSTRATIVOS FINANCEIROS DURANTE O PROCESSAMENTO DO TURNO SALVANDO NO SCHEMA DE CADA COOPERATIVA
-
-            -OK LIMITAR O NUMERO DE POSSIVEIS SERVICOS ATIVOS PARA 2 //metodo: 
-                NOVOS SOCKETS: - SUBSTITUICAO DE SERVICO (transferir tds os insumos para outro servico, ativa-lo e desativar o antigo) (ps: tem q haver substituicao ate para servicos em processo de cancelamento) - ; - COMPRA DE SERVICO (para serviços já ativos) - ; - TROCA DE INSUMOS (troca de insumos entre os servicoes ativos apenas) - ; - ATIVACAO DE SERVICO (para servicos n cancelados) - ; - DESATIVACAO DO SERVICO (para servicos ativos e com 0 insumos contanto que sempre haja 1 servico ativo a todo momento(ps: por isso é essencial a SUBSTITUICAO)) -
             
-            - IDEA PARA BACK UP (e saves antigos): ao final do turno criar um: new Aluno({ ... }) mas com uma assim: key: backup (0 ou 1) e dai vai ter o Ativo q é 0 ou 1 q auxilia pra so processar os dados atuais
 
-            - Implementar sistema de Lock (ou como ta agr q os proximos turnos apenas fornecem 0 de dinheiro) ao final da Simulação e fornecer os dados de quem ganhou
             
             */
