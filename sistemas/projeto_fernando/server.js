@@ -73,7 +73,8 @@ sockets.on('connection', (socket) => {
             .then((ll) => {
                 if(ll !== null){
                     console.log('>>usuario ja conectado');
-                    socket.emit('feedback', ['warning','voce ja esta conectado com: ' + ll.cooperativa]) 
+                    socket.emit('feedback', ['warning','AGUARDE UM MOMENTO ' + ll.cooperativa])
+                    socket.emit('recarregar') 
                 }
                 else{
                     Usuario.findOne({ login: creden.login, senha: creden.senha })
@@ -193,7 +194,7 @@ sockets.on('connection', (socket) => {
                                                                     usert.save()
                                                                         .then(() => {
                                                                             console.log('>>login efetuado com sucesso')
-                                                                            socket.emit('feedback', ['success', 'login aprovado para: ' + creden.login]) 
+                                                                            socket.emit('feedback', ['success', 'Login aprovado para: ' + creden.login]) 
                                                                             socket.emit('login-client-aprovado')
                                                                         
                                                                         })
@@ -603,7 +604,7 @@ sockets.on('connection', (socket) => {
                         if(pass == 1){
                         if(userx[novo][2] - userx[velho][2] > 0){
                             if(userx['taokeys'] >= qnt*30 + qnt*(userx[novo][2] - userx[velho][2])){
-                            let datetime = new Date();
+                            let datetime = new Date().toLocaleString('pt-BR').toLocaleString('pt-BR');
                             userx.deci.push({data: datetime, acao: 'Troca de '+qnt+' insumos de ' + velho + ' para ' + novo, autor: userx.modificador})
                             /*
                             if(userx.last_change.serv1 == novo && (userx[userx.last_change.serv1][0] - userx.last_change.insu1) < qnt){
@@ -803,7 +804,7 @@ sockets.on('connection', (socket) => {
                             else{socket.emit('feedback', ['warning','a cooperativa não possue caixa o suficiente para realizar essa operação'])}
                         }
                         else{
-                            let datetime = new Date();
+                            let datetime = new Date().toLocaleString('pt-BR').toLocaleString('pt-BR');
                             userx.deci.push({data: datetime, acao: 'Troca de '+qnt+' insumos de ' + velho + ' para ' + novo, autor: userx.modificador})
                            /*
                             if(userx.last_change.serv1 == novo && (userx[userx.last_change.serv1][0] - userx.last_change.insu1) < qnt){
@@ -1011,7 +1012,7 @@ sockets.on('connection', (socket) => {
                 else{socket.emit('feedback', ['warning','voce nao pode trocar insumos de um serviço para ele mesmo'])}
                 }
                 else{
-                    socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
+                    socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
                 }
             
             })
@@ -1035,7 +1036,7 @@ sockets.on('connection', (socket) => {
                     if(true){
                         if(userx[novo][2] - userx[velho][2] > 0 && userx['taokeys'] >= userx[velho][0]*30 + userx[velho][0]*(userx[novo][2] - userx[velho][2])){
 
-                            let datetime = new Date();
+                            let datetime = new Date().toLocaleString('pt-BR').toLocaleString('pt-BR');
                             userx.deci.push({data: datetime, acao: 'Substituição do serviço ' + velho + ' pelo ' + novo, autor: userx.modificador})
                         if(userx.last_change.serv1 == velho){
                             //userx.last_change.serv1 = novo
@@ -1226,7 +1227,7 @@ sockets.on('connection', (socket) => {
                             .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
                     }
                     else{
-                        let datetime = new Date();
+                        let datetime = new Date().toLocaleString('pt-BR').toLocaleString('pt-BR');
                         userx.deci.push({data: datetime, acao: 'Substituição do serviço ' + velho + ' pelo ' + novo, autor: userx.modificador})
                         
                         if(userx.last_change.serv1 == velho){
@@ -1431,7 +1432,7 @@ sockets.on('connection', (socket) => {
                 }
                 }
                 else{
-                    socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
+                    socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
                 }
             
             })
@@ -1451,7 +1452,7 @@ sockets.on('connection', (socket) => {
                             socket.emit('feedback', ['warning','voce precisa sempre ter pelo menos um servico ativo durante o turno (ative outro para desativar esse)'])
                         }
                         else{
-                            let datetime = new Date();
+                            let datetime = new Date().toLocaleString('pt-BR').toLocaleString('pt-BR');
                             userx.deci.push({data: datetime, acao: 'Encerrou o serviço ' + tipo, autor: userx.modificador})
                             if(userx.last_change.serv1 == tipo){
                                 //userx.last_change.serv1 = 0
@@ -1559,7 +1560,7 @@ sockets.on('connection', (socket) => {
                     }
                 }
                 else{
-                    socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
+                    socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -1577,7 +1578,7 @@ sockets.on('connection', (socket) => {
                 if(userx !== null){
                     if(userx[tipo][1] == 1){
                         if(volume > 0){
-                            let datetime = new Date();
+                            let datetime = new Date().toLocaleString('pt-BR').toLocaleString('pt-BR');
                             userx.deci.push({data: datetime, acao: 'Alteração do volume planejado do serviço '+ tipo +' para ' +volume, autor: userx.modificador})
                         
                             let array_dados = [userx[tipo][0], userx[tipo][1], userx[tipo][2], userx[tipo][3], volume, userx[tipo][5], userx[tipo][6], userx[tipo][7]]
@@ -1787,7 +1788,7 @@ sockets.on('connection', (socket) => {
                 })
             }
             else{
-                socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
+                socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
             }
             })
     }) //OKK falta teste
@@ -2103,7 +2104,7 @@ sockets.on('connection', (socket) => {
                 
             }
             else{
-                socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
+                socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
             }
             })
     }) //tb re-manda os balancos e decisoes para tornar a aplicacao mais responsiva
@@ -2113,7 +2114,7 @@ sockets.on('connection', (socket) => {
             .then((userx) => {
                 if(userx !== null){
                         if(qnt > 0 && userx.taokeys){
-                            let datetime = new Date();
+                            let datetime = new Date().toLocaleString('pt-BR').toLocaleString('pt-BR');
                             userx.deci.push({data: datetime, acao: 'Compra de ' +qnt + ' veículos', autor: userx.modificador})
                         
                             userx.balanco_patrimonial = {
@@ -2228,7 +2229,7 @@ sockets.on('connection', (socket) => {
              
             }
                 else{
-                    socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
+                    socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -2254,7 +2255,7 @@ sockets.on('connection', (socket) => {
                                         if(userx.frota[k] > falta){
                                             retirada = falta
                                             userx.taokeys = userx.taokeys + retirada*(57600/12)*(12-k)
-                                            let datetime = new Date();
+                                            let datetime = new Date().toLocaleString('pt-BR').toLocaleString('pt-BR');
                                             userx.deci.push({data: datetime, acao: 'Venda de '+qnt +' veículos', autor: userx.modificador})
                         
                                             userx.balanco_patrimonial = {
@@ -2270,7 +2271,7 @@ sockets.on('connection', (socket) => {
                                                 tributos_a_pagar_atual: userx.balanco_patrimonial.tributos_a_pagar_atual,
                                                 emprestimos: userx.balanco_patrimonial.emprestimos,
                                                 capial: userx.balanco_patrimonial.capial,
-                                                lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados
+                                                lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados + userx.frota[k]*(57600/12)*(12-k)
                                             }
                                             userx.fluxo_de_caixa = {
                                                 saldo_anterior: userx.fluxo_de_caixa.saldo_anterior,
@@ -2310,7 +2311,7 @@ sockets.on('connection', (socket) => {
                                             array[k] = 0
                                             userx.set('frota', array)
                                             userx.taokeys = userx.taokeys + retirada*(57600/12)*(12-k)
-                                            let datetime = new Date();
+                                            let datetime = new Date().toLocaleString('pt-BR').toLocaleString('pt-BR');
                                             userx.deci.push({data: datetime, acao: 'Venda de '+qnt +' veículos', autor: userx.modificador})
                         
                                             userx.balanco_patrimonial = {
@@ -2419,7 +2420,7 @@ sockets.on('connection', (socket) => {
                                 })
                         .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
                             }
-                            else{socket.emit('feedback', ['warning','sua cooperativa nao possue esse numero de veiculos'])}
+                            else{socket.emit('feedback', ['warning','Valor de veiculos inválido'])}
                           
                     }
                     else{socket.emit('feedback', ['warning','apenas valores positivos'])}
@@ -2428,7 +2429,7 @@ sockets.on('connection', (socket) => {
              
             }
                 else{
-                    socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
+                    socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -2504,7 +2505,7 @@ sockets.on('connection', (socket) => {
                                     userx["turno"]]);
                 }
                 else{
-                    socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
+                    socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -2519,7 +2520,7 @@ sockets.on('connection', (socket) => {
                 if(userx !== null){
                     if(userx[tipo][1] == 1){
                         if(preco > 0 && preco <= 9999){
-                            let datetime = new Date();
+                            let datetime = new Date().toLocaleString('pt-BR').toLocaleString('pt-BR');
                             userx.deci.push({data: datetime, acao: 'Alteração de preço de venda do serviço '+ tipo+' para ' + preco, autor: userx.modificador})
                         
                             let array_dados = [userx[tipo][0], userx[tipo][1], userx[tipo][2], preco, userx[tipo][4], userx[tipo][5], userx[tipo][6], userx[tipo][7]]
@@ -2600,7 +2601,7 @@ sockets.on('connection', (socket) => {
              
             }
                 else{
-                    socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
+                    socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -2616,7 +2617,7 @@ sockets.on('connection', (socket) => {
                 if(userx !== null){
                         if(qnt > 0){
                             let novaf = qnt
-                            let datetime = new Date();
+                            let datetime = new Date().toLocaleString('pt-BR').toLocaleString('pt-BR');
                             userx.deci.push({data: datetime, acao: 'Alteração na quantiadade de contratações promotores para' + qnt, autor: userx.modificador})
                         
                             userx.set('promotores', novaf) 
@@ -2690,7 +2691,7 @@ sockets.on('connection', (socket) => {
              
             }
                 else{
-                    socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
+                    socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -2702,7 +2703,7 @@ sockets.on('connection', (socket) => {
                 if(userx !== null){
                         if(qnt > 0 && userx['promotores'] >= qnt){
                             let novaf = userx['promotores'] - qnt
-                            let datetime = new Date();
+                            let datetime = new Date().toLocaleString('pt-BR');
                             userx.deci.push({data: datetime, acao: 'Demissão de '+qnt +' promotores', autor: userx.modificador})
                         
                             userx.set('promotores', novaf) 
@@ -2775,7 +2776,7 @@ sockets.on('connection', (socket) => {
              
             }
                 else{
-                    socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
+                    socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -3013,7 +3014,7 @@ sockets.on('connection', (socket) => {
                 if(userx !== null){
                         if(qnt > 0){
                             let novaf = userx['distribuidores'] + qnt
-                            let datetime = new Date();
+                            let datetime = new Date().toLocaleString('pt-BR');
                             userx.deci.push({data: datetime, acao: 'Contratação de '+qnt +' distribuidores', autor: userx.modificador})
                         
                             userx.set('distribuidores', novaf) 
@@ -3087,7 +3088,7 @@ sockets.on('connection', (socket) => {
              
             }
                 else{
-                    socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
+                    socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -3099,7 +3100,7 @@ sockets.on('connection', (socket) => {
                 if(userx !== null){
                         if(qnt > 0 && userx['distribuidores'] >= qnt){
                             let novaf = userx['distribuidores'] - qnt
-                            let datetime = new Date();
+                            let datetime = new Date().toLocaleString('pt-BR');
                             userx.deci.push({data: datetime, acao: 'Demissão de '+qnt +' distribuidores', autor: userx.modificador})
                         
                             userx.set('distribuidores', novaf) 
@@ -3170,7 +3171,7 @@ sockets.on('connection', (socket) => {
              
             }
                 else{
-                    socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
+                    socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -3183,7 +3184,7 @@ sockets.on('connection', (socket) => {
                         if(qnt > 0 && userx['pas'] >= qnt){
                             let novaf = Math.round((-1)*qnt)
                             socket.emit('feedback', ['success', 'Ordem de desativação de PAS realizada para ' + qnt +' postos (serão desativados após 2 turnos)'])
-                            let datetime = new Date();
+                            let datetime = new Date().toLocaleString('pt-BR');
                             userx.deci.push({data: datetime, acao: 'Diminuição de '+qnt +' unidades de P.A.S.', autor: userx.modificador})
                         
                             userx.set('pas2', novaf) 
@@ -3266,7 +3267,7 @@ sockets.on('connection', (socket) => {
                 if(userx !== null){
                         if(qnt > 0){
                             let novaf = Math.round(qnt)
-                            let datetime = new Date();
+                            let datetime = new Date().toLocaleString('pt-BR');
                             userx.deci.push({data: datetime, acao: 'Aumento de '+qnt +' unidades de P.A.S.', autor: userx.modificador})
                         
                             userx.set('pas2', novaf) 
@@ -3338,7 +3339,7 @@ sockets.on('connection', (socket) => {
              
             }
                 else{
-                    socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
+                    socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -3354,7 +3355,7 @@ sockets.on('connection', (socket) => {
             .then((userx) => {
                 if(userx !== null){
                         if(qnt > 0){
-                            let datetime = new Date();
+                            let datetime = new Date().toLocaleString('pt-BR');
                             userx.deci.push({data: datetime, acao: 'Investimento em propaganda no serviço '+tipo +' no valor de ' + qnt, autor: userx.modificador})
                             
                             if(userx.last_change.serv1 == tipo){
@@ -3568,15 +3569,15 @@ sockets.on('connection', (socket) => {
                        
                     }
                     else{
-                        if(userx.taokeys >= qnt){socket.emit('feedback', ['warning','apenas valores positivos'])}
-                        else{socket.emit('feedback', ['warning','sua cooperativa nao possue caixa o suficiente'])}
+                        if(userx.taokeys >= qnt){socket.emit('feedback', ['warning','Apenas valores positivos'])}
+                        else{socket.emit('feedback', ['warning','Falta caixa'])}
                 }
                     
                 
              
             }
                 else{
-                    socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
+                    socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -3594,7 +3595,7 @@ sockets.on('connection', (socket) => {
             .then((userx) => {
                 if(userx !== null){
                         if(qnt > 0){
-                            let datetime = new Date();
+                            let datetime = new Date().toLocaleString('pt-BR');
                             userx.deci.push({data: datetime, acao: 'Investimento em propaganda institucional no valor de ' + qnt, autor: userx.modificador})
                         
                             userx.balanco_patrimonial = {
@@ -3770,14 +3771,20 @@ sockets.on('connection', (socket) => {
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
     }) 
     socket.on('comissao', (dados) => {
-        let qnt = Number(dados.replace(",", "."))
+        let qnt  = 0
+        if(dados !== null){
+            qnt = Number(dados.replace(",", "."))
+        }
+        else{
+            qnt = 0
+        }
         
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => {
                 if(userx !== null){
-                        
-                            if(qnt%0.5 == 0){
-                            let datetime = new Date();
+                            if(qnt < 100){
+                            if(qnt%0.5 == 0 && qnt !== 0){
+                            let datetime = new Date().toLocaleString('pt-BR');
                             userx.deci.push({data: datetime, acao: 'Comissão alterada para ' + qnt+'%', autor: userx.modificador})
                         
                             userx.set('comissao', qnt+'%')
@@ -3842,7 +3849,12 @@ sockets.on('connection', (socket) => {
                         .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
                           
                     }
+                    
                     else{socket.emit('feedback', ['warning','Apenas valores inteiros ou terminados com ".5"'])}
+                    
+                    }
+
+                    else{socket.emit('feedback', ['warning','Impossivel atribuir uma comissão maior que a receita'])}
                     
                     
                     
@@ -3850,7 +3862,7 @@ sockets.on('connection', (socket) => {
              
             }
                 else{
-                    socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
+                    socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -3877,7 +3889,7 @@ sockets.on('connection', (socket) => {
                         }
                     }
                     if(userx[tipo][1] !== 3 && check_1_servico_ativo()){
-                        let datetime = new Date();
+                        let datetime = new Date().toLocaleString('pt-BR');
                         userx.deci.push({data: datetime, acao: 'Ativação do serviço '+tipo, autor: userx.modificador})
                             
                         if(userx.last_change.serv1 == 0){
@@ -3969,23 +3981,23 @@ sockets.on('connection', (socket) => {
                                     user["turno"]]);
         
                                     }
-                                    else{socket.emit('feedback', ['danger', 'falha ao atunteticar operacao'])}                  
+                                    else{socket.emit('feedback', ['danger', 'Falha ao atunteticar operacao'])}                  
                                 })
                         .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
 
                     }
                     else{
                         if(userx[tipo][1] == 3){
-                        socket.emit('feedback', ['warning', 'esse servico esta indisponivel para ativação nesse turno'])
+                        socket.emit('feedback', ['warning', 'Esse servico esta indisponivel para ativação nesse turno'])
                         }
                         else{
-                            socket.emit('feedback', ['warning', 'voce so pode ter 2 servicoes simultaneos'])
+                            socket.emit('feedback', ['warning', 'Apenas é permitido ter 2 SERVICOS simultaneos ATIVOS'])
                         }
                     }
 
                 }
                 else{
-                    socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
+                    socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -4072,7 +4084,7 @@ sockets.on('connection', (socket) => {
                                     }
                                     
                                 }//esses dois if fazem que a ultima decisao de compra de insumo que seja considerada apenas
-                                let datetime = new Date();
+                                let datetime = new Date().toLocaleString('pt-BR');
                                 userx.deci.push({data: datetime, acao: 'Alteração na ordem de compra de insumos do serviço '+tipo + ' para '+ qnti, autor: userx.modificador})
                             
                             userx.balanco_patrimonial = {
@@ -4181,10 +4193,10 @@ sockets.on('connection', (socket) => {
                                     }
                             }
                             else if(userx['taokeys'] >= qnti*userx[tipo][2] && userx[tipo][1] == 2){
-                                socket.emit('feedback', ['warning','esse servico esta em espera'])
+                                socket.emit('feedback', ['warning','Esse servico esta em espera'])
                             }
                         else{
-                            socket.emit('feedback', ['warning','falta caixa']);
+                            socket.emit('feedback', ['warning','Falta caixa']);
                             //console.log('hlu')
                     }
                      }
@@ -4257,7 +4269,7 @@ sockets.on('connection', (socket) => {
                             }
                             
                         }//esses dois if fazem que a ultima decisao de compra de insumo que seja considerada apenas
-                        let datetime = new Date();
+                        let datetime = new Date().toLocaleString('pt-BR');
                         userx.deci.push({data: datetime, acao: 'Alteração na ordem de compra de insumos do serviço '+tipo + ' para '+ qnti, autor: userx.modificador})
                         
                         userx.save()
@@ -4331,7 +4343,7 @@ sockets.on('connection', (socket) => {
                     //console.log(user.taokeys)
                     }
                     else{
-                        socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
+                        socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
                     }
             }) 
             .catch((err) => { console.log('falha na comunicacao com o banco de dados para o ' +socket.id+ " - " + err)})
@@ -4346,7 +4358,7 @@ sockets.on('connection', (socket) => {
                     if(userx !== null){
                         if(userx.pes_p.total_pas == 0){
                         if(true){
-                            let datetime = new Date();
+                            let datetime = new Date().toLocaleString('pt-BR');
                             userx.deci.push({data: datetime, acao: 'Contratou pesquisa de P.A.S. para o turno ' +userx.turno, autor: userx.modificador})
                         
                         userx.balanco_patrimonial = {
@@ -4511,7 +4523,8 @@ sockets.on('connection', (socket) => {
                     }
                     }
                     else{
-                        socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
+                        socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
+
                     }
             }) 
             .catch(() => { console.log('falha na comunicacao com o banco de dados para o ' +socket.id)
@@ -4525,7 +4538,7 @@ sockets.on('connection', (socket) => {
                         
                         
                         if(true){
-                            let datetime = new Date();
+                            let datetime = new Date().toLocaleString('pt-BR');
                             userx.deci.push({data: datetime, acao: 'Contratou pesquisa de total de distribuidores para o turno ' +userx.turno, autor: userx.modificador})
                         
                             userx.balanco_patrimonial = {
@@ -4670,7 +4683,7 @@ sockets.on('connection', (socket) => {
                                     userx["turno"]]);
                                         }
                 else{
-                    socket.emit('feedback', ['danger', 'voce nao pode realizar pesquisas ate que o administrador inicie o turno'])
+                    socket.emit('feedback', ['danger', 'Espere o inicio do turno para realizar essa ação'])
                 }
                                     })
 
@@ -4685,11 +4698,12 @@ sockets.on('connection', (socket) => {
                     //console.log(user.taokeys)
                     }
                     else{
-                        socket.emit('feedback', ['warning', '>> Sua cooperativa ja encomendou essa pesquisa.'])
+                        socket.emit('feedback', ['warning', '>> Essa pesquisa ja foi encomendada.'])
                     }
                     }
                     else{
-                        socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
+                        socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
+
                     }
             }) 
             .catch(() => { console.log('falha na comunicacao com o banco de dados para o ' +socket.id)
@@ -4702,7 +4716,7 @@ sockets.on('connection', (socket) => {
                         
                         //console.log(user.taokeys + ' ccccccccccccccc');
                         if(userx.pes_p.total_participacao_modelos !== 1){
-                            let datetime = new Date();
+                            let datetime = new Date().toLocaleString('pt-BR');
                             userx.deci.push({data: datetime, acao: 'Contratou pesquisa de participação da concorrência para o turno '+ userx.turno, autor: userx.modificador})
                         
                  
@@ -4869,7 +4883,8 @@ sockets.on('connection', (socket) => {
                     //console.log(user.taokeys)
                     }
                     else{
-                        socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
+                        socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
+
                     }
             }) 
             .catch((err) => { console.log('falha na comunicacao com o banco de dados para o ' +socket.id + ' ps: ' + err)
@@ -4882,7 +4897,7 @@ sockets.on('connection', (socket) => {
                         if(userx.pes_p.modelos_oferecidos == 0){
                         //console.log(user.taokeys + ' ccccccccccccccc');
                         if(true){
-                            let datetime = new Date();
+                            let datetime = new Date().toLocaleString('pt-BR');
                             userx.deci.push({data: datetime, acao: 'Contratou pesquisa dos serviços oferecidos pelo mercado para o turno ' +userx.turno, autor: userx.modificador})
                         
                             userx.balanco_patrimonial = {
@@ -5037,11 +5052,11 @@ sockets.on('connection', (socket) => {
                     //console.log(user.taokeys)
                     }
                     else{
-                        socket.emit('feedback', ['warning', '>> Sua cooperativa ja encomendou essa pesquisa.'])
+                        socket.emit('feedback', ['warning', '>> Essa pesquisa ja foi encomendada.'])
                     }
                     }
                     else{
-                        socket.emit('feedback',['danger','voce precisa estar logado para puxar o state atual da simulação'])
+                        socket.emit('feedback',['danger','É necessário estar logado para puxar os dados da simulação'])
                     }
             }) 
             .catch((err) => { console.log('falha na comunicacao com o banco de dados para o ' + socket.id + ' ps: ' + err)
@@ -5052,9 +5067,17 @@ sockets.on('connection', (socket) => {
             .then((userx) => { 
                     if(userx !== null && input.length == 2){
                         let redun
+                        function checkR(r) {
+                            if(r[0] == null || r[1] == null){
+                                return false
+                            }
+                            else{
+                                return true
+                            }
+                        }
                         //console.log(user.taokeys + ' ccccccccccccccc');
-                        if(input.length == 2){
-                            let datetime = new Date();
+                        if(input.length == 2 && checkR(input)){
+                            let datetime = new Date().toLocaleString('pt-BR').toLocaleString('pt-BR');
                             userx.deci.push({data: datetime, acao: 'Contratou pesquisa de teste entre tipos de serviço para ' +input[0] +' e ' + input[1] +' referente ao turno '+ userx.turno, autor: userx.modificador})
                         
                             function sem_redundancia() {
@@ -5225,7 +5248,7 @@ sockets.on('connection', (socket) => {
                             
                             }
                             else{  
-                                socket.emit('feedback', ['warning', '>> Sua cooperativa ja encomendou a pesquisa para ' + redun + '. (operação negada)'])
+                                socket.emit('feedback', ['warning', '>> A pesquisa para ' + redun + ' ja foi realizada. (operação negada)'])
 
                             }
                         }
@@ -5236,7 +5259,7 @@ sockets.on('connection', (socket) => {
                     //console.log(user.taokeys)
                     }
                     else{
-                        socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
+                        socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
                     }
             }) 
             .catch((err) => { console.log('falha na comunicacao com o banco de dados para o ' +socket.id + ' ps: ' + err)
@@ -5325,14 +5348,14 @@ sockets.on('connection', (socket) => {
                                                                 if(balancos.pes_p.total_distribuidores == 1){
                                                                     somapes = somapes + 2160
                                                                 }
-                                        //console.log('puxando-balancos <<ATUAL (RESP: ' + resp(balancos))
+                                        console.log('puxando-balancos <<ATUAL /volume 1: ' + checar4(balancos[balancos.last_change.serv1])+ ' /insu1: ' + balancos.last_change.insu1 + ' /insu1i: ' + balancos.last_change.insu1i)
                                         socket.emit('balancos', { 
                                             balanco_patrimonial: balancos.balanco_patrimonial,
                                             dre: balancos.dre,
                                             turno: balancos.turno,
                                             fluxo: balancos.fluxo_de_caixa,
                                             total_n_utilizado: resp(balancos),
-                                            planejado: {pesquisas: somapes,propagandai: balancos.propaganda,comissao: balancos.comissao,insu2i: balancos.last_change.insu2i,insu1i: balancos.last_change.insu1i,prop1: balancos.last_change.prop1, prop2: balancos.last_change.prop2, serv1: balancos.last_change.serv1, serv2: balancos.last_change.serv2, emprestimo: balancos.divida[0]+balancos.divida[1]+balancos.divida[2],frota: balancos.frota[0]+balancos.frota[1]+balancos.frota[2]+balancos.frota[3]+balancos.frota[4]+balancos.frota[5]+balancos.frota[6]+balancos.frota[7]+balancos.frota[8]+balancos.frota[9]+balancos.frota[10]+balancos.frota[11], pas: balancos.pas, distribuidores: balancos.distribuidores, promotores: balancos.promotores, last_change: balancos.last_change, volume1: checar4(balancos[balancos.last_change.serv1]), volume2: checar4(balancos[balancos.last_change.serv2]), preco1: checar3(balancos[balancos.last_change.serv1]), preco2: checar3(balancos[balancos.last_change.serv2])},
+                                            planejado: {pesquisas: somapes,propagandai: balancos.propaganda,comissao: balancos.comissao,insu2i: balancos.last_change.insu2i,insu1: balancos.last_change.insu1,insu2: balancos.last_change.insu2,insu1i: balancos.last_change.insu1i,prop1: balancos.last_change.prop1, prop2: balancos.last_change.prop2, serv1: balancos.last_change.serv1, serv2: balancos.last_change.serv2, emprestimo: balancos.divida[0]+balancos.divida[1]+balancos.divida[2],frota: balancos.frota[0]+balancos.frota[1]+balancos.frota[2]+balancos.frota[3]+balancos.frota[4]+balancos.frota[5]+balancos.frota[6]+balancos.frota[7]+balancos.frota[8]+balancos.frota[9]+balancos.frota[10]+balancos.frota[11], pas: balancos.pas, distribuidores: balancos.distribuidores, promotores: balancos.promotores, last_change: balancos.last_change, volume1: checar4(balancos[balancos.last_change.serv1]), volume2: checar4(balancos[balancos.last_change.serv2]), preco1: checar3(balancos[balancos.last_change.serv1]), preco2: checar3(balancos[balancos.last_change.serv2])},
                                             servs: {
                                                 
                                                     147:balancos['147'],
@@ -5466,7 +5489,8 @@ sockets.on('connection', (socket) => {
 
             }
                 else{
-                    socket.emit('feedback', ['danger','>> É preciso estar logado para puxar o state atual da simulação.'])
+                    socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
+
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -5498,7 +5522,7 @@ sockets.on('connection', (socket) => {
                                         }
                                         let med = Math.round(total_part/peps.length)
                                         let pmed = Math.round(precomedt/peps.length)
-                                        socket.emit('news', [{titulo: 'Volume médio de prestação serviço por cooperativa referente ao último bimestre', info: med, bimestre: userx.turno},{titulo: 'Preço médio de prestação de serviços referentes ao ultimo bimestre', info: pmed, bimestre: userx.turno}]);
+                                        socket.emit('news', [{titulo: '>> Volume médio de prestação serviço por player (referente ao último bimestre)', info: med, bimestre: userx.turno},{titulo: '>> Preço médio de prestação de serviços (referentes ao ultimo bimestre)', info: pmed, bimestre: userx.turno}]);
                                         
                                          //console.log(arr)        
                                          //socket.emit('feedback', ['warning', pes.participacao_modelos + pes.pes_p.total_distribuidores])    
@@ -5506,7 +5530,7 @@ sockets.on('connection', (socket) => {
                                     .catch((err) => {console.log(err)})
                                 }
                                 else{
-                                    socket.emit('news',[{titulo: 'Relevantes atualizações sobre o mercado', info: 'A cada 2 bimestres', bimestre: userx.turno}])
+                                    socket.emit('news',[{titulo: '>> Relevantes análises sobre o mercado', info: ' - Novos dados a cada 2 bimestres', bimestre: userx.turno}])
                                 }
                             
                             
@@ -5518,7 +5542,8 @@ sockets.on('connection', (socket) => {
 
             }
                 else{
-                    socket.emit('feedback', ['danger','>> É preciso estar logado para puxar o state atual da simulação.'])
+                    socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
+
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
@@ -5589,8 +5614,8 @@ sockets.on('connection', (socket) => {
                     Data.findOne({instancia: creden[2]})
                         .then((ll) => {
                             if(ll !== null){
-                                socket.emit('resposta-root', 'ja existe uma instacia com esse nome (OPERACAO NEGADA)')
-                                socket.emit('feedback', ['danger','ja existe uma instancia com esse nome'])
+                                socket.emit('resposta-root', 'Ja existe uma instacia com esse nome (OPERACAO NEGADA)')
+                                socket.emit('feedback', ['danger','Ja existe uma instancia com esse nome'])
                             }
                             else{
                                 Data.findOne({login_adm: creden[0]})
@@ -5606,8 +5631,8 @@ sockets.on('connection', (socket) => {
                                                 .catch((err) => {console.log(err)})
                                         }
                                         else{
-                                            socket.emit('resposta-root', 'ja existe ums instancia com esse LOGIN de administrador (OPERACAO NEGADA)')
-                                            socket.emit('feedback', ['danger','ja existe ums instancia com esse LOGIN de administrador'])
+                                            socket.emit('resposta-root', 'Ja existe ums instancia com esse LOGIN de administrador (OPERACAO NEGADA)')
+                                            socket.emit('feedback', ['danger','Ja existe ums instancia com esse LOGIN de administrador'])
                                         }
 
                                     })
@@ -5622,7 +5647,7 @@ sockets.on('connection', (socket) => {
         console.log(creden)
         Data.findOne({sockid: socket.id})
             .then((ll) => {
-                if(ll !== null){socket.emit('feedback', ['danger','voce ja esta conectado'])}
+                if(ll !== null){socket.emit('feedback', ['danger','Voce ja esta conectado'])}
                 else{
                     Data.findOne({login_adm: creden.login, senha_adm: creden.senha})
                         .then((adm) => {
@@ -5635,13 +5660,13 @@ sockets.on('connection', (socket) => {
                                                 console.log(`adm connected`)
                                                 socket.emit('state-gloal', cooperativas)
                                             })
-                                        socket.emit('feedback', ['success', 'login aprovado para ' + adm.instancia])
+                                        socket.emit('feedback', ['success', 'Login aprovado para ' + adm.instancia])
                                     })
                                     .catch((err) => {
                                         console.log(err)
                                    })
                             }
-                            else{socket.emit('feedback', ['danger', 'instancia nao encontrada'])}
+                            else{socket.emit('feedback', ['danger', 'Instancia nao encontrada'])}
                         })
                         .catch((err) => {console.log(err + ' <=> Falha na comunicacao com o Banco de dados n 403 ' + socket.id)})
                         }
@@ -5655,7 +5680,7 @@ sockets.on('connection', (socket) => {
         Data.findOne({sockid: socket.id})
             .then((ll) => {
                 if(ll == null){
-                    socket.emit('feedback', ['danger','voce precisa estar logado para puxar o state atual da simulação'])
+                    socket.emit('feedback', ['danger','Voce precisa estar logado para puxar o state atual da simulação'])
                 }
                 else{
                     if(ll.turno == 0){
@@ -5667,7 +5692,7 @@ sockets.on('connection', (socket) => {
                             .catch((err) => {console.log(err)})
                     }
                     else{
-                        socket.emit('feedback', ['danger','só é possivel alterar a demanda global antes de finalizar o primeiro turno'])
+                        socket.emit('feedback', ['danger','Só é possivel alterar a demanda global antes de finalizar o primeiro turno'])
                     }
                 }
             })
@@ -7746,12 +7771,12 @@ sockets.on('connection', (socket) => {
                                                 }
                                                 usert.save()
                                                     .then(() => {
-                                                        socket.emit('feedback', ['success', 'turno foi finalizado'])
+                                                        socket.emit('feedback', ['success', 'Turno foi finalizado'])
                                                         if(i == users.length - 1){
                                                             sockets.emit('final-turno') //manda a info pra tds os sockets conectados de que acabou o turno e para eles requisitarem (!!socket.emit('receber-faturamento')!!) o novo state pós FATURAMENTO e se o jogador n esriver conectado qnd acontecer o processo de faturamento essa puxada de dados tb smp acontece qnd ele se loga
                                                         }
                                                     })
-                                                    .catch((err) => {socket.emit('feedback', ['danger', 'falha ao salvar os dados no servidor (' + err + ')']);console.log(err)})
+                                                    .catch((err) => {socket.emit('feedback', ['danger', 'Falha ao salvar os dados no servidor (' + err + ')']);console.log(err)})
                                      
                                             })
                         })
@@ -7765,9 +7790,9 @@ sockets.on('connection', (socket) => {
             })
         
         }
-        else{socket.emit('feedback', ['warning', 'para finalizar o turno antes voce precisa inicia-lo'])}
+        else{socket.emit('feedback', ['warning', 'Para finalizar o turno antes voce precisa inicia-lo'])}
         }
-    else{socket.emit('feedback', ['danger',"voce precisa estar logado para puxar o state atual da simulação"])}
+    else{socket.emit('feedback', ['danger',"Voce precisa estar logado para puxar o state atual da simulação"])}
             })
             .catch((err) => { console.log(err) }) 
     }) //falta contabilizar a depreciação das maquinas e TRIBUTOS
@@ -8144,12 +8169,12 @@ sockets.on('connection', (socket) => {
                                                                         }
                                                                         usert.save()
                                                                             .then(() => {
-                                                                                socket.emit('feedback', ['success', 'turno foi iniciado'])
+                                                                                socket.emit('feedback', ['success', 'Turno foi iniciado'])
                                                                                 if(i == users.length - 1){
                                                                                     sockets.emit('final-turno') //manda a info pra tds os sockets conectados de que acabou o turno e para eles requisitarem (!!socket.emit('receber-faturamento')!!) o novo state pós FATURAMENTO e se o jogador n esriver conectado qnd acontecer o processo de faturamento essa puxada de dados tb smp acontece qnd ele se loga
                                                                                 }
                                                                             })
-                                                                            .catch((err) => {socket.emit('feedback', ['danger', 'falha ao salvar os dados no servidor (' + err + ')']);console.log(err)})
+                                                                            .catch((err) => {socket.emit('feedback', ['danger', 'Falha ao salvar os dados no servidor (' + err + ')']);console.log(err)})
                                                              
                                                                     })
                                                 })
@@ -8343,7 +8368,7 @@ server.listen(3000, () => {
 
             /*
 CHECK LIST:
-            
+            FALTA CONCERTAR OS custos de estocagem (apenas replicar as logicas para casos especificos q ja tem na parte da tabela q mostra os custos de estocagem secos=)
 
             
             */
