@@ -5621,7 +5621,7 @@ sockets.on('connection', (socket) => {
                                 Data.findOne({login_adm: creden[0]})
                                     .then((userL) => {
                                         if(userL == null){
-                                            let jogo = new Data({login_adm: creden[0], iniciado: 1, senha_adm: creden[1], instancia: creden[2], senha_instancia: creden[3], turno: 1, oferta_mercado: 18000000, ativo: 1})
+                                            let jogo = new Data({login_adm: creden[0], iniciado: 1, senha_adm: creden[1], instancia: creden[2], senha_instancia: creden[3], turno: 1, oferta_mercado: 19000000*2, ativo: 1})
                                             jogo.save()
                                                 .then(() => {
                                                     console.log('>>> Instancia: ' + creden[2] + ' registrada com sucesso')    
@@ -6266,6 +6266,30 @@ sockets.on('connection', (socket) => {
                     }//segunda parcela /\
                     users[i].taokeys = users[i].taokeys + users[i].balanco_patrimonial.contas_a_receber60 - users[i]['faturamento']*0.08 - users[i]['promotores']*2160  - users[i]['pas']*2160 - users[i]['faturamento']*(Number(users[i]['comissao'].slice(0,users[i]['comissao'].length-1)*0.01)) -720000 -50400// apenas no CBG>> - users[i]['distribuidores']*360
                     console.log("5 (+ users[i].balanco_patrimonial.contas_a_receber60 - users[i]['faturamento']*0.08 - users[i]['promotores']*2160  - users[i]['pas']*2160 - users[i]['faturamento']*(Number(users[i]['comissao'].slice(0,users[i]['comissao'].length-1)*0.01)) -720000 -50400): " + users[i].taokeys)
+                    users[i].fluxo_de_caixa = {
+                        saldo_anterior: users[i].fluxo_de_caixa.saldo_anterior,
+                        faturamento: users[i].fluxo_de_caixa.faturamento + users[i]['faturamento'],
+                        contas_a_receber: users[i].fluxo_de_caixa.contas_a_receber,
+                        contas_a_receber_recebidas: users[i].balanco_patrimonial.contas_a_receber60, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
+                        custo_de_servico_prestado: users[i].fluxo_de_caixa.custo_de_servico_prestado,
+                        emprestimos_contratados: users[i].fluxo_de_caixa.emprestimos_contratados,
+                        emprestimos_pagos: users[i].fluxo_de_caixa.emprestimos_pagos,
+                        veiculos_vendidos: users[i].fluxo_de_caixa.veiculos_vendidos,
+                        depreciacao_de_veiculos: users[i].fluxo_de_caixa.depreciacao_de_veiculos,
+                        depreciacao_de_maquinas: users[i].fluxo_de_caixa.depreciacao_de_maquinas,
+                        veiculos_comprados: users[i].fluxo_de_caixa.veiculos_comprados,
+                        tributos: users[i].fluxo_de_caixa.tributos,
+                        promotores: users[i].fluxo_de_caixa.promotores + users[i]['promotores']*2160 + users[i]['faturamento']*(Number(users[i]['comissao'].slice(0,users[i]['comissao'].length-1)*0.01)),
+                        propaganda: users[i].fluxo_de_caixa.propaganda,
+                        pesquisas: users[i].fluxo_de_caixa.pesquisas,
+                        pas: users[i].fluxo_de_caixa.pas + users[i]['pas']*2160 + 50400,
+                        uso_frota: users[i].fluxo_de_caixa.uso_frota,
+                        despesas_operacionais_n_planejadas: users[i].fluxo_de_caixa.despesas_operacionais_n_planejadas,
+                        despesas_administrativas: users[i].fluxo_de_caixa.despesas_administrativas,
+                        encargos_financiamento: users[i].fluxo_de_caixa.encargos_financiamento,
+                        maquinas: users[i].fluxo_de_caixa.maquinas,
+                        distribuidores: users[i].fluxo_de_caixa.distribuidores //+ users[i]['distribuidores']*360
+                    }
                     users[i].balanco_patrimonial = {
                         caixa: users[i].balanco_patrimonial.caixa + users[i].balanco_patrimonial.contas_a_receber60 - users[i]['faturamento']*0.08 - users[i]['promotores']*2160  - users[i]['pas']*2160 - users[i]['faturamento']*(Number(users[i]['comissao'].slice(0,users[i]['comissao'].length-1)*0.01)) - 720000 -50400, //- users[i]['distribuidores']*360
                         estoque: users[i].balanco_patrimonial.estoque,
@@ -6284,16 +6308,16 @@ sockets.on('connection', (socket) => {
                     users[i].dre = {
                         receita: users[i].dre.receita,
                         csp: users[i].dre.csp,
-                        estoque_inicial: users[i].dre.estoque_inicial,
+                        estoque_inicial: 0,
                         custo_prestacao_servico: users[i].dre.custo_prestacao_servico,
                         custo_estocagem: users[i].dre.custo_estocagem,
                         custo_troca_insumos: users[i].dre.custo_troca_insumos,
                         hora_extra: users[i].dre.hora_extra,
                         capacidade_n_utilizada: users[i].dre.capacidade_n_utilizada,
                         margem_bruta: users[i].dre.margem_bruta,
-                        despesas_administrativas: users[i].dre.despesas_administrativas + 720000,
+                        despesas_administrativas: 720000,
                         salario_promotores: users[i].dre.salario_promotores + users[i]['promotores']*2160, //gambiarra
-                        comissao: users[i].dre.comissao + users[i]['faturamento']*(Number(users[i]['comissao'].slice(0,users[i]['comissao'].length-1)*0.01)*0.01),
+                        comissao: users[i].dre.comissao + users[i]['faturamento']*Number(users[i]['comissao'].slice(0,users[i]['comissao'].length-1)*0.01),
                         propaganda_institucional: users[i].dre.propaganda_institucional,
                         propaganda_unitaria: users[i].dre.propaganda_unitaria,
                         depreciacao_de_maquinas: users[i].dre.depreciacao_de_maquinas,
@@ -6314,30 +6338,7 @@ sockets.on('connection', (socket) => {
 
 
                     }
-                    users[i].fluxo_de_caixa = {
-                        saldo_anterior: users[i].fluxo_de_caixa.saldo_anterior,
-                        faturamento: users[i].fluxo_de_caixa.faturamento + users[i]['faturamento'],
-                        contas_a_receber: users[i].fluxo_de_caixa.contas_a_receber,
-                        contas_a_receber_recebidas: users[i].fluxo_de_caixa.contas_a_receber_recebidas + users[i].balanco_patrimonial.contas_a_receber60, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
-                        custo_de_servico_prestado: users[i].fluxo_de_caixa.custo_de_servico_prestado,
-                        emprestimos_contratados: users[i].fluxo_de_caixa.emprestimos_contratados,
-                        emprestimos_pagos: users[i].fluxo_de_caixa.emprestimos_pagos,
-                        veiculos_vendidos: users[i].fluxo_de_caixa.veiculos_vendidos,
-                        depreciacao_de_veiculos: users[i].fluxo_de_caixa.depreciacao_de_veiculos,
-                        depreciacao_de_maquinas: users[i].fluxo_de_caixa.depreciacao_de_maquinas,
-                        veiculos_comprados: users[i].fluxo_de_caixa.veiculos_comprados,
-                        tributos: users[i].fluxo_de_caixa.tributos,
-                        promotores: users[i].fluxo_de_caixa.promotores + users[i]['promotores']*2160 + users[i]['faturamento']*(Number(users[i]['comissao'].slice(0,users[i]['comissao'].length-1)*0.01)),
-                        propaganda: users[i].fluxo_de_caixa.propaganda,
-                        pesquisas: users[i].fluxo_de_caixa.pesquisas,
-                        pas: users[i].fluxo_de_caixa.pas + users[i]['pas']*2160 + 50400,
-                        uso_frota: users[i].fluxo_de_caixa.uso_frota,
-                        despesas_operacionais_n_planejadas: users[i].fluxo_de_caixa.despesas_operacionais_n_planejadas,
-                        despesas_administrativas: users[i].fluxo_de_caixa.despesas_administrativas,
-                        encargos_financiamento: users[i].fluxo_de_caixa.encargos_financiamento,
-                        maquinas: users[i].fluxo_de_caixa.maquinas,
-                        distribuidores: users[i].fluxo_de_caixa.distribuidores //+ users[i]['distribuidores']*360
-                    }
+                    
                     console.log("5 balan_caixa : " + users[i].balanco_patrimonial.caixa)
 
                     

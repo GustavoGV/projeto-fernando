@@ -57,7 +57,8 @@ const UserSchema = new Schema({
     pes_p: Object,
     participacao_modelos: Array,
     deci: Array,
-    last_change: Object
+    last_change: Object,
+    recebimentos_clientes: Number
 });
 
 const DataSchema = new Schema({
