@@ -6,6 +6,7 @@ const Aluno = estrutura[0]
 const Data = estrutura[1]
 const Usuario = estrutura[2] //login individual
 import mongoose from 'mongoose'
+import { isNull } from 'util'
 //import { readFile } from 'fs'
 
 mongoose.connect('mongodb://localhost/aluno_teste')
@@ -50,8 +51,19 @@ let index = [
 
 app.use(express.static('public'))
 
-try{
-sockets.on('connection', (socket) => { 
+setInterval(async function a51() {
+    let keys = await Usuario.find({})
+    keys.map((key,index) => {
+        //console.log('key: ' + key.sockid) 
+        if(sockets.to(key.sockid) !== undefined){
+            //sockets.to(key.sockid).emit('feedback',['success','Te amo Fer!! Te amo Fer!! Te amo Fer!! Te amo Fer!! Te amo Fer!! Te amo Fer!! Te amo Fer!!']) 
+        }
+        
+    })
+                                        
+},5000)
+sockets.on('connection', async (socket) => {
+
     console.log(` <=> Cooperativa ON. socket.id: ${socket.id}`)
 
     socket.on('disconnect', () => {
@@ -68,167 +80,28 @@ sockets.on('connection', (socket) => {
     })
     socket.on('teste', (t) => {console.log('teste OK: (' + t +') id:'+ socket.id)
     })
-    socket.on('login-client', (creden) => {
-            Aluno.findOne({sockid: socket.id, temporario: 1}) // se n achar retorna Null e se vc tentar fazer essa pesquisa com um String sendo q no Schema ta como Number vai ir pro Catch ou vai pro Catch tb se n conseguir se conectar com o MongoDB
-            .then((ll) => {
+    socket.on('login-client', async (creden) => {
+        console.log('ue')
+        let ll = await Usuario.findOne({id: socket.id})
                 if(ll !== null){
                     console.log('>>usuario ja conectado');
                     socket.emit('feedback', ['warning','AGUARDE UM MOMENTO ' + ll.cooperativa])
                     socket.emit('recarregar') 
                 }
                 else{
-                    Usuario.findOne({ login: creden.login, senha: creden.senha })
-                        .then((u) => {
-                            if(u !== null){
-                                if(u.cooperativa !== 'provisorio'){
-                                    Aluno.findOne({ cooperativa: u.cooperativa, instancia: u.instancia, temporario: 1 })
-                                            .then((usert) => {
-                                                if(usert !== null){
-                                                Data.findOne({instancia: usert.instancia}) //filtro para apenas liberar o login se o turno estiver ATIVO aqui se necessário
-                                                    .then((check2) => {
-                                                        if(check2.ativo == 1){ 
-                                                            Aluno.findOne({cooperativa: usert.cooperativa, temporario: 0, instancia: usert.instancia})
-                                                                .then((userdef) => {
-                                                                    usert.last_change = {prop1: userdef.last_change.prop1, prop2: userdef.last_change.prop2 ,serv1: userdef.last_change.serv1, serv2: userdef.last_change.serv2, insu1: userdef.last_change.insu1, insu2: userdef.last_change.insu2, insu2i: userdef.last_change.insu2i, insu1i: userdef.last_change.insu1i, prop1: userdef.last_change.prop1, prop2: userdef.last_change.prop2}
-                                                                    usert.deci = userdef.deci
-                                                                    usert.set('npesquisas', userdef.npesquisas)
-                                                                    usert.set('turno', userdef.turno)
-                                                                    usert.set('propaganda', userdef.propaganda)
-                                                                    usert.set('propagandauni', userdef.propagandauni)
-                                                                    usert.set('taokeys', userdef.taokeys)
-                                                                    usert.set('comissao', userdef.comissao)
-                                                                    usert.set('pas', userdef.pas)
-                                                                    usert.set('pas1', userdef.pas1)
-                                                                    usert.set('pas2', userdef.pas2)
-                                                                    usert.set('distribuidores', userdef.distribuidores)
-                                                                    usert.set('promotores', userdef.promotores)
-                                                                    usert.set('divida', [userdef["divida"][0],userdef["divida"][1],userdef["divida"][2]])
+                    let ll1 = await Usuario.findOne({ login: creden.login, senha: creden.senha })
+                        if(ll1 !== null){
+                            ll1.set('sockid', socket.id)
+                            await ll1.save()
+                            socket.emit('login-client-aprovado')
+                            console.log('login-client-aprovado-emitido para ' + socket.id)
 
-                                                                    usert.balanco_patrimonial = {
-                                                                        caixa: userdef.balanco_patrimonial.caixa,
-                                                                        estoque: userdef.balanco_patrimonial.estoque,
-                                                                        contas_a_receber60: userdef.balanco_patrimonial.contas_a_receber60,
-                                                                        contas_a_receber120: userdef.balanco_patrimonial.contas_a_receber120,
-                                                                        maquinas: userdef.balanco_patrimonial.maquinas,
-                                                                        depreciacao_maquinas: userdef.balanco_patrimonial.depreciacao_maquinas,
-                                                                        veiculos: userdef.balanco_patrimonial.veiculos,
-                                                                        depreciacao_veiculos: userdef.balanco_patrimonial.depreciacao_veiculos,
-                                                                        tributos_a_pagar_anterior: userdef.balanco_patrimonial.tributos_a_pagar_anterior,
-                                                                        tributos_a_pagar_atual: userdef.balanco_patrimonial.tributos_a_pagar_atual,
-                                                                        emprestimos: userdef.balanco_patrimonial.emprestimos,
-                                                                        capial: userdef.balanco_patrimonial.capial,
-                                                                        lucros_acumulados: userdef.balanco_patrimonial.lucros_acumulados
-                                                                    }
-                                                                    usert.dre = {
-                                                                        receita: userdef.dre.receita,
-                                                                        csp: userdef.dre.csp,
-                                                                        estoque_inicial: userdef.dre.estoque_inicial,
-                                                                        custo_prestacao_servico: userdef.dre.custo_prestacao_servico,
-                                                                        custo_estocagem: userdef.dre.custo_estocagem,
-                                                                        custo_troca_insumos: userdef.dre.custo_troca_insumos,
-                                                                        hora_extra: userdef.dre.hora_extra,
-                                                                        capacidade_n_utilizada: userdef.dre.capacidade_n_utilizada,
-                                                                        margem_bruta: userdef.dre.margem_bruta,
-                                                                        despesas_administrativas: userdef.dre.despesas_administrativas,
-                                                                        salario_promotores: userdef.dre.salario_promotores,
-                                                                        comissao: userdef.dre.comissao,
-                                                                        propaganda_institucional: userdef.dre.propaganda_institucional,
-                                                                        propaganda_unitaria: userdef.dre.propaganda_unitaria,
-                                                                        depreciacao_de_maquinas: userdef.dre.depreciacao_de_maquinas,
-                                                                        encargos_financiamento: userdef.dre.encargos_financiamento,
-                                                                        salario_frota: userdef.dre.salario_frota,
-                                                                        manutencao_frota: userdef.dre.manutencao_frota,
-                                                                        depreciacao_de_veiculos: userdef.dre.depreciacao_de_veiculos,
-                                                                        frota_terceirizada: userdef.dre.frota_terceirizada,
-                                                                        despesas_operacionais_n_planejadas: userdef.dre.despesas_operacionais_n_planejadas,
-                                                                        pas: userdef.dre.pas,
-                                                                        pesquisas: userdef.dre.pesquisas,
-                                                                        tributos: userdef.dre.tributos,
-                                                                        servicos: [userdef.dre.servicos[0],userdef.dre.servicos[1],userdef.dre.servicos[2],userdef.dre.servicos[3]],
-                                                                        preco_medio: userdef.dre.preco_medio,
-                                                                        atendimentos: userdef.dre.atendimentos,
-                                                                        insumos_em_estoque: userdef.dre.insumos_em_estoque,
-                                                                        distribuidores: userdef.dre.distribuidores
-                                            
-                                                                    }
-                                                                    usert.fluxo_de_caixa = {
-                                                                        saldo_anterior: userdef.fluxo_de_caixa.saldo_anterior,
-                                                                        faturamento: userdef.fluxo_de_caixa.faturamento,
-                                                                        contas_a_receber: userdef.fluxo_de_caixa.contas_a_receber,
-                                                                        contas_a_receber_recebidas: userdef.fluxo_de_caixa.contas_a_receber_recebidas, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
-                                                                        custo_de_servico_prestado: userdef.fluxo_de_caixa.custo_de_servico_prestado,
-                                                                        emprestimos_contratados: userdef.fluxo_de_caixa.emprestimos_contratados,
-                                                                        emprestimos_pagos: userdef.fluxo_de_caixa.emprestimos_pagos,
-                                                                        veiculos_vendidos: userdef.fluxo_de_caixa.veiculos_vendidos,
-                                                                        depreciacao_de_veiculos: userdef.fluxo_de_caixa.depreciacao_de_veiculos,
-                                                                        depreciacao_de_maquinas: userdef.fluxo_de_caixa.depreciacao_de_maquinas,
-                                                                        veiculos_comprados: userdef.fluxo_de_caixa.veiculos_comprados,
-                                                                        tributos: userdef.fluxo_de_caixa.tributos,
-                                                                        promotores: userdef.fluxo_de_caixa.promotores,
-                                                                        propaganda: userdef.fluxo_de_caixa.propaganda,
-                                                                        pesquisas: userdef.fluxo_de_caixa.pesquisas,
-                                                                        pas: userdef.fluxo_de_caixa.pas,
-                                                                        uso_frota: userdef.fluxo_de_caixa.uso_frota,
-                                                                        despesas_operacionais_n_planejadas: userdef.fluxo_de_caixa.despesas_operacionais_n_planejadas,
-                                                                        despesas_administrativas: userdef.fluxo_de_caixa.despesas_administrativas,
-                                                                        encargos_financiamento: userdef.fluxo_de_caixa.encargos_financiamento,
-                                                                        maquinas: userdef.fluxo_de_caixa.maquinas,
-                                                                        distribuidores: userdef.fluxo_de_caixa.distribuidores
-                                                                    }
-                                                                    usert.somapropuni = {tipo1: userdef.somapropuni.tipo1, inv1: userdef.somapropuni.inv1, tipo2: userdef.somapropuni.tipo2, inv2: userdef.somapropuni.inv2}
-                                                                    usert.pes_p = {
-                                                                        modelos_oferecidos: userdef.pes_p.modelos_oferecidos,
-                                                                        total_pas: userdef.pes_p.total_pas,
-                                                                        total_participacao_modelos: userdef.pes_p.total_participacao_modelos,
-                                                                        total_distribuidores: userdef.pes_p.total_distribuidores
-                                                                    }
-                                                                    usert.participacao_modelos = userdef.participacao_modelos
-
-                                                                    for(let s = 0; s < index.length; s++){
-                                                                        let serv = index[s]
-                                                                        usert.set(serv, [userdef[serv][0], userdef[serv][1], userdef[serv][2], userdef[serv][3], userdef[serv][4], userdef[serv][5], userdef[serv][6], userdef[serv][7]])
-                                                                    }
-
-                                                                    usert.sockid = socket.id;
-                                                                    usert.modificador = u.nome
-                                                                    usert.save()
-                                                                        .then(() => {
-                                                                            console.log('>>login efetuado com sucesso')
-                                                                            socket.emit('feedback', ['success', 'Login aprovado para: ' + creden.login]) 
-                                                                            socket.emit('login-client-aprovado')
-                                                                        
-                                                                        })
-                                                                        .catch((err) => {socket.emit('feedback', ['danger','falha ao salvar os dados no servidor -> ' + err]);console.log(err)})
-                                     
-                                            })
-                              
-                                        }
-                                        else{
-                                            socket.emit('feedback', ['warning','o turno atual ainda nao foi inicializado pelo administrador'])
-                                        }        
-                                    })
-                                    .catch((errr) => {console.log(errr + ' <=> Falha na comunicacao com o Banco de dados n 403.0 ' + socket.id)})       
-                            
-                                }
-                                else{
-                                    socket.emit('feedback', ['danger','Nenhuma cooperativa encontrada (entre em contato com o suporte tecnico)'])
-                                }
-                            })
-                                        
-                                }
-                                else{
-                                    socket.emit('feedback', ['danger', 'Essa conta ainda nao foi vinculada com nenhuma Cooperativa (duvidas: sac@desafiosdegestao.com.br)'])    
-                                }
-                            }
-                            else{
-                                socket.emit('feedback', ['danger', 'Credenciais invalidas'])
-                            }
-                        })
-                        .catch((err) => {console.log(err + ' <=> Falha na comunicacao com o Banco de dados n 403.1 ' + socket.id)})
                         }
-            })
-            .catch(() => {console.log('falha na comunicacao com o Banco de dados n 504 ' +socket.id)})
-
+                    
+                }
+               
+                                
+               
                        
     }) //falta teste
     socket.on('vincular-pessoa', (inf) => {
@@ -254,39 +127,43 @@ sockets.on('connection', (socket) => {
     }) //new falta testar
     socket.on('register-client', (creden) => {
         console.log(creden)
-        let erro = []
+        let erros = []
         function formatCheck(c) {
             let a = 0
             if(c.cpf.length > 10){a=a+1}
-            else{erro.push('cpf invalido')}
-            if(c.login.length > 0){a=a+1}
-            else{erro.push('login invalido')}
-            if(c.email.length > 3){a=a+1}
-            else{erro.push('email invalido')}
+            else{erros.push('cpf invalido')}
+            if(c.login.length > 3){a=a+1}
+            else{erros.push('login invalido')}
+            if(c.email.length > 4){a=a+1}
+            else{erros.push('email invalido')}
             if(c.telefone.length > 7){a=a+1}
-            else{erro.push('telefone invalido')}
-            if(c.senha.length > 0){a=a+1}
-            else{erro.push('senha invalida')}
-            if(c.nome.length > 0){a=a+1}
-            else{erro.push('nome invalido')}
+            else{erros.push('telefone invalido')}
+            if(c.senha.length > 2){a=a+1}
+            else{erros.push('senha invalida')}
+            if(c.nome.length > 2){a=a+1}
+            else{erros.push('nome invalido')}
 
-            return 'fino'
+    
 
-            if(a == 6){return 'fino'}
-            else{return erro}
+            if(a == 6){
+                return 'fino'
+            }
+            else{
+                return erros
+            }
         }
-        Aluno.findOne({sockid: socket.id, temporario: 1}) // se n achar retorna Null e se vc tentar fazer essa pesquisa com um String sendo q no Schema ta como Number vai ir pro Catch ou vai pro Catch tb se n conseguir se conectar com o MongoDB
+        Usuario.findOne({sockid: socket.id}) // se n achar retorna Null e se vc tentar fazer essa pesquisa com um String sendo q no Schema ta como Number vai ir pro Catch ou vai pro Catch tb se n conseguir se conectar com o MongoDB
             .then((ll) => {
                 if(ll !== null){
                     console.log('>>usuario ja conectado')
-                    socket.emit('feedback', ['warning','voce ja esta conectado com: ' + ll.cooperativa])
+                    socket.emit('feedback', ['warning','Voce ja esta conectado com: ' + ll.cooperativa])
                 }
                 else{             
                     Usuario.findOne({login: creden.login})
                         .then((userx) => { 
                             if(userx !== null){
                                 console.log('>>registro negado: esse nome de login ja esta sendo usado');
-                                socket.emit('feedback', ['danger', 'esse nome de login ja esta sendo usado'])}
+                                socket.emit('feedback', ['danger', 'Esse login ja esta sendo utilizado'])}
                             else{
                                 
                                 if(formatCheck(creden) == 'fino'){
@@ -297,7 +174,7 @@ sockets.on('connection', (socket) => {
                                 }
                                 
                                 else{
-                                    socket.emit('feedback', ['danger', 'falha na tentativa de registro: ' + String(erro)])
+                                    socket.emit('feedback', ['danger', 'Falha na tentativa de registro: ' + String(erros)])
                                 }
                             }
                         }) 
@@ -308,6 +185,8 @@ sockets.on('connection', (socket) => {
     socket.on('register-cooperativa', (creden) => {
         Aluno.findOne({sockid: socket.id, temporario: 1}) // se n achar retorna Null e se vc tentar fazer essa pesquisa com um String sendo q no Schema ta como Number vai ir pro Catch ou vai pro Catch tb se n conseguir se conectar com o MongoDB
             .then((ll) => {
+
+                
                 if(ll !== null){
                     console.log('>>usuario ja conectado')
                     socket.emit('feedback', ['warning','voce ja esta conectado com: ' + ll.cooperativa])
@@ -568,7 +447,7 @@ sockets.on('connection', (socket) => {
         } })
             .catch((err) => {console.log(err+'. id:' + socket.id)})
     }) //falta realizar um registro de PESSOA FISICA e linkar a conta da cooperativa
-    socket.on('trocar-servico', (dados) => {
+    socket.on('trocar-servico', async (dados) => {
         console.log(dados)
         let velho = dados[0];
         let novo = dados[1];
@@ -576,8 +455,9 @@ sockets.on('connection', (socket) => {
 
         if(qnt && Number.isInteger(qnt)){ 
         if(qnt > 0){
-        Aluno.findOne({sockid: socket.id, temporario: 1})
-            .then((userx) => {
+        let ll = await Usuario.findOne({sockid: socket.id})
+        if(ll !== null){
+        let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
                 if(userx !== null){
                     
                     if(novo !== velho){
@@ -1015,7 +895,8 @@ sockets.on('connection', (socket) => {
                     socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
                 }
             
-            })
+            
+        }
         }
         else{
             socket.emit('feedback', ['danger', 'apenas numeros positivos sao aceitos nesse campo'])
@@ -1025,11 +906,12 @@ sockets.on('connection', (socket) => {
         socket.emit('feedback',['warning','Valor Inválido'])
     }
     }) 
-    socket.on('substituir-servico', (dados) => {
+    socket.on('substituir-servico', async (dados) => {
         let velho = dados[0];
         let novo = dados[1];
-        Aluno.findOne({sockid: socket.id, temporario: 1})
-            .then((userx) => {
+        let ll = await Usuario.findOne({sockid: socket.id})
+        if(ll !== null){
+        let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
                 if(userx !== null){
                     if(userx[velho][1] == 1 && userx[novo][1] !== 3){
                     if(userx[novo][1] !== 1){
@@ -1159,7 +1041,7 @@ sockets.on('connection', (socket) => {
                                 array_dados_novo = [insu_novo,1,userx[novo][2], userx[novo][3], userx[novo][4], userx[novo][5], userx[novo][6], userx[novo][7]]
                             }
                         userx.taokeys = userx.taokeys - userx[velho][0]*30 - Math.abs(userx[novo][2] - userx[velho][2])*userx[velho][0]
-                        console.log("16: " + users[i].taokeys)
+                        console.log("16: " + userx.taokeys)
                         userx.set(velho, array_dados_velho)
                         userx.set(novo, array_dados_novo)
                         //userx.taokeys = userx.taokeys - userx[velho][0]*30
@@ -1434,12 +1316,15 @@ sockets.on('connection', (socket) => {
                 else{
                     socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
                 }
+        }
             
-            })
+            
     })
-    socket.on('encerrar-servico', (tipo) => {
-        Aluno.findOne({sockid: socket.id, temporario: 1})
-            .then((userx) => {
+    socket.on('encerrar-servico', async (tipo) => {
+        let ll = await Usuario.findOne({sockid: socket.id})
+        if(ll !== null){
+        let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
+
                 if(userx !== null){
                     if(userx[tipo][0] == 0 && userx[tipo][1] == 1){
                         let b = 0;
@@ -1562,18 +1447,19 @@ sockets.on('connection', (socket) => {
                 else{
                     socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
                 }
-            })
-            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
+        
+            }
+            
     }) 
-    socket.on('alterar-volume', (dados) => {
+    socket.on('alterar-volume', async (dados) => {
         let tipo = dados[0];
         let volume = Number(dados[1]);
         //let ttt;
       
         if(volume && Number.isInteger(volume)){ 
-        
-        Aluno.findOne({sockid: socket.id, temporario: 1})
-            .then((userx) => {
+        let ll = await Usuario.findOne({sockid: socket.id})
+        if(ll !== null){
+        let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
                 //ttt = userx;
                 if(userx !== null){
                     if(userx[tipo][1] == 1){
@@ -1654,17 +1540,19 @@ sockets.on('connection', (socket) => {
                 else{
                     socket.emit('feedback', ['danger', 'voce precisa estar logado para puxar o state atual da simulação'])
                 }
-            })
-            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})     
+        }
+              
         }
         else{
             socket.emit('feedback',['warning','Valor Inválido'])
         }
     }) 
-    socket.on('salvar', () => {
+    socket.on('salvar', async () => {
         //console.log('inicio-salvamento'
-        Aluno.findOne({sockid: socket.id, temporario: 1})
-            .then((usert) => {
+        let ll = await Usuario.findOne({sockid: socket.id})
+        if(ll !== null){
+        let usert = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
+            
                 if(usert !== null){
                 Data.findOne({instancia: usert.instancia})
                     .then((check) => {
@@ -1790,13 +1678,15 @@ sockets.on('connection', (socket) => {
             else{
                 socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
             }
-            })
+        }
+            
     }) //OKK falta teste
-    socket.on('resetar', () => {
-        Aluno.findOne({sockid: socket.id, temporario: 1})
-            .then((usert) => {
+    socket.on('resetar', async () => {
+        let ll = await Usuario.findOne({sockid: socket.id})
+        if(ll !== null){
+        let usert = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1, backup: 0})
                 if(usert !== null){
-                Aluno.findOne({cooperativa: usert.cooperativa, instancia: usert.instancia, temporario: 0})
+                Aluno.findOne({cooperativa: usert.cooperativa, instancia: usert.instancia, temporario: 0, backup: 0})
                     .then((userdef) => {
                         usert.last_change = {prop1: userdef.last_change.prop1, prop2: userdef.last_change.prop2 ,serv1: userdef.last_change.serv1, serv2: userdef.last_change.serv2, insu1: userdef.last_change.insu1, insu2: userdef.last_change.insu2, insu2i: userdef.last_change.insu2i, insu1i: userdef.last_change.insu1i}
                         usert.deci = userdef.deci
@@ -1942,7 +1832,8 @@ sockets.on('connection', (socket) => {
                                     .catch((err) => {console.log(err)})
                                     }) 
                                     .catch((err) => {console.log(err)})
-                                    Aluno.findOne({sockid: socket.id, temporario: 1})
+
+                                    Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
                                     .then((userx) => {
                                         if(userx !== null){
                                                 
@@ -2095,7 +1986,7 @@ sockets.on('connection', (socket) => {
                                     usert["turno"]]);
                                 socket.emit('resetado')
                             })
-                            .catch((err) => {socket.emit('feedback', ['danger','falha ao salvar os dados no servidor']);console.log(err)})
+                            .catch((err) => {socket.emit('feedback', ['danger','Falha ao salvar os dados no servidor']);console.log(err)})
                         
 
 
@@ -2106,12 +1997,16 @@ sockets.on('connection', (socket) => {
             else{
                 socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
             }
-            })
+        }
+    
+            
     }) //tb re-manda os balancos e decisoes para tornar a aplicacao mais responsiva
-    socket.on('aumentar-frota', (dados) => {
+    socket.on('aumentar-frota', async (dados) => {
         let qnt = Number(dados)
-        Aluno.findOne({sockid: socket.id, temporario: 1})
-            .then((userx) => {
+        let ll = await Usuario.findOne({sockid: socket.id})
+        if(ll !== null){
+        let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
+            
                 if(userx !== null){
                         if(qnt > 0 && userx.taokeys){
                             let datetime = new Date().toLocaleString('pt-BR').toLocaleString('pt-BR');
@@ -2161,7 +2056,7 @@ sockets.on('connection', (socket) => {
                             userx.taokeys = userx.taokeys - 57600*Number(dados)
                             userx.set('frota', array_dados) 
                             userx.save()
-                                .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
+                                .then(() => Aluno.findOne({ cooperativa: ll.cooperativa, temporario: 1}))                 
                                 .then((user) => {
                                     if(user.taokeys == userx.taokeys){
                                         function propuni(tipo) {
@@ -2231,13 +2126,15 @@ sockets.on('connection', (socket) => {
                 else{
                     socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
                 }
-            })
-            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
+        }
+            
     }) 
-    socket.on('vender-frota', (dados) => {
+    socket.on('vender-frota', async (dados) => {
         let qnt = Number(dados)
-        Aluno.findOne({sockid: socket.id, temporario: 1})
-            .then((userx) => {
+        let ll = await Usuario.findOne({sockid: socket.id})
+        if(ll!==null){
+        let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
+    
                 if(userx !== null){
                         if(qnt > 0){
                             let soma_f = 0
@@ -2362,7 +2259,7 @@ sockets.on('connection', (socket) => {
                             
                         
                             userx.save()
-                                .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
+                                .then(() => Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1}))                 
                                 .then((user) => {
                                     if(user.taokeys == userx.taokeys){
                                         function propuni(tipo) {
@@ -2431,25 +2328,15 @@ sockets.on('connection', (socket) => {
                 else{
                     socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
                 }
-            })
-            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
-    })
-    socket.on('checar-frota', () => {
-        Aluno.findOne({sockid: socket.id, temporario: 1})
-            .then((userx) => {
-                if(userx !== null){
-                    let resp = userx['frota']
-                    socket.emit('feedback', ['success', 'Situação da sua frota: ' +resp])         
             }
-                else{
-                    socket.emit('feedback', ['danger', 'voce precisa estar logado para puxar o state atual da simulação'])
-                }
-            })
-            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
-    }) 
-    socket.on('puxar-state', () => {
-        Aluno.findOne({sockid: socket.id, temporario: 1})
-            .then((userx) => {
+    })
+    socket.on('puxar-state', async () => {
+        let ll = await Usuario.findOne({sockid: socket.id})
+        if(ll !== null){
+
+        
+        let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
+            
                 if(userx !== null){
                     function propuni(tipo) {
                         if(userx.somapropuni.tipo1 == tipo){
@@ -2507,16 +2394,16 @@ sockets.on('connection', (socket) => {
                 else{
                     socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
                 }
-            })
-            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
+            
+       }
     }) 
-    socket.on('alterar-preco', (dados) => {
+    socket.on('alterar-preco', async (dados) => {
         let tipo = dados[0];
         let preco = Number(dados[1]);
         if(preco && Number.isInteger(preco)){ 
-            
-        Aluno.findOne({sockid: socket.id, temporario: 1})
-            .then((userx) => {
+        let ll = await Usuario.findOne({sockid: socket.id})
+        if(ll!== null){
+        let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
                 if(userx !== null){
                     if(userx[tipo][1] == 1){
                         if(preco > 0 && preco <= 9999){
@@ -2603,17 +2490,18 @@ sockets.on('connection', (socket) => {
                 else{
                     socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
                 }
-            })
-            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
+        }
+            
         }
         else{
             socket.emit('feedback',['warning','Valor Inválido (X-'+preco+')'])
         }
     }) 
-    socket.on('promotores', (dados) => {
+    socket.on('promotores', async (dados) => {
         let qnt = Number(dados)
-        Aluno.findOne({sockid: socket.id, temporario: 1})
-            .then((userx) => {
+        let ll = await Usuario.findOne({sockid: socket.id})
+        if(ll !== null){
+        let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
                 if(userx !== null){
                         if(qnt > 0){
                             let novaf = qnt
@@ -2693,13 +2581,15 @@ sockets.on('connection', (socket) => {
                 else{
                     socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
                 }
-            })
-            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
+         
+        }
     }) 
-    socket.on('diminuir-promotores', (dados) => {
+    socket.on('diminuir-promotores', async (dados) => {
         let qnt = Number(dados)
-        Aluno.findOne({sockid: socket.id, temporario: 1})
-            .then((userx) => {
+        let ll = await Usuario.findOne({sockid: socket.id})
+        if(ll !== null){
+        let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
+            
                 if(userx !== null){
                         if(qnt > 0 && userx['promotores'] >= qnt){
                             let novaf = userx['promotores'] - qnt
@@ -2778,8 +2668,7 @@ sockets.on('connection', (socket) => {
                 else{
                     socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
                 }
-            })
-            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
+        }
     }) 
     socket.on('emprestimo', (dados) => {
         let qnt = Number(dados)
@@ -3006,11 +2895,13 @@ sockets.on('connection', (socket) => {
                 }
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
-    }) 
-    socket.on('aumentar-distribuidores', (dados) => {
+    })
+    socket.on('aumentar-distribuidores', async (dados) => {
         let qnt = Number(dados)
-        Aluno.findOne({sockid: socket.id, temporario: 1})
-            .then((userx) => {
+        let ll = Usuario.findOne({sockid: socket.id})
+        if(ll !== null){
+        let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
+        
                 if(userx !== null){
                         if(qnt > 0){
                             let novaf = userx['distribuidores'] + qnt
@@ -3090,13 +2981,14 @@ sockets.on('connection', (socket) => {
                 else{
                     socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
                 }
-            })
-            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
+            
+        }
     }) 
-    socket.on('diminuir-distribuidores', (dados) => {
+    socket.on('diminuir-distribuidores', async (dados) => {
         let qnt = Number(dados)
-        Aluno.findOne({sockid: socket.id, temporario: 1})
-            .then((userx) => {
+        let ll = await Usuario.findOne({sockid: socket.id})
+        if(ll !== null){
+        let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
                 if(userx !== null){
                         if(qnt > 0 && userx['distribuidores'] >= qnt){
                             let novaf = userx['distribuidores'] - qnt
@@ -3173,13 +3065,16 @@ sockets.on('connection', (socket) => {
                 else{
                     socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
                 }
-            })
-            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
+            
+        }
+            
     })
-    socket.on('diminuir-pas', (dados) => {
+    socket.on('diminuir-pas', async (dados) => {
         let qnt = Math.round(Number(dados))
-        Aluno.findOne({sockid: socket.id, temporario: 1})
-            .then((userx) => {
+        let ll = await Usuario.findOne({sockid: socket.id})
+        if(ll !== null){
+        let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
+            
                 if(userx !== null){
                         if(qnt > 0 && userx['pas'] >= qnt){
                             let novaf = Math.round((-1)*qnt)
@@ -3257,13 +3152,14 @@ sockets.on('connection', (socket) => {
                 else{
                     socket.emit('feedback', ['danger', 'voce precisa estar logado para puxar o state atual da simulação'])
                 }
-            })
-            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
-    })
-    socket.on('aumentar-pas', (dados) => {
+        }
+   })
+    socket.on('aumentar-pas', async (dados) => {
         let qnt = Number(dados)
-        Aluno.findOne({sockid: socket.id, temporario: 1})
-            .then((userx) => {
+        let ll = await Usuario.findOne({sockid: socket.id})
+        if(ll !== null){
+        let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
+            
                 if(userx !== null){
                         if(qnt > 0){
                             let novaf = Math.round(qnt)
@@ -3341,18 +3237,18 @@ sockets.on('connection', (socket) => {
                 else{
                     socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
                 }
-            })
-            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
+        }
     }) 
-    socket.on('propaganda-unitaria', (dados) => { //fazer igual a compra de insumos esse investimento em prop uni...
+    socket.on('propaganda-unitaria', async (dados) => { //fazer igual a compra de insumos esse investimento em prop uni...
         let tipo = dados[0]
         let qnt = Number(dados[1])
         
         
         if(qnt && Number.isInteger(qnt)){ 
+            let ll = await Usuario.findOne({sockid: socket.id})
+            if(ll !== null){
+            let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
             
-        Aluno.findOne({sockid: socket.id, temporario: 1})
-            .then((userx) => {
                 if(userx !== null){
                         if(qnt > 0){
                             let datetime = new Date().toLocaleString('pt-BR');
@@ -3579,20 +3475,21 @@ sockets.on('connection', (socket) => {
                 else{
                     socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
                 }
-            })
-            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
+         }
+    
         }
         else{
             socket.emit('feedback',['warning','Valor Inválido'])
         }
     })
-    socket.on('aumentar-propaganda', (dados) => {
+    socket.on('aumentar-propaganda', async (dados) => {
        
         let qnt = Number(dados)
         if(qnt && Number.isInteger){ 
-           
-        Aluno.findOne({sockid: socket.id, temporario: 1})
-            .then((userx) => {
+        let ll = await Usuario.findOne({sockid: socket.id})
+        if(ll !== null){
+        let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
+        
                 if(userx !== null){
                         if(qnt > 0){
                             let datetime = new Date().toLocaleString('pt-BR');
@@ -3750,8 +3647,8 @@ sockets.on('connection', (socket) => {
                 else{
                     socket.emit('feedback', ['danger', 'voce precisa estar logado para puxar o state atual da simulação'])
                 }
-            })
-            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
+        }
+            
         }
         else{
             socket.emit('feedback',['warning', 'Valor Inválido'])
@@ -3770,7 +3667,7 @@ sockets.on('connection', (socket) => {
             })
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
     }) 
-    socket.on('comissao', (dados) => {
+    socket.on('comissao', async (dados) => {
         let qnt  = 0
         if(dados !== null){
             qnt = Number(dados.replace(",", "."))
@@ -3778,9 +3675,10 @@ sockets.on('connection', (socket) => {
         else{
             qnt = 0
         }
-        
-        Aluno.findOne({sockid: socket.id, temporario: 1})
-            .then((userx) => {
+        let ll = await Usuario.findOne({sockid: socket.id})
+        if(ll !== null){
+        let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
+
                 if(userx !== null){
                             if(qnt < 100){
                             if(qnt%0.5 == 0 && qnt !== 0){
@@ -3864,12 +3762,13 @@ sockets.on('connection', (socket) => {
                 else{
                     socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
                 }
-            })
-            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
+    }
     }) 
-    socket.on('ativar-servico', (tipo) => {
-        Aluno.findOne({sockid: socket.id, temporario: 1})
-            .then((userx) => {
+    socket.on('ativar-servico', async (tipo) => {
+        let ll = await Usuario.findOne({sockid: socket.id})
+        if(ll !== null){
+       let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
+
                 if(userx !== null){
                     function check_1_servico_ativo() {
                         let count = 0
@@ -3999,18 +3898,19 @@ sockets.on('connection', (socket) => {
                 else{
                     socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
                 }
-            })
-            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
-    }) 
-    socket.on('comprar-servico', (dados) => {
+    }
+     }) 
+    socket.on('comprar-servico', async (dados) => {
         let tipo = dados[0];
         let iqnti = Number(dados[1])
         if(iqnti || iqnti == 0){ 
             let qnti = iqnti
             //console.log(' typeof qnti: '+typeof qnti)
             //console.log('qnti '+qnti)
-        Aluno.findOne({sockid: socket.id, temporario: 1})
-            .then((userx) => { 
+            let ll = await Usuario.findOne({sockid: socket.id})
+            if(ll !== null){
+        let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
+    
                     if(userx !== null){
                         if(qnti > 0 && Number.isInteger(qnti)){ 
                        
@@ -4345,16 +4245,18 @@ sockets.on('connection', (socket) => {
                     else{
                         socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
                     }
-            }) 
-            .catch((err) => { console.log('falha na comunicacao com o banco de dados para o ' +socket.id+ " - " + err)})
+                }
+            
         }
         else{
             socket.emit('feedback', ['warning','Valor Inválido'])
         }
     })
-    socket.on('pesquisar-pas', () => {
-        Aluno.findOne({sockid: socket.id, temporario: 1})
-            .then((userx) => { 
+    socket.on('pesquisar-pas', async () => {
+        let ll = await Usuario.findOne({sockid: socket.id})
+        if(ll!== null){
+        let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
+            
                     if(userx !== null){
                         if(userx.pes_p.total_pas == 0){
                         if(true){
@@ -4526,13 +4428,14 @@ sockets.on('connection', (socket) => {
                         socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
 
                     }
-            }) 
-            .catch(() => { console.log('falha na comunicacao com o banco de dados para o ' +socket.id)
-    })
+    }
+            
     }) 
-    socket.on('pesquisar-distribuidores', () => {
-        Aluno.findOne({sockid: socket.id, temporario: 1})
-            .then((userx) => { 
+    socket.on('pesquisar-distribuidores', async () => {
+        let ll = await Usuario.findOne({sockid: socket.id})
+        if(ll!==null){
+        let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
+            
                     if(userx !== null){
                         if(userx.pes_p.total_distribuidores == 0){
                         
@@ -4705,13 +4608,14 @@ sockets.on('connection', (socket) => {
                         socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
 
                     }
-            }) 
-            .catch(() => { console.log('falha na comunicacao com o banco de dados para o ' +socket.id)
-    })
+    }
+        
     }) 
-    socket.on('pesquisar-participacao-servicos', () => {
-        Aluno.findOne({sockid: socket.id, temporario: 1})
-            .then((userx) => { 
+    socket.on('pesquisar-participacao-servicos', async () => {
+        let ll = await Usuario.findOne({sockid: socket.id})
+        if(ll!==null){
+        let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
+            
                     if(userx !== null){
                         
                         //console.log(user.taokeys + ' ccccccccccccccc');
@@ -4886,13 +4790,14 @@ sockets.on('connection', (socket) => {
                         socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
 
                     }
-            }) 
-            .catch((err) => { console.log('falha na comunicacao com o banco de dados para o ' +socket.id + ' ps: ' + err)
-    })
+            }
+       
     }) 
-    socket.on('pesquisar-servicos-oferecidos-concorrencia', () => {
-        Aluno.findOne({sockid: socket.id, temporario: 1})
-            .then((userx) => { 
+    socket.on('pesquisar-servicos-oferecidos-concorrencia', async () => {
+        let ll = await Usuario.findOne({sockid: socket.id})
+        if(ll!==null){
+        let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
+            
                     if(userx !== null){
                         if(userx.pes_p.modelos_oferecidos == 0){
                         //console.log(user.taokeys + ' ccccccccccccccc');
@@ -5058,13 +4963,14 @@ sockets.on('connection', (socket) => {
                     else{
                         socket.emit('feedback',['danger','É necessário estar logado para puxar os dados da simulação'])
                     }
-            }) 
-            .catch((err) => { console.log('falha na comunicacao com o banco de dados para o ' + socket.id + ' ps: ' + err)
-    })
+            }
+         
     }) 
-    socket.on('pesquisar-teste-entre-2', (input) => {
-        Aluno.findOne({sockid: socket.id, temporario: 1})
-            .then((userx) => { 
+    socket.on('pesquisar-teste-entre-2', async (input) => {
+        let ll = await Usuario.findOne({sockid: socket.id})
+        if(ll!==null){
+        let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
+             
                     if(userx !== null && input.length == 2){
                         let redun
                         function checkR(r) {
@@ -5076,21 +4982,23 @@ sockets.on('connection', (socket) => {
                             }
                         }
                         //console.log(user.taokeys + ' ccccccccccccccc');
-                        if(input.length == 2 && checkR(input)){
+                        if(checkR(input) && input[0] !== input[1]){
                             let datetime = new Date().toLocaleString('pt-BR').toLocaleString('pt-BR');
                             userx.deci.push({data: datetime, acao: 'Contratou pesquisa de teste entre tipos de serviço para ' +input[0] +' e ' + input[1] +' referente ao turno '+ userx.turno, autor: userx.modificador})
                         
                             function sem_redundancia() {
                                 for(let ff = 0; ff < userx.participacao_modelos.length; ff++){
                                     
-
-                                    
+                                    //console.log('ff: ' + ff + ' - ' + userx.participacao_modelos)
+                                    //console.log('/== userx.participacao_modelos[ff]: ' + userx.participacao_modelos[ff] + ' - ' + 'input: ' + input + ' ==/')
                                     if(userx.participacao_modelos[ff][0] == input[0] && userx.participacao_modelos[ff][1] == input[1]){
-                                        redun = input[0]+'; '+input[1]
+                                        //console.log('tei1')
+                                        redun = input[0]+' - '+input[1]
                                         return false
                                     }
                                     if(userx.participacao_modelos[ff][0] == input[1] && userx.participacao_modelos[ff][1] == input[0]){
-                                        redun = input[0]+'; '+input[1]
+                                        //console.log('tei2')
+                                        redun = input[0]+' - '+input[1]
                                         return false
                                     }
                                     
@@ -5177,7 +5085,7 @@ sockets.on('connection', (socket) => {
                            userx['npesquisas'] = userx['npesquisas'] + 1
                            
                            
-                            userx.participacao_modelos.push([index[0],input[1]])
+                            userx.participacao_modelos.push([input[0],input[1]])
                             //userx.pes_p.total_participacao_modelos = 1
                                 
                                 
@@ -5185,7 +5093,7 @@ sockets.on('connection', (socket) => {
                            //console.log(user.taokeys)
                            userx.save()
                             .then(() => {
-                                socket.emit('feedback', ['success', '>> Encomenda de pesquisa de PARTICIPAÇÃO DE SERVIÇOS realizada com sucesso.'])
+                                socket.emit('feedback', ['success', '>> Encomenda de teste entre ' + input[0] + ' e ' + input[1] + ' realizada com sucesso.'])
                                         function propuni(tipo) {
                                             if(userx.somapropuni.tipo1 == tipo){
                                                 return userx.somapropuni.inv1
@@ -5253,22 +5161,22 @@ sockets.on('connection', (socket) => {
                             }
                         }
                         else{
-                            socket.emit('feedback', ['warning','falta caixa']);
+                            socket.emit('feedback', ['warning','Erro na pesquisa']);
                             //console.log('hlu')
                     }
                     //console.log(user.taokeys)
                     }
                     else{
-                        socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
+                        socket.emit('feedback', ['danger','Pesquisa inválida'])
                     }
-            }) 
-            .catch((err) => { console.log('falha na comunicacao com o banco de dados para o ' +socket.id + ' ps: ' + err)
+        }
+    
     })
-    })
-    socket.on('puxar-balancos',  (turno) => {
-
-        Aluno.findOne({sockid: socket.id, temporario: 1})
-            .then((userx) => {
+    socket.on('puxar-balancos', async (turno) => {
+        let ll = await Usuario.findOne({sockid: socket.id})
+        if(ll!== null){
+        let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
+    
                 if(userx !== null){
                         
                         //console.log(userx.turno)
@@ -5291,6 +5199,7 @@ sockets.on('connection', (socket) => {
                                         socket.emit('balancos', { 
                                             balanco_patrimonial: balancos.balanco_patrimonial,
                                             dre: balancos.dre,
+                                            comissao: balancos.comissao,
                                             turno: balancos.turno,
                                             fluxo: balancos.fluxo_de_caixa,
                                             total_n_utilizado: resp(balancos),
@@ -5300,13 +5209,13 @@ sockets.on('connection', (socket) => {
                                         
                                         } 
                                         else{
-                                            console.log('puts')
+                                            console.log('puts... Aluno.findOne({ cooperativa: userx.cooperativa, backup: 1, instancia: userx.instancia, turno: turno }) deu NULO')
                                         }         
                                     })
                                     .catch((err) => {console.log(err)})
                             }
                             else{
-                                Aluno.findOne({ cooperativa: userx.cooperativa, backup: 0, instancia: userx.instancia, temporario: 1 })
+                                Aluno.findOne({ cooperativa: userx.cooperativa, instancia: userx.instancia, temporario: 1 })
                                     .then((balancos) => {
                                         //console.log(balancos)
                                         if(balancos !== null){
@@ -5348,9 +5257,10 @@ sockets.on('connection', (socket) => {
                                                                 if(balancos.pes_p.total_distribuidores == 1){
                                                                     somapes = somapes + 2160
                                                                 }
-                                        console.log('puxando-balancos <<ATUAL /volume 1: ' + checar4(balancos[balancos.last_change.serv1])+ ' /insu1: ' + balancos.last_change.insu1 + ' /insu1i: ' + balancos.last_change.insu1i)
+                                        //console.log('puxando-balancos <<ATUAL /volume 1: ' + checar4(balancos[balancos.last_change.serv1])+ ' /insu1: ' + balancos.last_change.insu1 + ' /insu1i: ' + balancos.last_change.insu1i)
                                         socket.emit('balancos', { 
                                             balanco_patrimonial: balancos.balanco_patrimonial,
+                                            comissao: balancos.comissao,
                                             dre: balancos.dre,
                                             turno: balancos.turno,
                                             fluxo: balancos.fluxo_de_caixa,
@@ -5396,18 +5306,20 @@ sockets.on('connection', (socket) => {
                 else{
                     socket.emit('feedback', ['danger','É preciso estar logado para puxar o state atual da simulação.'])
                 }
-            })
-            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
-
+    }
+         
     })
-    socket.on('puxar-bp-geral', () => {
-        Aluno.findOne({sockid: socket.id, temporario: 1})
-            .then((userx) => {
+    socket.on('puxar-bp-geral', async () => {
+        let ll = await Usuario.findOne({sockid: socket.id})
+        if(ll !== null){
+        let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
+    
                 if(userx !== null){
                         
                         //console.log(userx.turno)
                         //console.log(Number(turno))
                             if(userx.turno == 2 || userx.turno == 4){
+                                if(userx.turno == 2){}//...
                                 Aluno.find({ backup: 1, instancia: userx.instancia, turno: userx.turno - 1 })                 
                                     .then((bps) => {
                                         if(bps.length !== 0){ 
@@ -5415,12 +5327,13 @@ sockets.on('connection', (socket) => {
                                             for(let i = 0; i < bps.length; i++){
                                                 resp.push({cooperativa: bps[i].cooperativa, balanco_patrimonial: bps[i].balanco_patrimonial, turno: bps[i].turno})
                                             }
+                                            //console.log('bp-geral sendo emitido... >> [0]:' + resp[0] + ' [1]:' + resp[1])
                                             socket.emit('bp-geral', resp)
                                        
                                         
                                         } 
                                         else{
-                                            console.log('puts deu 0 qnd foi puxar os bps do turno 2 ou 4...')
+                                            //console.log('puts deu 0 qnd foi puxar os bps do turno 2 ou 4...')
                                             socket.emit('bp-geral', ['vazio'])
                                         }         
                                     })
@@ -5434,15 +5347,17 @@ sockets.on('connection', (socket) => {
                 else{
                     socket.emit('feedback', ['danger','É preciso estar logado para puxar o state atual da simulação.'])
                 }
-            })
-            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
-
+        
+            }
+           
     })
 
-    socket.on('puxar-pesquisas',  () => {
+    socket.on('puxar-pesquisas', async () => {
         console.log("FOOII")
-        Aluno.findOne({sockid: socket.id, temporario: 1})
-            .then((userx) => {
+        let ll = await Usuario.findOne({sockid: socket.id})
+        if(ll !== null){
+        let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
+    
                 if(userx !== null){
                              //seria melhor ao registrar as instancias colocar como turno 1 na geração do JSON, mas fazer com cautela OKK
                                 Aluno.find({ cooperativa: userx.cooperativa, backup: 1, instancia: userx.instancia})                 
@@ -5492,14 +5407,15 @@ sockets.on('connection', (socket) => {
                     socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
 
                 }
-            })
-            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
-
+            }
+            
     })
-    socket.on('puxar-news',  () => {
+    socket.on('puxar-news', async () => {
         //console.log("FOOII")
-        Aluno.findOne({sockid: socket.id, temporario: 1})
-            .then((userx) => {
+        let ll = await Usuario.findOne({sockid: socket.id})
+        if(ll !== null){
+        let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
+            
                 if(userx !== null){
                              //seria melhor ao registrar as instancias colocar como turno 1 na geração do JSON, mas fazer com cautela OKK
                                 if(userx.turno == 2 || userx.turno == 4){
@@ -5545,14 +5461,15 @@ sockets.on('connection', (socket) => {
                     socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
 
                 }
-            })
-            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
-
+            }
+          
     })
-    socket.on('puxar-deci',  () => {
+    socket.on('puxar-deci', async () => {
         //console.log("FOOII")
-        Aluno.findOne({sockid: socket.id, temporario: 1})
-            .then((userx) => {
+        let ll = await Usuario.findOne({sockid: socket.id})
+        if(ll !== null){
+        let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
+            
                 if(userx !== null){
                              //seria melhor ao registrar as instancias colocar como turno 1 na geração do JSON, mas fazer com cautela OKK
                                 Aluno.find({ cooperativa: userx.cooperativa, backup: 1, instancia: userx.instancia})
@@ -5604,8 +5521,7 @@ sockets.on('connection', (socket) => {
                 else{
                     socket.emit('feedback', ['danger','>> É preciso estar logado para puxar o state atual da simulação.'])
                 }
-            })
-            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
+        }
 
     })
     // SOCKETS AMD \/
@@ -6014,7 +5930,7 @@ sockets.on('connection', (socket) => {
                                 faturamento: users[i].fluxo_de_caixa.faturamento,
                                 contas_a_receber: users[i].fluxo_de_caixa.contas_a_receber,
                                 contas_a_receber_recebidas: users[i].fluxo_de_caixa.contas_a_receber_recebidas, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
-                                custo_de_servico_prestado: users[i].fluxo_de_caixa.custo_de_servico_prestado + 10800*users[i]['frota'][f],
+                                custo_de_servico_prestado: users[i].fluxo_de_caixa.custo_de_servico_prestado,
                                 emprestimos_contratados: users[i].fluxo_de_caixa.emprestimos_contratados,
                                 emprestimos_pagos: users[i].fluxo_de_caixa.emprestimos_pagos,
                                 veiculos_vendidos: users[i].fluxo_de_caixa.veiculos_vendidos,
@@ -6026,7 +5942,7 @@ sockets.on('connection', (socket) => {
                                 propaganda: users[i].fluxo_de_caixa.propaganda,
                                 pesquisas: users[i].fluxo_de_caixa.pesquisas,
                                 pas: users[i].fluxo_de_caixa.pas,
-                                uso_frota: users[i].fluxo_de_caixa.uso_frota,
+                                uso_frota: users[i].fluxo_de_caixa.uso_frota + 10800*users[i]['frota'][f],
                                 despesas_operacionais_n_planejadas: users[i].fluxo_de_caixa.despesas_operacionais_n_planejadas,
                                 despesas_administrativas: users[i].fluxo_de_caixa.despesas_administrativas,
                                 encargos_financiamento: users[i].fluxo_de_caixa.encargos_financiamento,
@@ -6264,8 +6180,8 @@ sockets.on('connection', (socket) => {
                         }
                         console.log("4 balan_caixa : " + users[i].balanco_patrimonial.caixa)
                     }//segunda parcela /\
-                    users[i].taokeys = users[i].taokeys + users[i].balanco_patrimonial.contas_a_receber60 - users[i]['faturamento']*0.08 - users[i]['promotores']*2160  - users[i]['pas']*2160 - users[i]['faturamento']*(Number(users[i]['comissao'].slice(0,users[i]['comissao'].length-1)*0.01)) -720000 -50400// apenas no CBG>> - users[i]['distribuidores']*360
-                    console.log("5 (+ users[i].balanco_patrimonial.contas_a_receber60 - users[i]['faturamento']*0.08 - users[i]['promotores']*2160  - users[i]['pas']*2160 - users[i]['faturamento']*(Number(users[i]['comissao'].slice(0,users[i]['comissao'].length-1)*0.01)) -720000 -50400): " + users[i].taokeys)
+                    users[i].taokeys = users[i].taokeys + users[i].balanco_patrimonial.contas_a_receber60  - users[i]['promotores']*2160  - users[i]['pas']*2160 - users[i]['faturamento']*(Number(users[i]['comissao'].slice(0,users[i]['comissao'].length-1)*0.01)) -720000 -50400// apenas no CBG>> - users[i]['distribuidores']*360
+                    console.log("5 (+ users[i].balanco_patrimonial.contas_a_receber60 - users[i]['promotores']*2160  - users[i]['pas']*2160 - users[i]['faturamento']*(Number(users[i]['comissao'].slice(0,users[i]['comissao'].length-1)*0.01)) -720000 -50400): " + users[i].taokeys)
                     users[i].fluxo_de_caixa = {
                         saldo_anterior: users[i].fluxo_de_caixa.saldo_anterior,
                         faturamento: users[i].fluxo_de_caixa.faturamento + users[i]['faturamento'],
@@ -6285,13 +6201,13 @@ sockets.on('connection', (socket) => {
                         pas: users[i].fluxo_de_caixa.pas + users[i]['pas']*2160 + 50400,
                         uso_frota: users[i].fluxo_de_caixa.uso_frota,
                         despesas_operacionais_n_planejadas: users[i].fluxo_de_caixa.despesas_operacionais_n_planejadas,
-                        despesas_administrativas: users[i].fluxo_de_caixa.despesas_administrativas,
+                        despesas_administrativas: 720000,
                         encargos_financiamento: users[i].fluxo_de_caixa.encargos_financiamento,
                         maquinas: users[i].fluxo_de_caixa.maquinas,
                         distribuidores: users[i].fluxo_de_caixa.distribuidores //+ users[i]['distribuidores']*360
                     }
                     users[i].balanco_patrimonial = {
-                        caixa: users[i].balanco_patrimonial.caixa + users[i].balanco_patrimonial.contas_a_receber60 - users[i]['faturamento']*0.08 - users[i]['promotores']*2160  - users[i]['pas']*2160 - users[i]['faturamento']*(Number(users[i]['comissao'].slice(0,users[i]['comissao'].length-1)*0.01)) - 720000 -50400, //- users[i]['distribuidores']*360
+                        caixa: users[i].balanco_patrimonial.caixa + users[i].balanco_patrimonial.contas_a_receber60 - users[i]['promotores']*2160  - users[i]['pas']*2160 - users[i]['faturamento']*(Number(users[i]['comissao'].slice(0,users[i]['comissao'].length-1)*0.01)) - 720000 -50400, //- users[i]['distribuidores']*360
                         estoque: users[i].balanco_patrimonial.estoque,
                         contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber120,
                         contas_a_receber120: 0,
@@ -6303,7 +6219,7 @@ sockets.on('connection', (socket) => {
                         tributos_a_pagar_atual: users[i].balanco_patrimonial.tributos_a_pagar_atual,
                         emprestimos: users[i].balanco_patrimonial.emprestimos,
                         capial: users[i].balanco_patrimonial.capial,
-                        lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - users[i]['faturamento']*0.08 - users[i]['promotores']*2160 - users[i]['pas']*2160 - users[i]['faturamento']*(Number(users[i]['comissao'].slice(0,users[i]['comissao'].length-1)*0.01)) - 720000 - 50400//>> - users[i]['distribuidores']*360
+                        lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - users[i]['promotores']*2160 - users[i]['pas']*2160 - users[i]['faturamento']*(Number(users[i]['comissao'].slice(0,users[i]['comissao'].length-1)*0.01)) - 720000 - 50400//>> - users[i]['distribuidores']*360
                     }
                     users[i].dre = {
                         receita: users[i].dre.receita,
@@ -6348,9 +6264,11 @@ sockets.on('connection', (socket) => {
                     for(let o = 0; o < index.length; o++){
                         
                         users[i].set(index[o],[users[i][index[o]][0], users[i][index[o]][1], users[i][index[o]][2], users[i][index[o]][3], users[i][index[o]][4], users[i][index[o]][5], 0, users[i][index[o]][7]])
+                       
                         if(users[i][index[o]][4] > 0){
-                            
-                            users[i].balanco_patrimonial = {
+                            if((users[i]['faturamento']/users[i]['scorepreco'][1]) < 1){
+                                console.log('estoque 2' + users[i].balanco_patrimonial.estoque)
+                                users[i].balanco_patrimonial = {
                                 caixa: users[i].balanco_patrimonial.caixa,
                                 estoque: users[i].balanco_patrimonial.estoque - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][2]), //DANGER - ser houver acontecido o desconto de 10%
                                 contas_a_receber60: (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][3])*0.5 + users[i].balanco_patrimonial.contas_a_receber60,
@@ -6364,8 +6282,8 @@ sockets.on('connection', (socket) => {
                                 emprestimos: users[i].balanco_patrimonial.emprestimos,
                                 capial: users[i].balanco_patrimonial.capial,
                                 lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][2]) + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][3])
-                            }
-                            users[i].dre = {
+                                }
+                                users[i].dre = {
                                 receita: users[i].dre.receita + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][3]), 
                                 csp: users[i].dre.csp + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][2]), 
                                 estoque_inicial: users[i].dre.estoque_inicial,
@@ -6397,14 +6315,14 @@ sockets.on('connection', (socket) => {
         
 
         
-                            }
+                                }
                             
-                            users[i].fluxo_de_caixa = {
+                                users[i].fluxo_de_caixa = {
                                 saldo_anterior: users[i].fluxo_de_caixa.saldo_anterior,
                                 faturamento: users[i].fluxo_de_caixa.faturamento,
                                 contas_a_receber: users[i].fluxo_de_caixa.contas_a_receber + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][3]),
                                 contas_a_receber_recebidas: users[i].fluxo_de_caixa.contas_a_receber_recebidas, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
-                                custo_de_servico_prestado: users[i].fluxo_de_caixa.custo_de_servico_prestado,
+                                custo_de_servico_prestado: users[i].fluxo_de_caixa.custo_de_servico_prestado + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][2]),
                                 emprestimos_contratados: users[i].fluxo_de_caixa.emprestimos_contratados,
                                 emprestimos_pagos: users[i].fluxo_de_caixa.emprestimos_pagos,
                                 veiculos_vendidos: users[i].fluxo_de_caixa.veiculos_vendidos,
@@ -6422,6 +6340,102 @@ sockets.on('connection', (socket) => {
                                 encargos_financiamento: users[i].fluxo_de_caixa.encargos_financiamento,
                                 maquinas: users[i].fluxo_de_caixa.maquinas,
                                 distribuidores: users[i].fluxo_de_caixa.distribuidores
+                                }
+                            }
+                            else{
+                                console.log('estoque 1' + users[i].balanco_patrimonial.estoque)
+                                users[i].balanco_patrimonial = {
+                                    caixa: users[i].balanco_patrimonial.caixa,
+                                    estoque: users[i].balanco_patrimonial.estoque - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][2]), //DANGER - ser houver acontecido o desconto de 10%
+                                    contas_a_receber60: (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][3])*0.5 + users[i].balanco_patrimonial.contas_a_receber60,
+                                    contas_a_receber120: (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][3])*0.5 + users[i].balanco_patrimonial.contas_a_receber120,
+                                    maquinas: users[i].balanco_patrimonial.maquinas,
+                                    depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_maquinas,
+                                    veiculos: users[i].balanco_patrimonial.veiculos,
+                                    depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
+                                    tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
+                                    tributos_a_pagar_atual: users[i].balanco_patrimonial.tributos_a_pagar_atual,
+                                    emprestimos: users[i].balanco_patrimonial.emprestimos,
+                                    capial: users[i].balanco_patrimonial.capial,
+                                    lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - users[i][index[o]][4]*(users[i][index[o]][2]) + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][3])
+                                    }
+                                if(users[i].balanco_patrimonial.estoque < 0){
+                                    users[i].balanco_patrimonial = {
+                                        caixa: users[i].balanco_patrimonial.caixa,
+                                        estoque: 0, //DANGER - ser houver acontecido o desconto de 10%
+                                        contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
+                                        contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
+                                        maquinas: users[i].balanco_patrimonial.maquinas,
+                                        depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_maquinas,
+                                        veiculos: users[i].balanco_patrimonial.veiculos,
+                                        depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
+                                        tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
+                                        tributos_a_pagar_atual: users[i].balanco_patrimonial.tributos_a_pagar_atual,
+                                        emprestimos: users[i].balanco_patrimonial.emprestimos,
+                                        capial: users[i].balanco_patrimonial.capial,
+                                        lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados
+                                        }
+                                }
+                                    users[i].dre = {
+                                    receita: users[i].dre.receita + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][3]), 
+                                    csp: users[i].dre.csp + users[i][index[o]][4]*(users[i][index[o]][2]), 
+                                    estoque_inicial: users[i].dre.estoque_inicial,
+                                    custo_prestacao_servico: users[i].dre.custo_prestacao_servico + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][2]),
+                                    custo_estocagem: users[i].dre.custo_estocagem,
+                                    custo_troca_insumos: users[i].dre.custo_troca_insumos,
+                                    hora_extra: users[i].dre.hora_extra,
+                                    capacidade_n_utilizada: users[i].dre.capacidade_n_utilizada,
+                                    margem_bruta: users[i].dre.margem_bruta,
+                                    despesas_administrativas: users[i].dre.despesas_administrativas,
+                                    salario_promotores: users[i].dre.salario_promotores,
+                                    comissao: users[i].dre.comissao,
+                                    propaganda_institucional: users[i].dre.propaganda_institucional,
+                                    propaganda_unitaria: users[i].dre.propaganda_unitaria,
+                                    depreciacao_de_maquinas: users[i].dre.depreciacao_de_maquinas,
+                                    encargos_financiamento: users[i].dre.encargos_financiamento,
+                                    salario_frota: users[i].dre.salario_frota,
+                                    manutencao_frota: users[i].dre.manutencao_frota,
+                                    depreciacao_de_veiculos: users[i].dre.depreciacao_de_veiculos,
+                                    frota_terceirizada: users[i].dre.frota_terceirizada,
+                                    despesas_operacionais_n_planejadas: users[i].dre.despesas_operacionais_n_planejadas,
+                                    pas: users[i].dre.pas,
+                                    pesquisas: users[i].dre.pesquisas,
+                                    tributos: users[i].dre.tributos,
+                                    servicos: [users[i].dre.servicos[0],users[i].dre.servicos[1],users[i].dre.servicos[2],users[i].dre.servicos[3]],
+                                    preco_medio: users[i].dre.preco_medio,
+                                    atendimentos: users[i].dre.atendimentos,
+                                    insumos_em_estoque: users[i].dre.insumos_em_estoque// + (users[i][index[o]][0]*users[i][index[o]][2] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][2]))
+            
+    
+            
+                                    }
+                                
+                                    users[i].fluxo_de_caixa = {
+                                    saldo_anterior: users[i].fluxo_de_caixa.saldo_anterior,
+                                    faturamento: users[i].fluxo_de_caixa.faturamento,
+                                    contas_a_receber: users[i].fluxo_de_caixa.contas_a_receber + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][3]),
+                                    contas_a_receber_recebidas: users[i].fluxo_de_caixa.contas_a_receber_recebidas, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
+                                    custo_de_servico_prestado: users[i].fluxo_de_caixa.custo_de_servico_prestado + users[i][index[o]][4]*(users[i][index[o]][2]),
+                                    emprestimos_contratados: users[i].fluxo_de_caixa.emprestimos_contratados,
+                                    emprestimos_pagos: users[i].fluxo_de_caixa.emprestimos_pagos,
+                                    veiculos_vendidos: users[i].fluxo_de_caixa.veiculos_vendidos,
+                                    depreciacao_de_veiculos: users[i].fluxo_de_caixa.depreciacao_de_veiculos,
+                                    depreciacao_de_maquinas: users[i].fluxo_de_caixa.depreciacao_de_maquinas,
+                                    veiculos_comprados: users[i].fluxo_de_caixa.veiculos_comprados,
+                                    tributos: users[i].fluxo_de_caixa.tributos,
+                                    promotores: users[i].fluxo_de_caixa.promotores,
+                                    propaganda: users[i].fluxo_de_caixa.propaganda,
+                                    pesquisas: users[i].fluxo_de_caixa.pesquisas,
+                                    pas: users[i].fluxo_de_caixa.pas,
+                                    uso_frota: users[i].fluxo_de_caixa.uso_frota,
+                                    despesas_operacionais_n_planejadas: users[i].fluxo_de_caixa.despesas_operacionais_n_planejadas,
+                                    despesas_administrativas: users[i].fluxo_de_caixa.despesas_administrativas,
+                                    encargos_financiamento: users[i].fluxo_de_caixa.encargos_financiamento,
+                                    maquinas: users[i].fluxo_de_caixa.maquinas,
+                                    distribuidores: users[i].fluxo_de_caixa.distribuidores
+                                    }
+
+
                             }
 
 
@@ -6463,6 +6477,7 @@ sockets.on('connection', (socket) => {
                             users[i].set(index[o], array_insu)
                             if(users[i].last_change.serv1 == index[o]){
                                 if(users[i][index[o]][0] > 0){
+
                                 users[i].last_change =  {
                                     prop1: users[i].last_change.prop1,
                                     prop2: users[i].last_change.prop2,
@@ -6473,8 +6488,41 @@ sockets.on('connection', (socket) => {
                                     insu2i: users[i].last_change.insu2i,
                                     insu1i: users[i][index[o]][0]
                                 }
+
                                 }
                                 else{
+                                    users[i].dre = {
+                                        receita: users[i].dre.receita, 
+                                        csp: users[i].dre.csp, 
+                                        estoque_inicial: users[i].dre.estoque_inicial,
+                                        custo_prestacao_servico: users[i].dre.custo_prestacao_servico,
+                                        custo_estocagem: users[i].dre.custo_estocagem,
+                                        custo_troca_insumos: users[i].dre.custo_troca_insumos,
+                                        hora_extra: users[i].dre.hora_extra + users[i][index[o]][0]*(-1)*0.2*users[i][index[o]][2],
+                                        capacidade_n_utilizada: users[i].dre.capacidade_n_utilizada,
+                                        margem_bruta: users[i].dre.margem_bruta,
+                                        despesas_administrativas: users[i].dre.despesas_administrativas,
+                                        salario_promotores: users[i].dre.salario_promotores,
+                                        comissao: users[i].dre.comissao,
+                                        propaganda_institucional: users[i].dre.propaganda_institucional,
+                                        propaganda_unitaria: users[i].dre.propaganda_unitaria,
+                                        depreciacao_de_maquinas: users[i].dre.depreciacao_de_maquinas,
+                                        encargos_financiamento: users[i].dre.encargos_financiamento,
+                                        salario_frota: users[i].dre.salario_frota,
+                                        manutencao_frota: users[i].dre.manutencao_frota,
+                                        depreciacao_de_veiculos: users[i].dre.depreciacao_de_veiculos,
+                                        frota_terceirizada: users[i].dre.frota_terceirizada,
+                                        despesas_operacionais_n_planejadas: users[i].dre.despesas_operacionais_n_planejadas,
+                                        pas: users[i].dre.pas,
+                                        pesquisas: users[i].dre.pesquisas,
+                                        tributos: users[i].dre.tributos,
+                                        servicos: [users[i].dre.servicos[0],users[i].dre.servicos[1],users[i].dre.servicos[2],users[i].dre.servicos[3]],
+                                        preco_medio: users[i].dre.preco_medio,
+                                        atendimentos: users[i].dre.atendimentos,
+                                        insumos_em_estoque: users[i].dre.insumos_em_estoque
+                
+                
+                                    }
                                     users[i].last_change =  {
                                         prop1: users[i].last_change.prop1,
                                         prop2: users[i].last_change.prop2,
@@ -6490,6 +6538,7 @@ sockets.on('connection', (socket) => {
                             }
                             if(users[i].last_change.serv2 == index[o]){
                                 if(users[i][index[o]][0] > 0){
+                                users[i].balanco_patrimonial = {}
                                 users[i].last_change =  {
                                     prop1: users[i].last_change.prop1,
                                     prop2: users[i].last_change.prop2,
@@ -6502,6 +6551,38 @@ sockets.on('connection', (socket) => {
                                 }
                                 }
                                 else{
+                                    users[i].dre = {
+                                        receita: users[i].dre.receita, 
+                                        csp: users[i].dre.csp, 
+                                        estoque_inicial: users[i].dre.estoque_inicial,
+                                        custo_prestacao_servico: users[i].dre.custo_prestacao_servico,
+                                        custo_estocagem: users[i].dre.custo_estocagem,
+                                        custo_troca_insumos: users[i].dre.custo_troca_insumos,
+                                        hora_extra: users[i].dre.hora_extra + users[i][index[o]][0]*(-1)*0.2*users[i][index[o]][2],
+                                        capacidade_n_utilizada: users[i].dre.capacidade_n_utilizada,
+                                        margem_bruta: users[i].dre.margem_bruta,
+                                        despesas_administrativas: users[i].dre.despesas_administrativas,
+                                        salario_promotores: users[i].dre.salario_promotores,
+                                        comissao: users[i].dre.comissao,
+                                        propaganda_institucional: users[i].dre.propaganda_institucional,
+                                        propaganda_unitaria: users[i].dre.propaganda_unitaria,
+                                        depreciacao_de_maquinas: users[i].dre.depreciacao_de_maquinas,
+                                        encargos_financiamento: users[i].dre.encargos_financiamento,
+                                        salario_frota: users[i].dre.salario_frota,
+                                        manutencao_frota: users[i].dre.manutencao_frota,
+                                        depreciacao_de_veiculos: users[i].dre.depreciacao_de_veiculos,
+                                        frota_terceirizada: users[i].dre.frota_terceirizada,
+                                        despesas_operacionais_n_planejadas: users[i].dre.despesas_operacionais_n_planejadas,
+                                        pas: users[i].dre.pas,
+                                        pesquisas: users[i].dre.pesquisas,
+                                        tributos: users[i].dre.tributos,
+                                        servicos: [users[i].dre.servicos[0],users[i].dre.servicos[1],users[i].dre.servicos[2],users[i].dre.servicos[3]],
+                                        preco_medio: users[i].dre.preco_medio,
+                                        atendimentos: users[i].dre.atendimentos,
+                                        insumos_em_estoque: users[i].dre.insumos_em_estoque
+                
+                
+                                    }
                                     users[i].last_change =  {
                                         prop1: users[i].last_change.prop1,
                                         prop2: users[i].last_change.prop2,
@@ -6604,7 +6685,7 @@ sockets.on('connection', (socket) => {
                                 console.log("7 (+ users[i][index[o]][0]*users[i][index[o]][2]*1.2): " + users[i].taokeys)
                                 users[i].balanco_patrimonial = {
                                     caixa: users[i].balanco_patrimonial.caixa + users[i][index[o]][0]*users[i][index[o]][2]*1.2,
-                                    estoque: users[i].balanco_patrimonial.estoque + (-1)*(users[i][index[o]][0]*users[i][index[o]][2]),
+                                    estoque: users[i].balanco_patrimonial.estoque,
                                     contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
                                     contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
                                     maquinas: users[i].balanco_patrimonial.maquinas,
@@ -6615,11 +6696,11 @@ sockets.on('connection', (socket) => {
                                     tributos_a_pagar_atual: users[i].balanco_patrimonial.tributos_a_pagar_atual,
                                     emprestimos: users[i].balanco_patrimonial.emprestimos,
                                     capial: users[i].balanco_patrimonial.capial,
-                                    lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados + users[i][index[o]][0]*users[i][index[o]][2]*1.2 + (-1)*(users[i][index[o]][0]*users[i][index[o]][2])
+                                    lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados + users[i][index[o]][0]*users[i][index[o]][2]*1.2
                                 }
                                 users[i].dre = {
                                     receita: users[i].dre.receita, 
-                                    csp: users[i].dre.csp + users[i][index[o]][0]*(users[i][index[o]][2]) + (-1)*users[i][index[o]][0]*users[i][index[o]][2]*1.2,
+                                    csp: users[i].dre.csp + (-1)*users[i][index[o]][0]*users[i][index[o]][2]*1.2,
                                     estoque_inicial: users[i].dre.estoque_inicial,
                                     custo_prestacao_servico: users[i].dre.custo_prestacao_servico,
                                     custo_estocagem: users[i].dre.custo_estocagem,
@@ -6654,7 +6735,7 @@ sockets.on('connection', (socket) => {
                                     faturamento: users[i].fluxo_de_caixa.faturamento,
                                     contas_a_receber: users[i].fluxo_de_caixa.contas_a_receber,
                                     contas_a_receber_recebidas: users[i].fluxo_de_caixa.contas_a_receber_recebidas, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
-                                    custo_de_servico_prestado: users[i].fluxo_de_caixa.custo_de_servico_prestado + users[i][index[o]][0]*users[i][index[o]][2]*1.2,
+                                    custo_de_servico_prestado: users[i].fluxo_de_caixa.custo_de_servico_prestado + users[i][index[o]][0]*users[i][index[o]][2]*1.2*(-1),
                                     emprestimos_contratados: users[i].fluxo_de_caixa.emprestimos_contratados,
                                     emprestimos_pagos: users[i].fluxo_de_caixa.emprestimos_pagos,
                                     veiculos_vendidos: users[i].fluxo_de_caixa.veiculos_vendidos,
@@ -8003,7 +8084,7 @@ sockets.on('connection', (socket) => {
                                         backup.save() 
                                             .then(() => {
                                                 users[i].fluxo_de_caixa = {
-                                                    saldo_anterior: (users[i].balanco_patrimonial.contas_a_receber60 + users[i].fluxo_de_caixa.depreciacao_de_veiculos + users[i].fluxo_de_caixa.depreciacao_de_maquinas + users[i].fluxo_de_caixa.veiculos_vendidos) - (users[i].fluxo_de_caixa.promotores + users[i].fluxo_de_caixa.propaganda + users[i].fluxo_de_caixa.pesquisas + users[i].fluxo_de_caixa.pas + users[i].fluxo_de_caixa.uso_frota + users[i].fluxo_de_caixa.despesas_operacionais_n_planejadas + users[i].fluxo_de_caixa.despesas_administrativas + users[i].fluxo_de_caixa.encargos_de_financiamento + users[i].fluxo_de_caixa.custo_de_servico_prestado + users[i].fluxo_de_caixa.veiculos_comprados + users[i].fluxo_de_caixa.maquinas + users[i].fluxo_de_caixa.tributos),
+                                                    saldo_anterior: users[i].balanco_patrimonial.caixa,
                                                     faturamento: 0,
                                                     contas_a_receber: 0,
                                                     contas_a_receber_recebidas: 0, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
@@ -8356,11 +8437,7 @@ sockets.on('connection', (socket) => {
     
 
 })
-}
-catch (e) {
-    console.log(e)
-    //socket.emit('feedback', ['danger', 'erro fatal no server: ' + e])
-}
+
 // PARA TESTES PROFESSOR PRETENDE TER INSTANCIAS COM 8 PESSOAS NA SITUAÇAO IDEAL (basear teste com o parametro 8)
 server.listen(3000, () => {
     console.log(`--> Server escutando porta: 3000`)

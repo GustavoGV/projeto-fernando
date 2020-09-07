@@ -1,4 +1,6 @@
 import mongoose from 'mongoose'
+import { strict } from 'assert';
+import { ServerResponse } from 'http';
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
@@ -10,6 +12,7 @@ const UserSchema = new Schema({
     taokeys: Number,
     divida: Array,
     sockid: String,
+    sockids: Array,
     frota: Array,
     promotores: Number,
     distribuidores: Number,
@@ -83,6 +86,7 @@ const DataSchema = new Schema({
 })
 
 const UsuarioSchema = new Schema({
+
     cpf: String,
     nome: String,
     senha: String,
@@ -92,6 +96,7 @@ const UsuarioSchema = new Schema({
     instancia: String,
     sockid: String,
     cooperativa: String
+
 
 })
 
