@@ -907,6 +907,7 @@ sockets.on('connection', async (socket) => {
     }
     }) 
     socket.on('substituir-servico', async (dados) => {
+        console.log('substituir-servico')
         let velho = dados[0];
         let novo = dados[1];
         let ll = await Usuario.findOne({sockid: socket.id})
@@ -1321,6 +1322,7 @@ sockets.on('connection', async (socket) => {
             
     })
     socket.on('encerrar-servico', async (tipo) => {
+        console.log('encerrar-servico')
         let ll = await Usuario.findOne({sockid: socket.id})
         if(ll !== null){
         let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
@@ -1452,6 +1454,7 @@ sockets.on('connection', async (socket) => {
             
     }) 
     socket.on('alterar-volume', async (dados) => {
+        console.log('alterar-volume')
         let tipo = dados[0];
         let volume = Number(dados[1]);
         //let ttt;
@@ -1548,6 +1551,7 @@ sockets.on('connection', async (socket) => {
         }
     }) 
     socket.on('salvar', async () => {
+        console.log('SALVAR')
         //console.log('inicio-salvamento'
         let ll = await Usuario.findOne({sockid: socket.id})
         if(ll !== null){
@@ -1682,6 +1686,7 @@ sockets.on('connection', async (socket) => {
             
     }) //OKK falta teste
     socket.on('resetar', async () => {
+        console.log('resetar')
         let ll = await Usuario.findOne({sockid: socket.id})
         if(ll !== null){
         let usert = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1, backup: 0})
@@ -2002,6 +2007,7 @@ sockets.on('connection', async (socket) => {
             
     }) //tb re-manda os balancos e decisoes para tornar a aplicacao mais responsiva
     socket.on('aumentar-frota', async (dados) => {
+        console.log('aumentar-frota')
         let qnt = Number(dados)
         let ll = await Usuario.findOne({sockid: socket.id})
         if(ll !== null){
@@ -2130,6 +2136,7 @@ sockets.on('connection', async (socket) => {
             
     }) 
     socket.on('vender-frota', async (dados) => {
+        console.log('vender-frota')
         let qnt = Number(dados)
         let ll = await Usuario.findOne({sockid: socket.id})
         if(ll!==null){
@@ -2331,6 +2338,7 @@ sockets.on('connection', async (socket) => {
             }
     })
     socket.on('puxar-state', async () => {
+        console.log('puxar-state')
         let ll = await Usuario.findOne({sockid: socket.id})
         if(ll !== null){
 
@@ -2398,6 +2406,7 @@ sockets.on('connection', async (socket) => {
        }
     }) 
     socket.on('alterar-preco', async (dados) => {
+        console.log('alterar-preco')
         let tipo = dados[0];
         let preco = Number(dados[1]);
         if(preco && Number.isInteger(preco)){ 
@@ -2498,6 +2507,7 @@ sockets.on('connection', async (socket) => {
         }
     }) 
     socket.on('promotores', async (dados) => {
+        console.log('promotores')
         let qnt = Number(dados)
         let ll = await Usuario.findOne({sockid: socket.id})
         if(ll !== null){
@@ -2585,6 +2595,7 @@ sockets.on('connection', async (socket) => {
         }
     }) 
     socket.on('diminuir-promotores', async (dados) => {
+        console.log('diminuir-promotores')
         let qnt = Number(dados)
         let ll = await Usuario.findOne({sockid: socket.id})
         if(ll !== null){
@@ -2671,6 +2682,7 @@ sockets.on('connection', async (socket) => {
         }
     }) 
     socket.on('emprestimo', (dados) => {
+        console.log('emprestimo')
         let qnt = Number(dados)
         Aluno.findOne({sockid: socket.id, temporario: 1})
             .then((userx) => {
@@ -2897,7 +2909,9 @@ sockets.on('connection', async (socket) => {
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
     })
     socket.on('aumentar-distribuidores', async (dados) => {
+        console.log('aumentar-distribuidores')
         let qnt = Number(dados)
+
         let ll = Usuario.findOne({sockid: socket.id})
         if(ll !== null){
         let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
@@ -2985,6 +2999,7 @@ sockets.on('connection', async (socket) => {
         }
     }) 
     socket.on('diminuir-distribuidores', async (dados) => {
+        console.log('diminuir-distribuidores')
         let qnt = Number(dados)
         let ll = await Usuario.findOne({sockid: socket.id})
         if(ll !== null){
@@ -3070,6 +3085,7 @@ sockets.on('connection', async (socket) => {
             
     })
     socket.on('diminuir-pas', async (dados) => {
+        console.log('diminuir-pas')
         let qnt = Math.round(Number(dados))
         let ll = await Usuario.findOne({sockid: socket.id})
         if(ll !== null){
@@ -3155,6 +3171,7 @@ sockets.on('connection', async (socket) => {
         }
    })
     socket.on('aumentar-pas', async (dados) => {
+        console.log('aumentar-pas')
         let qnt = Number(dados)
         let ll = await Usuario.findOne({sockid: socket.id})
         if(ll !== null){
@@ -3240,6 +3257,7 @@ sockets.on('connection', async (socket) => {
         }
     }) 
     socket.on('propaganda-unitaria', async (dados) => { //fazer igual a compra de insumos esse investimento em prop uni...
+        console.lo9('propaganda-unitaria')
         let tipo = dados[0]
         let qnt = Number(dados[1])
         
@@ -3483,7 +3501,7 @@ sockets.on('connection', async (socket) => {
         }
     })
     socket.on('aumentar-propaganda', async (dados) => {
-       
+       console.log('aumentar-propaganda')
         let qnt = Number(dados)
         if(qnt && Number.isInteger){ 
         let ll = await Usuario.findOne({sockid: socket.id})
@@ -3668,6 +3686,7 @@ sockets.on('connection', async (socket) => {
             .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
     }) 
     socket.on('comissao', async (dados) => {
+        console.log('comissao')
         let qnt  = 0
         if(dados !== null){
             qnt = Number(dados.replace(",", "."))
@@ -3765,6 +3784,7 @@ sockets.on('connection', async (socket) => {
     }
     }) 
     socket.on('ativar-servico', async (tipo) => {
+        console.log('ativar=servico')
         let ll = await Usuario.findOne({sockid: socket.id})
         if(ll !== null){
        let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
@@ -3901,6 +3921,7 @@ sockets.on('connection', async (socket) => {
     }
      }) 
     socket.on('comprar-servico', async (dados) => {
+        console.log('comprar-servico')
         let tipo = dados[0];
         let iqnti = Number(dados[1])
         if(iqnti || iqnti == 0){ 
@@ -4253,6 +4274,7 @@ sockets.on('connection', async (socket) => {
         }
     })
     socket.on('pesquisar-pas', async () => {
+        console.log('pesquisar-pas')
         let ll = await Usuario.findOne({sockid: socket.id})
         if(ll!== null){
         let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
@@ -4432,6 +4454,7 @@ sockets.on('connection', async (socket) => {
             
     }) 
     socket.on('pesquisar-distribuidores', async () => {
+        console.log('pesquisar-distribuidores')
         let ll = await Usuario.findOne({sockid: socket.id})
         if(ll!==null){
         let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
@@ -4612,6 +4635,7 @@ sockets.on('connection', async (socket) => {
         
     }) 
     socket.on('pesquisar-participacao-servicos', async () => {
+        console.log('pesquisar-participacao-servicos')
         let ll = await Usuario.findOne({sockid: socket.id})
         if(ll!==null){
         let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
@@ -4967,6 +4991,7 @@ sockets.on('connection', async (socket) => {
          
     }) 
     socket.on('pesquisar-teste-entre-2', async (input) => {
+        console.log('pesquisar-teste-entre-2')
         let ll = await Usuario.findOne({sockid: socket.id})
         if(ll!==null){
         let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
@@ -5173,6 +5198,7 @@ sockets.on('connection', async (socket) => {
     
     })
     socket.on('puxar-balancos', async (turno) => {
+        console.log('puxar-balancos')
         let ll = await Usuario.findOne({sockid: socket.id})
         if(ll!== null){
         let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
@@ -5310,6 +5336,7 @@ sockets.on('connection', async (socket) => {
          
     })
     socket.on('puxar-bp-geral', async () => {
+        console.log('puxar-bp-geral')
         let ll = await Usuario.findOne({sockid: socket.id})
         if(ll !== null){
         let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
@@ -5353,7 +5380,7 @@ sockets.on('connection', async (socket) => {
     })
 
     socket.on('puxar-pesquisas', async () => {
-        console.log("FOOII")
+        console.log("puxar-pesquisas")
         let ll = await Usuario.findOne({sockid: socket.id})
         if(ll !== null){
         let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
@@ -5411,7 +5438,7 @@ sockets.on('connection', async (socket) => {
             
     })
     socket.on('puxar-news', async () => {
-        //console.log("FOOII")
+        console.log("puxar-news")
         let ll = await Usuario.findOne({sockid: socket.id})
         if(ll !== null){
         let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
@@ -5465,7 +5492,7 @@ sockets.on('connection', async (socket) => {
           
     })
     socket.on('puxar-deci', async () => {
-        //console.log("FOOII")
+        console.log("puxar-deci")
         let ll = await Usuario.findOne({sockid: socket.id})
         if(ll !== null){
         let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
