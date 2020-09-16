@@ -7,6 +7,7 @@ const Data = estrutura[1]
 const Usuario = estrutura[2] //login individual
 import mongoose from 'mongoose'
 import { isNull } from 'util'
+import { SSL_OP_EPHEMERAL_RSA } from 'constants'
 //import { readFile } from 'fs'
 
 mongoose.connect('mongodb://localhost/aluno_teste')
@@ -50,18 +51,21 @@ let index = [
 
 
 app.use(express.static('public'))
-
+/*
 setInterval(async function a51() {
     let keys = await Usuario.find({})
     keys.map((key,index) => {
         //console.log('key: ' + key.sockid) 
         if(sockets.to(key.sockid) !== undefined){
-            //sockets.to(key.sockid).emit('feedback',['success','Te amo Fer!! Te amo Fer!! Te amo Fer!! Te amo Fer!! Te amo Fer!! Te amo Fer!! Te amo Fer!!']) 
+            //sockets.to(key.sockid).emit('repuxar-b')
+            sockets.to(key.sockid).emit('feedback',['success','Te amo Fer!! Te amo Fer!! Te amo Fer!! Te amo Fer!! Te amo Fer!! Te amo Fer!! Te amo Fer!!']) 
         }
         
     })
                                         
 },5000)
+*/
+
 sockets.on('connection', async (socket) => {
 
     console.log(` <=> Cooperativa ON. socket.id: ${socket.id}`)
@@ -201,7 +205,7 @@ sockets.on('connection', async (socket) => {
             .then((userx) => {
                 if(userx !== null){
                     console.log('>>registro negado: já existe cooperativa com este nome');
-                    socket.emit('feedback', ['danger', 'ja existe uma cooperativa com esse nome na instancia selecionada'])}
+                    socket.emit('feedback', ['danger', 'Ja existe um usuário com esse nome na instancia selecionada'])}
                 else{
                     let jogador = new Aluno({ sockid: socket.id, backup: 0, temporario: 1, instancia: creden[2], last_change: {serv1: '147', serv2: 0, prop1: 0, prop2: 0, insu1: 0, insu2: 0, insu1i: 985, insu2i: 0, prop1: 0, prop2: 0}, npesquisas: 1, turno: 1, scoremod: 0, scorepreco: [0,0], propaganda: 0, propagandauni: 1, faturamento: 0, ativo: 1, taokeys: 1872000, divida: [0,0,0], comissao: '5%', frota: [10,0,0,0,0,0,0,0,0,0,0,0], cooperativa: creden[0], pas: 15, pas1: 0, pas2: 0, distribuidores: 25, promotores: 20, senha: creden[1], 
                         147:[985,1,288,600,300,0,0,0],
@@ -483,9 +487,9 @@ sockets.on('connection', async (socket) => {
                         }
                         if(pass == 1){
                         if(userx[novo][2] - userx[velho][2] > 0){
-                            if(userx['taokeys'] >= qnt*30 + qnt*(userx[novo][2] - userx[velho][2])){
+                        
                             let datetime = new Date().toLocaleString('pt-BR').toLocaleString('pt-BR');
-                            userx.deci.push({data: datetime, acao: 'Troca de '+qnt+' insumos de ' + velho + ' para ' + novo, autor: userx.modificador})
+                            userx.deci.push({data: datetime, acao: 'Troca de '+qnt+' insumos de ' + velho + ' para ' + novo, autor: ll.nome})
                             /*
                             if(userx.last_change.serv1 == novo && (userx[userx.last_change.serv1][0] - userx.last_change.insu1) < qnt){
                             userx.last_change = {
@@ -617,14 +621,14 @@ sockets.on('connection', async (socket) => {
                         userx.set(velho, array_dados_velho)
                         userx.set(novo, array_dados_novo)
                         userx.taokeys = userx.taokeys - qnt*30 - (userx[novo][2] - userx[velho][2])*qnt 
-                        console.log("13: " + users[i].taokeys)
-                        userx.save()
-                            .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
-                            .then((user) => {
+                        console.log("13: " + userx.taokeys)
+                        await userx.save()
+                                          
+                            let user = await Aluno.findOne({ _id: userx._id, temporario: 1})
                                 //console.log(userx[velho][0] + ' <----userx(Schema trabalhado aqui)')
                                 //console.log(user[velho][0] + ' <=====user(recem pesquisado)')
                                 if(user.taokeys == userx.taokeys){
-                                socket.emit('feedback', ['success', qnt + ' insumos transferidos do serviço: '+ velho +' com sucesso para o serviço: ' + novo])
+                                    
                                 function propuni(tipo) {
                                     if(user.somapropuni.tipo1 == tipo){
                                         return user.somapropuni.inv1
@@ -645,7 +649,12 @@ sockets.on('connection', async (socket) => {
                                         return 0
                                     }
                                 }
-                                socket.emit('update', [
+                                let meias = await Usuario.find({cooperativa: ll.cooperativa, instancia: ll.instancia})
+                                    if(meias.length > 0){
+                                            for(let m = 0; m < meias.length; m++){
+                                                sockets.to(meias[m].sockid).emit('repuxar-b')
+                                                sockets.to(meias[m].sockid).emit('feedback', ['success', qnt + ' insumos transferidos do '+ velho +' para o ' + novo + '. [' + ll.nome+']'])
+                                                sockets.to(meias[m].sockid).emit('update', [
                                                                         [...user["147"],"147",propuni("147"),insumosi("147")],
                                     [...user["148"],"148",propuni("148"),insumosi("148")],
                                     [...user["149"],"149",propuni("149"),insumosi("149")],
@@ -676,16 +685,17 @@ sockets.on('connection', async (socket) => {
                                     user["propagandauni"],
                                     (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                     user["turno"]]);
-        
-                                    }                  
-                                })
-                            .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
+                                }
                             }
-                            else{socket.emit('feedback', ['warning','a cooperativa não possue caixa o suficiente para realizar essa operação'])}
+                        }                 
+                                
+                            
+                            
+                            else{socket.emit('feedback', ['warning','Falta caixa o suficiente para realizar essa operação'])}
                         }
                         else{
                             let datetime = new Date().toLocaleString('pt-BR').toLocaleString('pt-BR');
-                            userx.deci.push({data: datetime, acao: 'Troca de '+qnt+' insumos de ' + velho + ' para ' + novo, autor: userx.modificador})
+                            userx.deci.push({data: datetime, acao: 'Troca de '+qnt+' insumos de ' + velho + ' para ' + novo, autor: ll.nome})
                            /*
                             if(userx.last_change.serv1 == novo && (userx[userx.last_change.serv1][0] - userx.last_change.insu1) < qnt){
                                 console.log('(qnt - (userx[userx.last_change.serv1][0] - userx.last_change.insu1)): '+(qnt - (userx[userx.last_change.serv1][0] - userx.last_change.insu1)))
@@ -807,13 +817,12 @@ sockets.on('connection', async (socket) => {
                             userx.set(novo, array_dados_novo)
                             userx.taokeys = userx.taokeys - qnt*30 - Math.abs(userx[novo][2] - userx[velho][2])*qnt 
                             console.log("14: " + users[i].taokeys)
-                            userx.save()
-                                .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
-                                .then((user) => {
+                            await userx.save()
+                                             
+                                let user = await Aluno.findOne({ _id: userx._id, temporario: 1})
                                     //console.log(userx[velho][0] + ' <----userx(Schema trabalhado aqui)')
                                     //console.log(user[velho][0] + ' <=====user(recem pesquisado)')
                                     if(user.taokeys == userx.taokeys){
-                                    socket.emit('feedback', ['success', qnt + ' insumos transferidos do serviço: '+ velho +' com sucesso para o serviço: ' + novo])
                                     function propuni(tipo) {
                                         if(user.somapropuni.tipo1 == tipo){
                                             return user.somapropuni.inv1
@@ -834,7 +843,12 @@ sockets.on('connection', async (socket) => {
                                             return 0
                                         }
                                     }
-                                    socket.emit('update', [
+                                    let meias = await Usuario.find({cooperativa: ll.cooperativa, instancia: ll.instancia})
+                                    if(meias.length > 0){
+                                        for(let m = 0; m < meias.length; m++){
+                                            sockets.to(meias[m].sockid).emit('repuxar-b')
+                                            sockets.to(meias[m].sockid).emit('feedback', ['success', qnt + ' insumos transferidos do '+ velho +' para o ' + novo + '. [' + ll.nome+']'])
+                                            sockets.to(meias[m].sockid).emit('update', [
                                                                         [...user["147"],"147",propuni("147"),insumosi("147")],
                                     [...user["148"],"148",propuni("148"),insumosi("148")],
                                     [...user["149"],"149",propuni("149"),insumosi("149")],
@@ -865,11 +879,11 @@ sockets.on('connection', async (socket) => {
                                     user["propagandauni"],
                                     (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                     user["turno"]]);
+                                            }
+                                        }
             
                                         }                  
-                                    })
-                                .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
-
+                                    
                             }
                         }
                         else{
@@ -883,7 +897,7 @@ sockets.on('connection', async (socket) => {
                             socket.emit('feedback', ['warning','Falta caixa']) 
                         }
                         else{
-                            socket.emit('feedback', ['warning', 'Sua cooperativa não possue essa quantidade de insumos em estoque desse serviço.'])
+                            socket.emit('feedback', ['warning', 'Não possue-se essa quantidade de insumos em estoque desse serviço.'])
                         }
                     }
                 
@@ -917,10 +931,10 @@ sockets.on('connection', async (socket) => {
                     if(userx[velho][1] == 1 && userx[novo][1] !== 3){
                     if(userx[novo][1] !== 1){
                     if(true){
-                        if(userx[novo][2] - userx[velho][2] > 0 && userx['taokeys'] >= userx[velho][0]*30 + userx[velho][0]*(userx[novo][2] - userx[velho][2])){
+                        if(userx[novo][2] - userx[velho][2] > 0){
 
                             let datetime = new Date().toLocaleString('pt-BR').toLocaleString('pt-BR');
-                            userx.deci.push({data: datetime, acao: 'Substituição do serviço ' + velho + ' pelo ' + novo, autor: userx.modificador})
+                            userx.deci.push({data: datetime, acao: 'Substituição do serviço ' + velho + ' pelo ' + novo, autor: ll.nome})
                         if(userx.last_change.serv1 == velho){
                             //userx.last_change.serv1 = novo
                             userx.last_change = {
@@ -1046,13 +1060,12 @@ sockets.on('connection', async (socket) => {
                         userx.set(velho, array_dados_velho)
                         userx.set(novo, array_dados_novo)
                         //userx.taokeys = userx.taokeys - userx[velho][0]*30
-                        userx.save()
-                            .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
-                            .then((user) => {
+                        await userx.save()
+                                         
+                            let user = await Aluno.findOne({ _id: userx._id, temporario: 1})
                                 //console.log(userx[velho][0] + ' <----userx(Schema trabalhado aqui)')
                                 //console.log(user[velho][0] + ' <=====user(recem pesquisado)')
                                 if(user.taokeys == userx.taokeys){
-                                    socket.emit('feedback', ['success','voce substituiu o serviço '+ velho +' pelo: '+ novo +' com sucesso'])
                                     function propuni(tipo) {
                                         if(user.somapropuni.tipo1 == tipo){
                                             return user.somapropuni.inv1
@@ -1073,7 +1086,13 @@ sockets.on('connection', async (socket) => {
                                             return 0
                                         }
                                     }
-                                    socket.emit('update', [
+                                    let meias = await Usuario.find({cooperativa: ll.cooperativa, instancia: ll.instancia})
+                                    if(meias.length > 0){
+                                        for(let m = 0; m < meias.length; m++){
+                                            sockets.to(meias[m].sockid).emit('repuxar-b')
+                                            sockets.to(meias[m].sockid).emit('feedback',['success','O serviço '+ velho +' foi substituido pelo: '+ novo +' com sucesso. [' +ll.nome+']'])
+                                    
+                                            sockets.to(meias[m].sockid).emit('update', [
                                                                         [...user["147"],"147",propuni("147"),insumosi("147")],
                                     [...user["148"],"148",propuni("148"),insumosi("148")],
                                     [...user["149"],"149",propuni("149"),insumosi("149")],
@@ -1104,14 +1123,15 @@ sockets.on('connection', async (socket) => {
                                     user["propagandauni"],
                                     (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                     user["turno"]]);
+                                            }
+                                        }
         
                                     }                  
-                                })
-                            .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
+                               h((err) => {console.log('erro na confirmacao n 302: ' + err)})
                     }
                     else{
                         let datetime = new Date().toLocaleString('pt-BR').toLocaleString('pt-BR');
-                        userx.deci.push({data: datetime, acao: 'Substituição do serviço ' + velho + ' pelo ' + novo, autor: userx.modificador})
+                        userx.deci.push({data: datetime, acao: 'Substituição do serviço ' + velho + ' pelo ' + novo, autor: ll.nome})
                         
                         if(userx.last_change.serv1 == velho){
                             //userx.last_change.serv1 = novo
@@ -1233,9 +1253,9 @@ sockets.on('connection', async (socket) => {
                         userx.set(velho, array_dados_velho)
                         userx.set(novo, array_dados_novo)
                         //userx.taokeys = userx.taokeys - userx[velho][0]*30
-                        userx.save()
-                            .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
-                            .then((user) => {
+                        await userx.save()
+                                        
+                            let user = await Aluno.findOne({ _id: userx._id, temporario: 1})
                                 //console.log(userx[velho][0] + ' <----userx(Schema trabalhado aqui)')
                                 //console.log(user[velho][0] + ' <=====user(recem pesquisado)')
                                 if(user.taokeys == userx.taokeys){
@@ -1259,7 +1279,13 @@ sockets.on('connection', async (socket) => {
                                             return 0
                                         }
                                     }
-                                    socket.emit('update', [
+                                    let meias = await Usuario.find({cooperativa: ll.cooperativa, instancia: ll.instancia})
+                                    if(meias.length > 0){
+                                        for(let m = 0; m < meias.length; m++){
+                                            sockets.to(meias[m].sockid).emit('repuxar-b')
+                                            sockets.to(meias[m].sockid).emit('feedback',['success','O serviço '+ velho +' foi substituido pelo: '+ novo +' com sucesso. [' +ll.nome+']'])
+                                    
+                                            sockets.to(meias[m].sockid).emit('update', [
                                                                         [...user["147"],"147",propuni("147"),insumosi("147")],
                                     [...user["148"],"148",propuni("148"),insumosi("148")],
                                     [...user["149"],"149",propuni("149"),insumosi("149")],
@@ -1290,15 +1316,13 @@ sockets.on('connection', async (socket) => {
                                     user["propagandauni"],
                                     (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                     user["turno"]]);
+                                            }
+                                        }
         
                                     }                  
-                                })
-                            .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
                     }
 
-                    if(userx[novo][2] - userx[velho][2] > 0 && userx['taokeys'] < userx[velho][0]*30 + userx[velho][0]*(userx[novo][2] - userx[velho][2])){
-                        socket.emit('feedback', ['warning', 'falta caixa para realizar essa operacao'])
-                    }
+                    
                     }
                 }
                 else{
@@ -1340,7 +1364,7 @@ sockets.on('connection', async (socket) => {
                         }
                         else{
                             let datetime = new Date().toLocaleString('pt-BR').toLocaleString('pt-BR');
-                            userx.deci.push({data: datetime, acao: 'Encerrou o serviço ' + tipo, autor: userx.modificador})
+                            userx.deci.push({data: datetime, acao: 'Encerrou o serviço ' + tipo, autor: ll.nome})
                             if(userx.last_change.serv1 == tipo){
                                 //userx.last_change.serv1 = 0
                                 userx.last_change = {
@@ -1371,11 +1395,11 @@ sockets.on('connection', async (socket) => {
                             }
                         let array_dados = [0, 2, userx[tipo][2], userx[tipo][3], userx[tipo][4], userx[tipo][5], userx[tipo][6], userx[tipo][7]]
                         userx.set(tipo, array_dados) 
-                        userx.save()
-                            .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
-                            .then((user) => {
+                        await userx.save()
+                                         
+                            let user = await Aluno.findOne({ _id: userx._id, temporario: 1})
                                     if(user.taokeys == userx.taokeys){
-                                        socket.emit('feedback', ['success', tipo + ' encerrado com sucesso e ficara indisponivel durante o proximo turno'])
+                                        
                                         function propuni(tipo) {
                                             if(user.somapropuni.tipo1 == tipo){
                                                 return user.somapropuni.inv1
@@ -1396,7 +1420,12 @@ sockets.on('connection', async (socket) => {
                                                 return 0
                                             }
                                         }
-                                        socket.emit('update', [
+                                        let meias = await Usuario.find({cooperativa: ll.cooperativa, instancia: ll.instancia})
+                                    if(meias.length > 0){
+                                        for(let m = 0; m < meias.length; m++){
+                                            sockets.to(meias[m].sockid).emit('repuxar-b')
+                                            sockets.to(meias[m].sockid).emit('feedback', ['success', tipo + ' encerrado e ficara indisponivel durante o proximo turno. ['+ll.nome+']'])
+                                            sockets.to(meias[m].sockid).emit('update', [
                                                                         [...user["147"],"147",propuni("147"),insumosi("147")],
                                     [...user["148"],"148",propuni("148"),insumosi("148")],
                                     [...user["149"],"149",propuni("149"),insumosi("149")],
@@ -1427,10 +1456,11 @@ sockets.on('connection', async (socket) => {
                                     user["propagandauni"],
                                     (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                     user["turno"]]);
+                                            }
+                                        }
         
                                     }                  
-                                })
-                        .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
+                                
                             }
                     }
                     else if(userx[tipo][0] == 0 && userx[tipo][1] == 2){
@@ -1468,15 +1498,14 @@ sockets.on('connection', async (socket) => {
                     if(userx[tipo][1] == 1){
                         if(volume > 0){
                             let datetime = new Date().toLocaleString('pt-BR').toLocaleString('pt-BR');
-                            userx.deci.push({data: datetime, acao: 'Alteração do volume planejado do serviço '+ tipo +' para ' +volume, autor: userx.modificador})
+                            userx.deci.push({data: datetime, acao: 'Alteração do volume planejado do serviço '+ tipo +' para ' +volume, autor: ll.nome})
                         
                             let array_dados = [userx[tipo][0], userx[tipo][1], userx[tipo][2], userx[tipo][3], volume, userx[tipo][5], userx[tipo][6], userx[tipo][7]]
                             userx.set(tipo, array_dados) 
-                            userx.save()
-                                .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
-                                .then((user) => {
+                            await userx.save()
+                                             
+                                let user = await Aluno.findOne({ _id: userx._id, temporario: 1})
                                     if(user.taokeys == userx.taokeys){
-                                        socket.emit('feedback', ['success', 'volume de vendas planejado do serviço: ' + tipo + ' alterado para ' + volume + ' com sucesso'])
                                         function propuni(tipo) {
                                             if(user.somapropuni.tipo1 == tipo){
                                                 return user.somapropuni.inv1
@@ -1497,7 +1526,12 @@ sockets.on('connection', async (socket) => {
                                                 return 0
                                             }
                                         }
-                                        socket.emit('update', [
+                                        let meias = await Usuario.find({cooperativa: ll.cooperativa, instancia: ll.instancia})
+                                    if(meias.length > 0){
+                                        for(let m = 0; m < meias.length; m++){
+                                            sockets.to(meias[m].sockid).emit('feedback', ['success', 'Volume planejado de vendas do ' + tipo + ' alterado para ' + volume + '. ['+ll.nome+']'])
+                                            sockets.to(meias[m].sockid).emit('repuxar-b')
+                                            sockets.to(meias[m].sockid).emit('update', [
                                                                         [...user["147"],"147",propuni("147"),insumosi("147")],
                                     [...user["148"],"148",propuni("148"),insumosi("148")],
                                     [...user["149"],"149",propuni("149"),insumosi("149")],
@@ -1528,11 +1562,12 @@ sockets.on('connection', async (socket) => {
                                     user["propagandauni"],
                                     (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                     user["turno"]]);
+                                            }
+                                        }
         
                                     }                  
-                                })
-                        .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
-                          
+                                
+                       
                     }
                     else{socket.emit('feedback', ['warning','o volume de vendas so aceita valores positivos'])}
                     
@@ -1558,11 +1593,11 @@ sockets.on('connection', async (socket) => {
         let usert = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
             
                 if(usert !== null){
-                Data.findOne({instancia: usert.instancia})
-                    .then((check) => {
-                        if(check.ativo == 1){
-                Aluno.findOne({cooperativa: usert.cooperativa, instancia: usert.instancia, temporario: 0})
-                    .then((userdef) => {
+                let check = await Data.findOne({instancia: usert.instancia})
+                    
+                    if(check.ativo == 1){
+                        let userdef = await Aluno.findOne({cooperativa: usert.cooperativa, instancia: usert.instancia, temporario: 0})
+                    
                         userdef.last_change = {serv1: usert.last_change.serv1, serv2: usert.last_change.serv2, insu1: usert.last_change.insu1, insu2: usert.last_change.insu2, insu2i: usert.last_change.insu2i, insu1i: usert.last_change.insu1i, prop1: usert.last_change.prop1, prop2: usert.last_change.prop2}
                         userdef.deci = usert.deci
                         userdef.set('npesquisas', usert.npesquisas)
@@ -1666,18 +1701,74 @@ sockets.on('connection', async (socket) => {
                             userdef.set(serv, [usert[serv][0], usert[serv][1], usert[serv][2], usert[serv][3], usert[serv][4], usert[serv][5], usert[serv][6], usert[serv][7]])
                         }
                         userdef.modificador = usert.modificador
-                        userdef.save()
-                            .then(() => {
-                                socket.emit('feedback', ['success','Os dados foram salvos com sucesso'])
-                            })
-                            .catch((err) => {socket.emit('feedback', ['danger','falha ao salvar os dados no servidor: ' + err]);console.log(err)})
-                        
+                        await userdef.save()
+                        function propuni(tipo) {
+                            if(usert.somapropuni.tipo1 == tipo){
+                                return usert.somapropuni.inv1
+                            }
+                            else if(usert.somapropuni.tipo2 == tipo){
+                                return usert.somapropuni.inv2
+                            }
+                            else{return 0}
+                        }
+                        function insumosi(s) {
+                            if(s == usert.last_change.serv1){
+                                return usert.last_change.insu1i
+                            }
+                            else if(s == usert.last_change.serv2){
+                                return usert.last_change.insu2i
+                            }
+                            else{
+                                return 0
+                            }
+                        }
+                        let meias = await Usuario.find({cooperativa: ll.cooperativa, instancia: ll.instancia})
+                            if(meias.length > 0){
+                                for(let m = 0; m < meias.length; m++){
+                                    sockets.to(meias[m].sockid).emit('repuxar-b')
+                                    sockets.to(meias[m].sockid).emit('feedback', ['success','A jogada foi salva com sucesso. ['+ll.nome+']'])
+                                    sockets.to(meias[m].sockid).emit('update', [
+                            [...usert["147"],"147",propuni("147"),insumosi("147")],
+                            [...usert["148"],"148",propuni("148"),insumosi("148")],
+                            [...usert["149"],"149",propuni("149"),insumosi("149")],
+                            [...usert["157"],"157",propuni("157"),insumosi("157")],
+                            [...usert["158"],"158",propuni("158"),insumosi("158")],
+                            [...usert["159"],"159",propuni("159"),insumosi("159")],
+                            [...usert["257"],"257",propuni("257"),insumosi("257")],
+                            [...usert["258"],"258",propuni("258"),insumosi("258")],
+                            [...usert["259"],"259",propuni("259"),insumosi("259")],
+                            [...usert["267"],"267",propuni("267"),insumosi("267")],
+                            [...usert["268"],"268",propuni("268"),insumosi("268")],
+                            [...usert["269"],"269",propuni("269"),insumosi("269")],
+                            [...usert["347"],"347",propuni("347"),insumosi("347")],
+                            [...usert["348"],"348",propuni("348"),insumosi("348")],
+                            [...usert["349"],"349",propuni("349"),insumosi("349")],
+                            [...usert["357"],"357",propuni("357"),insumosi("357")],
+                            [...usert["358"],"358",propuni("358"),insumosi("358")],
+                            [...usert["359"],"359",propuni("359"),insumosi("359")],
+                            [...usert["367"],"367",propuni("367"),insumosi("367")],
+                            [...usert["368"],"368",propuni("368"),insumosi("368")],
+                            [...usert["369"],"369",propuni("369"),insumosi("369")],
+                            usert["taokeys"],
+                            usert["frota"],
+                            usert["promotores"],
+                            usert["comissao"],
+                            usert["distribuidores"],
+                            usert["pas"],
+                            usert["propaganda"],
+                            usert["propagandauni"],
+                            (usert["divida"][0]+usert["divida"][1]+usert["divida"][2]),
+                            usert["turno"]]);
+                                    }
+                                }
+                                
+                           
 
 
-                    })
+                    
                 }
                 else{socket.emit('feedback', ['danger','você só pode salvar uma jogada quando o moderador iniciar oficialmente o turno'])}
-                })
+                
             }
             else{
                 socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
@@ -1691,8 +1782,7 @@ sockets.on('connection', async (socket) => {
         if(ll !== null){
         let usert = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1, backup: 0})
                 if(usert !== null){
-                Aluno.findOne({cooperativa: usert.cooperativa, instancia: usert.instancia, temporario: 0, backup: 0})
-                    .then((userdef) => {
+                let userdef = await Aluno.findOne({cooperativa: usert.cooperativa, instancia: usert.instancia, temporario: 0, backup: 0})
                         usert.last_change = {prop1: userdef.last_change.prop1, prop2: userdef.last_change.prop2 ,serv1: userdef.last_change.serv1, serv2: userdef.last_change.serv2, insu1: userdef.last_change.insu1, insu2: userdef.last_change.insu2, insu2i: userdef.last_change.insu2i, insu1i: userdef.last_change.insu1i}
                         usert.deci = userdef.deci
                         usert.set('npesquisas', userdef.npesquisas)
@@ -1799,13 +1889,13 @@ sockets.on('connection', async (socket) => {
                         }
                         usert.set('frota', [userdef.frota[0],userdef.frota[1],userdef.frota[2],userdef.frota[3],userdef.frota[4],userdef.frota[5],userdef.frota[6],userdef.frota[7],userdef.frota[8],userdef.frota[9],userdef.frota[10],userdef.frota[11]])
                         
-                        usert.save()
-                            .then(() => {
-                                socket.emit('feedback', ['success','A jogada foi resetada com sucesso'])
-                                Aluno.find({ cooperativa: userdef.cooperativa, backup: 1, instancia: userdef.instancia})
-                                    .then((peps) => {    
-                                    Aluno.findOne({ cooperativa: userdef.cooperativa, temporario: 1, instancia: userdef.instancia})           
-                                    .then((atual) => {
+                        await usert.save()
+                            
+                                
+                                let peps = await Aluno.find({ cooperativa: userdef.cooperativa, backup: 1, instancia: userdef.instancia})
+                                   
+                                    let atual = await Aluno.findOne({ cooperativa: userdef.cooperativa, temporario: 1, instancia: userdef.instancia})           
+                                    
                                         let arr = []
                                         for(let i = 0; i < peps.length; i++){
                                             for(let ii = 0; ii < peps[i].deci.length;ii++){
@@ -1833,11 +1923,8 @@ sockets.on('connection', async (socket) => {
                                         socket.emit('deci', respp);
                                          //console.log(arr)        
                                          //socket.emit('feedback', ['warning', pes.participacao_modelos + pes.pes_p.total_distribuidores])    
-                                    })
-                                    .catch((err) => {console.log(err)})
-                                    }) 
-                                    .catch((err) => {console.log(err)})
-
+                                    
+                                    
                                     Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
                                     .then((userx) => {
                                         if(userx !== null){
@@ -1957,7 +2044,12 @@ sockets.on('connection', async (socket) => {
                                         return 0
                                     }
                                 }
-                                socket.emit('update', [
+                                let meias = await Usuario.find({cooperativa: ll.cooperativa, instancia: ll.instancia})
+                                    if(meias.length > 0){
+                                        for(let m = 0; m < meias.length; m++){
+                                            sockets.to(meias[m].sockid).emit('repuxar-b')
+                                            sockets.to(meias[m].sockid).emit('feedback', ['success','A jogada foi resetada com sucesso. ['+ll.nome+']'])
+                                            sockets.to(meias[m].sockid).emit('update', [
                                     [...usert["147"],"147",propuni("147"),insumosi("147")],
                                     [...usert["148"],"148",propuni("148"),insumosi("148")],
                                     [...usert["149"],"149",propuni("149"),insumosi("149")],
@@ -1989,13 +2081,14 @@ sockets.on('connection', async (socket) => {
                                     usert["propagandauni"],
                                     (usert["divida"][0]+usert["divida"][1]+usert["divida"][2]),
                                     usert["turno"]]);
+                                            }
+                                        }
                                 socket.emit('resetado')
-                            })
-                            .catch((err) => {socket.emit('feedback', ['danger','Falha ao salvar os dados no servidor']);console.log(err)})
-                        
+                            
+                           
 
 
-                    })
+                    
                 
                 
             }
@@ -2016,7 +2109,7 @@ sockets.on('connection', async (socket) => {
                 if(userx !== null){
                         if(qnt > 0 && userx.taokeys){
                             let datetime = new Date().toLocaleString('pt-BR').toLocaleString('pt-BR');
-                            userx.deci.push({data: datetime, acao: 'Compra de ' +qnt + ' veículos', autor: userx.modificador})
+                            userx.deci.push({data: datetime, acao: 'Compra de ' +qnt + ' veículos', autor: ll.nome})
                         
                             userx.balanco_patrimonial = {
                                 caixa: userx.balanco_patrimonial.caixa - qnt*57600,
@@ -2061,9 +2154,9 @@ sockets.on('connection', async (socket) => {
                             let array_dados = [novaf, userx['frota'][1], userx['frota'][2], userx['frota'][3], userx['frota'][4], userx['frota'][5], userx['frota'][6], userx['frota'][7], userx['frota'][8], userx['frota'][9], userx['frota'][10], userx['frota'][11], userx['frota'][12], userx['frota'][13], userx['frota'][14], userx['frota'][15], userx['frota'][16], userx['frota'][17], userx['frota'][18], userx['frota'][19], userx['frota'][20], userx['frota'][21], userx['frota'][22], userx['frota'][23]]
                             userx.taokeys = userx.taokeys - 57600*Number(dados)
                             userx.set('frota', array_dados) 
-                            userx.save()
-                                .then(() => Aluno.findOne({ cooperativa: ll.cooperativa, temporario: 1}))                 
-                                .then((user) => {
+                            await userx.save()
+                                let user = await Aluno.findOne({ cooperativa: ll.cooperativa, temporario: 1})                 
+                                
                                     if(user.taokeys == userx.taokeys){
                                         function propuni(tipo) {
                                             if(user.somapropuni.tipo1 == tipo){
@@ -2085,7 +2178,13 @@ sockets.on('connection', async (socket) => {
                                                 return 0
                                             }
                                         }
-                                        socket.emit('update', [
+                                        let meias = await Usuario.find({cooperativa: user.cooperativa, instancia: user.instancia})
+                                    if(meias.length > 0){
+                                        for(let m = 0; m < meias.length; m++){
+                                            sockets.to(meias[m].sockid).emit('repuxar-b')
+                                            sockets.to(meias[m].sockid).emit('feedback',['success','Compra de ' + qnt + ' veiculos realizada. ['+ll.nome+']'])
+                                    
+                                            sockets.to(meias[m].sockid).emit('update', [
                                                                         [...user["147"],"147",propuni("147"),insumosi("147")],
                                     [...user["148"],"148",propuni("148"),insumosi("148")],
                                     [...user["149"],"149",propuni("149"),insumosi("149")],
@@ -2116,10 +2215,10 @@ sockets.on('connection', async (socket) => {
                                     user["propagandauni"],
                                     (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                     user["turno"]]);
+                                            }
+                                        }
                                     }                  
-                                })
-                        .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
-                          
+                             
                     }
                     else if(qnt > 0 && userx.taokeys < qnt*57600){
                         socket.emit('feedback', ['warning','falta caixa'])
@@ -2160,22 +2259,22 @@ sockets.on('connection', async (socket) => {
                                             retirada = falta
                                             userx.taokeys = userx.taokeys + retirada*(57600/12)*(12-k)
                                             let datetime = new Date().toLocaleString('pt-BR').toLocaleString('pt-BR');
-                                            userx.deci.push({data: datetime, acao: 'Venda de '+qnt +' veículos', autor: userx.modificador})
+                                            userx.deci.push({data: datetime, acao: 'Venda de '+qnt +' veículos', autor: ll.nome})
                         
                                             userx.balanco_patrimonial = {
-                                                caixa: userx.balanco_patrimonial.caixa + userx.frota[k]*(57600/12)*(12-k),
+                                                caixa: userx.balanco_patrimonial.caixa + retirada*(57600/12)*(12-k),
                                                 estoque: userx.balanco_patrimonial.estoque,
                                                 contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
                                                 contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
                                                 maquinas: userx.balanco_patrimonial.maquinas,
                                                 depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_maquinas,
                                                 veiculos: userx.balanco_patrimonial.veiculos - qnt*57600,
-                                                depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos + userx.frota[k]*(57600/12)*(k),
+                                                depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos + retirada*(57600/12)*(k),
                                                 tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
                                                 tributos_a_pagar_atual: userx.balanco_patrimonial.tributos_a_pagar_atual,
                                                 emprestimos: userx.balanco_patrimonial.emprestimos,
                                                 capial: userx.balanco_patrimonial.capial,
-                                                lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados + userx.frota[k]*(57600/12)*(12-k)
+                                                lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados + retirada*(57600/12)*(12-k)
                                             }
                                             userx.fluxo_de_caixa = {
                                                 saldo_anterior: userx.fluxo_de_caixa.saldo_anterior,
@@ -2185,7 +2284,7 @@ sockets.on('connection', async (socket) => {
                                                 custo_de_servico_prestado: userx.fluxo_de_caixa.custo_de_servico_prestado,
                                                 emprestimos_contratados: userx.fluxo_de_caixa.emprestimos_contratados,
                                                 emprestimos_pagos: userx.fluxo_de_caixa.emprestimos_pagos,
-                                                veiculos_vendidos: userx.fluxo_de_caixa.veiculos_vendidos + qnt*57600,
+                                                veiculos_vendidos: userx.fluxo_de_caixa.veiculos_vendidos + retirada*57600,
                                                 depreciacao_de_veiculos: userx.fluxo_de_caixa.depreciacao_de_veiculos,
                                                 depreciacao_de_maquinas: userx.fluxo_de_caixa.depreciacao_de_maquinas,
                                                 veiculos_comprados: userx.fluxo_de_caixa.veiculos_comprados,
@@ -2216,7 +2315,7 @@ sockets.on('connection', async (socket) => {
                                             userx.set('frota', array)
                                             userx.taokeys = userx.taokeys + retirada*(57600/12)*(12-k)
                                             let datetime = new Date().toLocaleString('pt-BR').toLocaleString('pt-BR');
-                                            userx.deci.push({data: datetime, acao: 'Venda de '+qnt +' veículos', autor: userx.modificador})
+                                            userx.deci.push({data: datetime, acao: 'Venda de '+qnt +' veículos', autor: ll.nome})
                         
                                             userx.balanco_patrimonial = {
                                             caixa: userx.balanco_patrimonial.caixa + userx.frota[k]*(57600/12)*(12-k),
@@ -2265,9 +2364,9 @@ sockets.on('connection', async (socket) => {
                                 }
                             
                         
-                            userx.save()
-                                .then(() => Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1}))                 
-                                .then((user) => {
+                            await userx.save()
+                                let user = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})            
+                                
                                     if(user.taokeys == userx.taokeys){
                                         function propuni(tipo) {
                                             if(user.somapropuni.tipo1 == tipo){
@@ -2289,7 +2388,13 @@ sockets.on('connection', async (socket) => {
                                                 return 0
                                             }
                                         }
-                                        socket.emit('update', [
+                                        let meias = await Usuario.find({cooperativa: ll.cooperativa, instancia: ll.instancia})
+                                    if(meias.length > 0){
+                                        for(let m = 0; m < meias.length; m++){
+                                            sockets.to(meias[m].sockid).emit('repuxar-b')
+                                            sockets.to(meias[m].sockid).emit('feedback',['success','Venda de ' + qnt+ ' veiculos realizada com sucesso. ['+ll.nome+']'])
+                                    
+                                            sockets.to(meias[m].sockid).emit('update', [
                                                                         [...user["147"],"147",propuni("147"),insumosi("147")],
                                     [...user["148"],"148",propuni("148"),insumosi("148")],
                                     [...user["149"],"149",propuni("149"),insumosi("149")],
@@ -2320,10 +2425,11 @@ sockets.on('connection', async (socket) => {
                                     user["propagandauni"],
                                     (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                     user["turno"]]);
+                                            }
+                                        }
                                     }                  
-                                })
-                        .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
-                            }
+                                
+                           }
                             else{socket.emit('feedback', ['warning','Valor de veiculos inválido'])}
                           
                     }
@@ -2338,6 +2444,7 @@ sockets.on('connection', async (socket) => {
             }
     })
     socket.on('puxar-state', async () => {
+        
         console.log('puxar-state')
         let ll = await Usuario.findOne({sockid: socket.id})
         if(ll !== null){
@@ -2366,38 +2473,50 @@ sockets.on('connection', async (socket) => {
                                                 return 0
                                             }
                                         }
-                                        socket.emit('update', [
-                                    [...userx["147"],"147",propuni("147"),insumosi("147")],
-                                    [...userx["148"],"148",propuni("148"),insumosi("148")],
-                                    [...userx["149"],"149",propuni("149"),insumosi("149")],
-                                    [...userx["157"],"157",propuni("157"),insumosi("157")],
-                                    [...userx["158"],"158",propuni("158"),insumosi("158")],
-                                    [...userx["159"],"159",propuni("159"),insumosi("159")],
-                                    [...userx["257"],"257",propuni("257"),insumosi("257")],
-                                    [...userx["258"],"258",propuni("258"),insumosi("258")],
-                                    [...userx["259"],"259",propuni("259"),insumosi("259")],
-                                    [...userx["267"],"267",propuni("267"),insumosi("267")],
-                                    [...userx["268"],"268",propuni("268"),insumosi("268")],
-                                    [...userx["269"],"269",propuni("269"),insumosi("269")],
-                                    [...userx["347"],"347",propuni("347"),insumosi("347")],
-                                    [...userx["348"],"348",propuni("348"),insumosi("348")],
-                                    [...userx["349"],"349",propuni("349"),insumosi("349")],
-                                    [...userx["357"],"357",propuni("357"),insumosi("357")],
-                                    [...userx["358"],"358",propuni("358"),insumosi("358")],
-                                    [...userx["359"],"359",propuni("359"),insumosi("359")],
-                                    [...userx["367"],"367",propuni("367"),insumosi("367")],
-                                    [...userx["368"],"368",propuni("368"),insumosi("368")],
-                                    [...userx["369"],"369",propuni("369"),insumosi("369")],
-                                    userx["taokeys"],
-                                    userx["frota"],
-                                    userx["promotores"],
-                                    userx["comissao"],
-                                    userx["distribuidores"],
-                                    userx["pas"],
-                                    userx["propaganda"],
-                                    userx["propagandauni"],
-                                    (userx["divida"][0]+userx["divida"][1]+userx["divida"][2]),
-                                    userx["turno"]]);
+                                    let meias = await Usuario.find({cooperativa: ll.cooperativa, instancia: ll.instancia})
+                                    if(meias.length > 0){
+                                        
+                                        
+                                        for(let m = 0; m < meias.length; m++){
+                                            sockets.to(meias[m].sockid).emit('repuxar-b')
+                                            sockets.to(meias[m].sockid).emit('update', [
+                                                [...userx["147"],"147",propuni("147"),insumosi("147")],
+                                                [...userx["148"],"148",propuni("148"),insumosi("148")],
+                                                [...userx["149"],"149",propuni("149"),insumosi("149")],
+                                                [...userx["157"],"157",propuni("157"),insumosi("157")],
+                                                [...userx["158"],"158",propuni("158"),insumosi("158")],
+                                                [...userx["159"],"159",propuni("159"),insumosi("159")],
+                                                [...userx["257"],"257",propuni("257"),insumosi("257")],
+                                                [...userx["258"],"258",propuni("258"),insumosi("258")],
+                                                [...userx["259"],"259",propuni("259"),insumosi("259")],
+                                                [...userx["267"],"267",propuni("267"),insumosi("267")],
+                                                [...userx["268"],"268",propuni("268"),insumosi("268")],
+                                                [...userx["269"],"269",propuni("269"),insumosi("269")],
+                                                [...userx["347"],"347",propuni("347"),insumosi("347")],
+                                                [...userx["348"],"348",propuni("348"),insumosi("348")],
+                                                [...userx["349"],"349",propuni("349"),insumosi("349")],
+                                                [...userx["357"],"357",propuni("357"),insumosi("357")],
+                                                [...userx["358"],"358",propuni("358"),insumosi("358")],
+                                                [...userx["359"],"359",propuni("359"),insumosi("359")],
+                                                [...userx["367"],"367",propuni("367"),insumosi("367")],
+                                                [...userx["368"],"368",propuni("368"),insumosi("368")],
+                                                [...userx["369"],"369",propuni("369"),insumosi("369")],
+                                                userx["taokeys"],
+                                                userx["frota"],
+                                                userx["promotores"],
+                                                userx["comissao"],
+                                                userx["distribuidores"],
+                                                userx["pas"],
+                                                userx["propaganda"],
+                                                userx["propagandauni"],
+                                                (userx["divida"][0]+userx["divida"][1]+userx["divida"][2]),
+                                                userx["turno"]]
+                                            )
+                                        }
+                                        
+
+                                    }
+
                 }
                 else{
                     socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
@@ -2417,15 +2536,15 @@ sockets.on('connection', async (socket) => {
                     if(userx[tipo][1] == 1){
                         if(preco > 0 && preco <= 9999){
                             let datetime = new Date().toLocaleString('pt-BR').toLocaleString('pt-BR');
-                            userx.deci.push({data: datetime, acao: 'Alteração de preço de venda do serviço '+ tipo+' para ' + preco, autor: userx.modificador})
+                            userx.deci.push({data: datetime, acao: 'Alteração de preço de venda do serviço '+ tipo+' para ' + preco, autor: ll.nome})
                         
                             let array_dados = [userx[tipo][0], userx[tipo][1], userx[tipo][2], preco, userx[tipo][4], userx[tipo][5], userx[tipo][6], userx[tipo][7]]
                             userx.set(tipo, array_dados) 
-                            userx.save()
-                                .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
-                                .then((user) => {
+                            await userx.save()
+                                let user = await Aluno.findOne({ _id: userx._id, temporario: 1})              
+                                
                                     if(user.taokeys == userx.taokeys){
-                                        socket.emit('feedback', ['success', 'preço do serviço: ' + tipo + ' alterado para: ' + preco + ' com sucesso'])
+                                    
                                         function propuni(tipo) {
                                             if(user.somapropuni.tipo1 == tipo){
                                                 return user.somapropuni.inv1
@@ -2446,7 +2565,15 @@ sockets.on('connection', async (socket) => {
                                                 return 0
                                             }
                                         }
-                                        socket.emit('update', [
+                                        let meias = await Usuario.find({cooperativa: ll.cooperativa, instancia: ll.instancia})
+                                        sockets.emit('final-turno')
+                                        if(meias.length > 0){
+                                        
+                                        for(let m = 0; m < meias.length; m++){
+                                            sockets.to(meias[m].sockid).emit('repuxar-b')
+                                            sockets.to(meias[m].sockid).emit('feedback',['success', 'Preço do serviço: ' + tipo + ' alterado para: ' + preco + ' com sucesso. ['+ll.nome+']'])
+                                    
+                                            sockets.to(meias[m].sockid).emit('update', [
                                                                         [...user["147"],"147",propuni("147"),insumosi("147")],
                                     [...user["148"],"148",propuni("148"),insumosi("148")],
                                     [...user["149"],"149",propuni("149"),insumosi("149")],
@@ -2478,10 +2605,11 @@ sockets.on('connection', async (socket) => {
                                     (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                     user["turno"]]);
         
-                                    }                  
-                                })
-                        .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
-
+                                    
+                                }     
+                                }    
+                                }        
+                            
                     }
                     else{socket.emit('feedback', ['warning','Esse valor é impraticavel no mercado'])}
                 }
@@ -2516,12 +2644,12 @@ sockets.on('connection', async (socket) => {
                         if(qnt > 0){
                             let novaf = qnt
                             let datetime = new Date().toLocaleString('pt-BR').toLocaleString('pt-BR');
-                            userx.deci.push({data: datetime, acao: 'Alteração na quantiadade de contratações promotores para' + qnt, autor: userx.modificador})
+                            userx.deci.push({data: datetime, acao: 'Alteração na quantiadade de contratações promotores para' + qnt, autor: ll.nome})
                         
                             userx.set('promotores', novaf) 
-                            userx.save()
-                                .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
-                                .then((user) => {
+                            await userx.save()
+                                let user = await Aluno.findOne({ _id: userx._id, temporario: 1})            
+                                
                                     if(user.taokeys == userx.taokeys){
                                         function propuni(tipo) {
                                             if(user.somapropuni.tipo1 == tipo){
@@ -2543,7 +2671,13 @@ sockets.on('connection', async (socket) => {
                                                 return 0
                                             }
                                         }
-                                        socket.emit('update', [
+                                        let meias = await Usuario.find({cooperativa: ll.cooperativa, instancia: ll.instancia})
+                                    if(meias.length > 0){
+                                        for(let m = 0; m < meias.length; m++){
+                                            sockets.to(meias[m].sockid).emit('repuxar-b')
+                                            sockets.to(meias[m].sockid).emit('feedback',['success', 'Alteração no número de promotores para ' + qnt+ '. ['+ll.nome+']'])
+                                    
+                                            sockets.to(meias[m].sockid).emit('update', [
                                                                         [...user["147"],"147",propuni("147"),insumosi("147")],
                                     [...user["148"],"148",propuni("148"),insumosi("148")],
                                     [...user["149"],"149",propuni("149"),insumosi("149")],
@@ -2574,11 +2708,11 @@ sockets.on('connection', async (socket) => {
                                     user["propagandauni"],
                                     (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                     user["turno"]]);
-        
+                                            }
+                                        }
                                     }                  
-                                })
-                        .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
-                          
+                                
+                        
                     }
                     else if(qnt > 0 && userx.taokeys < qnt*57600){
                         socket.emit('feedback', ['warning','falta caixa'])
@@ -2605,12 +2739,12 @@ sockets.on('connection', async (socket) => {
                         if(qnt > 0 && userx['promotores'] >= qnt){
                             let novaf = userx['promotores'] - qnt
                             let datetime = new Date().toLocaleString('pt-BR');
-                            userx.deci.push({data: datetime, acao: 'Demissão de '+qnt +' promotores', autor: userx.modificador})
+                            userx.deci.push({data: datetime, acao: 'Demissão de '+qnt +' promotores', autor: ll.nome})
                         
                             userx.set('promotores', novaf) 
-                            userx.save()
-                                .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
-                                .then((user) => {
+                            await userx.save()
+                                let user = await Aluno.findOne({ _id: userx._id, temporario: 1})                 
+                            
                                     if(user.taokeys == userx.taokeys){
                                         function propuni(tipo) {
                                             if(user.somapropuni.tipo1 == tipo){
@@ -2632,7 +2766,12 @@ sockets.on('connection', async (socket) => {
                                                 return 0
                                             }
                                         }
-                                        socket.emit('update', [
+                                        let meias = await Usuario.find({cooperativa: ll.cooperativa, instancia: ll.instancia})
+                                    if(meias.length > 0){
+                                        for(let m = 0; m < meias.length; m++){
+                                            sockets.to(meias[m].sockid).emit('repuxar-b')
+                                            sockets.to(meias[m].sockid).emit('feedback', ['danger','404'])
+                                            sockets.to(meias[m].sockid).emit('update', [
                                                                         [...user["147"],"147",propuni("147"),insumosi("147")],
                                     [...user["148"],"148",propuni("148"),insumosi("148")],
                                     [...user["149"],"149",propuni("149"),insumosi("149")],
@@ -2663,10 +2802,11 @@ sockets.on('connection', async (socket) => {
                                     user["propagandauni"],
                                     (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                     user["turno"]]);
-                                    }                  
-                                })
-                        .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
-                          
+                                    }     
+                                }  
+                                }           
+                                
+                        
                     }
                     else if(qnt > 0 && userx.taokeys < qnt*57600){
                         socket.emit('feedback', ['warning', 'falta caixa'])
@@ -2681,11 +2821,11 @@ sockets.on('connection', async (socket) => {
                 }
         }
     }) 
-    socket.on('emprestimo', (dados) => {
+    socket.on('emprestimo', async (dados) => {
         console.log('emprestimo')
         let qnt = Number(dados)
-        Aluno.findOne({sockid: socket.id, temporario: 1})
-            .then((userx) => {
+        let userx = await Aluno.findOne({sockid: socket.id, temporario: 1})
+            
                 if(userx !== null){
                         if(qnt > 0){
                             userx.balanco_patrimonial = {
@@ -2719,9 +2859,9 @@ sockets.on('connection', async (socket) => {
                             */
                             userx.set('divida', [(qnt+userx['divida'][0]), userx['divida'][1], userx['divida'][2]]) 
                             userx.taokeys = userx.taokeys + qnt
-                            userx.save()
-                                .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
-                                .then((user) => {
+                            await userx.save()
+                                let user = await Aluno.findOne({ _id: userx._id, temporario: 1})                
+                                
                                     if(user.taokeys == userx.taokeys){
                                         function propuni(tipo) {
                                             if(user.somapropuni.tipo1 == tipo){
@@ -2743,7 +2883,11 @@ sockets.on('connection', async (socket) => {
                                                 return 0
                                             }
                                         }
-                                        socket.emit('update', [
+                                        let meias = await Usuario.find({cooperativa: user.cooperativa, instancia: user.instancia})
+                                    if(meias.length > 0){
+                                        for(let m = 0; m < meias.length; m++){
+                                            sockets.to(meias[m].sockid).emit('repuxar-b')
+                                            sockets.to(meias[m].sockid).emit('update', [
                                                                         [...user["147"],"147",propuni("147"),insumosi("147")],
                                     [...user["148"],"148",propuni("148"),insumosi("148")],
                                     [...user["149"],"149",propuni("149"),insumosi("149")],
@@ -2774,140 +2918,19 @@ sockets.on('connection', async (socket) => {
                                     user["propagandauni"],
                                     (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                     user["turno"]]);
+                                            }
+                                        }
                                     }                  
-                                })
-                        .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})  
+                                
                     }
                     else{socket.emit('feedback', ['warning','apenas valores positivos'])}
             }
                 else{
                     socket.emit('feedback', ['danger', 'voce precisa estar logado para puxar o state atual da simulação'])
                 }
-            })
-            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
-    }) 
-    socket.on('quitar-divida', (ee) => {
-        console.log(ee)
-        //let qnt = Number(dados)
-        Aluno.findOne({sockid: socket.id, temporario: 1})
-            .then((userx) => {
-                if(userx !== null){
-                    if(userx.taokeys >= (userx['divida'][0] + userx['divida'][1] + userx['divida'][2])){
-                        userx.balanco_patrimonial = {
-                            caixa: userx.balanco_patrimonial.caixa - (userx['divida'][0] + userx['divida'][1] + userx['divida'][2]),
-                            estoque: userx.balanco_patrimonial.estoque,
-                            contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
-                            contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
-                            maquinas: userx.balanco_patrimonial.maquinas,
-                            depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_maquinas,
-                            veiculos: userx.balanco_patrimonial.veiculos,
-                            depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos,
-                            tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
-                            tributos_a_pagar_atual: userx.balanco_patrimonial.tributos_a_pagar_atual,
-                            emprestimos: userx.balanco_patrimonial.emprestimos - (userx['divida'][0] + userx['divida'][1] + userx['divida'][2]),
-                            capial: userx.balanco_patrimonial.capial,
-                            lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados
-                        }
-                        userx.fluxo_de_caixa = {
-                            saldo_anterior: userx.fluxo_de_caixa.saldo_anterior,
-                            faturamento: userx.fluxo_de_caixa.faturamento,
-                            contas_a_receber: userx.fluxo_de_caixa.contas_a_receber,
-                            contas_a_receber_recebidas: userx.fluxo_de_caixa.contas_a_receber_recebidas, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
-                            custo_de_servico_prestado: userx.fluxo_de_caixa.custo_de_servico_prestado,
-                            emprestimos_contratados: userx.fluxo_de_caixa.emprestimos_contratados,
-                            emprestimos_pagos: userx.fluxo_de_caixa.emprestimos_pagos + (userx['divida'][0] + userx['divida'][1] + userx['divida'][2]),
-                            veiculos_vendidos: userx.fluxo_de_caixa.veiculos_vendidos,
-                            depreciacao_de_veiculos: userx.fluxo_de_caixa.depreciacao_de_veiculos,
-                            depreciacao_de_maquinas: userx.fluxo_de_caixa.depreciacao_de_maquinas,
-                            veiculos_comprados: userx.fluxo_de_caixa.veiculos_comprados,
-                            tributos: userx.fluxo_de_caixa.tributos,
-                            promotores: userx.fluxo_de_caixa.promotores,
-                            propaganda: userx.fluxo_de_caixa.propaganda,
-                            pesquisas: userx.fluxo_de_caixa.pesquisas,
-                            pas: userx.fluxo_de_caixa.pas,
-                            uso_frota: userx.fluxo_de_caixa.uso_frota,
-                            despesas_operacionais_n_planejadas: userx.fluxo_de_caixa.despesas_operacionais_n_planejadas,
-                            despesas_administrativas: userx.fluxo_de_caixa.despesas_administrativas,
-                            encargos_financiamento: userx.fluxo_de_caixa.encargos_financiamento,
-                            maquinas: userx.fluxo_de_caixa.maquinas,
-                            distribuidores: userx.fluxo_de_caixa.distribuidores
-                        }
-                        userx.taokeys = userx.taokeys - (userx['divida'][0] + userx['divida'][1] + userx['divida'][2])
-                        userx.set('divida', [0,0,0])
-    
-                            userx.save()
-                                .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
-                                .then((user) => {
-                                    if(user.taokeys == userx.taokeys){
-                                        function propuni(tipo) {
-                                            if(user.somapropuni.tipo1 == tipo){
-                                                return user.somapropuni.inv1
-                                            }
-                                            else if(user.somapropuni.tipo2 == tipo){
-                                                return user.somapropuni.inv2
-                                            }
-                                            else{return 0}
-                                        }
-                                        function insumosi(s) {
-                                            if(s == user.last_change.serv1){
-                                                return user.last_change.insu1i
-                                            }
-                                            else if(s == user.last_change.serv2){
-                                                return user.last_change.insu2i
-                                            }
-                                            else{
-                                                return 0
-                                            }
-                                        }
-                                        socket.emit('update', [
-                                                                        [...user["147"],"147",propuni("147"),insumosi("147")],
-                                    [...user["148"],"148",propuni("148"),insumosi("148")],
-                                    [...user["149"],"149",propuni("149"),insumosi("149")],
-                                    [...user["157"],"157",propuni("157"),insumosi("157")],
-                                    [...user["158"],"158",propuni("158"),insumosi("158")],
-                                    [...user["159"],"159",propuni("159"),insumosi("159")],
-                                    [...user["257"],"257",propuni("257"),insumosi("257")],
-                                    [...user["258"],"258",propuni("258"),insumosi("258")],
-                                    [...user["259"],"259",propuni("259"),insumosi("259")],
-                                    [...user["267"],"267",propuni("267"),insumosi("267")],
-                                    [...user["268"],"268",propuni("268"),insumosi("268")],
-                                    [...user["269"],"269",propuni("269"),insumosi("269")],
-                                    [...user["347"],"347",propuni("347"),insumosi("347")],
-                                    [...user["348"],"348",propuni("348"),insumosi("348")],
-                                    [...user["349"],"349",propuni("349"),insumosi("349")],
-                                    [...user["357"],"357",propuni("357"),insumosi("357")],
-                                    [...user["358"],"358",propuni("358"),insumosi("358")],
-                                    [...user["359"],"359",propuni("359"),insumosi("359")],
-                                    [...user["367"],"367",propuni("367"),insumosi("367")],
-                                    [...user["368"],"368",propuni("368"),insumosi("368")],
-                                    [...user["369"],"369",propuni("369"),insumosi("369")],                                    user["taokeys"],
-                                    user["frota"],
-                                    user["promotores"],
-                                    user["comissao"],
-                                    user["distribuidores"],
-                                    user["pas"],
-                                    user["propaganda"],
-                                    user["propagandauni"],
-                                    (user["divida"][0]+user["divida"][1]+user["divida"][2]),
-                                    user["turno"]]);
-                                    }                  
-                                })
-                        .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
-                          
-                            }
-                            else{
-                                socket.emit('feedback', ['warning','voce nao tem caixa para quitar a sua divida no momento'])
-                            }
-                    
-                
-             
-            }
-                else{
-                    socket.emit('feedback', ['danger', 'voce precisa estar logado para puxar o state atual da simulação'])
-                }
-            })
-            .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
-    })
+            
+   }) 
+   
     socket.on('aumentar-distribuidores', async (dados) => {
         console.log('aumentar-distribuidores')
         let qnt = Number(dados)
@@ -2920,12 +2943,12 @@ sockets.on('connection', async (socket) => {
                         if(qnt > 0){
                             let novaf = userx['distribuidores'] + qnt
                             let datetime = new Date().toLocaleString('pt-BR');
-                            userx.deci.push({data: datetime, acao: 'Contratação de '+qnt +' distribuidores', autor: userx.modificador})
+                            userx.deci.push({data: datetime, acao: 'Contratação de '+qnt +' distribuidores', autor: ll.nome})
                         
                             userx.set('distribuidores', novaf) 
-                            userx.save()
-                                .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
-                                .then((user) => {
+                            await userx.save()
+                                let user = await Aluno.findOne({ _id: userx._id, temporario: 1})               
+                            
                                     if(user.taokeys == userx.taokeys){
                                         function propuni(tipo) {
                                             if(user.somapropuni.tipo1 == tipo){
@@ -2947,7 +2970,11 @@ sockets.on('connection', async (socket) => {
                                                 return 0
                                             }
                                         }
-                                        socket.emit('update', [
+                                        let meias = await Usuario.find({cooperativa: ll.cooperativa, instancia: ll.instancia})
+                                    if(meias.length > 0){
+                                        for(let m = 0; m < meias.length; m++){
+                                            sockets.to(meias[m].sockid).emit('repuxar-b')
+                                            sockets.to(meias[m].sockid).emit('update', [
                                                                         [...user["147"],"147",propuni("147"),insumosi("147")],
                                     [...user["148"],"148",propuni("148"),insumosi("148")],
                                     [...user["149"],"149",propuni("149"),insumosi("149")],
@@ -2979,10 +3006,10 @@ sockets.on('connection', async (socket) => {
                                     (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                     user["turno"]]);
         
-                                    }                  
-                                })
-                        .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
-                          
+                                    } 
+                                }      
+                                }           
+                            
                     }
                     else if(qnt > 0 && userx.taokeys < qnt*57600){
                         socket.emit('feedback', ['warning','falta caixa'])
@@ -3008,12 +3035,12 @@ sockets.on('connection', async (socket) => {
                         if(qnt > 0 && userx['distribuidores'] >= qnt){
                             let novaf = userx['distribuidores'] - qnt
                             let datetime = new Date().toLocaleString('pt-BR');
-                            userx.deci.push({data: datetime, acao: 'Demissão de '+qnt +' distribuidores', autor: userx.modificador})
+                            userx.deci.push({data: datetime, acao: 'Demissão de '+qnt +' distribuidores', autor: ll.nome})
                         
                             userx.set('distribuidores', novaf) 
-                            userx.save()
-                                .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
-                                .then((user) => {
+                            await userx.save()
+                                let user = await Aluno.findOne({ _id: userx._id, temporario: 1})                
+                               
                                     if(user.taokeys == userx.taokeys){
                                         function propuni(tipo) {
                                             if(user.somapropuni.tipo1 == tipo){
@@ -3035,7 +3062,11 @@ sockets.on('connection', async (socket) => {
                                                 return 0
                                             }
                                         }
-                                        socket.emit('update', [
+                                        let meias = await Usuario.find({cooperativa: ll.cooperativa, instancia: ll.instancia})
+                                    if(meias.length > 0){
+                                        for(let m = 0; m < meias.length; m++){
+                                            sockets.to(meias[m].sockid).emit('repuxar-b')
+                                            sockets.to(meias[m].sockid).emit('update', [
                                                                         [...user["147"],"147",propuni("147"),insumosi("147")],
                                     [...user["148"],"148",propuni("148"),insumosi("148")],
                                     [...user["149"],"149",propuni("149"),insumosi("149")],
@@ -3067,10 +3098,11 @@ sockets.on('connection', async (socket) => {
                                     (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                     user["turno"]]);
         
-                                    }                  
-                                })
-                        .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
-                          
+                                    }   
+                                }
+                                }               
+                                
+                        
                     }
                     else{socket.emit('feedback', ['warning', 'apenas valores positivos'])}
                     
@@ -3094,14 +3126,14 @@ sockets.on('connection', async (socket) => {
                 if(userx !== null){
                         if(qnt > 0 && userx['pas'] >= qnt){
                             let novaf = Math.round((-1)*qnt)
-                            socket.emit('feedback', ['success', 'Ordem de desativação de PAS realizada para ' + qnt +' postos (serão desativados após 2 turnos)'])
+                            
                             let datetime = new Date().toLocaleString('pt-BR');
-                            userx.deci.push({data: datetime, acao: 'Diminuição de '+qnt +' unidades de P.A.S.', autor: userx.modificador})
+                            userx.deci.push({data: datetime, acao: 'Diminuição de '+qnt +' unidades de P.A.S.', autor: ll.nome})
                         
                             userx.set('pas2', novaf) 
-                            userx.save()
-                                .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
-                                .then((user) => {
+                            await userx.save()
+                                let user = await Aluno.findOne({ _id: userx._id, temporario: 1})                
+                                
                                     if(user.taokeys == userx.taokeys){
                                         function propuni(tipo) {
                                             if(user.somapropuni.tipo1 == tipo){
@@ -3123,7 +3155,12 @@ sockets.on('connection', async (socket) => {
                                                 return 0
                                             }
                                         }
-                                        socket.emit('update', [
+                                        let meias = await Usuario.find({cooperativa: ll.cooperativa, instancia: ll.instancia})
+                                    if(meias.length > 0){
+                                        for(let m = 0; m < meias.length; m++){
+                                            sockets.to(meias[m].sockid).emit('repuxar-b')
+                                            sockets.to(meias[m].sockid).emit('feedback', ['success', 'Ordem de desativação de PAS realizada para ' + qnt +' postos (serão desativados após 2 turnos). ['+ll.nome+']'])
+                                            sockets.to(meias[m].sockid).emit('update', [
                                                                         [...user["147"],"147",propuni("147"),insumosi("147")],
                                     [...user["148"],"148",propuni("148"),insumosi("148")],
                                     [...user["149"],"149",propuni("149"),insumosi("149")],
@@ -3155,10 +3192,11 @@ sockets.on('connection', async (socket) => {
                                     (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                     user["turno"]]);
         
-                                    }                  
-                                })
-                        .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
-                          
+                                    }        
+                                }
+                                }          
+                                
+                       
                     }
                     else{socket.emit('feedback', ['warning','apenas valores positivos'])}
                     
@@ -3181,14 +3219,14 @@ sockets.on('connection', async (socket) => {
                         if(qnt > 0){
                             let novaf = Math.round(qnt)
                             let datetime = new Date().toLocaleString('pt-BR');
-                            userx.deci.push({data: datetime, acao: 'Aumento de '+qnt +' unidades de P.A.S.', autor: userx.modificador})
+                            userx.deci.push({data: datetime, acao: 'Aumento de '+qnt +' unidades de P.A.S.', autor: ll.nome})
                         
                             userx.set('pas2', novaf) 
-                            userx.save()
-                                .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
-                                .then((user) => {
+                            await userx.save()
+                                let user = await Aluno.findOne({ _id: userx._id, temporario: 1})                
+                                
                                     if(user.taokeys == userx.taokeys){
-                                        socket.emit('feedback', ['success', 'ordem de aquisição de PAS realizada para ' + qnt +' postos (entraram em atividade após 2 turnos)'])
+                                        
                                         function propuni(tipo) {
                                             if(user.somapropuni.tipo1 == tipo){
                                                 return user.somapropuni.inv1
@@ -3209,7 +3247,12 @@ sockets.on('connection', async (socket) => {
                                                 return 0
                                             }
                                         }
-                                        socket.emit('update', [
+                                        let meias = await Usuario.find({cooperativa: ll.cooperativa, instancia: ll.instancia})
+                                    if(meias.length > 0){
+                                        for(let m = 0; m < meias.length; m++){
+                                            sockets.to(meias[m].sockid).emit('repuxar-b')
+                                            sockets.to(meias[m].sockid).emit('feedback', ['success', 'Ordem de aquisição de PAS realizada para ' + qnt +' postos (entraram em atividade após 2 turnos). ['+ll.nome+']'])
+                                            sockets.to(meias[m].sockid).emit('update', [
                                     [...user["147"],"147",propuni("147"),insumosi("147")],
                                     [...user["148"],"148",propuni("148"),insumosi("148")],
                                     [...user["149"],"149",propuni("149"),insumosi("149")],
@@ -3241,10 +3284,11 @@ sockets.on('connection', async (socket) => {
                                     (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                     user["turno"]]);
         
-                                    }                  
-                                })
-                        .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
-                          
+                                    }  
+                                }   
+                                }             
+                               
+                        
                     }
                     else{socket.emit('feedback', ['warning','apenas valores positivos'])}
                     
@@ -3257,7 +3301,7 @@ sockets.on('connection', async (socket) => {
         }
     }) 
     socket.on('propaganda-unitaria', async (dados) => { //fazer igual a compra de insumos esse investimento em prop uni...
-        console.lo9('propaganda-unitaria')
+        console.log('propaganda-unitaria')
         let tipo = dados[0]
         let qnt = Number(dados[1])
         
@@ -3270,10 +3314,49 @@ sockets.on('connection', async (socket) => {
                 if(userx !== null){
                         if(qnt > 0){
                             let datetime = new Date().toLocaleString('pt-BR');
-                            userx.deci.push({data: datetime, acao: 'Investimento em propaganda no serviço '+tipo +' no valor de ' + qnt, autor: userx.modificador})
+                            userx.deci.push({data: datetime, acao: 'Investimento em propaganda no serviço '+tipo +' no valor de ' + qnt, autor: ll.nome})
                             
                             if(userx.last_change.serv1 == tipo){
                                 
+                                userx.fluxo_de_caixa = {
+                                    saldo_anterior: userx.fluxo_de_caixa.saldo_anterior,
+                                    faturamento: userx.fluxo_de_caixa.faturamento,
+                                    contas_a_receber: userx.fluxo_de_caixa.contas_a_receber,
+                                    contas_a_receber_recebidas: userx.fluxo_de_caixa.contas_a_receber_recebidas, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
+                                    custo_de_servico_prestado: userx.fluxo_de_caixa.custo_de_servico_prestado,
+                                    emprestimos_contratados: userx.fluxo_de_caixa.emprestimos_contratados,
+                                    emprestimos_pagos: userx.fluxo_de_caixa.emprestimos_pagos,
+                                    veiculos_vendidos: userx.fluxo_de_caixa.veiculos_vendidos,
+                                    depreciacao_de_veiculos: userx.fluxo_de_caixa.depreciacao_de_veiculos,
+                                    depreciacao_de_maquinas: userx.fluxo_de_caixa.depreciacao_de_maquinas,
+                                    veiculos_comprados: userx.fluxo_de_caixa.veiculos_comprados,
+                                    tributos: userx.fluxo_de_caixa.tributos,
+                                    promotores: userx.fluxo_de_caixa.promotores,
+                                    propaganda: userx.fluxo_de_caixa.propaganda - userx.last_change.prop1,
+                                    pesquisas: userx.fluxo_de_caixa.pesquisas,
+                                    pas: userx.fluxo_de_caixa.pas,
+                                    uso_frota: userx.fluxo_de_caixa.uso_frota,
+                                    despesas_operacionais_n_planejadas: userx.fluxo_de_caixa.despesas_operacionais_n_planejadas,
+                                    despesas_administrativas: userx.fluxo_de_caixa.despesas_administrativas,
+                                    encargos_financiamento: userx.fluxo_de_caixa.encargos_financiamento,
+                                    maquinas: userx.fluxo_de_caixa.maquinas,
+                                    distribuidores: userx.fluxo_de_caixa.distribuidores
+                                }
+                                userx.balanco_patrimonial = {
+                                    caixa: userx.balanco_patrimonial.caixa + userx.last_change.prop1,
+                                    estoque: userx.balanco_patrimonial.estoque,
+                                    contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
+                                    contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
+                                    maquinas: userx.balanco_patrimonial.maquinas,
+                                    depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_maquinas,
+                                    veiculos: userx.balanco_patrimonial.veiculos,
+                                    depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos,
+                                    tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
+                                    tributos_a_pagar_atual: userx.balanco_patrimonial.tributos_a_pagar_atual,
+                                    emprestimos: userx.balanco_patrimonial.emprestimos,
+                                    capial: userx.balanco_patrimonial.capial,
+                                    lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados + userx.last_change.prop1
+                                }
                                 userx.last_change = {
                                     serv1: userx.last_change.serv1,
                                     serv2: userx.last_change.serv2,
@@ -3287,6 +3370,46 @@ sockets.on('connection', async (socket) => {
                                 }
                             }
                             if(userx.last_change.serv2 == tipo){
+                                
+                                userx.fluxo_de_caixa = {
+                                    saldo_anterior: userx.fluxo_de_caixa.saldo_anterior,
+                                    faturamento: userx.fluxo_de_caixa.faturamento,
+                                    contas_a_receber: userx.fluxo_de_caixa.contas_a_receber,
+                                    contas_a_receber_recebidas: userx.fluxo_de_caixa.contas_a_receber_recebidas, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
+                                    custo_de_servico_prestado: userx.fluxo_de_caixa.custo_de_servico_prestado,
+                                    emprestimos_contratados: userx.fluxo_de_caixa.emprestimos_contratados,
+                                    emprestimos_pagos: userx.fluxo_de_caixa.emprestimos_pagos,
+                                    veiculos_vendidos: userx.fluxo_de_caixa.veiculos_vendidos,
+                                    depreciacao_de_veiculos: userx.fluxo_de_caixa.depreciacao_de_veiculos,
+                                    depreciacao_de_maquinas: userx.fluxo_de_caixa.depreciacao_de_maquinas,
+                                    veiculos_comprados: userx.fluxo_de_caixa.veiculos_comprados,
+                                    tributos: userx.fluxo_de_caixa.tributos,
+                                    promotores: userx.fluxo_de_caixa.promotores,
+                                    propaganda: userx.fluxo_de_caixa.propaganda - userx.last_change.prop2,
+                                    pesquisas: userx.fluxo_de_caixa.pesquisas,
+                                    pas: userx.fluxo_de_caixa.pas,
+                                    uso_frota: userx.fluxo_de_caixa.uso_frota,
+                                    despesas_operacionais_n_planejadas: userx.fluxo_de_caixa.despesas_operacionais_n_planejadas,
+                                    despesas_administrativas: userx.fluxo_de_caixa.despesas_administrativas,
+                                    encargos_financiamento: userx.fluxo_de_caixa.encargos_financiamento,
+                                    maquinas: userx.fluxo_de_caixa.maquinas,
+                                    distribuidores: userx.fluxo_de_caixa.distribuidores
+                                }
+                                userx.balanco_patrimonial = {
+                                    caixa: userx.balanco_patrimonial.caixa + userx.last_change.prop2,
+                                    estoque: userx.balanco_patrimonial.estoque,
+                                    contas_a_receber60: userx.balanco_patrimonial.contas_a_receber60,
+                                    contas_a_receber120: userx.balanco_patrimonial.contas_a_receber120,
+                                    maquinas: userx.balanco_patrimonial.maquinas,
+                                    depreciacao_maquinas: userx.balanco_patrimonial.depreciacao_maquinas,
+                                    veiculos: userx.balanco_patrimonial.veiculos,
+                                    depreciacao_veiculos: userx.balanco_patrimonial.depreciacao_veiculos,
+                                    tributos_a_pagar_anterior: userx.balanco_patrimonial.tributos_a_pagar_anterior,
+                                    tributos_a_pagar_atual: userx.balanco_patrimonial.tributos_a_pagar_atual,
+                                    emprestimos: userx.balanco_patrimonial.emprestimos,
+                                    capial: userx.balanco_patrimonial.capial,
+                                    lucros_acumulados: userx.balanco_patrimonial.lucros_acumulados + userx.last_change.prop2
+                                }
                                 userx.last_change = {
                                     serv1: userx.last_change.serv1,
                                     serv2: userx.last_change.serv2,
@@ -3420,11 +3543,11 @@ sockets.on('connection', async (socket) => {
                             let novaf = Number(userx['propagandauni']) + qnt
                             userx.taokeys = userx.taokeys - qnt
                             userx.set('propagandauni', novaf) 
-                            userx.save()
-                                .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
-                                .then((user) => {
+                            await userx.save()
+                                let user = await Aluno.findOne({ _id: userx._id, temporario: 1})                 
+                                
                                     if(user.taokeys == userx.taokeys){
-                                        socket.emit('feedback', ['success', 'investimento em propaganda unitária, no valor de:  '+ qnt +', relizado com sucesso'])
+                                        
                                         function propuni(tipo) {
                                             if(user.somapropuni.tipo1 == tipo){
                                                 return user.somapropuni.inv1
@@ -3445,7 +3568,12 @@ sockets.on('connection', async (socket) => {
                                                 return 0
                                             }
                                         }
-                                        socket.emit('update', [
+                                        let meias = await Usuario.find({cooperativa: user.cooperativa, instancia: user.instancia})
+                                    if(meias.length > 0){
+                                        for(let m = 0; m < meias.length; m++){
+                                            sockets.to(meias[m].sockid).emit('repuxar-b')
+                                            sockets.to(meias[m].sockid).emit('feedback', ['success', 'Verba para propaganda unitária do '+ tipo +' alterada para ' + qnt + '. ['+ll.nome+']'])
+                                            sockets.to(meias[m].sockid).emit('update', [
                                                                         [...user["147"],"147",propuni("147"),insumosi("147")],
                                     [...user["148"],"148",propuni("148"),insumosi("148")],
                                     [...user["149"],"149",propuni("149"),insumosi("149")],
@@ -3477,10 +3605,11 @@ sockets.on('connection', async (socket) => {
                                     (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                     user["turno"]]);
         
-                                    }                  
-                                })
-                        .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
-                       
+                                    }  
+                                }         
+                                }       
+                                
+                        
                     }
                     else{
                         if(userx.taokeys >= qnt){socket.emit('feedback', ['warning','Apenas valores positivos'])}
@@ -3511,7 +3640,7 @@ sockets.on('connection', async (socket) => {
                 if(userx !== null){
                         if(qnt > 0){
                             let datetime = new Date().toLocaleString('pt-BR');
-                            userx.deci.push({data: datetime, acao: 'Investimento em propaganda institucional no valor de ' + qnt, autor: userx.modificador})
+                            userx.deci.push({data: datetime, acao: 'Investimento em propaganda institucional no valor de ' + qnt, autor: ll.nome})
                         
                             userx.balanco_patrimonial = {
                                 caixa: userx.balanco_patrimonial.caixa - qnt + userx['propaganda'],
@@ -3588,9 +3717,9 @@ sockets.on('connection', async (socket) => {
                             let novaf = qnt
                             userx.taokeys = userx.taokeys - qnt + userx['propaganda']
                             userx.set('propaganda', novaf) 
-                            userx.save()
-                                .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
-                                .then((user) => {
+                            await userx.save()
+                                let user = await Aluno.findOne({ _id: userx._id, temporario: 1})                 
+                                
                                     if(user.taokeys == userx.taokeys){
                                         function propuni(tipo) {
                                             if(user.somapropuni.tipo1 == tipo){
@@ -3612,7 +3741,12 @@ sockets.on('connection', async (socket) => {
                                                 return 0
                                             }
                                         }
-                                        socket.emit('update', [
+                                        let meias = await Usuario.find({cooperativa: ll.cooperativa, instancia: ll.instancia})
+                                    if(meias.length > 0){
+                                        for(let m = 0; m < meias.length; m++){
+                                            sockets.to(meias[m].sockid).emit('repuxar-b')
+                                            sockets.to(meias[m].sockid).emit('feedback',['success', 'Verba para propaganda institucional alterada para '+ qnt + '. [' +ll.nome+']'])
+                                            sockets.to(meias[m].sockid).emit('update', [
                                     [...user["147"],"147",propuni("147"),insumosi("147")],
                                     [...user["148"],"148",propuni("148"),insumosi("148")],
                                     [...user["149"],"149",propuni("149"),insumosi("149")],
@@ -3645,10 +3779,11 @@ sockets.on('connection', async (socket) => {
                                     (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                     user["turno"]]);
         
-                                    }                  
-                                })
-                        .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
-                          
+                                    }       
+                                }
+                                }           
+                                
+                        
                     }
                     else{
                         if(userx.taokeys < qnt){
@@ -3702,12 +3837,12 @@ sockets.on('connection', async (socket) => {
                             if(qnt < 100){
                             if(qnt%0.5 == 0 && qnt !== 0){
                             let datetime = new Date().toLocaleString('pt-BR');
-                            userx.deci.push({data: datetime, acao: 'Comissão alterada para ' + qnt+'%', autor: userx.modificador})
+                            userx.deci.push({data: datetime, acao: 'Comissão alterada para ' + qnt+'%', autor: ll.nome})
                         
                             userx.set('comissao', qnt+'%')
-                            userx.save()
-                                .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
-                                .then((user) => {
+                            await userx.save()
+                                let user = await Aluno.findOne({ _id: userx._id, temporario: 1})                 
+                                
                                     if(user.taokeys == userx.taokeys){
                                         function propuni(tipo) {
                                             if(user.somapropuni.tipo1 == tipo){
@@ -3729,7 +3864,12 @@ sockets.on('connection', async (socket) => {
                                                 return 0
                                             }
                                         }
-                                        socket.emit('update', [
+                                        let meias = await Usuario.find({cooperativa: ll.cooperativa, instancia: ll.instancia})
+                                    if(meias.length > 0){
+                                        for(let m = 0; m < meias.length; m++){
+                                            sockets.to(meias[m].sockid).emit('repuxar-b')
+                                            sockets.to(meias[m].sockid).emit('feedback', ['success', 'Comissao alterada para ' + qnt + '%. ['+ll.nome+']'])
+                                            sockets.to(meias[m].sockid).emit('update', [
                                                                         [...user["147"],"147",propuni("147"),insumosi("147")],
                                     [...user["148"],"148",propuni("148"),insumosi("148")],
                                     [...user["149"],"149",propuni("149"),insumosi("149")],
@@ -3761,10 +3901,11 @@ sockets.on('connection', async (socket) => {
                                     (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                     user["turno"]]);
         
-                                    }                  
-                                })
-                        .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
-                          
+                                    }    
+                                }
+                                }              
+                                
+                        
                     }
                     
                     else{socket.emit('feedback', ['warning','Apenas valores inteiros ou terminados com ".5"'])}
@@ -3809,7 +3950,7 @@ sockets.on('connection', async (socket) => {
                     }
                     if(userx[tipo][1] !== 3 && check_1_servico_ativo()){
                         let datetime = new Date().toLocaleString('pt-BR');
-                        userx.deci.push({data: datetime, acao: 'Ativação do serviço '+tipo, autor: userx.modificador})
+                        userx.deci.push({data: datetime, acao: 'Ativação do serviço '+tipo, autor: ll.nome})
                             
                         if(userx.last_change.serv1 == 0){
                             userx.last_change = {
@@ -3838,10 +3979,9 @@ sockets.on('connection', async (socket) => {
                         }
                         let array_dados = [0, 1, userx[tipo][2], userx[tipo][3], userx[tipo][4], userx[tipo][5], userx[tipo][6], userx[tipo][7]]
                         userx.set(tipo, array_dados) 
-                        userx.save()
-                            .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
-                            .then((user) => {
-                               // console.log(userx[tipo][1] + ' <----userx(Schema trabalhado aqui)')
+                        await userx.save()
+                            let user = await Aluno.findOne({ _id: userx._id, temporario: 1})                 
+                                                           // console.log(userx[tipo][1] + ' <----userx(Schema trabalhado aqui)')
                                // console.log(user[tipo][1] + ' <=====user(recem pesquisado)')
                                     if(user.taokeys == userx.taokeys){
                                         function propuni(tipo) {
@@ -3866,8 +4006,12 @@ sockets.on('connection', async (socket) => {
                                         }
                                         
                                     
-                                        
-                                        socket.emit('update', [
+                                        let meias = await Usuario.find({cooperativa: ll.cooperativa, instancia: ll.instancia})
+                                    if(meias.length > 0){
+                                        for(let m = 0; m < meias.length; m++){
+                                            sockets.to(meias[m].sockid).emit('repuxar-b')
+                                            sockets.to(meias[m].sockid).emit('feedback', ['success', 'Serviço ' +tipo + ' ativado. [' + ll.nome+']'])
+                                            sockets.to(meias[m].sockid).emit('update', [
                                     [...user["147"],"147",propuni("147"),insumosi("147")],
                                     [...user["148"],"148",propuni("148"),insumosi("148")],
                                     [...user["149"],"149",propuni("149"),insumosi("149")],
@@ -3898,12 +4042,12 @@ sockets.on('connection', async (socket) => {
                                     user["propagandauni"],
                                     (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                     user["turno"]]);
-        
+                                            }
+                                        }
                                     }
                                     else{socket.emit('feedback', ['danger', 'Falha ao atunteticar operacao'])}                  
-                                })
-                        .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
-
+                                
+                       
                     }
                     else{
                         if(userx[tipo][1] == 3){
@@ -4006,7 +4150,7 @@ sockets.on('connection', async (socket) => {
                                     
                                 }//esses dois if fazem que a ultima decisao de compra de insumo que seja considerada apenas
                                 let datetime = new Date().toLocaleString('pt-BR');
-                                userx.deci.push({data: datetime, acao: 'Alteração na ordem de compra de insumos do serviço '+tipo + ' para '+ qnti, autor: userx.modificador})
+                                userx.deci.push({data: datetime, acao: 'Alteração na ordem de compra de insumos do serviço '+tipo + ' para '+ qnti, autor: ll.nome})
                             
                             userx.balanco_patrimonial = {
                                 caixa: userx.balanco_patrimonial.caixa - qnti*userx[tipo][2],
@@ -4042,12 +4186,11 @@ sockets.on('connection', async (socket) => {
                         
                            userx.set(tipo, array_dados)
                            userx.taokeys = userx.taokeys - qnti*userx[tipo][2]
-                           userx.save()
-                                .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
-                                .then((user) => {
-                                 
+                           await userx.save()
+                                let user = await Aluno.findOne({ _id: userx._id, temporario: 1})                 
+                                    
                                     if(user.taokeys == userx.taokeys){
-                                        socket.emit('feedback', ['success', 'Ordem de compra de insumos do serviço '+tipo+' alterado para ' + qnti])
+                                        
                                         function propuni(tipo) {
                                             if(user.somapropuni.tipo1 == tipo){
                                                 return user.somapropuni.inv1
@@ -4068,7 +4211,12 @@ sockets.on('connection', async (socket) => {
                                                 return 0
                                             }
                                         }
-                                        socket.emit('update', [
+                                        let meias = await Usuario.find({cooperativa: ll.cooperativa, instancia: ll.instancia})
+                                    if(meias.length > 0){
+                                        for(let m = 0; m < meias.length; m++){
+                                            sockets.to(meias[m].sockid).emit('repuxar-b')
+                                            sockets.to(meias[m].sockid).emit('feedback', ['success', 'Ordem de compra do '+tipo+' alterado para ' + qnti + ' insumos. [' +ll.nome+']'])
+                                            sockets.to(meias[m].sockid).emit('update', [
                                                                         [...user["147"],"147",propuni("147"),insumosi("147")],
                                     [...user["148"],"148",propuni("148"),insumosi("148")],
                                     [...user["149"],"149",propuni("149"),insumosi("149")],
@@ -4099,11 +4247,11 @@ sockets.on('connection', async (socket) => {
                                     user["propagandauni"],
                                     (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                                     user["turno"]]);
-                
+                                            }
+                                        }
                                             }                  
-                                        })
-                                .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
-                                    
+                                        
+                                 
                                     }
                                     else{
                                         socket.emit('feedback', ['danger', 'Valor inválido'])
@@ -4191,14 +4339,14 @@ sockets.on('connection', async (socket) => {
                             
                         }//esses dois if fazem que a ultima decisao de compra de insumo que seja considerada apenas
                         let datetime = new Date().toLocaleString('pt-BR');
-                        userx.deci.push({data: datetime, acao: 'Alteração na ordem de compra de insumos do serviço '+tipo + ' para '+ qnti, autor: userx.modificador})
+                        userx.deci.push({data: datetime, acao: 'Alteração na ordem de compra de insumos do serviço '+tipo + ' para '+ qnti, autor: ll.nome})
                         
-                        userx.save()
-                        .then(() => Aluno.findOne({ _id: userx._id, temporario: 1}))                 
-                        .then((user) => {
+                        await userx.save()
+                        let user = await Aluno.findOne({ _id: userx._id, temporario: 1})                 
+                        
                          
                             if(user.taokeys == userx.taokeys){
-                                socket.emit('feedback', ['success', 'Ordem de compra de insumos para o serviço ' + tipo + ' alterada para ' + qnti])
+                    
                                 function propuni(tipo) {
                                     if(user.somapropuni.tipo1 == tipo){
                                         return user.somapropuni.inv1
@@ -4219,7 +4367,12 @@ sockets.on('connection', async (socket) => {
                                         return 0
                                     }
                                 }
-                                socket.emit('update', [
+                                let meias = await Usuario.find({cooperativa: ll.cooperativa, instancia: ll.instancia})
+                                    if(meias.length > 0){
+                                for(let m = 0; m < meias.length; m++){
+                                    sockets.to(meias[m].sockid).emit('repuxar-b')
+                                    sockets.to(meias[m].sockid).emit('feedback', ['success', 'Ordem de compra do '+tipo+' alterado para ' + qnti + ' insumos. [' +ll.nome+']'])
+                                    sockets.to(meias[m].sockid).emit('update', [
                             [...user["147"],"147",propuni("147"),insumosi("147")],
                             [...user["148"],"148",propuni("148"),insumosi("148")],
                             [...user["149"],"149",propuni("149"),insumosi("149")],
@@ -4251,11 +4404,11 @@ sockets.on('connection', async (socket) => {
                             user["propagandauni"],
                             (user["divida"][0]+user["divida"][1]+user["divida"][2]),
                             user["turno"]]);
-        
+                                    }
+                                }
                                     }                  
-                                })
-                        .catch((err) => {console.log('erro na confirmacao n 302: ' + err)})
-                        //socket.emit('feedback', ['success','Ordem de compra de insumos do serviço '+tipo+' alterado para 0'])
+                                
+                       //socket.emit('feedback', ['success','Ordem de compra de insumos do serviço '+tipo+' alterado para 0'])
                      }
                      else{
                          socket.emit('feedback',['warning','Valor Inválido'])
@@ -4283,7 +4436,7 @@ sockets.on('connection', async (socket) => {
                         if(userx.pes_p.total_pas == 0){
                         if(true){
                             let datetime = new Date().toLocaleString('pt-BR');
-                            userx.deci.push({data: datetime, acao: 'Contratou pesquisa de P.A.S. para o turno ' +userx.turno, autor: userx.modificador})
+                            userx.deci.push({data: datetime, acao: 'Contratou pesquisa de P.A.S. para o turno ' +userx.turno, autor: ll.nome})
                         
                         userx.balanco_patrimonial = {
                             caixa: userx.balanco_patrimonial.caixa - 2160,
@@ -4366,12 +4519,12 @@ sockets.on('connection', async (socket) => {
                                 total_distribuidores: userx.pes_p.total_distribuidores
                            } 
                            //console.log(user.taokeys)
-                           userx.save()
-                            .then(() => {
-                                Data.findOne({ativo: 1, instancia: userx.instancia})
-                                    .then((dados) => {
+                           await userx.save()
+
+                                let dados = await Data.findOne({ativo: 1, instancia: userx.instancia})
+                                    
                                         if(dados !== null){
-                                        socket.emit('feedback', ['success', '>> Encomenda de pesquisa de PAS realizada com sucesso.'])
+                                        //socket.emit('feedback', ['success', '>> Encomenda de pesquisa de PAS realizada com sucesso.'])
                                         //socket.emit('resposta-pesquisa', 'Ultima encomenda: Total P.A.S.')
                                         function propuni(tipo) {
                                             if(userx.somapropuni.tipo1 == tipo){
@@ -4393,7 +4546,17 @@ sockets.on('connection', async (socket) => {
                                                 return 0
                                             }
                                         }
-                                        socket.emit('update', [
+                                        let meias = await Usuario.find({cooperativa: ll.cooperativa, instancia: ll.instancia})
+                                    if(meias.length > 0){
+                                        function sleep(ms) {
+                                            return new Promise(resolve => setTimeout(resolve, ms));
+                                          }
+                                        
+                                            
+                                        for(let m = 0; m < meias.length; m++){
+                                            sockets.to(meias[m].sockid).emit('repuxar-b')
+                                            sockets.to(meias[m].sockid).emit('feedback', ['success', '>> Encomenda de pesquisa de PAS realizada com sucesso. ['+ll.nome+']'])
+                                            sockets.to(meias[m].sockid).emit('update', [
                                     [...userx["147"],"147",propuni("147"),insumosi("147")],
                                     [...userx["148"],"148",propuni("148"),insumosi("148")],
                                     [...userx["149"],"149",propuni("149"),insumosi("149")],
@@ -4426,15 +4589,15 @@ sockets.on('connection', async (socket) => {
                                     (userx["divida"][0]+userx["divida"][1]+userx["divida"][2]),
                                     userx["turno"]]);
                                     }
+                                        
+                                }
+                                }
                                     else{
                                         socket.emit('feedback', ['danger','>> Voce nao pode realizar pesquisas ate que o administrador inicie o turno.'])
                                     }
-                                    })
-                                    .catch((err) => {console.log(err)})
-
-                            })
-                            .catch((err) => {console.log('falha em salvar transacao por pesquisa n 307' + err)})
-                            }
+                                    
+                                 
+                           }
 
                         else{
                             socket.emit('feedback', ['warning','falta caixa']);
@@ -4443,7 +4606,7 @@ sockets.on('connection', async (socket) => {
                     //console.log(user.taokeys)
                     }
                     else{
-                        socket.emit('feedback', ['warning', '>> Sua cooperativa ja encomendou essa pesquisa.'])
+                        socket.emit('feedback', ['warning', '>> Essa pesquisa ja foi encomendada.'])
                     }
                     }
                     else{
@@ -4465,7 +4628,7 @@ sockets.on('connection', async (socket) => {
                         
                         if(true){
                             let datetime = new Date().toLocaleString('pt-BR');
-                            userx.deci.push({data: datetime, acao: 'Contratou pesquisa de total de distribuidores para o turno ' +userx.turno, autor: userx.modificador})
+                            userx.deci.push({data: datetime, acao: 'Contratou pesquisa de total de distribuidores para o turno ' +userx.turno, autor: ll.nome})
                         
                             userx.balanco_patrimonial = {
                                 caixa: userx.balanco_patrimonial.caixa - 2160,
@@ -4548,12 +4711,12 @@ sockets.on('connection', async (socket) => {
                             total_distribuidores: 1
                             }  
                            //console.log(user.taokeys)
-                           userx.save()
-                            .then(() => {
-                                Data.findOne({ativo: 1, instancia: userx.instancia})
-                                    .then((dados) => {
+                           await userx.save()
+                            
+                                let dados = await Data.findOne({ativo: 1, instancia: userx.instancia})
+                            
                                         if(dados !== null){
-                                        socket.emit('feedback', ['success', '>> Encomenda de pesquisa de DISTRIBUIDORES realizada com sucesso.'])
+                                        
                                         //socket.emit('resposta-pesquisa', 'Ultima encomenda: Distribuidores')
                                         function propuni(tipo) {
                                             if(userx.somapropuni.tipo1 == tipo){
@@ -4575,7 +4738,12 @@ sockets.on('connection', async (socket) => {
                                                 return 0
                                             }
                                         }
-                                        socket.emit('update', [
+                                        let meias = await Usuario.find({cooperativa: ll.cooperativa, instancia: ll.instancia})
+                                    if(meias.length > 0){
+                                        for(let m = 0; m < meias.length; m++){
+                                            sockets.to(meias[m].sockid).emit('repuxar-b')
+                                            sockets.to(meias[m].sockid).emit('feedback', ['success', '>> Encomenda de pesquisa de DISTRIBUIDORES realizada com sucesso. ['+ll.nome +']'])
+                                            sockets.to(meias[m].sockid).emit('update', [
                                     [...userx["147"],"147",propuni("147"),insumosi("147")],
                                     [...userx["148"],"148",propuni("148"),insumosi("148")],
                                     [...userx["149"],"149",propuni("149"),insumosi("149")],
@@ -4608,13 +4776,14 @@ sockets.on('connection', async (socket) => {
                                     (userx["divida"][0]+userx["divida"][1]+userx["divida"][2]),
                                     userx["turno"]]);
                                         }
+                                    }
+                                    }
                 else{
                     socket.emit('feedback', ['danger', 'Espere o inicio do turno para realizar essa ação'])
                 }
-                                    })
+                                    
 
-                            })
-                            .catch((err) => {console.log('falha em salvar transacao por pesquisa n 307' + err)})
+                            
                             }
 
                         else{
@@ -4645,7 +4814,7 @@ sockets.on('connection', async (socket) => {
                         //console.log(user.taokeys + ' ccccccccccccccc');
                         if(userx.pes_p.total_participacao_modelos !== 1){
                             let datetime = new Date().toLocaleString('pt-BR');
-                            userx.deci.push({data: datetime, acao: 'Contratou pesquisa de participação da concorrência para o turno '+ userx.turno, autor: userx.modificador})
+                            userx.deci.push({data: datetime, acao: 'Contratou pesquisa de participação da concorrência para o turno '+ userx.turno, autor: ll.nome})
                         
                  
                             userx.balanco_patrimonial = {
@@ -4733,9 +4902,9 @@ sockets.on('connection', async (socket) => {
                            
                            
                            //console.log(user.taokeys)
-                           userx.save()
-                            .then(() => {
-                                socket.emit('feedback', ['success', '>> Encomenda de pesquisa de PARTICIPAÇÃO DE SERVIÇOS realizada com sucesso.'])
+                           await userx.save()
+                            
+                                
                                         function propuni(tipo) {
                                             if(userx.somapropuni.tipo1 == tipo){
                                                 return userx.somapropuni.inv1
@@ -4756,7 +4925,12 @@ sockets.on('connection', async (socket) => {
                                                 return 0
                                             }
                                         }
-                                        socket.emit('update', [
+                                        let meias = await Usuario.find({cooperativa: ll.cooperativa, instancia: ll.instancia})
+                                    if(meias.length > 0){
+                                        for(let m = 0; m < meias.length; m++){
+                                            sockets.to(meias[m].sockid).emit('repuxar-b')
+                                            sockets.to(meias[m].sockid).emit('feedback', ['success', '>> Encomenda de pesquisa de PARTICIPAÇÃO DE SERVIÇOS realizada com sucesso. ['+ll.nome+']'])
+                                            sockets.to(meias[m].sockid).emit('update', [
                                     [...userx["147"],"147",propuni("147"),insumosi("147")],
                                     [...userx["148"],"148",propuni("148"),insumosi("148")],
                                     [...userx["149"],"149",propuni("149"),insumosi("149")],
@@ -4788,12 +4962,12 @@ sockets.on('connection', async (socket) => {
                                     userx["propagandauni"],
                                     (userx["divida"][0]+userx["divida"][1]+userx["divida"][2]),
                                     userx["turno"]]);
-            
+                                            }
+                                        }
                                     
 
-                            })
-                            .catch((err) => {console.log('falha em salvar transacao por pesquisa n 307' + err)})
                             
+                           
                             
                             
                            
@@ -4827,7 +5001,7 @@ sockets.on('connection', async (socket) => {
                         //console.log(user.taokeys + ' ccccccccccccccc');
                         if(true){
                             let datetime = new Date().toLocaleString('pt-BR');
-                            userx.deci.push({data: datetime, acao: 'Contratou pesquisa dos serviços oferecidos pelo mercado para o turno ' +userx.turno, autor: userx.modificador})
+                            userx.deci.push({data: datetime, acao: 'Contratou pesquisa dos serviços oferecidos pelo mercado para o turno ' +userx.turno, autor: ll.nome})
                         
                             userx.balanco_patrimonial = {
                                 caixa: userx.balanco_patrimonial.caixa - 2160,
@@ -4910,9 +5084,9 @@ sockets.on('connection', async (socket) => {
                             total_distribuidores: userx.pes_p.total_distribuidores
                        }  
                            //console.log(user.taokeys)
-                           userx.save()
-                            .then(() => {
-                                socket.emit('feedback', ['success', '>> Encomenda de pesquisa de SERVIÇOS OFERECIDOS NO MERCADO realizada com sucesso.'])
+                           await userx.save()
+                       
+                                
                                 //socket.emit('resposta-pesquisa', 'Ultima encomenda: Modelos no Mercado')
                                         function propuni(tipo) {
                                             if(userx.somapropuni.tipo1 == tipo){
@@ -4934,7 +5108,12 @@ sockets.on('connection', async (socket) => {
                                                 return 0
                                             }
                                         }
-                                        socket.emit('update', [
+                                        let meias = await Usuario.find({cooperativa: ll.cooperativa, instancia: ll.instancia})
+                                    if(meias.length > 0){
+                                        for(let m = 0; m < meias.length; m++){
+                                            sockets.to(meias[m].sockid).emit('repuxar-b')
+                                            sockets.to(meias[m].sockid).emit('feedback', ['success', '>> Encomenda de pesquisa de SERVIÇOS OFERECIDOS NO MERCADO realizada com sucesso. ['+ll.nome+']'])
+                                            sockets.to(meias[m].sockid).emit('update', [
                                     [...userx["147"],"147",propuni("147"),insumosi("147")],
                                     [...userx["148"],"148",propuni("148"),insumosi("148")],
                                     [...userx["149"],"149",propuni("149"),insumosi("149")],
@@ -4966,12 +5145,12 @@ sockets.on('connection', async (socket) => {
                                     userx["propagandauni"],
                                     (userx["divida"][0]+userx["divida"][1]+userx["divida"][2]),
                                     userx["turno"]]);
+                                            }
+                                        }
             
-            
-                                    })
+                                    
 
                             
-                            .catch((err) => {console.log('falha em salvar transacao por pesquisa n 307' + err)})
                             }
 
                         else{
@@ -5009,7 +5188,7 @@ sockets.on('connection', async (socket) => {
                         //console.log(user.taokeys + ' ccccccccccccccc');
                         if(checkR(input) && input[0] !== input[1]){
                             let datetime = new Date().toLocaleString('pt-BR').toLocaleString('pt-BR');
-                            userx.deci.push({data: datetime, acao: 'Contratou pesquisa de teste entre tipos de serviço para ' +input[0] +' e ' + input[1] +' referente ao turno '+ userx.turno, autor: userx.modificador})
+                            userx.deci.push({data: datetime, acao: 'Contratou pesquisa de teste entre tipos de serviço para ' +input[0] +' e ' + input[1] +' referente ao turno '+ userx.turno, autor: ll.nome})
                         
                             function sem_redundancia() {
                                 for(let ff = 0; ff < userx.participacao_modelos.length; ff++){
@@ -5116,10 +5295,9 @@ sockets.on('connection', async (socket) => {
                                 
                            
                            //console.log(user.taokeys)
-                           userx.save()
-                            .then(() => {
-                                socket.emit('feedback', ['success', '>> Encomenda de teste entre ' + input[0] + ' e ' + input[1] + ' realizada com sucesso.'])
-                                        function propuni(tipo) {
+                           await userx.save()
+                            
+                                function propuni(tipo) {
                                             if(userx.somapropuni.tipo1 == tipo){
                                                 return userx.somapropuni.inv1
                                             }
@@ -5139,7 +5317,13 @@ sockets.on('connection', async (socket) => {
                                                 return 0
                                             }
                                         }
-                                        socket.emit('update', [
+                                        let meias = await Usuario.find({cooperativa: ll.cooperativa, instancia: ll.instancia})
+                                    if(meias.length > 0){
+                                        for(let m = 0; m < meias.length; m++){
+                                            sockets.to(meias[m].sockid).emit('repuxar-b')
+                                            sockets.to(meias[m].sockid).emit('feedback', ['success', '>> Encomenda de teste entre ' + input[0] + ' e ' + input[1] + ' realizada com sucesso.'])
+                                        
+                                            sockets.to(meias[m].sockid).emit('update', [
                                     [...userx["147"],"147",propuni("147"),insumosi("147")],
                                     [...userx["148"],"148",propuni("148"),insumosi("148")],
                                     [...userx["149"],"149",propuni("149"),insumosi("149")],
@@ -5172,10 +5356,10 @@ sockets.on('connection', async (socket) => {
                                     (userx["divida"][0]+userx["divida"][1]+userx["divida"][2]),
                                     userx["turno"]]);
             
-                                    
+                                            }
+                                        }
 
-                            })
-                            .catch((err) => {console.log('falha em salvar transacao por pesquisa n 307' + err)})
+                            
                             
                             
                             
