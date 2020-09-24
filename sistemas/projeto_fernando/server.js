@@ -126,7 +126,7 @@ sockets.on('connection', async (socket) => {
                 })
         }
         else{
-            socket.emit('feedback', ['danger', 'senha-mestra incorreta'])
+            socket.emit('feedback', ['danger', 'Senha-mestra incorreta'])
         }
     }) //new falta testar
     socket.on('register-client', (creden) => {
@@ -5405,7 +5405,27 @@ sockets.on('connection', async (socket) => {
                                             return w
                                         }
                                         //console.log('puxando-balancos << BACKUP')
-                                        
+                                        function check(formula, valor){
+                                            if(formula[valor]){
+                                                if(formula[valor][4]){
+                                                    return formula[valor][4]
+                                                }
+                                            }
+                                        }
+                                        function check2(formula, valor){
+                                            if(formula[valor]){
+                                                if(formula[valor][3]){
+                                                    return formula[valor][3]
+                                                }
+                                            }
+                                        }
+                                        function somaF(f) {
+                                            let som = 0
+                                            for(let i = 0; i < f.length; i ++){
+                                                som = som + f[i]
+                                            }
+                                            return som
+                                        }
                                         socket.emit('balancos', { 
                                             balanco_patrimonial: balancos.balanco_patrimonial,
                                             dre: balancos.dre,
@@ -5413,7 +5433,8 @@ sockets.on('connection', async (socket) => {
                                             turno: balancos.turno,
                                             fluxo: balancos.fluxo_de_caixa,
                                             total_n_utilizado: resp(balancos),
-                                            planejado: 0
+                                            planejado: 0,
+                                            deci: {servico_1: balancos.dre.servicos[0], servico_2: balancos.dre.servicos[2], preco_1: balancos.dre.servicos[1], preco_2: balancos.dre.servicos[3], planejado_1: check(balancos,balancos.last_change.serv1), planejado_2: check(balancos,balancos.last_change.serv2), compras_1: balancos.last_change.insu1, compras_2: balancos.last_change.insu2, propaganda_1: balancos.last_change.prop1, propaganda_2: balancos.last_change.prop2, institucional: balancos.propaganda, comissao: balancos.comissao, frota: somaF(balancos.frota), pas: balancos.pas1}
                                             
                                          });  
                                         
@@ -5468,6 +5489,27 @@ sockets.on('connection', async (socket) => {
                                                                     somapes = somapes + 2160
                                                                 }
                                         //console.log('puxando-balancos <<ATUAL /volume 1: ' + checar4(balancos[balancos.last_change.serv1])+ ' /insu1: ' + balancos.last_change.insu1 + ' /insu1i: ' + balancos.last_change.insu1i)
+                                        function check(formula, valor){
+                                            if(formula[valor]){
+                                                if(formula[valor][4]){
+                                                    return formula[valor][4]
+                                                }
+                                            }
+                                        }
+                                        function check2(formula, valor){
+                                            if(formula[valor]){
+                                                if(formula[valor][3]){
+                                                    return formula[valor][3]
+                                                }
+                                            }
+                                        }
+                                        function somaF(f) {
+                                            let som = 0
+                                            for(let i = 0; i < f.length; i ++){
+                                                som = som + f[i]
+                                            }
+                                            return som
+                                        }
                                         socket.emit('balancos', { 
                                             balanco_patrimonial: balancos.balanco_patrimonial,
                                             comissao: balancos.comissao,
@@ -5499,7 +5541,9 @@ sockets.on('connection', async (socket) => {
                                                     367:balancos['367'],
                                                     368:balancos['368'],
                                                     369:balancos['369']
-                                            }
+                                            },
+                                            deci: {servico_1: balancos.dre.servicos[0], servico_2: balancos.dre.servicos[2], preco_1: check2(balancos,balancos.last_change.serv1), preco_2: check2(balancos,balancos.last_change.serv2), planejado_1: check(balancos,balancos.last_change.serv1), planejado_2: check(balancos,balancos.last_change.serv2), compras_1: balancos.last_change.insu1, compras_2: balancos.last_change.insu2, propaganda_1: balancos.last_change.prop1, propaganda_2: balancos.last_change.prop2, institucional: balancos.propaganda, comissao: balancos.comissao, frota: somaF(balancos.frota), pas: balancos.pas2}
+                                            
                                          });
                                         }
                                         else{
@@ -5529,26 +5573,46 @@ sockets.on('connection', async (socket) => {
                         
                         //console.log(userx.turno)
                         //console.log(Number(turno))
-                            if(userx.turno == 2 || userx.turno == 4){
-                                if(userx.turno == 2){}//...
-                                Aluno.find({ backup: 1, instancia: userx.instancia, turno: userx.turno - 1 })                 
-                                    .then((bps) => {
+                            if(userx.turno == 2 || userx.turno == 3){
+                                let bps = await Aluno.find({ backup: 1, instancia: userx.instancia, turno: 1 })                 
+                            
                                         if(bps.length !== 0){ 
                                             let resp = []
                                             for(let i = 0; i < bps.length; i++){
                                                 resp.push({cooperativa: bps[i].cooperativa, balanco_patrimonial: bps[i].balanco_patrimonial, turno: bps[i].turno})
                                             }
                                             //console.log('bp-geral sendo emitido... >> [0]:' + resp[0] + ' [1]:' + resp[1])
-                                            socket.emit('bp-geral', resp)
-                                       
-                                        
+                                            socket.emit('bp-geral', resp)   
                                         } 
                                         else{
                                             //console.log('puts deu 0 qnd foi puxar os bps do turno 2 ou 4...')
                                             socket.emit('bp-geral', ['vazio'])
                                         }         
-                                    })
-                                    .catch((err) => {console.log(err)})
+                                    
+                                    
+                            }
+                            else if(userx.turno == 1){
+                                socket.emit('bp-geral', ['vazio'])
+                            }
+                            else{
+                                let bps2 = await Aluno.find({ backup: 1, instancia: userx.instancia, turno: 1 })                 
+                                let bps4 = await Aluno.find({ backup: 1, instancia: userx.instancia, turno: 3 }) 
+                                        if(bps2.length !== 0 && bps4.length !== 0){ 
+                                            let resp = []
+                                            for(let i = 0; i < bps2.length; i++){
+                                                resp.push({cooperativa: bps2[i].cooperativa, balanco_patrimonial: bps2[i].balanco_patrimonial, turno: 2})
+                                            }
+                                            for(let i = 0; i < bps4.length; i++){
+                                                resp.push({cooperativa: bps4[i].cooperativa, balanco_patrimonial: bps4[i].balanco_patrimonial, turno: 4})
+                                            }
+                                            //console.log('bp-geral sendo emitido... >> [0]:' + resp[0] + ' [1]:' + resp[1])
+                                            socket.emit('bp-geral', resp)   
+                                        } 
+                                        else{
+                                            //console.log('puts deu 0 qnd foi puxar os bps do turno 2 ou 4...')
+                                            socket.emit('bp-geral', ['vazio'])
+                                        } 
+
                             }
                             
 
@@ -5629,7 +5693,7 @@ sockets.on('connection', async (socket) => {
             
                 if(userx !== null){
                              //seria melhor ao registrar as instancias colocar como turno 1 na geração do JSON, mas fazer com cautela OKK
-                                if(userx.turno == 2 || userx.turno == 4){
+                                if(userx.turno == 2 || userx.turno == 3){
                                 Aluno.find({ backup: 1, instancia: userx.instancia, turno: userx.turno-1})                 
                                     .then((peps) => {
                                         //let arr = []
@@ -5656,8 +5720,14 @@ sockets.on('connection', async (socket) => {
                                     })
                                     .catch((err) => {console.log(err)})
                                 }
+                                else if(userx.turno == 4 || userx.turno == 5){
+
+                                }
+                                else if(userx.turno == 6){
+
+                                }
                                 else{
-                                    socket.emit('news',[{titulo: '>> Relevantes análises sobre o mercado', info: ' - Novos dados a cada 2 bimestres', bimestre: userx.turno}])
+                                    
                                 }
                             
                             
