@@ -85,7 +85,7 @@ sockets.on('connection', async (socket) => {
     socket.on('teste', (t) => {console.log('teste OK: (' + t +') id:'+ socket.id)
     })
     socket.on('login-client', async (creden) => {
-        console.log('ue')
+        //console.log('ue')
         let ll = await Usuario.findOne({id: socket.id})
                 if(ll !== null){
                     console.log('>>usuario ja conectado');
@@ -3966,6 +3966,8 @@ sockets.on('connection', async (socket) => {
                             
                         }
                         if(userx.last_change.serv2 == 0){
+                            console.log('userx.last_change.serv2 == 0 (passed)')
+                            console.log(userx.last_change + ' (userx.last_change) antes')
                             userx.last_change = {
                                 serv1: userx.last_change.serv1,
                                 serv2: tipo,
@@ -3976,8 +3978,9 @@ sockets.on('connection', async (socket) => {
                                 prop1: userx.last_change.prop1,
                                 prop2: userx.last_change.prop2
                             }
+                            console.log(userx.last_change + ' (userx.last_change) dps')
                         }
-                        let array_dados = [0, 1, userx[tipo][2], userx[tipo][3], userx[tipo][4], userx[tipo][5], userx[tipo][6], userx[tipo][7]]
+                        let array_dados = [0, 1, userx[tipo][2], userx[tipo][2]*1.1, 1000, userx[tipo][5], userx[tipo][6], userx[tipo][7]]
                         userx.set(tipo, array_dados) 
                         await userx.save()
                             let user = await Aluno.findOne({ _id: userx._id, temporario: 1})                 
@@ -5410,6 +5413,12 @@ sockets.on('connection', async (socket) => {
                                                 if(formula[valor][4]){
                                                     return formula[valor][4]
                                                 }
+                                                else{
+                                                    return 0
+                                                }
+                                            }
+                                            else{
+                                                return 0
                                             }
                                         }
                                         function check2(formula, valor){
@@ -5417,6 +5426,12 @@ sockets.on('connection', async (socket) => {
                                                 if(formula[valor][3]){
                                                     return formula[valor][3]
                                                 }
+                                                else{
+                                                    return 0
+                                                }
+                                            }
+                                            else{
+                                                return 0
                                             }
                                         }
                                         function somaF(f) {
@@ -5437,7 +5452,7 @@ sockets.on('connection', async (socket) => {
                                             deci: {servico_1: balancos.dre.servicos[0], servico_2: balancos.dre.servicos[2], preco_1: balancos.dre.servicos[1], preco_2: balancos.dre.servicos[3], planejado_1: check(balancos,balancos.last_change.serv1), planejado_2: check(balancos,balancos.last_change.serv2), compras_1: balancos.last_change.insu1, compras_2: balancos.last_change.insu2, propaganda_1: balancos.last_change.prop1, propaganda_2: balancos.last_change.prop2, institucional: balancos.propaganda, comissao: balancos.comissao, frota: somaF(balancos.frota), pas: balancos.pas1}
                                             
                                          });  
-                                        
+                                        console.log(check(balancos,balancos.last_change.serv2) + ' check(balancos,balancos.last_change.serv2)')
                                         } 
                                         else{
                                             console.log('puts... Aluno.findOne({ cooperativa: userx.cooperativa, backup: 1, instancia: userx.instancia, turno: turno }) deu NULO')
@@ -5494,6 +5509,12 @@ sockets.on('connection', async (socket) => {
                                                 if(formula[valor][4]){
                                                     return formula[valor][4]
                                                 }
+                                                else{
+                                                    return 0
+                                                }
+                                            }
+                                            else{
+                                                return 0
                                             }
                                         }
                                         function check2(formula, valor){
@@ -5501,6 +5522,12 @@ sockets.on('connection', async (socket) => {
                                                 if(formula[valor][3]){
                                                     return formula[valor][3]
                                                 }
+                                                else{
+                                                    return 0
+                                                }
+                                            }
+                                            else{
+                                                return 0
                                             }
                                         }
                                         function somaF(f) {
@@ -5542,9 +5569,10 @@ sockets.on('connection', async (socket) => {
                                                     368:balancos['368'],
                                                     369:balancos['369']
                                             },
-                                            deci: {servico_1: balancos.dre.servicos[0], servico_2: balancos.dre.servicos[2], preco_1: check2(balancos,balancos.last_change.serv1), preco_2: check2(balancos,balancos.last_change.serv2), planejado_1: check(balancos,balancos.last_change.serv1), planejado_2: check(balancos,balancos.last_change.serv2), compras_1: balancos.last_change.insu1, compras_2: balancos.last_change.insu2, propaganda_1: balancos.last_change.prop1, propaganda_2: balancos.last_change.prop2, institucional: balancos.propaganda, comissao: balancos.comissao, frota: somaF(balancos.frota), pas: balancos.pas2}
+                                            deci: {servico_1: balancos.dre.servicos[0], servico_2: balancos.last_change.serv2, preco_1: check2(balancos,balancos.last_change.serv1), preco_2: check2(balancos,balancos.last_change.serv2), planejado_1: check(balancos,balancos.last_change.serv1), planejado_2: check(balancos,balancos.last_change.serv2), compras_1: balancos.last_change.insu1, compras_2: balancos.last_change.insu2, propaganda_1: balancos.last_change.prop1, propaganda_2: balancos.last_change.prop2, institucional: balancos.propaganda, comissao: balancos.comissao, frota: somaF(balancos.frota), pas: balancos.pas2}
                                             
                                          });
+                                         console.log(balancos.dre.servicos[2] + ' (balancos.dre.servicos[2])')
                                         }
                                         else{
                                             console.log('puts atual')
@@ -5640,14 +5668,14 @@ sockets.on('connection', async (socket) => {
                                         let arr = []
                                         for(let i = 0; i < peps.length; i++){
                                             if(peps[i].pes_p.modelos_oferecidos !== 'vazio'){
-                                                let resposta = 'Serviços:'
+                                                let resposta = 'Serviços operados:'
                                                 peps[i].pes_p.modelos_oferecidos.map((serv,ind) => {
                                                     resposta = resposta + ' ' + serv + ' -'
                                                 })
                                                 arr.push({tipo: 'Modelos Oferecidos', resultado: resposta, bimestre: peps[i].turno})
                                             }
                                             if(peps[i].pes_p.total_participacao_modelos !== 'vazio'){
-                                                arr.push({tipo: 'Participação da concorrência', resultado: peps[i].pes_p.total_participacao_modelos, bimestre: peps[i].turno})
+                                                arr.push({tipo: 'Participação dos tipos de serviço no faturamento total', resultado: peps[i].pes_p.total_participacao_modelos, bimestre: peps[i].turno})
                                             }
                                             if(peps[i].pes_p.total_pas !== 'vazio'){
                                                 arr.push({tipo: 'Total de P.A.S.', resultado: peps[i].pes_p.total_pas, bimestre: peps[i].turno})
@@ -5659,7 +5687,7 @@ sockets.on('connection', async (socket) => {
                                             */
                                             if(peps[i].participacao_modelos.length > 0){
                                                 for(let ii = 0; ii < peps[i].participacao_modelos.length; ii++){//ex-> [index, resul]
-                                                    arr.push({tipo: 'Teste entre dois tipos de serviço: ', resultado: 'Combinações: ' + peps[i].participacao_modelos[ii][0] + peps[i].participacao_modelos[ii][1], bimestre: peps[i].turno})
+                                                    arr.push({tipo: 'Teste entre dois tipos de serviço: ', resultado: 'Resultado do teste: ' + peps[i].participacao_modelos[ii][0] + peps[i].participacao_modelos[ii][1], bimestre: peps[i].turno})
                                                 }   
                                             }
                                             
@@ -8175,7 +8203,7 @@ sockets.on('connection', async (socket) => {
                         for(let i = 0; i < users.length; i++){
                             for(let h = 0; h < index.length; h++){
                                 if(users[i][index[h]][1] == 1){
-                                    serv.push(users[i].cooperativa+': '+index[h])
+                                    serv.push('['+users[i].cooperativa+'->opera o serviço->'+index[h]+']')
                                 }
                                 if(users[i][index[h]][6] > 0){
                                     part[h] = part[h] + users[i][index[h]][6]
@@ -8219,19 +8247,19 @@ sockets.on('connection', async (socket) => {
                                                 console.log('users[i].participacao_modelos[dd][0][2]: ' + users[i].participacao_modelos[dd][0][2])
                                                 console.log('users[i].participacao_modelos[dd][1][2]: ' + users[i].participacao_modelos[dd][1][2])
                                                 if(users[i].participacao_modelos[dd][0][2] > users[i].participacao_modelos[dd][1][2] && users[i].participacao_modelos[dd][0][0] > users[i].participacao_modelos[dd][1][0]){
-                                                    let sorte = Math.round(Math.random()*15) + 50
+                                                    let sorte = Math.round(Math.round(Math.random()*19) + 50)
                                                     console.log('sorte: ' + sorte)
                                                     let azar = 100 - sorte
-                                                    amem.push([users[i].participacao_modelos[dd][0]+' com preferência de '+sorte+'% e ',users[i].participacao_modelos[dd][1]+' com '+azar+'%.'])
+                                                    amem.push([users[i].participacao_modelos[dd][0]+' com preferência de '+azar+'% e ',users[i].participacao_modelos[dd][1]+' com '+Math.roundsorte+'%.'])
                                                 }
                                                 else if(users[i].participacao_modelos[dd][0][2] > users[i].participacao_modelos[dd][1][2] && users[i].participacao_modelos[dd][0][0] <  users[i].participacao_modelos[dd][1][0]){
-                                                    let sorte = Math.round(Math.random()*8) + 50
+                                                    let sorte = Math.round(Math.random()*14) + 50
                                                     console.log('sorte: ' + sorte)
                                                     let azar = 100 - sorte
                                                     amem.push(["{ "+users[i].participacao_modelos[dd][0]+' com prefenrência de '+sorte+'% e ',users[i].participacao_modelos[dd][1]+' com '+azar+'%. }'])
-                                                }
+                                                } 
                                                 else{
-                                                    let sorte = Math.round(Math.random()*5) + 50
+                                                    let sorte = Math.round(Math.random()*8) + 50
                                                     console.log('sorte: ' + sorte)
                                                     let azar = 100 - sorte
                                                     amem.push([users[i].participacao_modelos[dd][0]+' com prefenrência de '+sorte+'% e ',users[i].participacao_modelos[dd][1]+' com '+azar+'%.'])
