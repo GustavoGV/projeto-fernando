@@ -241,7 +241,7 @@ sockets.on('connection', async (socket) => {
                             tributos_a_pagar_anterior: 913221,
                             tributos_a_pagar_atual: 0,
                             emprestimos: 288000,
-                            capial: 18720000,
+                            capial: 19472919,
                             lucros_acumulados: 0
                         },
                         dre: {
@@ -349,7 +349,7 @@ sockets.on('connection', async (socket) => {
                                         tributos_a_pagar_anterior: 913221,
                                         tributos_a_pagar_atual: 0,
                                         emprestimos: 288000,
-                                        capial: 18720000,
+                                        capial: 19472919,
                                         lucros_acumulados: 0
                                     },
                                     dre: {
@@ -5846,7 +5846,7 @@ sockets.on('connection', async (socket) => {
                                 Data.findOne({login_adm: creden[0]})
                                     .then((userL) => {
                                         if(userL == null){
-                                            let jogo = new Data({login_adm: creden[0], iniciado: 1, senha_adm: creden[1], instancia: creden[2], senha_instancia: creden[3], turno: 1, oferta_mercado: 19000000*2, ativo: 1})
+                                            let jogo = new Data({login_adm: creden[0], iniciado: 1, senha_adm: creden[1], instancia: creden[2], senha_instancia: creden[3], turno: 1, oferta_mercado: 24000000, ativo: 1})
                                             jogo.save()
                                                 .then(() => {
                                                     console.log('>>> Instancia: ' + creden[2] + ' registrada com sucesso')    
@@ -6575,8 +6575,8 @@ sockets.on('connection', async (socket) => {
                         users[i].set(index[o],[users[i][index[o]][0], users[i][index[o]][1], users[i][index[o]][2], users[i][index[o]][3], users[i][index[o]][4], users[i][index[o]][5], 0, users[i][index[o]][7]])
                        
                         if(users[i][index[o]][4] > 0){
-                            if((users[i]['faturamento']/users[i]['scorepreco'][1]) < 1){
-                                console.log('estoque 2' + users[i].balanco_patrimonial.estoque)
+                            if(((users[i][index[o]][0]) - ((users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4])) > 0){
+                                //console.log('estoque 2' + users[i].balanco_patrimonial.estoque)
                                 users[i].balanco_patrimonial = {
                                 caixa: users[i].balanco_patrimonial.caixa,
                                 estoque: users[i].balanco_patrimonial.estoque - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][2]), //DANGER - ser houver acontecido o desconto de 10%
@@ -6625,7 +6625,6 @@ sockets.on('connection', async (socket) => {
 
         
                                 }
-                            
                                 users[i].fluxo_de_caixa = {
                                 saldo_anterior: users[i].fluxo_de_caixa.saldo_anterior,
                                 faturamento: users[i].fluxo_de_caixa.faturamento,
@@ -6650,12 +6649,85 @@ sockets.on('connection', async (socket) => {
                                 maquinas: users[i].fluxo_de_caixa.maquinas,
                                 distribuidores: users[i].fluxo_de_caixa.distribuidores
                                 }
+                                users[i].set(index[o], [((users[i][index[o]][0]) - ((users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4])), users[i][index[o]][1], users[i][index[o]][2], users[i][index[o]][3], users[i][index[o]][4], users[i][index[o]][5], users[i][index[o]][6], users[i][index[o]][7]])
+                                users[i].balanco_patrimonial = {
+                                caixa: users[i].balanco_patrimonial.caixa,
+                                estoque: users[i].balanco_patrimonial.estoque - 36*(users[i][index[o]][0]), //DANGER - ser houver acontecido o desconto de 10%
+                                contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
+                                contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
+                                maquinas: users[i].balanco_patrimonial.maquinas,
+                                depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_maquinas,
+                                veiculos: users[i].balanco_patrimonial.veiculos,
+                                depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
+                                tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
+                                tributos_a_pagar_atual: users[i].balanco_patrimonial.tributos_a_pagar_atual,
+                                emprestimos: users[i].balanco_patrimonial.emprestimos,
+                                capial: users[i].balanco_patrimonial.capial,
+                                lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - 36*(users[i][index[o]][0])
+                                }
+                                users[i].dre = {
+                                receita: users[i].dre.receita, 
+                                csp: users[i].dre.csp + users[i][index[o]][0]*36, 
+                                estoque_inicial: users[i].dre.estoque_inicial,
+                                custo_prestacao_servico: users[i].dre.custo_prestacao_servico,
+                                custo_estocagem: users[i].dre.custo_estocagem + users[i][index[o]][4]*36,
+                                custo_troca_insumos: users[i].dre.custo_troca_insumos,
+                                hora_extra: users[i].dre.hora_extra,
+                                capacidade_n_utilizada: users[i].dre.capacidade_n_utilizada,
+                                margem_bruta: users[i].dre.margem_bruta,
+                                despesas_administrativas: users[i].dre.despesas_administrativas,
+                                salario_promotores: users[i].dre.salario_promotores,
+                                comissao: users[i].dre.comissao,
+                                propaganda_institucional: users[i].dre.propaganda_institucional,
+                                propaganda_unitaria: users[i].dre.propaganda_unitaria,
+                                depreciacao_de_maquinas: users[i].dre.depreciacao_de_maquinas,
+                                encargos_financiamento: users[i].dre.encargos_financiamento,
+                                salario_frota: users[i].dre.salario_frota,
+                                manutencao_frota: users[i].dre.manutencao_frota,
+                                depreciacao_de_veiculos: users[i].dre.depreciacao_de_veiculos,
+                                frota_terceirizada: users[i].dre.frota_terceirizada,
+                                despesas_operacionais_n_planejadas: users[i].dre.despesas_operacionais_n_planejadas,
+                                pas: users[i].dre.pas,
+                                pesquisas: users[i].dre.pesquisas,
+                                tributos: users[i].dre.tributos,
+                                servicos: [users[i].dre.servicos[0],users[i].dre.servicos[1],users[i].dre.servicos[2],users[i].dre.servicos[3]],
+                                preco_medio: users[i].dre.preco_medio,
+                                atendimentos: users[i].dre.atendimentos,
+                                insumos_em_estoque: users[i].dre.insumos_em_estoque// + (users[i][index[o]][0]*users[i][index[o]][2] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][2]))
+        
+
+        
+                                }
+                                users[i].fluxo_de_caixa = {
+                                saldo_anterior: users[i].fluxo_de_caixa.saldo_anterior,
+                                faturamento: users[i].fluxo_de_caixa.faturamento,
+                                contas_a_receber: users[i].fluxo_de_caixa.contas_a_receber,
+                                contas_a_receber_recebidas: users[i].fluxo_de_caixa.contas_a_receber_recebidas, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
+                                custo_de_servico_prestado: users[i].fluxo_de_caixa.custo_de_servico_prestado + users[i][index[o]][0]*36,
+                                emprestimos_contratados: users[i].fluxo_de_caixa.emprestimos_contratados,
+                                emprestimos_pagos: users[i].fluxo_de_caixa.emprestimos_pagos,
+                                veiculos_vendidos: users[i].fluxo_de_caixa.veiculos_vendidos,
+                                depreciacao_de_veiculos: users[i].fluxo_de_caixa.depreciacao_de_veiculos,
+                                depreciacao_de_maquinas: users[i].fluxo_de_caixa.depreciacao_de_maquinas,
+                                veiculos_comprados: users[i].fluxo_de_caixa.veiculos_comprados,
+                                tributos: users[i].fluxo_de_caixa.tributos,
+                                promotores: users[i].fluxo_de_caixa.promotores,
+                                propaganda: users[i].fluxo_de_caixa.propaganda,
+                                pesquisas: users[i].fluxo_de_caixa.pesquisas,
+                                pas: users[i].fluxo_de_caixa.pas,
+                                uso_frota: users[i].fluxo_de_caixa.uso_frota,
+                                despesas_operacionais_n_planejadas: users[i].fluxo_de_caixa.despesas_operacionais_n_planejadas,
+                                despesas_administrativas: users[i].fluxo_de_caixa.despesas_administrativas,
+                                encargos_financiamento: users[i].fluxo_de_caixa.encargos_financiamento,
+                                maquinas: users[i].fluxo_de_caixa.maquinas,
+                                distribuidores: users[i].fluxo_de_caixa.distribuidores
+                                }
                             }
                             else{
                                 console.log('estoque 1' + users[i].balanco_patrimonial.estoque)
                                 users[i].balanco_patrimonial = {
-                                    caixa: users[i].balanco_patrimonial.caixa,
-                                    estoque: users[i].balanco_patrimonial.estoque - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][2]), //DANGER - ser houver acontecido o desconto de 10%
+                                    caixa: users[i].balanco_patrimonial.caixa + ((users[i][index[o]][0]) - ((users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]))*users[i][index[o]][2]*1.2,
+                                    estoque: users[i].balanco_patrimonial.estoque - users[i][index[o]][0]*(users[i][index[o]][2]), //DANGER - ser houver acontecido o desconto de 10%
                                     contas_a_receber60: (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][3])*0.5 + users[i].balanco_patrimonial.contas_a_receber60,
                                     contas_a_receber120: (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][3])*0.5 + users[i].balanco_patrimonial.contas_a_receber120,
                                     maquinas: users[i].balanco_patrimonial.maquinas,
@@ -6666,33 +6738,16 @@ sockets.on('connection', async (socket) => {
                                     tributos_a_pagar_atual: users[i].balanco_patrimonial.tributos_a_pagar_atual,
                                     emprestimos: users[i].balanco_patrimonial.emprestimos,
                                     capial: users[i].balanco_patrimonial.capial,
-                                    lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - users[i][index[o]][4]*(users[i][index[o]][2]) + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][3])
-                                    }
-                                if(users[i].balanco_patrimonial.estoque < 0){
-                                    users[i].balanco_patrimonial = {
-                                        caixa: users[i].balanco_patrimonial.caixa,
-                                        estoque: 0, //DANGER - ser houver acontecido o desconto de 10%
-                                        contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
-                                        contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
-                                        maquinas: users[i].balanco_patrimonial.maquinas,
-                                        depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_maquinas,
-                                        veiculos: users[i].balanco_patrimonial.veiculos,
-                                        depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
-                                        tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
-                                        tributos_a_pagar_atual: users[i].balanco_patrimonial.tributos_a_pagar_atual,
-                                        emprestimos: users[i].balanco_patrimonial.emprestimos,
-                                        capial: users[i].balanco_patrimonial.capial,
-                                        lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados
-                                        }
-                                }
-                                    users[i].dre = {
+                                    lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - users[i][index[o]][0]*(users[i][index[o]][2]) + ((users[i][index[o]][0]) - ((users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]))*users[i][index[o]][2]*1.2 + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][3])
+                                    }// falta cobrar o custo de hora extra para os INSUMOS adquiridos a mais para suprir a demanda...
+                                users[i].dre = {
                                     receita: users[i].dre.receita + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][3]), 
-                                    csp: users[i].dre.csp + users[i][index[o]][4]*(users[i][index[o]][2]), 
+                                    csp: users[i].dre.csp + users[i][index[o]][0]*(users[i][index[o]][2]) - ((users[i][index[o]][0]) - ((users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]))*users[i][index[o]][2], 
                                     estoque_inicial: users[i].dre.estoque_inicial,
-                                    custo_prestacao_servico: users[i].dre.custo_prestacao_servico + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][2]),
+                                    custo_prestacao_servico: users[i].dre.custo_prestacao_servico + users[i][index[o]][0]*(users[i][index[o]][2]),
                                     custo_estocagem: users[i].dre.custo_estocagem,
                                     custo_troca_insumos: users[i].dre.custo_troca_insumos,
-                                    hora_extra: users[i].dre.hora_extra,
+                                    hora_extra: users[i].dre.hora_extra - ((users[i][index[o]][0]) - ((users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]))*users[i][index[o]][2]*0.2,
                                     capacidade_n_utilizada: users[i].dre.capacidade_n_utilizada,
                                     margem_bruta: users[i].dre.margem_bruta,
                                     despesas_administrativas: users[i].dre.despesas_administrativas,
@@ -6718,13 +6773,12 @@ sockets.on('connection', async (socket) => {
     
             
                                     }
-                                
-                                    users[i].fluxo_de_caixa = {
+                                users[i].fluxo_de_caixa = {
                                     saldo_anterior: users[i].fluxo_de_caixa.saldo_anterior,
                                     faturamento: users[i].fluxo_de_caixa.faturamento,
                                     contas_a_receber: users[i].fluxo_de_caixa.contas_a_receber + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][3]),
                                     contas_a_receber_recebidas: users[i].fluxo_de_caixa.contas_a_receber_recebidas, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
-                                    custo_de_servico_prestado: users[i].fluxo_de_caixa.custo_de_servico_prestado + users[i][index[o]][4]*(users[i][index[o]][2]),
+                                    custo_de_servico_prestado: users[i].fluxo_de_caixa.custo_de_servico_prestado + users[i][index[o]][0]*(users[i][index[o]][2]) - ((users[i][index[o]][0]) - ((users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]))*users[i][index[o]][2]*1.2,
                                     emprestimos_contratados: users[i].fluxo_de_caixa.emprestimos_contratados,
                                     emprestimos_pagos: users[i].fluxo_de_caixa.emprestimos_pagos,
                                     veiculos_vendidos: users[i].fluxo_de_caixa.veiculos_vendidos,
@@ -6743,44 +6797,14 @@ sockets.on('connection', async (socket) => {
                                     maquinas: users[i].fluxo_de_caixa.maquinas,
                                     distribuidores: users[i].fluxo_de_caixa.distribuidores
                                     }
+                                users[i].set(index[o], [0, users[i][index[o]][1], users[i][index[o]][2], users[i][index[o]][3], users[i][index[o]][4], users[i][index[o]][5], users[i][index[o]][6], users[i][index[o]][7]])
 
 
                             }
 
 
-                            let array_insu = [(users[i][index[o]][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]), users[i][index[o]][1], users[i][index[o]][2], users[i][index[o]][3], users[i][index[o]][4],(users[i][index[o]][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*users[i][index[o]][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][3])]
-                            users[i].dre = {
-                                receita: users[i].dre.receita, 
-                                csp: users[i].dre.csp, 
-                                estoque_inicial: users[i].dre.estoque_inicial + users[i][index[o]][0]*users[i][index[o]][2],
-                                custo_prestacao_servico: users[i].dre.custo_prestacao_servico,
-                                custo_estocagem: users[i].dre.custo_estocagem,
-                                custo_troca_insumos: users[i].dre.custo_troca_insumos,
-                                hora_extra: users[i].dre.hora_extra,
-                                capacidade_n_utilizada: users[i].dre.capacidade_n_utilizada,
-                                margem_bruta: users[i].dre.margem_bruta,
-                                despesas_administrativas: users[i].dre.despesas_administrativas,
-                                salario_promotores: users[i].dre.salario_promotores,
-                                comissao: users[i].dre.comissao,
-                                propaganda_institucional: users[i].dre.propaganda_institucional,
-                                propaganda_unitaria: users[i].dre.propaganda_unitaria,
-                                depreciacao_de_maquinas: users[i].dre.depreciacao_de_maquinas,
-                                encargos_financiamento: users[i].dre.encargos_financiamento,
-                                salario_frota: users[i].dre.salario_frota,
-                                manutencao_frota: users[i].dre.manutencao_frota,
-                                depreciacao_de_veiculos: users[i].dre.depreciacao_de_veiculos,
-                                frota_terceirizada: users[i].dre.frota_terceirizada,
-                                despesas_operacionais_n_planejadas: users[i].dre.despesas_operacionais_n_planejadas,
-                                pas: users[i].dre.pas,
-                                pesquisas: users[i].dre.pesquisas,
-                                tributos: users[i].dre.tributos,
-                                servicos: [users[i].dre.servicos[0],users[i].dre.servicos[1],users[i].dre.servicos[2],users[i].dre.servicos[3]],
-                                preco_medio: users[i].dre.preco_medio,
-                                atendimentos: users[i].dre.atendimentos + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4],
-                                insumos_em_estoque: users[i].dre.insumos_em_estoque + users[i][index[o]][0]
-        
-        
-                            } //CONTABILIZA os estoques inicias dos servicos e atendimentos realizados (para DRE)
+                            let array_insu = [users[i][index[o]][0], users[i][index[o]][1], users[i][index[o]][2], users[i][index[o]][3], users[i][index[o]][4],(users[i][index[o]][5] + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]), (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*users[i][index[o]][3], 0.5*(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][3])]
+                             //CONTABILIZA os estoques inicias dos servicos e atendimentos realizados (para DRE)
                             //(users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['147'][4]*users[i]['147'][3] => igual ao faturamento obtido pelo jogador nesse serviço especifico
                             
                             users[i].set(index[o], array_insu)
@@ -6910,163 +6934,7 @@ sockets.on('connection', async (socket) => {
                             //users[i].balanco_patrimonial.contas_a_receber = users[i]['147'][7]
                             
                             //users[i][index[o]][0] = users[i]['147'][0] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i]['147'][4]
-                            if(users[i][index[o]][0] >= 0){
-                                 
-                                users[i].taokeys = users[i].taokeys - users[i][index[o]][0]*36
-                                console.log("6 (- users[i][index[o]][0]*36): " + users[i].taokeys)
-    
-
-                                users[i].balanco_patrimonial = {
-                                caixa: users[i].balanco_patrimonial.caixa - users[i][index[o]][0]*36,
-                                estoque: users[i].balanco_patrimonial.estoque,
-                                contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
-                                contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
-                                maquinas: users[i].balanco_patrimonial.maquinas,
-                                depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_maquinas,
-                                veiculos: users[i].balanco_patrimonial.veiculos,
-                                depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
-                                tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
-                                tributos_a_pagar_atual: users[i].balanco_patrimonial.tributos_a_pagar_atual,
-                                emprestimos: users[i].balanco_patrimonial.emprestimos,
-                                capial: users[i].balanco_patrimonial.capial,
-                                lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados - users[i][index[o]][0]*36
-                            }
-                                //tbb contabiliza os estoques nao utilizados na DRE \/
-                                users[i].dre = {
-                                    receita: users[i].dre.receita, 
-                                    csp: users[i].dre.csp + users[i][index[o]][0]*36,
-                                    estoque_inicial: users[i].dre.estoque_inicial,
-                                    custo_prestacao_servico: users[i].dre.custo_prestacao_servico,
-                                    custo_estocagem: users[i].dre.custo_estocagem + users[i][index[o]][0]*36,
-                                    custo_troca_insumos: users[i].dre.custo_troca_insumos,
-                                    hora_extra: users[i].dre.hora_extra,
-                                    capacidade_n_utilizada: users[i].dre.capacidade_n_utilizada + users[i][index[o]][0],
-                                    margem_bruta: users[i].dre.margem_bruta,
-                                    despesas_administrativas: users[i].dre.despesas_administrativas,
-                                    salario_promotores: users[i].dre.salario_promotores,
-                                    comissao: users[i].dre.comissao,
-                                    propaganda_institucional: users[i].dre.propaganda_institucional,
-                                    propaganda_unitaria: users[i].dre.propaganda_unitaria,
-                                    depreciacao_de_maquinas: users[i].dre.depreciacao_de_maquinas,
-                                    encargos_financiamento: users[i].dre.encargos_financiamento,
-                                    salario_frota: users[i].dre.salario_frota,
-                                    manutencao_frota: users[i].dre.manutencao_frota,
-                                    depreciacao_de_veiculos: users[i].dre.depreciacao_de_veiculos,
-                                    frota_terceirizada: users[i].dre.frota_terceirizada,
-                                    despesas_operacionais_n_planejadas: users[i].dre.despesas_operacionais_n_planejadas,
-                                    pas: users[i].dre.pas,
-                                    pesquisas: users[i].dre.pesquisas,
-                                    tributos: users[i].dre.tributos,
-                                    servicos: [users[i].dre.servicos[0],users[i].dre.servicos[1],users[i].dre.servicos[2],users[i].dre.servicos[3]],
-                                    preco_medio: users[i].dre.preco_medio,
-                                    atendimentos: users[i].dre.atendimentos,
-                                    insumos_em_estoque: users[i].dre.insumos_em_estoque
-                                }
-                                users[i].fluxo_de_caixa = {
-                                    saldo_anterior: users[i].fluxo_de_caixa.saldo_anterior,
-                                    faturamento: users[i].fluxo_de_caixa.faturamento,
-                                    contas_a_receber: users[i].fluxo_de_caixa.contas_a_receber,
-                                    contas_a_receber_recebidas: users[i].fluxo_de_caixa.contas_a_receber_recebidas, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
-                                    custo_de_servico_prestado: users[i].fluxo_de_caixa.custo_de_servico_prestado + users[i][index[o]][0]*36,
-                                    emprestimos_contratados: users[i].fluxo_de_caixa.emprestimos_contratados,
-                                    emprestimos_pagos: users[i].fluxo_de_caixa.emprestimos_pagos,
-                                    veiculos_vendidos: users[i].fluxo_de_caixa.veiculos_vendidos,
-                                    depreciacao_de_veiculos: users[i].fluxo_de_caixa.depreciacao_de_veiculos,
-                                    depreciacao_de_maquinas: users[i].fluxo_de_caixa.depreciacao_de_maquinas,
-                                    veiculos_comprados: users[i].fluxo_de_caixa.veiculos_comprados,
-                                    tributos: users[i].fluxo_de_caixa.tributos,
-                                    promotores: users[i].fluxo_de_caixa.promotores,
-                                    propaganda: users[i].fluxo_de_caixa.propaganda,
-                                    pesquisas: users[i].fluxo_de_caixa.pesquisas,
-                                    pas: users[i].fluxo_de_caixa.pas,
-                                    uso_frota: users[i].fluxo_de_caixa.uso_frota,
-                                    despesas_operacionais_n_planejadas: users[i].fluxo_de_caixa.despesas_operacionais_n_planejadas,
-                                    despesas_administrativas: users[i].fluxo_de_caixa.despesas_administrativas,
-                                    encargos_financiamento: users[i].fluxo_de_caixa.encargos_financiamento,
-                                    maquinas: users[i].fluxo_de_caixa.maquinas
-                                }    
-                                console.log("6 balan_caixa : " + users[i].balanco_patrimonial.caixa)                  
-
-                            }
-                            else{
-                                console.log("antes 7: " + users[i].taokeys)
-                                users[i].taokeys = users[i].taokeys + users[i][index[o]][0]*users[i][index[o]][2]*1.2
-                                console.log("7 (+ users[i][index[o]][0]*users[i][index[o]][2]*1.2): " + users[i].taokeys)
-                                users[i].balanco_patrimonial = {
-                                    caixa: users[i].balanco_patrimonial.caixa + users[i][index[o]][0]*users[i][index[o]][2]*1.2,
-                                    estoque: users[i].balanco_patrimonial.estoque,
-                                    contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
-                                    contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
-                                    maquinas: users[i].balanco_patrimonial.maquinas,
-                                    depreciacao_maquinas: users[i].balanco_patrimonial.depreciacao_maquinas,
-                                    veiculos: users[i].balanco_patrimonial.veiculos,
-                                    depreciacao_veiculos: users[i].balanco_patrimonial.depreciacao_veiculos,
-                                    tributos_a_pagar_anterior: users[i].balanco_patrimonial.tributos_a_pagar_anterior,
-                                    tributos_a_pagar_atual: users[i].balanco_patrimonial.tributos_a_pagar_atual,
-                                    emprestimos: users[i].balanco_patrimonial.emprestimos,
-                                    capial: users[i].balanco_patrimonial.capial,
-                                    lucros_acumulados: users[i].balanco_patrimonial.lucros_acumulados + users[i][index[o]][0]*users[i][index[o]][2]*1.2
-                                }
-                                users[i].dre = {
-                                    receita: users[i].dre.receita, 
-                                    csp: users[i].dre.csp + (-1)*users[i][index[o]][0]*users[i][index[o]][2]*1.2,
-                                    estoque_inicial: users[i].dre.estoque_inicial,
-                                    custo_prestacao_servico: users[i].dre.custo_prestacao_servico,
-                                    custo_estocagem: users[i].dre.custo_estocagem,
-                                    custo_troca_insumos: users[i].dre.custo_troca_insumos,
-                                    hora_extra: users[i].dre.hora_extra,
-                                    capacidade_n_utilizada: users[i].dre.capacidade_n_utilizada,
-                                    margem_bruta: users[i].dre.margem_bruta,
-                                    despesas_administrativas: users[i].dre.despesas_administrativas,
-                                    salario_promotores: users[i].dre.salario_promotores,
-                                    comissao: users[i].dre.comissao,
-                                    propaganda_institucional: users[i].dre.propaganda_institucional,
-                                    propaganda_unitaria: users[i].dre.propaganda_unitaria,
-                                    depreciacao_de_maquinas: users[i].dre.depreciacao_de_maquinas,
-                                    encargos_financiamento: users[i].dre.encargos_financiamento,
-                                    salario_frota: users[i].dre.salario_frota,
-                                    manutencao_frota: users[i].dre.manutencao_frota,
-                                    depreciacao_de_veiculos: users[i].dre.depreciacao_de_veiculos,
-                                    frota_terceirizada: users[i].dre.frota_terceirizada,
-                                    despesas_operacionais_n_planejadas: users[i].dre.despesas_operacionais_n_planejadas,
-                                    pas: users[i].dre.pas,
-                                    pesquisas: users[i].dre.pesquisas,
-                                    tributos: users[i].dre.tributos,
-                                    servicos: [users[i].dre.servicos[0],users[i].dre.servicos[1],users[i].dre.servicos[2],users[i].dre.servicos[3]],
-                                    preco_medio: users[i].dre.preco_medio,
-                                    atendimentos: users[i].dre.atendimentos,
-                                    insumos_em_estoque: users[i].dre.insumos_em_estoque// + (-1)*users[i][index[o]][0]*users[i][index[o]][2]
-            
-            
-                                }
-                                users[i].fluxo_de_caixa = {
-                                    saldo_anterior: users[i].fluxo_de_caixa.saldo_anterior,
-                                    faturamento: users[i].fluxo_de_caixa.faturamento,
-                                    contas_a_receber: users[i].fluxo_de_caixa.contas_a_receber,
-                                    contas_a_receber_recebidas: users[i].fluxo_de_caixa.contas_a_receber_recebidas, //as contas a receber. recebidas nessa passagem de turno (q tiveram o valor somado a receita do período anterior)
-                                    custo_de_servico_prestado: users[i].fluxo_de_caixa.custo_de_servico_prestado + users[i][index[o]][0]*users[i][index[o]][2]*1.2*(-1),
-                                    emprestimos_contratados: users[i].fluxo_de_caixa.emprestimos_contratados,
-                                    emprestimos_pagos: users[i].fluxo_de_caixa.emprestimos_pagos,
-                                    veiculos_vendidos: users[i].fluxo_de_caixa.veiculos_vendidos,
-                                    depreciacao_de_veiculos: users[i].fluxo_de_caixa.depreciacao_de_veiculos,
-                                    depreciacao_de_maquinas: users[i].fluxo_de_caixa.depreciacao_de_maquinas,
-                                    veiculos_comprados: users[i].fluxo_de_caixa.veiculos_comprados,
-                                    tributos: users[i].fluxo_de_caixa.tributos,
-                                    promotores: users[i].fluxo_de_caixa.promotores,
-                                    propaganda: users[i].fluxo_de_caixa.propaganda,
-                                    pesquisas: users[i].fluxo_de_caixa.pesquisas,
-                                    pas: users[i].fluxo_de_caixa.pas,
-                                    uso_frota: users[i].fluxo_de_caixa.uso_frota,
-                                    despesas_operacionais_n_planejadas: users[i].fluxo_de_caixa.despesas_operacionais_n_planejadas,
-                                    despesas_administrativas: users[i].fluxo_de_caixa.despesas_administrativas,
-                                    encargos_financiamento: users[i].fluxo_de_caixa.encargos_financiamento,
-                                    maquinas: users[i].fluxo_de_caixa.maquinas
-                                }
-                                console.log("7 balan_caixa : " + users[i].balanco_patrimonial.caixa)  
-
-                                
-                                users[i].set(index[o], [0, users[i][index[o]][1], users[i][index[o]][2], users[i][index[o]][3], users[i][index[o]][4], users[i][index[o]][5], users[i][index[o]][6], users[i][index[o]][7]])
-                            }
+                            
 
                             if(index[o][2] == '9' || index[o][2] == 9){
                                 uso_frota = uso_frota + (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]
