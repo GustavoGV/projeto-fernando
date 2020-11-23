@@ -1888,14 +1888,9 @@ sockets.on('connection', async (socket) => {
                             usert.set(serv, [userdef[serv][0], userdef[serv][1], userdef[serv][2], userdef[serv][3], userdef[serv][4], userdef[serv][5], userdef[serv][6], userdef[serv][7]])
                         }
                         usert.set('frota', [userdef.frota[0],userdef.frota[1],userdef.frota[2],userdef.frota[3],userdef.frota[4],userdef.frota[5],userdef.frota[6],userdef.frota[7],userdef.frota[8],userdef.frota[9],userdef.frota[10],userdef.frota[11]])
-                        
                         await usert.save()
-                            
-                                
-                                let peps = await Aluno.find({ cooperativa: userdef.cooperativa, backup: 1, instancia: userdef.instancia})
-                                   
+                                let peps = await Aluno.find({ cooperativa: userdef.cooperativa, backup: 1, instancia: userdef.instancia})                                   
                                     let atual = await Aluno.findOne({ cooperativa: userdef.cooperativa, temporario: 1, instancia: userdef.instancia})           
-                                    
                                         let arr = []
                                         for(let i = 0; i < peps.length; i++){
                                             for(let ii = 0; ii < peps[i].deci.length;ii++){
@@ -1905,26 +1900,9 @@ sockets.on('connection', async (socket) => {
                                         for(let k = 0; k < atual.deci.length;k++){
                                             arr.push(atual.deci[k])
                                         }
-                                        function getUnique(arry, comp) {
-
-                                            // store the comparison  values in array
-                                        const unique =  arry.map(e => e[comp])
-                        
-                                          // store the indexes of the unique objects
-                                            .map((e, i, final) => final.indexOf(e) === i && i)
-                        
-                                          // eliminate the false indexes & return unique objects
-                                            .filter((e) => arry[e]).map(e => arry[e]);
-                        
-                                            return unique;
-                                        }
-                                        
-                                        let respp = getUnique(arr,'acao')
-                                        socket.emit('deci', respp);
+                                        socket.emit('deci', arr);
                                          //console.log(arr)        
                                          //socket.emit('feedback', ['warning', pes.participacao_modelos + pes.pes_p.total_distribuidores])    
-                                    
-                                    
                                     Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
                                     .then((userx) => {
                                         if(userx !== null){
@@ -4556,7 +4534,7 @@ sockets.on('connection', async (socket) => {
                                           }
                                         
                                             
-                                        for(let m = 0; m < meias.length; m++){
+                                        for(let m = 0; m < meias.length; m++){ //envia um socket para cada um dos usuários online da cooperativa desse Player
                                             sockets.to(meias[m].sockid).emit('repuxar-b')
                                             sockets.to(meias[m].sockid).emit('feedback', ['success', '>> Encomenda de pesquisa de PAS realizada com sucesso. ['+ll.nome+']'])
                                             sockets.to(meias[m].sockid).emit('update', [
@@ -5654,63 +5632,65 @@ sockets.on('connection', async (socket) => {
             }
            
     })
-
     socket.on('puxar-pesquisas', async () => {
         console.log("puxar-pesquisas")
         let ll = await Usuario.findOne({sockid: socket.id})
         if(ll !== null){
-        let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
-    
-                if(userx !== null){
-                             //seria melhor ao registrar as instancias colocar como turno 1 na geração do JSON, mas fazer com cautela OKK
-                                Aluno.find({ cooperativa: userx.cooperativa, backup: 1, instancia: userx.instancia})                 
-                                    .then((peps) => {
-                                        let arr = []
-                                        for(let i = 0; i < peps.length; i++){
-                                            if(peps[i].pes_p.modelos_oferecidos !== 'vazio'){
-                                                let resposta = 'Serviços operados:'
-                                                peps[i].pes_p.modelos_oferecidos.map((serv,ind) => {
-                                                    resposta = resposta + ' ' + serv + ' -'
-                                                })
-                                                arr.push({tipo: 'Modelos Oferecidos', resultado: resposta, bimestre: peps[i].turno})
-                                            }
-                                            if(peps[i].pes_p.total_participacao_modelos !== 'vazio'){
-                                                arr.push({tipo: 'Participação dos tipos de serviço no faturamento total', resultado: peps[i].pes_p.total_participacao_modelos, bimestre: peps[i].turno})
-                                            }
-                                            if(peps[i].pes_p.total_pas !== 'vazio'){
-                                                arr.push({tipo: 'Total de P.A.S.', resultado: peps[i].pes_p.total_pas, bimestre: peps[i].turno})
-                                            }
+            let userx = await Aluno.findOne({cooperativa: ll.cooperativa, instancia: ll.instancia,  temporario: 1})
+            if(userx !== null){
+                //seria melhor ao registrar as instancias colocar como turno 1 na geração do JSON, mas fazer com cautela OKK
+                let peps = await Aluno.find({ cooperativa: userx.cooperativa, backup: 1, instancia: userx.instancia})                 
+                let arr = []
+                class pesquisa {
+                    constructor(cod, resultado, bimestre) {
+                        this.cod = cod;
+                        this.resultado = resultado;
+                        this.bimestre = bimestre
+                    }
+                }
+                for(let i = 0; i < peps.length; i++){
+                    if(peps[i].pes_p.modelos_oferecidos !== 'vazio'){
+                        let resposta = [];
+                        peps[i].pes_p.modelos_oferecidos.map((serv,ind) => {
+                            resposta.push(serv)
+                        });
+                        let oxe1 = new pesquisa('Tipos de serviço ofertados no mercado:', resposta, peps[i].turno) //resposta = array de objetos {serv: ..., user: ...}
+                        //console.log(resposta[0].serv)
+                        arr.push(oxe1)
+                    }
+                    if(peps[i].pes_p.total_participacao_modelos !== 'vazio'){
+                        let respbb = []
+                        let rr = peps[i].pes_p.total_participacao_modelos
+                        for(let kk = 0; kk < rr.length; kk++){
+                            respbb.push([rr.serv, rr.part])
+                        }
+                        console.log(respbb)
+                        let oxe2 = new pesquisa('Participação na receita total dos serviços prestados:', respbb, peps[i].turno) //resposta = array de arrays [[(serv), (part)],]
+                        arr.push(oxe2)
+                    }
+                    if(peps[i].pes_p.total_pas !== 'vazio'){
+                        let oxe3 = new pesquisa('Total de postos avançados de serviço em funcionamento:', peps[i].pes_p.total_pas, peps[i].turno)
+                        arr.push(oxe3)
+                        
+                    }
                                             /*
                                             if(peps[i].pes_p.distribuidores !== 'vazio'){
-                                                
+                       
                                             }
                                             */
-                                            if(peps[i].participacao_modelos.length > 0){
-                                                for(let ii = 0; ii < peps[i].participacao_modelos.length; ii++){//ex-> [index, resul]
-                                                    arr.push({tipo: 'Teste entre dois tipos de serviço: ', resultado: 'Resultado do teste: ' + peps[i].participacao_modelos[ii][0] + peps[i].participacao_modelos[ii][1], bimestre: peps[i].turno})
-                                                }   
-                                            }
-                                            
-                                        }
-                                        socket.emit('pesquisas', arr);
-                                         //console.log(arr)        
-                                         //socket.emit('feedback', ['warning', pes.participacao_modelos + pes.pes_p.total_distribuidores])    
-                                    })
-                                    .catch((err) => {console.log(err)})
-                            
-                            
-                                //socket.emit('feedback', ['danger', '>> Não é possível consultar pesquisas que ainda não foram efetuadas.'])
-                            
-                            
-
-                          
-
+                    if(peps[i].participacao_modelos.length > 0){
+                        //ex-> [index, resul]
+                        let oxe4 = new pesquisa('Teste entre dois tipos de serviço:', peps[i].participacao_modelos, peps[i].turno) //resultado = array de objetos { serv1: '147', pre1: 55, serv2: 'xxx', pre2: 45}
+                        arr.push(oxe4)
+                    }             
+                    }
+                        socket.emit('pesquisas', arr);
+                                        
             }
-                else{
-                    socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
-
-                }
+            else{
+                socket.emit('feedback', ['danger','É necessário estar logado para puxar os dados da simulação'])
             }
+        }
             
     })
     socket.on('puxar-news', async () => {
@@ -8055,99 +8035,88 @@ sockets.on('connection', async (socket) => {
             })
             .catch((err) => { console.log(err) }) 
     }) //falta contabilizar a depreciação das maquinas e TRIBUTOS
-    socket.on('iniciar-turno', () => {
-        Data.findOne({sockid: socket.id})    
-            .then((pesquisas) => {
-                if(pesquisas !== null){
-                    if(pesquisas.finalizado == 1){
-                        pesquisas.finalizado = 0
-                        Aluno.find({ativo: 1, instancia: pesquisas.instancia, temporario: 0})
-                            .then((users) => {
-                        let tpas = 0
-                        let tdis = 0
-                        let serv = []
-                        let part = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                        let total_part = 0
-                        for(let i = 0; i < users.length; i++){
-                            for(let h = 0; h < index.length; h++){
-                                if(users[i][index[h]][1] == 1){
-                                    serv.push('['+users[i].cooperativa+'->opera o serviço->'+index[h]+']')
-                                }
-                                if(users[i][index[h]][6] > 0){
-                                    part[h] = part[h] + users[i][index[h]][6]
-                                    total_part = total_part + users[i][index[h]][6]
-                                }
+    socket.on('iniciar-turno', async () => {
+        let pesquisas = await Data.findOne({sockid: socket.id})    
+            if(pesquisas !== null){
+                if(pesquisas.finalizado == 1){
+                    pesquisas.finalizado = 0
+                    let users = await Aluno.find({ativo: 1, instancia: pesquisas.instancia, temporario: 0})
+                    let tpas = 0
+                    let tdis = 0
+                    let serv = []
+                    let part = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    let total_part = 0
+                    for(let i = 0; i < users.length; i++){
+                        for(let h = 0; h < index.length; h++){
+                            if(users[i][index[h]][1] == 1){
+                                serv.push({user: users[i].cooperativa, serv: index[h]})
                             }
-                            tpas = tpas + users[i]['pas'];
-                            tdis = tdis + users[i]['distribuidores'];
-
-                        }
-                        let rep = ''
-                        for(let i = 0; i < part.length; i++){
-                            if(part[i] !== 0){
-                                rep = rep + ' || ' + index[i]+ ': '+(part[i]/total_part)*100+'%'
+                            if(users[i][index[h]][6] > 0){
+                                part[h] = part[h] + users[i][index[h]][6]
+                                total_part = total_part + users[i][index[h]][6]
                             }
                         }
-                        let serv2 = serv.filter(function(item, pos) {
-                            return serv.indexOf(item) == pos;
-                        }) //retira redundancia
-
-                        pesquisas['modelos_oferecidos'] = serv2
-                        pesquisas['total_pas'] = tpas
-                        pesquisas['participacao_modelos'] = part
-                        pesquisas['total_participacao_modelos'] = total_part
-                        pesquisas['total_distribuidores'] = tdis
+                        tpas = tpas + users[i]['pas'];
+                        tdis = tdis + users[i]['distribuidores'];
+                    }
+                    let rep = []
+                    for(let i = 0; i < part.length; i++){
+                        if(part[i] > 0){
+                            rep.push({serv: index[i], part: (part[i]/total_part)*100})
+                        }
+                    }   
+                    pesquisas['modelos_oferecidos'] = serv
+                    pesquisas['total_pas'] = tpas
+                    pesquisas['participacao_modelos'] = part
+                    pesquisas['total_participacao_modelos'] = total_part
+                    pesquisas['total_distribuidores'] = tdis
                         
-                        pesquisas.iniciado = 1
-                        pesquisas.ativo = 1
+                    pesquisas.iniciado = 1
+                    pesquisas.ativo = 1
 
-                        pesquisas.save()
-                            .then(() => {
-                                        for(let i = 0; i < users.length; i++){
-                                        let amem = []
-                                        let tserv2 = serv2
-                                        let ttpas = tpas
-                                        let ttotal_part = total_part
-                                        let ttdis = tdis
-                                        //console.log(users[i].dre.servicos)
-                                        
-                                            for(let dd = 0; dd < users[i].participacao_modelos.length; dd++){
-                                                console.log('users[i].participacao_modelos[dd][0][2]: ' + users[i].participacao_modelos[dd][0][2])
-                                                console.log('users[i].participacao_modelos[dd][1][2]: ' + users[i].participacao_modelos[dd][1][2])
-                                                if(users[i].participacao_modelos[dd][0][2] > users[i].participacao_modelos[dd][1][2] && users[i].participacao_modelos[dd][0][0] > users[i].participacao_modelos[dd][1][0]){
-                                                    let sorte = Math.round(Math.round(Math.random()*19) + 50)
-                                                    console.log('sorte: ' + sorte)
-                                                    let azar = 100 - sorte
-                                                    amem.push([users[i].participacao_modelos[dd][0]+' com preferência de '+azar+'% e ',users[i].participacao_modelos[dd][1]+' com '+Math.roundsorte+'%.'])
-                                                }
-                                                else if(users[i].participacao_modelos[dd][0][2] > users[i].participacao_modelos[dd][1][2] && users[i].participacao_modelos[dd][0][0] <  users[i].participacao_modelos[dd][1][0]){
-                                                    let sorte = Math.round(Math.random()*14) + 50
-                                                    console.log('sorte: ' + sorte)
-                                                    let azar = 100 - sorte
-                                                    amem.push(["{ "+users[i].participacao_modelos[dd][0]+' com prefenrência de '+sorte+'% e ',users[i].participacao_modelos[dd][1]+' com '+azar+'%. }'])
-                                                } 
-                                                else{
-                                                    let sorte = Math.round(Math.random()*8) + 50
-                                                    console.log('sorte: ' + sorte)
-                                                    let azar = 100 - sorte
-                                                    amem.push([users[i].participacao_modelos[dd][0]+' com prefenrência de '+sorte+'% e ',users[i].participacao_modelos[dd][1]+' com '+azar+'%.'])
-                                                }
-                                            }
-                                        
-                                        if(users[i].pes_p.modelos_oferecidos !== 1){
-                                            console.log('mod-ofere-zero')
-                                            tserv2 = 'vazio'}
-                                        if(users[i].pes_p.total_pas !== 1){
-                                            ttpas = 'vazio'}
-                                            
-                                        if(users[i].pes_p.total_participacao_modelos !== 1){
-                                            rep = 'vazio'}
-                                            
-                                        if(users[i].pes_p.total_distribuidores !== 1){
-                                            console.log('dist-zero')
-                                            ttdis = 'vazio'}
-                                            
-                                        let backup = new Aluno({backup: 1, instancia: users[i].instancia, npesquisas: users[i].npesquisas, turno: Number(users[i].turno) - 1, propaganda: users[i].propaganda, propagandauni: users[i].propagandauni, faturamento: users[i].faturamento, ativo: 1, taokeys: users[i].taokeys, divida: [users[i]['divida'][0],users[i]['divida'][1],users[i]['divida'][2]], comissao: users[i].comissao, frota: [users[i].frota[0],users[i].frota[1],users[i].frota[2],users[i].frota[3],users[i].frota[4],users[i].frota[5],users[i].frota[6],users[i].frota[7],users[i].frota[8],users[i].frota[9],users[i].frota[10],users[i].frota[11]], cooperativa: users[i].cooperativa, pas: users[i].pas, pas1: users[i].pas1, pas2: users[i].pas2, distribuidores: users[i].distribuidores, promotores: users[i].promotores, 
+                    await pesquisas.save()
+                            
+                    for(let i = 0; i < users.length; i++){
+                        let amem = []
+                        let tserv2 = serv
+                        let ttpas = tpas
+                        let ttotal_part = total_part
+                        let ttdis = tdis
+                        //console.log(users[i].dre.servicos)
+                        for(let dd = 0; dd < users[i].participacao_modelos.length; dd++){
+                            if(users[i].participacao_modelos[dd][0][2] > users[i].participacao_modelos[dd][1][2] && users[i].participacao_modelos[dd][0][0] > users[i].participacao_modelos[dd][1][0]){
+                                let sorte = Math.round(Math.round(Math.random()*25) + 50)
+                                let azar = 100 - sorte
+                                amem.push({serv1: users[i].participacao_modelos[dd][0],pre1: sorte, serv2: users[i].participacao_modelos[dd][1], pre2: azar})
+                            }
+                            else if(users[i].participacao_modelos[dd][0][2] > users[i].participacao_modelos[dd][1][2] && users[i].participacao_modelos[dd][0][0] <  users[i].participacao_modelos[dd][1][0]){
+                                let sorte = Math.round(Math.random()*18) + 50
+                                console.log('sorte: ' + sorte)
+                                let azar = 100 - sorte
+                                amem.push({serv1: users[i].participacao_modelos[dd][0], pre1: azar, serv2: users[i].participacao_modelos[dd][1], pre2: sorte})
+                            } 
+                            else{
+                                let sorte = Math.round(Math.random()*9) + 50
+                                console.log('sorte: ' + sorte)
+                                let azar = 100 - sorte
+                                amem.push({serv1: users[i].participacao_modelos[dd][0], pre1: sorte, serv2: users[i].participacao_modelos[dd][1], pre2: azar})
+                            }
+                        }          
+                        if(users[i].pes_p.modelos_oferecidos !== 1){
+                            console.log('mod-ofere-zero')
+                            tserv2 = 'vazio'
+                        }
+                        if(users[i].pes_p.total_pas !== 1){
+                            ttpas = 'vazio'
+                        }     
+                        if(users[i].pes_p.total_participacao_modelos !== 1){
+                            rep = 'vazio'
+                        }         
+                        if(users[i].pes_p.total_distribuidores !== 1){
+                            console.log('dist-zero')
+                            ttdis = 'vazio'
+                        }          
+                        let backup = new Aluno({backup: 1, instancia: users[i].instancia, npesquisas: users[i].npesquisas, turno: Number(users[i].turno) - 1, propaganda: users[i].propaganda, propagandauni: users[i].propagandauni, faturamento: users[i].faturamento, ativo: 1, taokeys: users[i].taokeys, divida: [users[i]['divida'][0],users[i]['divida'][1],users[i]['divida'][2]], comissao: users[i].comissao, frota: [users[i].frota[0],users[i].frota[1],users[i].frota[2],users[i].frota[3],users[i].frota[4],users[i].frota[5],users[i].frota[6],users[i].frota[7],users[i].frota[8],users[i].frota[9],users[i].frota[10],users[i].frota[11]], cooperativa: users[i].cooperativa, pas: users[i].pas, pas1: users[i].pas1, pas2: users[i].pas2, distribuidores: users[i].distribuidores, promotores: users[i].promotores, 
                                             147:[users[i]['147'][0],users[i]['147'][1],users[i]['147'][2],users[i]['147'][3],users[i]['147'][4],users[i]['147'][5],users[i]['147'][6],users[i]['147'][7]],
                                             159:[users[i]['159'][0],users[i]['159'][1],users[i]['159'][2],users[i]['159'][3],users[i]['159'][4],users[i]['159'][5],users[i]['159'][6],users[i]['159'][7]],
                                             149:[users[i]['149'][0],users[i]['149'][1],users[i]['149'][2],users[i]['149'][3],users[i]['149'][4],users[i]['149'][5],users[i]['149'][6],users[i]['149'][7]],
@@ -8257,8 +8226,8 @@ sockets.on('connection', async (socket) => {
                                                 insu1i: users[i].last_change.insu1i
                                             }
                                             
-                                        });
-                                        backup.save() 
+                        });
+                        backup.save() 
                                             .then(() => {
                                                 users[i].fluxo_de_caixa = {
                                                     saldo_anterior: users[i].balanco_patrimonial.caixa,
@@ -8442,33 +8411,22 @@ sockets.on('connection', async (socket) => {
                                             })
                                             .catch((err) => {console.log(err)})
 
-                                        }
-                                    
-                            })
-                            .catch((err) => {console.log(err)})
-
-                        })
-                    }
-                else{
-                    socket.emit('feedback', ['warning', 'Para iniciar um novo turno voce precisa antes finalizar o atual.'])}
+                    }      
                 }
                 else{
-                    socket.emit('feedback', ['danger','É preciso estar logado para puxar o state atual da simulação'])
-                }   
-
-            })
-            
-
+                    socket.emit('feedback', ['warning', 'Para iniciar um novo turno voce precisa antes finalizar o atual.'])
+                }
+            }
+            else{
+                socket.emit('feedback', ['danger','É preciso estar logado para puxar o state atual da simulação'])
+            }   
     }) 
-    socket.on('puxar-tds-states', () => {
-        Data.findOne({sockid: socket.id})
-            .then((data) => { 
+    socket.on('puxar-tds-states', async () => {
+        let data = await Data.findOne({sockid: socket.id})
             if(data !== null){
-            Aluno.find({instancia: data.instancia, temporario: 0, ativo: 1, backup: 0})
-                .then((userxs) => {
+                let userxs = await Aluno.find({instancia: data.instancia, temporario: 0, ativo: 1, backup: 0})
                 let resp = []
                 for(let i = 0; i < userxs.length; i++){
-
                     resp.push([
                         [...userxs[i]["147"],"147"],
                         [...userxs[i]["148"],"148"],
@@ -8507,13 +8465,13 @@ sockets.on('connection', async (socket) => {
                 }
                 socket.emit('tds-states', resp)
                 
-                })
-                .catch((err) => {console.log(err + ' para o id: ' + socket.id)})
             }
-            else{socket.emit('feedback', ['danger', 'voce precisa estar logado para puxar o state atual da simulação'])}
+            else{
+                socket.emit('feedback', ['danger', 'voce precisa estar logado para puxar o state atual da simulação'])
+            }
 
-            })
-            .catch((err) => { console.log(err) })
+            
+           
     })
     socket.on('puxar-balancos-adm',  (dados) => {
         let cooperativa = dados[0]
