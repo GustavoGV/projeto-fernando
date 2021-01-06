@@ -1,16 +1,22 @@
-import express from 'express'
-import http from 'http'
-import socketio from 'socket.io'
+import express from 'express' // enviar dados
+import http from 'http' //protocolo de comunicação
+import socketio from 'socket.io' //web sockets (HTTP "persistente")
 import estrutura from './src/aluno.js'
-const Aluno = estrutura[0]
-const Data = estrutura[1]
+const Aluno = estrutura[0] // info das cooperativas
+const Data = estrutura[1] // info das instancias
 const Usuario = estrutura[2] //login individual
-import mongoose from 'mongoose'
+import mongoose from 'mongoose' // banco de dados
 import { isNull } from 'util'
 import { SSL_OP_EPHEMERAL_RSA } from 'constants'
 //import { readFile } from 'fs'
 
-mongoose.connect('mongodb://localhost/aluno_teste')
+
+// BUG needs repair: when passing the turn the temporary database dont update automactly with the offical one...
+
+
+
+
+mongoose.connect('mongodb://localhost/aluno_teste') //conexão com o banco de dados
 mongoose.connection
     .once('open', () => console.log('Conexao com MongoDB (banco de dados) foi estabelecida com sucesso'))
     .on('error', (error) => {
@@ -50,7 +56,7 @@ let index = [
 "369"]
 
 
-app.use(express.static('public'))
+app.use(express.static('public')) //expondo a pasta "public" pela porta utilizada publicamente
 /*
 setInterval(async function a51() {
     let keys = await Usuario.find({})
@@ -103,8 +109,6 @@ sockets.on('connection', async (socket) => {
                         }
                     
                 }
-               
-                                
                
                        
     }) //falta teste
@@ -1596,7 +1600,7 @@ sockets.on('connection', async (socket) => {
                 let check = await Data.findOne({instancia: usert.instancia})
                     
                     if(check.ativo == 1){
-                        let userdef = await Aluno.findOne({cooperativa: usert.cooperativa, instancia: usert.instancia, temporario: 0})
+                        let userdef = await Aluno.findOne({cooperativa: usert.cooperativa, instancia: usert.instancia, temporario: 0, backup: 0})
                     
                         userdef.last_change = {serv1: usert.last_change.serv1, serv2: usert.last_change.serv2, insu1: usert.last_change.insu1, insu2: usert.last_change.insu2, insu2i: usert.last_change.insu2i, insu1i: usert.last_change.insu1i, prop1: usert.last_change.prop1, prop2: usert.last_change.prop2}
                         userdef.deci = usert.deci
@@ -5917,7 +5921,7 @@ sockets.on('connection', async (socket) => {
         adm.turno = adm.turno + 1 //contabilia a passagem de turno
         adm.save()
             .then(() => {
-        Aluno.find({ativo: 1, temporario: 0, instancia: adm.instancia})
+        Aluno.find({ativo: 1, temporario: 0, instancia: adm.instancia}) //antes das operações seria interassante dar um aviso ao jogadores que o turno acabou e direcionalos a tela de login, q so liberara a entrada dnv qnd o turno se iniciar(teria q dar socket.off em cada um dos sockets associados com a Cooperativa procesada)
             .then((users) => {
                 let soma = 0;
                 let soma1 = 0;
@@ -8115,8 +8119,8 @@ sockets.on('connection', async (socket) => {
                         if(users[i].pes_p.total_distribuidores !== 1){
                             console.log('dist-zero')
                             ttdis = 'vazio'
-                        }          
-                        let backup = new Aluno({backup: 1, instancia: users[i].instancia, npesquisas: users[i].npesquisas, turno: Number(users[i].turno) - 1, propaganda: users[i].propaganda, propagandauni: users[i].propagandauni, faturamento: users[i].faturamento, ativo: 1, taokeys: users[i].taokeys, divida: [users[i]['divida'][0],users[i]['divida'][1],users[i]['divida'][2]], comissao: users[i].comissao, frota: [users[i].frota[0],users[i].frota[1],users[i].frota[2],users[i].frota[3],users[i].frota[4],users[i].frota[5],users[i].frota[6],users[i].frota[7],users[i].frota[8],users[i].frota[9],users[i].frota[10],users[i].frota[11]], cooperativa: users[i].cooperativa, pas: users[i].pas, pas1: users[i].pas1, pas2: users[i].pas2, distribuidores: users[i].distribuidores, promotores: users[i].promotores, 
+                        } //COLOCAR AQUI O TEMPORARIO: 3 SE FOR O CASO         
+                        let backup = new Aluno({backup: 1, temporario: 3, instancia: users[i].instancia, npesquisas: users[i].npesquisas, turno: Number(users[i].turno) - 1, propaganda: users[i].propaganda, propagandauni: users[i].propagandauni, faturamento: users[i].faturamento, ativo: 1, taokeys: users[i].taokeys, divida: [users[i]['divida'][0],users[i]['divida'][1],users[i]['divida'][2]], comissao: users[i].comissao, frota: [users[i].frota[0],users[i].frota[1],users[i].frota[2],users[i].frota[3],users[i].frota[4],users[i].frota[5],users[i].frota[6],users[i].frota[7],users[i].frota[8],users[i].frota[9],users[i].frota[10],users[i].frota[11]], cooperativa: users[i].cooperativa, pas: users[i].pas, pas1: users[i].pas1, pas2: users[i].pas2, distribuidores: users[i].distribuidores, promotores: users[i].promotores, 
                                             147:[users[i]['147'][0],users[i]['147'][1],users[i]['147'][2],users[i]['147'][3],users[i]['147'][4],users[i]['147'][5],users[i]['147'][6],users[i]['147'][7]],
                                             159:[users[i]['159'][0],users[i]['159'][1],users[i]['159'][2],users[i]['159'][3],users[i]['159'][4],users[i]['159'][5],users[i]['159'][6],users[i]['159'][7]],
                                             149:[users[i]['149'][0],users[i]['149'][1],users[i]['149'][2],users[i]['149'][3],users[i]['149'][4],users[i]['149'][5],users[i]['149'][6],users[i]['149'][7]],
@@ -8301,7 +8305,7 @@ sockets.on('connection', async (socket) => {
                                                                         usert.deci = users[i].deci
                                                                         usert.set('frota', [users[i].frota[0],users[i].frota[1],users[i].frota[2],users[i].frota[3],users[i].frota[4],users[i].frota[5],users[i].frota[6],users[i].frota[7],users[i].frota[8],users[i].frota[9],users[i].frota[10],users[i].frota[11]])
                                                                         usert.set('npesquisas', users[i].npesquisas)
-                                                                        usert.set('turno', users[i].turno)
+                                                                        usert.set('turno', users[i].turno) //wtff nao tinha dado update no turno no Mongo msm dos de ter passado por essa requisição... brisa dms
                                                                         usert.set('propaganda', users[i].propaganda)
                                                                         usert.set('propagandauni', users[i].propagandauni)
                                                                         usert.set('taokeys', users[i].taokeys)
