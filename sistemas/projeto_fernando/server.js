@@ -13,7 +13,7 @@ import { SSL_OP_EPHEMERAL_RSA } from 'constants'
 
 // BUG needs repair: when passing the turn the temporary database dont update automactly with the offical one...
 
-
+//24000000 no total para cada cooperativa a mais no jogo...
 
 
 mongoose.connect('mongodb://localhost/aluno_teste') //conexão com o banco de dados
@@ -5659,16 +5659,17 @@ sockets.on('connection', async (socket) => {
                             resposta.push(serv)
                         });
                         let oxe1 = new pesquisa('Tipos de serviço ofertados no mercado:', resposta, peps[i].turno) //resposta = array de objetos {serv: ..., user: ...}
-                        //console.log(resposta[0].serv)
+                        console.log(resposta[0].serv + ' -resposta[0].serv') 
                         arr.push(oxe1)
                     }
                     if(peps[i].pes_p.total_participacao_modelos !== 'vazio'){
-                        let respbb = []
+                        let respbb = [['Task', 'Relacao']]
                         let rr = peps[i].pes_p.total_participacao_modelos
                         for(let kk = 0; kk < rr.length; kk++){
-                            respbb.push([rr.serv, rr.part])
+                            respbb.push([rr[kk].serv.toString(), rr[kk].part])
+                            console.log(rr[kk].serv + '<- rr.serv // ' + rr[kk].part + ' <--rr.part//')
                         }
-                        console.log(respbb)
+                        console.log(respbb[0] + ' respbb')
                         let oxe2 = new pesquisa('Participação na receita total dos serviços prestados:', respbb, peps[i].turno) //resposta = array de arrays [[(serv), (part)],]
                         arr.push(oxe2)
                     }
@@ -5684,10 +5685,13 @@ sockets.on('connection', async (socket) => {
                                             */
                     if(peps[i].participacao_modelos.length > 0){
                         //ex-> [index, resul]
-                        let oxe4 = new pesquisa('Teste entre dois tipos de serviço:', peps[i].participacao_modelos, peps[i].turno) //resultado = array de objetos { serv1: '147', pre1: 55, serv2: 'xxx', pre2: 45}
-                        arr.push(oxe4)
+                        for(let ff = 0; ff < peps[i].participacao_modelos.length; ff++){
+                            let oxe4 = new pesquisa('Teste entre dois tipos de serviço:', [['Taks', 'Modelos'], [peps[i].participacao_modelos[ff].serv1.toString(), peps[i].participacao_modelos[ff].pre1],[peps[i].participacao_modelos[ff].serv2.toString(), peps[i].participacao_modelos[ff].pre2]], peps[i].turno) //resultado = array de objetos { serv1: '147', pre1: 55, serv2: 'xxx', pre2: 45}
+                            arr.push(oxe4)
+                        }
                     }             
                     }
+                        console.log(arr[0] + ' emitido')
                         socket.emit('pesquisas', arr);
                                         
             }
@@ -5705,42 +5709,41 @@ sockets.on('connection', async (socket) => {
             
                 if(userx !== null){
                              //seria melhor ao registrar as instancias colocar como turno 1 na geração do JSON, mas fazer com cautela OKK
+                                socket.emit('news', userx.turno)
+                                /**
                                 if(userx.turno == 2 || userx.turno == 3){
-                                Aluno.find({ backup: 1, instancia: userx.instancia, turno: userx.turno-1})                 
+                                Aluno.find({ backup: 1, instancia: userx.instancia, turno: 2})                 
                                     .then((peps) => {
                                         //let arr = []
                                         //let part = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                                        let tiposSERV1 = 5
+                                        let tiposSERV2 = 12
+                                        let faturamentoM = 3600000*4
+                                        let investP = 3600000*0.15
                                         let total_part = 0
                                         let precomedt = 0
-                                        for(let i = 0; i < peps.length; i++){
-                                                for(let h = 0; h < index.length; h++){
-                                                    if(peps[i][index[h]][6] > 0){
-                                                        total_part = total_part + peps[i][index[h]][6]
-                                                    }
-                                                }
-                                                precomedt = precomedt + peps[i].dre.preco_medio
-                                                
-                    
-                                            
-                                        }
-                                        let med = Math.round(total_part/peps.length)
-                                        let pmed = Math.round(precomedt/peps.length)
-                                        socket.emit('news', [{titulo: '>> Volume médio de prestação serviço por player (referente ao último bimestre)', info: med, bimestre: userx.turno},{titulo: '>> Preço médio de prestação de serviços (referentes ao ultimo bimestre)', info: pmed, bimestre: userx.turno}]);
-                                        
-                                         //console.log(arr)        
-                                         //socket.emit('feedback', ['warning', pes.participacao_modelos + pes.pes_p.total_distribuidores])    
+                                       
                                     })
                                     .catch((err) => {console.log(err)})
                                 }
                                 else if(userx.turno == 4 || userx.turno == 5){
 
+                                    let faturamentoM = 2880000*4
+                                    let investP = 2880000*0.15
+                                    let tiposSERV1 = 5
+                                    let tiposSERV2 = 12
+
                                 }
                                 else if(userx.turno == 6){
+
+                                    let faturamentoM = 5520000*4
+                                    let investP = 5520000*0.15
 
                                 }
                                 else{
                                     
                                 }
+                                **/
                             
                             
                                 //socket.emit('feedback', ['danger', '>> Não é possível consultar pesquisas que ainda não foram efetuadas.'])
@@ -6278,22 +6281,22 @@ sockets.on('connection', async (socket) => {
                     if(adm.turno == 6){
                         console.log('||-=-=-=-=-=-=-=-=-=-=-||==> Game Over <==||-=-=-=-=-=-=-=-=-=-=-||')
                     }
-                    if(adm.turno%6 == 0){
+                    if((adm.turno-1)%6 == 0){
                         return DemandaAnual*0.25
                     }
-                    else if(adm.turno%5 == 0){
+                    else if((adm.turno-1)%5 == 0){
                         return DemandaAnual*0.21
                     }
-                    else if(adm.turno%4 == 0){    
+                    else if((adm.turno-1)%4 == 0){    
                         return DemandaAnual*0.12
                     }
-                    else if(adm.turno%3 == 0){
+                    else if((adm.turno-1)%3 == 0){
                         return DemandaAnual*0.12
                     }
-                    else if(adm.turno%2 == 0){
+                    else if((adm.turno-1)%2 == 0){
                         return DemandaAnual*0.20
                     }
-                    else if(adm.turno%1 == 0){
+                    else if((adm.turno-1)%1 == 0){
                         return DemandaAnual*0.10
                     }
                     else{
