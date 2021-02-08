@@ -10,18 +10,20 @@ import { isNull } from 'util'
 import { SSL_OP_EPHEMERAL_RSA } from 'constants'
 //import { readFile } from 'fs'
 
-
+  
 // BUG needs repair: when passing the turn the temporary database dont update automactly with the offical one...
 
 //24000000 no total para cada cooperativa a mais no jogo...
 
 
-mongoose.connect('mongodb://localhost/aluno_teste') //conexão com o banco de dados
+//mongoose.connect('mongodb://localhost/aluno_teste') //conexão com o banco de dados
+mongoose.connect('mongodb+srv://user_4:batata@toka.rv0te.gcp.mongodb.net/<dbname>?retryWrites=true&w=majority')
 mongoose.connection
     .once('open', () => console.log('Conexao com MongoDB (banco de dados) foi estabelecida com sucesso'))
     .on('error', (error) => {
         console.warn('Falha ao se conectar com o banco de dados. Motivo: ', error)
     })
+
 //mongoose.set('useFindAndModify', false);
 
 const app = express()
