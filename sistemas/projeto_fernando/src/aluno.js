@@ -95,7 +95,7 @@ const UserSchema = new Schema({
         tributos: Number,
         servicos: [String, Number, Number, Number],
         preco_medio: Number,
-        atendimentos: Number,
+        atendimentos: [String, Number, String, Number],
         insumos_em_estoque: Number,
         distribuidores: Number,
     },

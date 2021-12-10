@@ -277,7 +277,7 @@ sockets.on('connection', async (socket) => {
                             tributos: 0,
                             servicos: ['147',288,0,0],
                             preco_medio: 0,
-                            atendimentos: 0,
+                            atendimentos: ['147',0,'-',0],
                             insumos_em_estoque: 985,
                             distribuidores: 0
 
@@ -385,7 +385,7 @@ sockets.on('connection', async (socket) => {
                                         tributos: 0,
                                         servicos: ['147',288,0,0],
                                         preco_medio: 0,
-                                        atendimentos: 0,
+                                        atendimentos: ['147',0,'-',0],
                                         insumos_em_estoque: 985,
                                         distribuidores: 0
             
@@ -493,7 +493,20 @@ sockets.on('connection', async (socket) => {
                         }
                         if(pass == 1){
                         if(userx[novo][2] - userx[velho][2] > 0){
-                        
+                            let novoArray = [userx.dre.atendimentos[0],userx.dre.atendimentos[1],userx.dre.atendimentos[2],userx.dre.atendimentos[3]]
+                            for(let g = 0; g < userx.dre.atendimentos.length; g++){
+                                
+                                if(userx.dre.atendimentos[g] == velho){
+                                    if(g == 0){
+                                        novoArray = [novo,userx.dre.atendimentos[1],userx.dre.atendimentos[2],userx.dre.atendimentos[3]]        
+                                    }
+                                    else if(g == 2){
+                                        novoArray = [userx.dre.atendimentos[0],userx.dre.atendimentos[1],novo,userx.dre.atendimentos[3]]
+                                    }
+                                }
+                            }
+                             
+
                             let datetime = new Date().toLocaleString('pt-BR').toLocaleString('pt-BR');
                             userx.deci.push({data: datetime, acao: 'Troca de '+qnt+' insumos de ' + velho + ' para ' + novo, autor: ll.nome})
                             /*
@@ -565,7 +578,7 @@ sockets.on('connection', async (socket) => {
                                 tributos: userx.dre.tributos,
                                 servicos: [userx.dre.servicos[0], userx.dre.servicos[1], userx.dre.servicos[2], userx.dre.servicos[3]],
                                 preco_medio: userx.dre.preco_medio,
-                                atendimentos: userx.dre.atendimentos,
+                                atendimentos: novoArray,
                                 insumos_em_estoque: userx.dre.insumos_em_estoque,
                                 distribuidores: userx.dre.distribuidores
     
@@ -700,6 +713,19 @@ sockets.on('connection', async (socket) => {
                             else{socket.emit('feedback', ['warning','Falta caixa o suficiente para realizar essa operação'])}
                         }
                         else{
+                            let novoArray = [userx.dre.atendimentos[0],userx.dre.atendimentos[1],userx.dre.atendimentos[2],userx.dre.atendimentos[3]]
+                            for(let g = 0; g < userx.dre.atendimentos.length; g++){
+    
+                                if(userx.dre.atendimentos[g] == velho){
+                                    if(g == 0){
+                                        novoArray = [novo,userx.dre.atendimentos[1],userx.dre.atendimentos[2],userx.dre.atendimentos[3]]        
+                                    }
+                                    else if(g == 2){
+                                        novoArray = [userx.dre.atendimentos[0],userx.dre.atendimentos[1],novo,userx.dre.atendimentos[3]]
+                                    }
+                                }
+                            }
+                            
                             let datetime = new Date().toLocaleString('pt-BR').toLocaleString('pt-BR');
                             userx.deci.push({data: datetime, acao: 'Troca de '+qnt+' insumos de ' + velho + ' para ' + novo, autor: ll.nome})
                            /*
@@ -772,7 +798,7 @@ sockets.on('connection', async (socket) => {
                                     tributos: userx.dre.tributos,
                                     servicos: [userx.dre.servicos[0], userx.dre.servicos[1], userx.dre.servicos[2], userx.dre.servicos[3]],
                                     preco_medio: userx.dre.preco_medio,
-                                    atendimentos: userx.dre.atendimentos,
+                                    atendimentos: novoArray,
                                     insumos_em_estoque: userx.dre.insumos_em_estoque,
                                     distribuidores: userx.dre.distribuidores
         
@@ -938,6 +964,17 @@ sockets.on('connection', async (socket) => {
                     if(userx[novo][1] !== 1){
                     if(true){
                         if(userx[novo][2] - userx[velho][2] > 0){
+                            let novoArray = [userx.dre.atendimentos[0],userx.dre.atendimentos[1],userx.dre.atendimentos[2],userx.dre.atendimentos[3]]
+                            for(let g = 0; g < userx.dre.atendimentos.length; g++){
+                                if(userx.dre.atendimentos[g] == velho){
+                                    if(g == 0){
+                                        novoArray = [novo,userx.dre.atendimentos[1],userx.dre.atendimentos[2],userx.dre.atendimentos[3]]
+                                    }
+                                    else if(g == 2){
+                                        novoArray = [userx.dre.atendimentos[0],userx.dre.atendimentos[1],novo,userx.dre.atendimentos[3]]
+                                    }
+                                }
+                            }
 
                             let datetime = new Date().toLocaleString('pt-BR').toLocaleString('pt-BR');
                             userx.deci.push({data: datetime, acao: 'Substituição do serviço ' + velho + ' pelo ' + novo, autor: ll.nome})
@@ -1017,7 +1054,7 @@ sockets.on('connection', async (socket) => {
                             tributos: userx.dre.tributos,
                             servicos: [userx.dre.servicos[0], userx.dre.servicos[1], userx.dre.servicos[2], userx.dre.servicos[3]],
                             preco_medio: userx.dre.preco_medio,
-                            atendimentos: userx.dre.atendimentos,
+                            atendimentos: novoArray,
                             insumos_em_estoque: userx.dre.insumos_em_estoque,
                             distribuidores: userx.dre.distribuidores
 
@@ -1136,6 +1173,18 @@ sockets.on('connection', async (socket) => {
                                h((err) => {console.log('erro na confirmacao n 302: ' + err)})
                     }
                     else{
+                        let novoArray = [userx.dre.atendimentos[0],userx.dre.atendimentos[1],userx.dre.atendimentos[2],userx.dre.atendimentos[3]]
+                            for(let g = 0; g < userx.dre.atendimentos.length; g++){
+                                if(userx.dre.atendimentos[g] == velho){
+                                    if(g == 0){
+                                        novoArray = [novo,userx.dre.atendimentos[1],userx.dre.atendimentos[2],userx.dre.atendimentos[3]]
+                                    }
+                                    else if(g == 2){
+                                        novoArray = [userx.dre.atendimentos[0],userx.dre.atendimentos[1],novo,userx.dre.atendimentos[3]]
+                                    }
+                                }
+                            }
+
                         let datetime = new Date().toLocaleString('pt-BR').toLocaleString('pt-BR');
                         userx.deci.push({data: datetime, acao: 'Substituição do serviço ' + velho + ' pelo ' + novo, autor: ll.nome})
                         
@@ -1210,7 +1259,7 @@ sockets.on('connection', async (socket) => {
                             tributos: userx.dre.tributos,
                             servicos: [userx.dre.servicos[0], userx.dre.servicos[1], userx.dre.servicos[2], userx.dre.servicos[3]],
                             preco_medio: userx.dre.preco_medio,
-                            atendimentos: userx.dre.atendimentos,
+                            atendimentos: novoArray,
                             insumos_em_estoque: userx.dre.insumos_em_estoque,
                             distribuidores: userx.dre.distribuidores
 
@@ -1369,6 +1418,52 @@ sockets.on('connection', async (socket) => {
                             socket.emit('feedback', ['warning','voce precisa sempre ter pelo menos um servico ativo durante o turno (ative outro para desativar esse)'])
                         }
                         else{
+                            let novoArray = [userx.dre.atendimentos[0],userx.dre.atendimentos[1],userx.dre.atendimentos[2],userx.dre.atendimentos[3]]
+
+                            for (let g = 0; g < novoArray.length; g++){
+                                if(userx.dre.atendimentos[g] == tipo){
+                                    if(g == 0){
+                                        novoArray = ['-',userx.dre.atendimentos[1],userx.dre.atendimentos[2],userx.dre.atendimentos[3]]
+                                    }
+                                    else if(g == 2){
+                                        novoArray = [userx.dre.atendimentos[0],userx.dre.atendimentos[1],'-',userx.dre.atendimentos[3]]                                        
+                                    }
+                                }
+                            }
+                                userx.dre = {
+                                    receita: userx.dre.receita,
+                                    csp: userx.dre.csp,
+                                    estoque_inicial: userx.dre.estoque_inicial,
+                                    custo_prestacao_servico: userx.dre.custo_prestacao_servico,
+                                    custo_estocagem: userx.dre.custo_estocagem,
+                                    custo_troca_insumos: userx.dre.custo_troca_insumos,
+                                    hora_extra: userx.dre.hora_extra,
+                                    capacidade_n_utilizada: userx.dre.capacidade_n_utilizada,
+                                    margem_bruta: userx.dre.margem_bruta,
+                                    despesas_administrativas: userx.dre.despesas_administrativas,
+                                    salario_promotores: userx.dre.salario_promotores,
+                                    comissao: userx.dre.comissao,
+                                    propaganda_institucional: userx.dre.propaganda_institucional,
+                                    propaganda_unitaria: userx.dre.propaganda_unitaria,
+                                    depreciacao_de_maquinas: userx.dre.depreciacao_de_maquinas,
+                                    encargos_financiamento: userx.dre.encargos_financiamento,
+                                    salario_frota: userx.dre.salario_frota,
+                                    manutencao_frota: userx.dre.manutencao_frota,
+                                    depreciacao_de_veiculos: userx.dre.depreciacao_de_veiculos,
+                                    frota_terceirizada: userx.dre.frota_terceirizada,
+                                    despesas_operacionais_n_planejadas: userx.dre.despesas_operacionais_n_planejadas,
+                                    pas: userx.dre.pas,
+                                    pesquisas: userx.dre.pesquisas,
+                                    tributos: userx.dre.tributos,
+                                    servicos: [userx.dre.servicos[0], userx.dre.servicos[1], userx.dre.servicos[2], userx.dre.servicos[3]],
+                                    preco_medio: userx.dre.preco_medio,
+                                    atendimentos: [userx.dre.atendimentos[0],userx.dre.atendimentos[1],userx.dre.atendimentos[2],userx.dre.atendimentos[3]],
+                                    insumos_em_estoque: userx.dre.insumos_em_estoque,
+                                    distribuidores: userx.dre.distribuidores
+        
+                                }
+                            
+
                             let datetime = new Date().toLocaleString('pt-BR').toLocaleString('pt-BR');
                             userx.deci.push({data: datetime, acao: 'Encerrou o serviço ' + tipo, autor: ll.nome})
                             if(userx.last_change.serv1 == tipo){
@@ -1663,7 +1758,7 @@ sockets.on('connection', async (socket) => {
                             tributos: usert.dre.tributos,
                             servicos: [usert.dre.servicos[0], usert.dre.servicos[1], usert.dre.servicos[2], usert.dre.servicos[3]],
                             preco_medio: usert.dre.preco_medio,
-                            atendimentos: usert.dre.atendimentos,
+                            atendimentos: [usert.dre.atendimentos[0],usert.dre.atendimentos[1],usert.dre.atendimentos[2],usert.dre.atendimentos[3]],
                             insumos_em_estoque: usert.dre.insumos_em_estoque,
                             distribuidores: usert.dre.distribuidores
 
@@ -1848,7 +1943,7 @@ sockets.on('connection', async (socket) => {
                             tributos: userdef.dre.tributos,
                             servicos: [userdef.dre.servicos[0],userdef.dre.servicos[1],userdef.dre.servicos[2],userdef.dre.servicos[3]],
                             preco_medio: userdef.dre.preco_medio,
-                            atendimentos: userdef.dre.atendimentos,
+                            atendimentos: [userdef.dre.atendimentos[0],userdef.dre.atendimentos[1],userdef.dre.atendimentos[2],userdef.dre.atendimentos[3]],
                             insumos_em_estoque: userdef.dre.insumos_em_estoque,
                             distribuidores: userdef.dre.distribuidores
 
@@ -3450,7 +3545,7 @@ sockets.on('connection', async (socket) => {
                                 tributos: userx.dre.tributos,
                                 servicos: [userx.dre.servicos[0], userx.dre.servicos[1], userx.dre.servicos[2], userx.dre.servicos[3]],
                                 preco_medio: userx.dre.preco_medio,
-                                atendimentos: userx.dre.atendimentos,
+                                atendimentos: [userx.dre.atendimentos[0],userx.dre.atendimentos[1],userx.dre.atendimentos[2],userx.dre.atendimentos[3]],
                                 insumos_em_estoque: userx.dre.insumos_em_estoque,
                                 distribuidores: userx.dre.distribuidores
     
@@ -3668,7 +3763,7 @@ sockets.on('connection', async (socket) => {
                                 tributos: userx.dre.tributos,
                                 servicos: [userx.dre.servicos[0], userx.dre.servicos[1], userx.dre.servicos[2], userx.dre.servicos[3]],
                                 preco_medio: userx.dre.preco_medio,
-                                atendimentos: userx.dre.atendimentos,
+                                atendimentos: [userx.dre.atendimentos[0],userx.dre.atendimentos[1],userx.dre.atendimentos[2],userx.dre.atendimentos[3]],
                                 insumos_em_estoque: userx.dre.insumos_em_estoque,
                                 distribuidores: userx.dre.distribuidores
     
@@ -3935,6 +4030,49 @@ sockets.on('connection', async (socket) => {
                     if(userx[tipo][1] !== 3 && check_1_servico_ativo()){
                         let datetime = new Date().toLocaleString('pt-BR');
                         userx.deci.push({data: datetime, acao: 'Ativação do serviço '+tipo, autor: ll.nome})
+                        let novoArray = [userx.dre.atendimentos[0],userx.dre.atendimentos[1],userx.dre.atendimentos[2],userx.dre.atendimentos[3]]
+                        for (let g = 0; g < novoArray.length; g++){
+                            if(userx.dre.atendimentos[g] == '-'){
+                                if(g == 0){
+                                    novoArray = [tipo,userx.dre.atendimentos[1],userx.dre.atendimentos[2],userx.dre.atendimentos[3]]
+                                }
+                                else if(g == 2){
+                                    novoArray = [userx.dre.atendimentos[0],userx.dre.atendimentos[1],tipo,userx.dre.atendimentos[3]]
+                                }
+                            }
+                        }
+                        userx.dre = {
+                            receita: userx.dre.receita,
+                            csp: userx.dre.csp,
+                            estoque_inicial: userx.dre.estoque_inicial,
+                            custo_prestacao_servico: userx.dre.custo_prestacao_servico,
+                            custo_estocagem: userx.dre.custo_estocagem,
+                            custo_troca_insumos: userx.dre.custo_troca_insumos,
+                            hora_extra: userx.dre.hora_extra,
+                            capacidade_n_utilizada: userx.dre.capacidade_n_utilizada,
+                            margem_bruta: userx.dre.margem_bruta,
+                            despesas_administrativas: userx.dre.despesas_administrativas,
+                            salario_promotores: userx.dre.salario_promotores,
+                            comissao: userx.dre.comissao,
+                            propaganda_institucional: userx.dre.propaganda_institucional,
+                            propaganda_unitaria: userx.dre.propaganda_unitaria,
+                            depreciacao_de_maquinas: userx.dre.depreciacao_de_maquinas,
+                            encargos_financiamento: userx.dre.encargos_financiamento,
+                            salario_frota: userx.dre.salario_frota,
+                            manutencao_frota: userx.dre.manutencao_frota,
+                            depreciacao_de_veiculos: userx.dre.depreciacao_de_veiculos,
+                            frota_terceirizada: userx.dre.frota_terceirizada,
+                            despesas_operacionais_n_planejadas: userx.dre.despesas_operacionais_n_planejadas,
+                            pas: userx.dre.pas,
+                            pesquisas: userx.dre.pesquisas,
+                            tributos: userx.dre.tributos,
+                            servicos: [userx.dre.servicos[0], userx.dre.servicos[1], userx.dre.servicos[2], userx.dre.servicos[3]],
+                            preco_medio: userx.dre.preco_medio,
+                            atendimentos: novoArray,
+                            insumos_em_estoque: userx.dre.insumos_em_estoque,
+                            distribuidores: userx.dre.distribuidores
+
+                        }
                             
                         if(userx.last_change.serv1 == 0){
                             userx.last_change = {
@@ -4467,7 +4605,7 @@ sockets.on('connection', async (socket) => {
                             tributos: userx.dre.tributos,
                             servicos: [userx.dre.servicos[0], userx.dre.servicos[1], userx.dre.servicos[2], userx.dre.servicos[3]],
                             preco_medio: userx.dre.preco_medio,
-                            atendimentos: userx.dre.atendimentos,
+                            atendimentos: [userx.dre.atendimentos[0],userx.dre.atendimentos[1],userx.dre.atendimentos[2],userx.dre.atendimentos[3]],
                             insumos_em_estoque: userx.dre.insumos_em_estoque,
                             distribuidores: userx.dre.distribuidores
 
@@ -4659,7 +4797,7 @@ sockets.on('connection', async (socket) => {
                                 tributos: userx.dre.tributos,
                                 servicos: [userx.dre.servicos[0], userx.dre.servicos[1], userx.dre.servicos[2], userx.dre.servicos[3]],
                                 preco_medio: userx.dre.preco_medio,
-                                atendimentos: userx.dre.atendimentos,
+                                atendimentos: [userx.dre.atendimentos[0],userx.dre.atendimentos[1],userx.dre.atendimentos[2],userx.dre.atendimentos[3]],
                                 insumos_em_estoque: userx.dre.insumos_em_estoque,
                                 distribuidores: userx.dre.distribuidores
     
@@ -4846,7 +4984,7 @@ sockets.on('connection', async (socket) => {
                                 tributos: userx.dre.tributos,
                                 servicos: [userx.dre.servicos[0], userx.dre.servicos[1], userx.dre.servicos[2], userx.dre.servicos[3]],
                                 preco_medio: userx.dre.preco_medio,
-                                atendimentos: userx.dre.atendimentos,
+                                atendimentos: [userx.dre.atendimentos[0],userx.dre.atendimentos[1],userx.dre.atendimentos[2],userx.dre.atendimentos[3]],
                                 insumos_em_estoque: userx.dre.insumos_em_estoque,
                                 distribuidores: userx.dre.distribuidores
     
@@ -5032,7 +5170,7 @@ sockets.on('connection', async (socket) => {
                                 tributos: userx.dre.tributos,
                                 servicos: [userx.dre.servicos[0], userx.dre.servicos[1], userx.dre.servicos[2], userx.dre.servicos[3]],
                                 preco_medio: userx.dre.preco_medio,
-                                atendimentos: userx.dre.atendimentos,
+                                atendimentos: [userx.dre.atendimentos[0],userx.dre.atendimentos[1],userx.dre.atendimentos[2],userx.dre.atendimentos[3]],
                                 insumos_em_estoque: userx.dre.insumos_em_estoque,
                                 distribuidores: userx.dre.distribuidores
     
@@ -5241,7 +5379,7 @@ sockets.on('connection', async (socket) => {
                                 tributos: userx.dre.tributos,
                                 servicos: [userx.dre.servicos[0], userx.dre.servicos[1], userx.dre.servicos[2], userx.dre.servicos[3]],
                                 preco_medio: userx.dre.preco_medio,
-                                atendimentos: userx.dre.atendimentos,
+                                atendimentos: [userx.dre.atendimentos[0],userx.dre.atendimentos[1],userx.dre.atendimentos[2],userx.dre.atendimentos[3]],
                                 insumos_em_estoque: userx.dre.insumos_em_estoque,
                                 distribuidores: userx.dre.distribuidores
     
@@ -5992,7 +6130,7 @@ sockets.on('connection', async (socket) => {
                                     tributos: users[i].dre.tributos,
                                     servicos: [index[r], users[i][index[r]][2], users[i].dre.servicos[2], users[i].dre.servicos[3]],//aqui!
                                     preco_medio: users[i].dre.preco_medio,
-                                    atendimentos: users[i].dre.atendimentos,
+                                    atendimentos: [users[i].dre.atendimentos[0],users[i].dre.atendimentos[1],users[i].dre.atendimentos[2],users[i].dre.atendimentos[3]],
                                     insumos_em_estoque: users[i].dre.insumos_em_estoque,
                                     distribuidores: users[i].dre.distribuidores
         
@@ -6026,7 +6164,7 @@ sockets.on('connection', async (socket) => {
                                     tributos: users[i].dre.tributos,
                                     servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], index[r], users[i][index[r]][2]],
                                     preco_medio: users[i].dre.preco_medio,
-                                    atendimentos: users[i].dre.atendimentos,
+                                    atendimentos: [users[i].dre.atendimentos[0],users[i].dre.atendimentos[1],users[i].dre.atendimentos[2],users[i].dre.atendimentos[3]],
                                     insumos_em_estoque: users[i].dre.insumos_em_estoque,
                                     distribuidores: users[i].dre.distribuidores
         
@@ -6081,7 +6219,7 @@ sockets.on('connection', async (socket) => {
                         tributos: users[i].dre.tributos,
                         servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],//aqui!
                         preco_medio: (users[i]['scorepreco'][1]/users[i]['scorepreco'][0]),
-                        atendimentos: users[i].dre.atendimentos,
+                        atendimentos: [users[i].dre.atendimentos[0],users[i].dre.atendimentos[1],users[i].dre.atendimentos[2],users[i].dre.atendimentos[3]],
                         insumos_em_estoque: users[i].dre.insumos_em_estoque,
                         distribuidores: users[i].dre.distribuidores
 
@@ -6137,7 +6275,7 @@ sockets.on('connection', async (socket) => {
                         tributos: users[i].dre.tributos,
                         servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],
                         preco_medio: users[i].dre.preco_medio,
-                        atendimentos: users[i].dre.atendimentos,
+                        atendimentos: [users[i].dre.atendimentos[0],users[i].dre.atendimentos[1],users[i].dre.atendimentos[2],users[i].dre.atendimentos[3]],
                         insumos_em_estoque: users[i].dre.insumos_em_estoque,
                         distribuidores: users[i].dre.distribuidores
 
@@ -6218,7 +6356,7 @@ sockets.on('connection', async (socket) => {
                                 tributos: users[i].dre.tributos,
                                 servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],
                                 preco_medio: users[i].dre.preco_medio,
-                                atendimentos: users[i].dre.atendimentos,
+                                atendimentos: [users[i].dre.atendimentos[0],users[i].dre.atendimentos[1],users[i].dre.atendimentos[2],users[i].dre.atendimentos[3]],
                                 insumos_em_estoque: users[i].dre.insumos_em_estoque,
                                 distribuidores: users[i].dre.distribuidores
     
@@ -6369,7 +6507,7 @@ sockets.on('connection', async (socket) => {
                             tributos: users[i].dre.tributos + users[i].balanco_patrimonial.tributos_a_pagar_anterior/2,
                             servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],
                             preco_medio: users[i].dre.preco_medio,
-                            atendimentos: users[i].dre.atendimentos,
+                            atendimentos: [users[i].dre.atendimentos[0],users[i].dre.atendimentos[1],users[i].dre.atendimentos[2],users[i].dre.atendimentos[3]],
                             insumos_em_estoque: users[i].dre.insumos_em_estoque,
                             distribuidores: users[i].dre.distribuidores //+ users[i]['distribuidores']*360
     
@@ -6446,7 +6584,7 @@ sockets.on('connection', async (socket) => {
                             tributos: users[i].dre.tributos + users[i].balanco_patrimonial.tributos_a_pagar_anterior,
                             servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],
                             preco_medio: users[i].dre.preco_medio,
-                            atendimentos: users[i].dre.atendimentos,
+                            atendimentos: [users[i].dre.atendimentos[0],users[i].dre.atendimentos[1],users[i].dre.atendimentos[2],users[i].dre.atendimentos[3]],
                             insumos_em_estoque: users[i].dre.insumos_em_estoque,
                             distribuidores: users[i].dre.distribuidores //+ users[i]['distribuidores']*360
     
@@ -6546,7 +6684,7 @@ sockets.on('connection', async (socket) => {
                         tributos: users[i].dre.tributos + users[i]['faturamento']*0.08,
                         servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],
                         preco_medio: users[i].dre.preco_medio,
-                        atendimentos: users[i].dre.atendimentos,
+                        atendimentos: [users[i].dre.atendimentos[0],users[i].dre.atendimentos[1],users[i].dre.atendimentos[2],users[i].dre.atendimentos[3]],
                         insumos_em_estoque: users[i].dre.insumos_em_estoque,
                         distribuidores: users[i].dre.distribuidores //+ users[i]['distribuidores']*360
 
@@ -6565,6 +6703,54 @@ sockets.on('connection', async (socket) => {
                        
                         if(users[i][index[o]][4] > 0){
                             if(((users[i][index[o]][0]) - ((users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4])) > 0){
+                                //
+                                for (let g = 0; g < users[i].dre.atendimentos.length; g++){
+                                    if(users[i].dre.atendimentos[g] == index[o]){//atribui a varaivel atendimentos (da DRE) qnts atendimentos ocorreram em cada serviço
+                                        let novoArray = [users[i].dre.atendimentos[0],users[i].dre.atendimentos[1],users[i].dre.atendimentos[2],users[i].dre.atendimentos[3]]
+                                        if(g == 0){
+                                            novoArray = [users[i].dre.atendimentos[0],((users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]),users[i].dre.atendimentos[2],users[i].dre.atendimentos[3]]
+                                        }
+                                        else if(g == 2){
+                                            novoArray = [users[i].dre.atendimentos[0],users[i].dre.atendimentos[1],users[i].dre.atendimentos[2],((users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4])]
+                                        }
+                                        users[i].dre = {
+                                            receita: users[i].dre.receita, 
+                                            csp: users[i].dre.csp, 
+                                            estoque_inicial: users[i].dre.estoque_inicial,
+                                            custo_prestacao_servico: users[i].dre.custo_prestacao_servico,
+                                            custo_estocagem: users[i].dre.custo_estocagem,
+                                            custo_troca_insumos: users[i].dre.custo_troca_insumos,
+                                            hora_extra: users[i].dre.hora_extra,
+                                            capacidade_n_utilizada: users[i].dre.capacidade_n_utilizada,
+                                            margem_bruta: users[i].dre.margem_bruta,
+                                            despesas_administrativas: users[i].dre.despesas_administrativas,
+                                            salario_promotores: users[i].dre.salario_promotores,
+                                            comissao: users[i].dre.comissao,
+                                            propaganda_institucional: users[i].dre.propaganda_institucional,
+                                            propaganda_unitaria: users[i].dre.propaganda_unitaria,
+                                            depreciacao_de_maquinas: users[i].dre.depreciacao_de_maquinas,
+                                            encargos_financiamento: users[i].dre.encargos_financiamento,
+                                            salario_frota: users[i].dre.salario_frota,
+                                            manutencao_frota: users[i].dre.manutencao_frota,
+                                            depreciacao_de_veiculos: users[i].dre.depreciacao_de_veiculos,
+                                            frota_terceirizada: users[i].dre.frota_terceirizada,
+                                            despesas_operacionais_n_planejadas: users[i].dre.despesas_operacionais_n_planejadas,
+                                            pas: users[i].dre.pas,
+                                            pesquisas: users[i].dre.pesquisas,
+                                            tributos: users[i].dre.tributos,
+                                            servicos: [users[i].dre.servicos[0],users[i].dre.servicos[1],users[i].dre.servicos[2],users[i].dre.servicos[3]],
+                                            preco_medio: users[i].dre.preco_medio,
+                                            atendimentos: novoArray,
+                                            insumos_em_estoque: users[i].dre.insumos_em_estoque// + (users[i][index[o]][0]*users[i][index[o]][2] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][2]))
+                    
+            
+                    
+                                            }
+
+                                        
+                                    }
+                                }
+                                //
                                 //console.log('estoque 2' + users[i].balanco_patrimonial.estoque)
                                 users[i].balanco_patrimonial = {
                                 caixa: users[i].balanco_patrimonial.caixa,
@@ -6608,7 +6794,7 @@ sockets.on('connection', async (socket) => {
                                 tributos: users[i].dre.tributos,
                                 servicos: [users[i].dre.servicos[0],users[i].dre.servicos[1],users[i].dre.servicos[2],users[i].dre.servicos[3]],
                                 preco_medio: users[i].dre.preco_medio,
-                                atendimentos: users[i].dre.atendimentos,
+                                atendimentos: [users[i].dre.atendimentos[0],users[i].dre.atendimentos[1],users[i].dre.atendimentos[2],users[i].dre.atendimentos[3]],
                                 insumos_em_estoque: users[i].dre.insumos_em_estoque// + (users[i][index[o]][0]*users[i][index[o]][2] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][2]))
         
 
@@ -6681,7 +6867,7 @@ sockets.on('connection', async (socket) => {
                                 tributos: users[i].dre.tributos,
                                 servicos: [users[i].dre.servicos[0],users[i].dre.servicos[1],users[i].dre.servicos[2],users[i].dre.servicos[3]],
                                 preco_medio: users[i].dre.preco_medio,
-                                atendimentos: users[i].dre.atendimentos,
+                                atendimentos: [users[i].dre.atendimentos[0],users[i].dre.atendimentos[1],users[i].dre.atendimentos[2],users[i].dre.atendimentos[3]],
                                 insumos_em_estoque: users[i].dre.insumos_em_estoque// + (users[i][index[o]][0]*users[i][index[o]][2] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][2]))
         
 
@@ -6713,6 +6899,55 @@ sockets.on('connection', async (socket) => {
                                 }
                             }
                             else{
+                                //
+                                for (let g = 0; g < users[i].dre.atendimentos.length; g++){
+                                    if(users[i].dre.atendimentos[g] == index[o]){//atribui a varaivel atendimentos (da DRE) qnts atendimentos ocorreram em cada serviço
+                                        let novoArray = [users[i].dre.atendimentos[0],users[i].dre.atendimentos[1],users[i].dre.atendimentos[2],users[i].dre.atendimentos[3]]
+                                        if(g == 0){
+                                            novoArray = [users[i].dre.atendimentos[0],((users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]),users[i].dre.atendimentos[2],users[i].dre.atendimentos[3]]
+                                        }
+                                        else if(g == 2){
+                                            novoArray = [users[i].dre.atendimentos[0],users[i].dre.atendimentos[1],users[i].dre.atendimentos[2],((users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4])]
+                                        }
+                                        users[i].dre = {
+                                            receita: users[i].dre.receita, 
+                                            csp: users[i].dre.csp, 
+                                            estoque_inicial: users[i].dre.estoque_inicial,
+                                            custo_prestacao_servico: users[i].dre.custo_prestacao_servico,
+                                            custo_estocagem: users[i].dre.custo_estocagem,
+                                            custo_troca_insumos: users[i].dre.custo_troca_insumos,
+                                            hora_extra: users[i].dre.hora_extra,
+                                            capacidade_n_utilizada: users[i].dre.capacidade_n_utilizada,
+                                            margem_bruta: users[i].dre.margem_bruta,
+                                            despesas_administrativas: users[i].dre.despesas_administrativas,
+                                            salario_promotores: users[i].dre.salario_promotores,
+                                            comissao: users[i].dre.comissao,
+                                            propaganda_institucional: users[i].dre.propaganda_institucional,
+                                            propaganda_unitaria: users[i].dre.propaganda_unitaria,
+                                            depreciacao_de_maquinas: users[i].dre.depreciacao_de_maquinas,
+                                            encargos_financiamento: users[i].dre.encargos_financiamento,
+                                            salario_frota: users[i].dre.salario_frota,
+                                            manutencao_frota: users[i].dre.manutencao_frota,
+                                            depreciacao_de_veiculos: users[i].dre.depreciacao_de_veiculos,
+                                            frota_terceirizada: users[i].dre.frota_terceirizada,
+                                            despesas_operacionais_n_planejadas: users[i].dre.despesas_operacionais_n_planejadas,
+                                            pas: users[i].dre.pas,
+                                            pesquisas: users[i].dre.pesquisas,
+                                            tributos: users[i].dre.tributos,
+                                            servicos: [users[i].dre.servicos[0],users[i].dre.servicos[1],users[i].dre.servicos[2],users[i].dre.servicos[3]],
+                                            preco_medio: users[i].dre.preco_medio,
+                                            atendimentos: novoArray,
+                                            insumos_em_estoque: users[i].dre.insumos_em_estoque// + (users[i][index[o]][0]*users[i][index[o]][2] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][2]))
+                    
+            
+                    
+                                            }
+
+                                        
+                                    }
+                                }
+                                //
+
                                 console.log('estoque 1' + users[i].balanco_patrimonial.estoque)
                                 users[i].balanco_patrimonial = {
                                     caixa: users[i].balanco_patrimonial.caixa + ((users[i][index[o]][0]) - ((users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]))*users[i][index[o]][2]*1.2,
@@ -6756,7 +6991,7 @@ sockets.on('connection', async (socket) => {
                                     tributos: users[i].dre.tributos,
                                     servicos: [users[i].dre.servicos[0],users[i].dre.servicos[1],users[i].dre.servicos[2],users[i].dre.servicos[3]],
                                     preco_medio: users[i].dre.preco_medio,
-                                    atendimentos: users[i].dre.atendimentos,
+                                    atendimentos: [users[i].dre.atendimentos[0],users[i].dre.atendimentos[1],users[i].dre.atendimentos[2],users[i].dre.atendimentos[3]],
                                     insumos_em_estoque: users[i].dre.insumos_em_estoque// + (users[i][index[o]][0]*users[i][index[o]][2] - (users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4]*(users[i][index[o]][2]))
             
     
@@ -6840,7 +7075,7 @@ sockets.on('connection', async (socket) => {
                                         tributos: users[i].dre.tributos,
                                         servicos: [users[i].dre.servicos[0],users[i].dre.servicos[1],users[i].dre.servicos[2],users[i].dre.servicos[3]],
                                         preco_medio: users[i].dre.preco_medio,
-                                        atendimentos: users[i].dre.atendimentos,
+                                        atendimentos: [users[i].dre.atendimentos[0],users[i].dre.atendimentos[1],users[i].dre.atendimentos[2],users[i].dre.atendimentos[3]],
                                         insumos_em_estoque: users[i].dre.insumos_em_estoque
                 
                 
@@ -6900,7 +7135,7 @@ sockets.on('connection', async (socket) => {
                                         tributos: users[i].dre.tributos,
                                         servicos: [users[i].dre.servicos[0],users[i].dre.servicos[1],users[i].dre.servicos[2],users[i].dre.servicos[3]],
                                         preco_medio: users[i].dre.preco_medio,
-                                        atendimentos: users[i].dre.atendimentos,
+                                        atendimentos: [users[i].dre.atendimentos[0],users[i].dre.atendimentos[1],users[i].dre.atendimentos[2],users[i].dre.atendimentos[3]],
                                         insumos_em_estoque: users[i].dre.insumos_em_estoque
                 
                 
@@ -7011,7 +7246,7 @@ sockets.on('connection', async (socket) => {
                                 tributos: users[i].dre.tributos,
                                 servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],
                                 preco_medio: users[i].dre.preco_medio,
-                                atendimentos: users[i].dre.atendimentos,
+                                atendimentos: [users[i].dre.atendimentos[0],users[i].dre.atendimentos[1],users[i].dre.atendimentos[2],users[i].dre.atendimentos[3]],
                                 insumos_em_estoque: users[i].dre.insumos_em_estoque
     
                             }
@@ -7086,7 +7321,7 @@ sockets.on('connection', async (socket) => {
                                 tributos: users[i].dre.tributos,
                                 servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],
                                 preco_medio: users[i].dre.preco_medio,
-                                atendimentos: users[i].dre.atendimentos,
+                                atendimentos: [users[i].dre.atendimentos[0],users[i].dre.atendimentos[1],users[i].dre.atendimentos[2],users[i].dre.atendimentos[3]],
                                 insumos_em_estoque: users[i].dre.insumos_em_estoque
     
                             }
@@ -7169,7 +7404,7 @@ sockets.on('connection', async (socket) => {
                             tributos: users[i].dre.tributos,
                             servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],
                             preco_medio: users[i].dre.preco_medio,
-                            atendimentos: users[i].dre.atendimentos,
+                            atendimentos: [users[i].dre.atendimentos[0],users[i].dre.atendimentos[1],users[i].dre.atendimentos[2],users[i].dre.atendimentos[3]],
                             insumos_em_estoque: users[i].dre.insumos_em_estoque
 
                         }
@@ -7246,7 +7481,7 @@ sockets.on('connection', async (socket) => {
                             tributos: users[i].dre.tributos,
                             servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],
                             preco_medio: users[i].dre.preco_medio,
-                            atendimentos: users[i].dre.atendimentos,
+                            atendimentos: [users[i].dre.atendimentos[0],users[i].dre.atendimentos[1],users[i].dre.atendimentos[2],users[i].dre.atendimentos[3]],
                             insumos_em_estoque: users[i].dre.insumos_em_estoque
 
                         },
@@ -7319,7 +7554,7 @@ sockets.on('connection', async (socket) => {
                             tributos: users[i].dre.tributos,
                             servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],
                             preco_medio: users[i].dre.preco_medio,
-                            atendimentos: users[i].dre.atendimentos,
+                            atendimentos: [users[i].dre.atendimentos[0],users[i].dre.atendimentos[1],users[i].dre.atendimentos[2],users[i].dre.atendimentos[3]],
                             insumos_em_estoque: users[i].dre.insumos_em_estoque
 
                         }
@@ -7396,7 +7631,7 @@ sockets.on('connection', async (socket) => {
                             tributos: users[i].dre.tributos,
                             servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],
                             preco_medio: users[i].dre.preco_medio,
-                            atendimentos: users[i].dre.atendimentos,
+                            atendimentos: [users[i].dre.atendimentos[0],users[i].dre.atendimentos[1],users[i].dre.atendimentos[2],users[i].dre.atendimentos[3]],
                             insumos_em_estoque: users[i].dre.insumos_em_estoque
 
                         }
@@ -7472,7 +7707,7 @@ sockets.on('connection', async (socket) => {
                             tributos: users[i].dre.tributos,
                             servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],
                             preco_medio: users[i].dre.preco_medio,
-                            atendimentos: users[i].dre.atendimentos,
+                            atendimentos: [users[i].dre.atendimentos[0],users[i].dre.atendimentos[1],users[i].dre.atendimentos[2],users[i].dre.atendimentos[3]],
                             insumos_em_estoque: users[i].dre.insumos_em_estoque
 
                         }
@@ -7546,7 +7781,7 @@ sockets.on('connection', async (socket) => {
                             tributos: users[i].dre.tributos,
                             servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],
                             preco_medio: users[i].dre.preco_medio,
-                            atendimentos: users[i].dre.atendimentos,
+                            atendimentos: [users[i].dre.atendimentos[0],users[i].dre.atendimentos[1],users[i].dre.atendimentos[2],users[i].dre.atendimentos[3]],
                             insumos_em_estoque: users[i].dre.insumos_em_estoque
 
                         }
@@ -7624,7 +7859,7 @@ sockets.on('connection', async (socket) => {
                             tributos: users[i].dre.tributos,
                             servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],
                             preco_medio: users[i].dre.preco_medio,
-                            atendimentos: users[i].dre.atendimentos,
+                            atendimentos: [users[i].dre.atendimentos[0],users[i].dre.atendimentos[1],users[i].dre.atendimentos[2],users[i].dre.atendimentos[3]],
                             insumos_em_estoque: users[i].dre.insumos_em_estoque
 
                         }
@@ -7700,7 +7935,7 @@ sockets.on('connection', async (socket) => {
                             tributos: users[i].dre.tributos,
                             servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],
                             preco_medio: users[i].dre.preco_medio,
-                            atendimentos: users[i].dre.atendimentos,
+                            atendimentos: [users[i].dre.atendimentos[0],users[i].dre.atendimentos[1],users[i].dre.atendimentos[2],users[i].dre.atendimentos[3]],
                             insumos_em_estoque: users[i].dre.insumos_em_estoque
 
                         }
@@ -7777,7 +8012,7 @@ sockets.on('connection', async (socket) => {
                             tributos: users[i].dre.tributos,
                             servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],
                             preco_medio: users[i].dre.preco_medio,
-                            atendimentos: users[i].dre.atendimentos,
+                            atendimentos: [users[i].dre.atendimentos[0],users[i].dre.atendimentos[1],users[i].dre.atendimentos[2],users[i].dre.atendimentos[3]],
                             insumos_em_estoque: users[i].dre.insumos_em_estoque
 
                         }
@@ -7977,7 +8212,7 @@ sockets.on('connection', async (socket) => {
                                                     tributos: users[i].dre.tributos,
                                                     servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],
                                                     preco_medio: users[i].dre.preco_medio,
-                                                    atendimentos: users[i].dre.atendimentos,
+                                                    atendimentos: [users[i].dre.atendimentos[0],users[i].dre.atendimentos[1],users[i].dre.atendimentos[2],users[i].dre.atendimentos[3]],
                                                     insumos_em_estoque: users[i].dre.insumos_em_estoque
                         
                                                 }
@@ -8189,7 +8424,7 @@ sockets.on('connection', async (socket) => {
                                                 tributos: users[i].dre.tributos,
                                                 servicos:[users[i].dre.servicos[0],users[i].dre.servicos[1],users[i].dre.servicos[2],users[i].dre.servicos[3]],
                                                 preco_medio: users[i].dre.preco_medio,
-                                                atendimentos: users[i].dre.atendimentos,
+                                                atendimentos: [users[i].dre.atendimentos[0],users[i].dre.atendimentos[1],users[i].dre.atendimentos[2],users[i].dre.atendimentos[3]],
                                                 insumos_em_estoque: users[i].dre.insumos_em_estoque
                     
                                             },
@@ -8289,7 +8524,7 @@ sockets.on('connection', async (socket) => {
                                                     tributos: 0,
                                                     servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],
                                                     preco_medio: 0,
-                                                    atendimentos: 0,
+                                                    atendimentos: [users[i].dre.atendimentos[0], users[i].dre.atendimentos[1], users[i].dre.atendimentos[2], users[i].dre.atendimentos[3]],
                                                     insumos_em_estoque: 0,
                                                     distribuidores: 0
                         
@@ -8364,7 +8599,7 @@ sockets.on('connection', async (socket) => {
                                                                             tributos: users[i].dre.tributos,
                                                                             servicos: [users[i].dre.servicos[0], users[i].dre.servicos[1], users[i].dre.servicos[2], users[i].dre.servicos[3]],
                                                                             preco_medio: users[i].dre.preco_medio,
-                                                                            atendimentos: users[i].dre.atendimentos,
+                                                                            atendimentos: [users[i].dre.atendimentos[0],users[i].dre.atendimentos[1],users[i].dre.atendimentos[2],users[i].dre.atendimentos[3]],
                                                                             insumos_em_estoque: users[i].dre.insumos_em_estoque
                                                 
                                                                         }
