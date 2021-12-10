@@ -18,7 +18,7 @@ import { SSL_OP_EPHEMERAL_RSA } from 'constants'
 
 mongoose.connect('mongodb+srv://user_4:@toka.rv0te.gcp.mongodb.net/hsg-cbg?retryWrites=true&w=majority') //conexão com o banco de dados
 
-mongoose.connection
+mongoose.connection 
     .once('open', () => console.log('Conexao com MongoDB (banco de dados) foi estabelecida com sucesso'))
     .on('error', (error) => {
         console.warn('Falha ao se conectar com o banco de dados. Motivo: ', error)
@@ -6640,8 +6640,8 @@ sockets.on('connection', async (socket) => {
                                 }
                                 users[i].set(index[o], [((users[i][index[o]][0]) - ((users[i]['faturamento']/users[i]['scorepreco'][1])*users[i][index[o]][4])), users[i][index[o]][1], users[i][index[o]][2], users[i][index[o]][3], users[i][index[o]][4], users[i][index[o]][5], users[i][index[o]][6], users[i][index[o]][7]])
                                 users[i].balanco_patrimonial = {
-                                caixa: users[i].balanco_patrimonial.caixa,
-                                estoque: users[i].balanco_patrimonial.estoque - 36*(users[i][index[o]][0]), //DANGER - ser houver acontecido o desconto de 10%
+                                caixa: users[i].balanco_patrimonial.caixa - 36*(users[i][index[o]][0]), //antes esse desconto estava sendo feito na conta estoques CHANGE
+                                estoque: users[i].balanco_patrimonial.estoque, //DANGER - ser houver acontecido o desconto de 10%
                                 contas_a_receber60: users[i].balanco_patrimonial.contas_a_receber60,
                                 contas_a_receber120: users[i].balanco_patrimonial.contas_a_receber120,
                                 maquinas: users[i].balanco_patrimonial.maquinas,
