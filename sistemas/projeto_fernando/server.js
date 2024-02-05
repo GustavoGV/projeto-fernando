@@ -16,7 +16,7 @@ import { SSL_OP_EPHEMERAL_RSA } from 'constants'
 //24000000 no total para cada cooperativa a mais no jogo...
 
 
-mongoose.connect('mongodb+srv://user_4:@toka.rv0te.gcp.mongodb.net/hsg-cbg?retryWrites=true&w=majority') //conexão com o banco de dados
+mongoose.connect('mongodb://localhost/aluno_teste')
 
 mongoose.connection 
     .once('open', () => console.log('Conexao com MongoDB (banco de dados) foi estabelecida com sucesso'))
@@ -8818,8 +8818,8 @@ sockets.on('connection', async (socket) => {
 })
 
 // PARA TESTES PROFESSOR PRETENDE TER INSTANCIAS COM 8 PESSOAS NA SITUAÇAO IDEAL (basear teste com o parametro 8)
-server.listen(3000, () => {
-    console.log(`--> Server escutando porta: 3000`)
+server.listen(80, () => {
+    console.log(`--> Server escutando porta: 80`)
 })
 
 
