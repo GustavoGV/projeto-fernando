@@ -8818,8 +8818,8 @@ sockets.on('connection', async (socket) => {
 })
 
 // PARA TESTES PROFESSOR PRETENDE TER INSTANCIAS COM 8 PESSOAS NA SITUAÇAO IDEAL (basear teste com o parametro 8)
-server.listen(80, () => {
-    console.log(`--> Server escutando porta: 80`)
+server.listen(3000, () => {
+    console.log(`--> Server escutando porta: 3000`)
 })
 
 
